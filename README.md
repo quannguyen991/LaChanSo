@@ -32,6 +32,17 @@ Mở `http://localhost:3000`.
 
 Không commit file `.env`. API key luôn nằm ở backend. Frontend gọi API nội bộ qua `public/services.js`; không nhúng khóa hay gọi Gemini trực tiếp.
 
+Khi chạy sau reverse proxy hoặc Cloud Run, đặt `TRUST_PROXY=true` trong `.env` để rate-limit tính theo đúng IP người dùng thay vì dồn mọi người vào một bucket.
+
+## Triển khai bằng Docker
+
+```powershell
+docker build -t khoan-da .
+docker run -p 3000:3000 -e GEMINI_API_KEY=... -e TRUST_PROXY=true khoan-da
+```
+
+Image chạy bằng user không phải root và đọc biến `PORT` (Cloud Run tự đặt). CI tại `.github/workflows/ci.yml` chạy test, `npm audit` và build thử image mỗi lần push/PR.
+
 ## Kiểm thử
 
 ```powershell
@@ -51,6 +62,7 @@ npm run test:gemini
 - `server.js`: Express API, giới hạn request, MIME/kích thước upload, rate limit và security headers; không lưu tệp tải lên.
 - `public/services.js`: ranh giới gọi API, timeout/hủy và adapter cho OCR, giọng nói, QR, gia đình, báo cáo, quyền riêng tư.
 - `public/`: HTML/CSS/JS thuần, PWA manifest, font và icon vendored cục bộ.
+- `public/sw.js`: service worker cache app-shell để cài đặt và mở được khi mất mạng; các endpoint `/api` luôn gọi mạng, không cache.
 - `test/scenarios.json`: 10 kịch bản dùng dữ liệu giả.
 
 Liên hệ, mật khẩu gia đình, vụ việc và lịch sử chỉ lưu trong `localStorage`. Chế độ “kiểm tra một lần” không thêm kết quả mới vào lịch sử. Tệp tải lên không được lưu sau khi phân tích.
