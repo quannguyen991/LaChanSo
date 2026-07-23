@@ -1,0 +1,177 @@
+[
+  {
+    "id": "cong-an-chuyen-tien-giu-bi-mat",
+    "input": "Có người gọi tự xưng là công an phường, nói tôi liên quan vụ rửa tiền, yêu cầu chuyển 80 triệu vào một tài khoản để xác minh trong hôm nay, không được nói với ai.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "gia_danh_co_quan_nha_nuoc": true,
+      "doi_chuyen_tien_tai_khoan_ca_nhan": true,
+      "ep_thoi_gian_khan_cap": true,
+      "doa_bat_giu_hoac_cat_tro_cap": false,
+      "yeu_cau_giu_bi_mat": true,
+      "doi_otp_hoac_cai_app_la": false,
+      "tu_xung_nguoi_than_nhung_dang_ngo": false
+    }
+  },
+  {
+    "id": "con-tai-nan-so-la",
+    "input": "Con tôi gọi điện bảo bị tai nạn, cần 20 triệu gấp để đóng viện phí, giọng hơi lạ, số điện thoại không phải số con hay dùng.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "gia_danh_co_quan_nha_nuoc": false,
+      "doi_chuyen_tien_tai_khoan_ca_nhan": false,
+      "ep_thoi_gian_khan_cap": true,
+      "doa_bat_giu_hoac_cat_tro_cap": false,
+      "yeu_cau_giu_bi_mat": false,
+      "doi_otp_hoac_cai_app_la": false,
+      "tu_xung_nguoi_than_nhung_dang_ngo": true
+    }
+  },
+  {
+    "id": "trung-thuong-nop-phi",
+    "input": "Có tin nhắn nói tôi trúng thưởng, phải nộp phí 500 nghìn để nhận quà.",
+    "expected_risk": "Nghi ngờ",
+    "signals": {
+      "gia_danh_co_quan_nha_nuoc": false,
+      "doi_chuyen_tien_tai_khoan_ca_nhan": true,
+      "ep_thoi_gian_khan_cap": false,
+      "doa_bat_giu_hoac_cat_tro_cap": false,
+      "yeu_cau_giu_bi_mat": false,
+      "doi_otp_hoac_cai_app_la": false,
+      "tu_xung_nguoi_than_nhung_dang_ngo": false
+    }
+  },
+  {
+    "id": "buu-ta-hen-giao",
+    "input": "Bưu tá gọi báo có bưu phẩm cần tôi ra nhận, hẹn giờ giao.",
+    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "signals": {}
+  },
+  {
+    "id": "vien-kiem-sat-doa-bat",
+    "input": "Người gọi tự xưng viện kiểm sát, dọa sẽ bắt tôi ngay chiều nay nếu không chuyển tiền vào tài khoản họ cung cấp.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "gia_danh_co_quan_nha_nuoc": true,
+      "doi_chuyen_tien_tai_khoan_ca_nhan": true,
+      "ep_thoi_gian_khan_cap": true,
+      "doa_bat_giu_hoac_cat_tro_cap": true
+    }
+  },
+  {
+    "id": "bhxh-xin-otp",
+    "input": "Có người xưng là nhân viên bảo hiểm xã hội, bảo tôi đọc mã OTP để nhận tiền trợ cấp trong ngày.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "gia_danh_co_quan_nha_nuoc": true,
+      "ep_thoi_gian_khan_cap": true,
+      "doi_otp_hoac_cai_app_la": true
+    }
+  },
+  {
+    "id": "chau-muon-chuyen-gap",
+    "input": "Một số lạ gọi, tự nhận là cháu tôi đang đi công tác và nhờ chuyển tiền gấp, nhưng không trả lời được câu hỏi riêng của gia đình.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "ep_thoi_gian_khan_cap": true,
+      "tu_xung_nguoi_than_nhung_dang_ngo": true
+    }
+  },
+  {
+    "id": "con-nho-mua-thuoc",
+    "input": "Con gái gọi từ đúng số đã lưu, nhờ tôi mua thuốc khi đi ngang hiệu thuốc, không yêu cầu chuyển tiền.",
+    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "signals": {}
+  },
+  {
+    "id": "cong-an-moi-len-lam-viec",
+    "input": "Công an khu vực gọi từ số tôi đã lưu, mời tôi sáng mai lên trụ sở làm việc và không yêu cầu chuyển tiền hay cung cấp mã.",
+    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "signals": {}
+  },
+  {
+    "id": "nguoi-than-can-tien-khong-gap",
+    "input": "Người tự nhận là em trai nhắn từ tài khoản mới, hỏi tôi có thể cho mượn tiền vào tuần sau không, chưa hối thúc và chưa gửi số tài khoản.",
+    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "signals": {
+      "tu_xung_nguoi_than_nhung_dang_ngo": true
+    }
+  },
+  {
+    "id": "so-huu-ky-nghi-ep-ky-tai-cho",
+    "input": "Tôi được mời dự hội thảo miễn phí tặng vali du lịch, tới nơi bị mời mua gói sở hữu kỳ nghỉ giá 300 triệu trong 20 năm, nếu ký ngay hôm nay được giảm 50%.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "moi_hoi_thao_qua_tang_mien_phi": true,
+      "ep_ky_hop_dong_ngay_tai_cho_giam_gia_soc": true,
+      "hop_dong_gia_tri_lon_nhieu_nam": true
+    }
+  },
+  {
+    "id": "so-huu-ky-nghi-ep-mua-them",
+    "input": "Sau khi đã ký hợp đồng kỳ nghỉ, nhân viên liên tục gọi điện mỗi ngày bảo tôi phải ký thêm một hợp đồng mới thì mới chuyển nhượng được hợp đồng cũ.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "ep_mua_them_hop_dong_de_thoat_hop_dong_cu": true,
+      "goi_dien_lien_tuc_gay_ap_luc": true
+    }
+  },
+  {
+    "id": "hoi-thao-tang-qua-chua-ep",
+    "input": "Tôi nhận được thư mời dự hội thảo giới thiệu sản phẩm du lịch, có tặng quà, nhưng chưa ai yêu cầu ký hợp đồng hay chuyển tiền gì.",
+    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "signals": {
+      "moi_hoi_thao_qua_tang_mien_phi": true
+    }
+  },
+  {
+    "id": "chia-se-man-hinh-ho-tro-ky-thuat",
+    "input": "Một người tự xưng là nhân viên kỹ thuật nói điện thoại của tôi có virus và đề nghị điều khiển từ xa để sửa.",
+    "expected_risk": "Nghi ngờ",
+    "signals": {
+      "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa": true
+    }
+  },
+  {
+    "id": "dien-luc-doa-cat-dien",
+    "input": "Một người tự xưng là nhân viên điện lực thông báo nhà tôi còn nợ tiền điện và sẽ bị cắt điện sau một giờ nếu không chuyển tiền ngay.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "mao_danh_dich_vu_thiet_yeu_hoac_thue": true,
+      "ep_thoi_gian_khan_cap": true
+    }
+  },
+  {
+    "id": "dau-tu-tien-ao-loi-nhuan-cao",
+    "input": "Một người mời tôi đầu tư tiền ảo với lợi nhuận 3% mỗi ngày và cam kết chắc chắn không thể thua lỗ.",
+    "expected_risk": "Nghi ngờ",
+    "signals": {
+      "dau_tu_loi_nhuan_cao_dam_bao": true
+    }
+  },
+  {
+    "id": "nguoi-quen-qua-mang-xin-tien-ve-nuoc",
+    "input": "Tôi quen một người tự xưng là bác sĩ đang làm việc ở nước ngoài qua mạng, chưa từng gặp mặt. Người này nhờ tôi trả giúp phí vé máy bay để về Việt Nam.",
+    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "signals": {
+      "nguoi_quen_qua_mang_chua_gap_mat_xin_tien": true
+    }
+  },
+  {
+    "id": "giao-vien-bao-tin-tai-nan",
+    "input": "Một người tự xưng là cô giáo báo con tôi bị tai nạn trong giờ thể dục, cần đóng viện phí ngay, không cho tôi nói chuyện trực tiếp với con hay nhà trường.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba": true,
+      "ep_thoi_gian_khan_cap": true
+    }
+  },
+  {
+    "id": "de-doa-video-rieng-tu",
+    "input": "Một người lạ quay lại cuộc gọi video nhạy cảm rồi đe dọa gửi cho gia đình tôi nếu không chuyển tiền.",
+    "expected_risk": "Nghi ngờ",
+    "signals": {
+      "de_doa_bang_hinh_anh_video_rieng_tu": true
+    }
+  }
+]

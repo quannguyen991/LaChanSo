@@ -1,0 +1,23 @@
+{
+  "name": "la-chan-so",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Khoan Da - he thong ho tro nguoi cao tuoi dung lai va xac minh truoc khi chuyen tien.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test",
+    "test:gemini": "node scripts/gemini-live.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@fontsource-variable/lexend": "^5.3.0",
+    "@fontsource-variable/nunito-sans": "^5.3.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsqr": "^1.4.0"
+  }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "emergency-113",
+    "name": "Công an / tình huống nguy hiểm",
+    "phone": "113",
+    "website": "https://bocongan.gov.vn",
+    "purpose": "Tình huống đe dọa trực tiếp hoặc cần hỗ trợ khẩn cấp",
+    "source": "Cổng thông tin Bộ Công an; người dùng cần xác nhận theo địa bàn",
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "national-cyber-guidance",
+    "name": "Cổng không gian mạng quốc gia",
+    "phone": "",
+    "website": "https://tinnhiemmang.vn",
+    "purpose": "Xem hướng dẫn và chuẩn bị nội dung phản ánh",
+    "source": "Website công khai; KHOAN ĐÃ không tự gửi báo cáo",
+    "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "saved-bank",
+    "kind": "saved-bank",
+    "name": "Ngân hàng của bác",
+    "phone": "",
+    "website": "",
+    "purpose": "Gọi bằng số trên mặt sau thẻ hoặc số bác đã tự lưu",
+    "source": "Số do người dùng tự lưu trong mục Gia đình",
+    "updatedAt": "2026-07-23"
+  }
+]

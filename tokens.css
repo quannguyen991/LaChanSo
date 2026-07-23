@@ -1,0 +1,84 @@
+:root {
+  color-scheme: light;
+  --font-display: "Nunito Sans Variable", sans-serif;
+  --font-body: "Nunito Sans Variable", sans-serif;
+
+  --color-paper: oklch(97% 0.018 245);
+  --color-surface: oklch(99.4% 0.004 245);
+  --color-surface-2: oklch(95% 0.025 245);
+  --color-ink: oklch(20% 0.055 255);
+  --color-ink-2: oklch(37% 0.05 255);
+  --color-muted: oklch(50% 0.035 255);
+  --color-rule: oklch(90% 0.025 245);
+  --color-rule-strong: oklch(76% 0.05 245);
+
+  --color-accent: oklch(43% 0.18 255);
+  --color-accent-bright: oklch(49% 0.19 250);
+  --color-accent-hover: oklch(36% 0.17 255);
+  --color-accent-deep: oklch(29% 0.13 255);
+  --color-accent-soft: oklch(93% 0.04 245);
+  --color-accent-soft-line: oklch(80% 0.075 245);
+  --color-accent-ink: oklch(99% 0.003 245);
+  --color-sky-soft: oklch(94% 0.045 240);
+
+  --color-leaf: oklch(58% 0.15 150);
+  --color-teal-soft: oklch(90% 0.05 165);
+  --color-teal: oklch(43% 0.1 165);
+  --color-violet-soft: oklch(91% 0.05 300);
+  --color-violet: oklch(45% 0.13 300);
+  --color-rose-soft: oklch(93% 0.05 10);
+  --color-rose: oklch(50% 0.15 10);
+
+  --color-notice: oklch(52% 0.15 55);
+  --color-notice-soft: oklch(94% 0.05 65);
+  --color-notice-line: oklch(78% 0.09 60);
+  --color-avatar-soft: oklch(88% 0.05 55);
+  --color-avatar-ink: oklch(45% 0.09 45);
+
+  --color-focus-inner: oklch(99% 0.003 245);
+  --color-focus-outer: oklch(30% 0.12 255);
+
+  --color-success: oklch(42% 0.11 155);
+  --color-success-soft: oklch(94% 0.04 155);
+  --color-warning: oklch(46% 0.11 78);
+  --color-warning-soft: oklch(95% 0.055 82);
+  --color-danger: oklch(45% 0.19 25);
+  --color-danger-deep: oklch(35% 0.16 25);
+  --color-danger-soft: oklch(95% 0.045 25);
+  --color-danger-faint: oklch(98% 0.015 25);
+  --color-danger-ink: oklch(98% 0.006 25);
+
+  --color-shadow: oklch(25% 0.055 255 / 0.12);
+  --color-shadow-strong: oklch(25% 0.055 255 / 0.22);
+  --color-backdrop: oklch(18% 0.055 255 / 0.68);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 1px 2px var(--color-shadow), 0 2px 8px var(--color-shadow);
+  --shadow-md: 0 4px 10px var(--color-shadow), 0 16px 40px var(--color-shadow);
+  --shadow-lg: 0 8px 20px var(--color-shadow-strong), 0 28px 64px var(--color-shadow-strong);
+
+  --content-width: 72rem;
+  --reading-width: 46rem;
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-route-exit: 170ms;
+  --duration-route-enter: 340ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-route-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-route-exit: cubic-bezier(0.4, 0, 1, 1);
+  --bottom-nav-height: 5.5rem;
+}
