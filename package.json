@@ -1,6 +1,6 @@
 {
   "name": "la-chan-so",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Khoan Da - he thong ho tro nguoi cao tuoi dung lai va xac minh truoc khi chuyen tien.",
   "main": "server.js",
