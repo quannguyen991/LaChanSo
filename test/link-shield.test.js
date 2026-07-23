@@ -1,9 +1,11 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const http = require("node:http");
 const {
   evaluateLinkRisk,
   resolveRedirectChain,
   isPrivateOrReservedIp,
+  defaultHeadFetch,
   LinkCheckError
 } = require("../src/link-shield");
 
@@ -71,6 +73,33 @@ test("isPrivateOrReservedIp blocks loopback and link-local IPv6", () => {
   assert.equal(isPrivateOrReservedIp("2606:4700:4700::1111", 6), false);
 });
 
+test("isPrivateOrReservedIp blocks IPv4-mapped IPv6 private/reserved addresses", () => {
+  assert.equal(isPrivateOrReservedIp("::ffff:10.0.0.1", 6), true);
+  assert.equal(isPrivateOrReservedIp("::ffff:192.168.1.1", 6), true);
+  assert.equal(isPrivateOrReservedIp("::ffff:172.16.0.1", 6), true);
+  assert.equal(isPrivateOrReservedIp("::ffff:169.254.169.254", 6), true, "cloud metadata");
+  assert.equal(isPrivateOrReservedIp("::ffff:127.0.0.1", 6), true);
+  assert.equal(isPrivateOrReservedIp("::ffff:a00:1", 6), true, "hex form of 10.0.0.1");
+  assert.equal(isPrivateOrReservedIp("::", 6), true);
+  // A mapped *public* address is still legitimately reachable.
+  assert.equal(isPrivateOrReservedIp("::ffff:8.8.8.8", 6), false);
+});
+
+test("isPrivateOrReservedIp blocks CGNAT, multicast and broadcast IPv4", () => {
+  assert.equal(isPrivateOrReservedIp("100.64.0.1", 4), true, "CGNAT");
+  assert.equal(isPrivateOrReservedIp("224.0.0.1", 4), true, "multicast");
+  assert.equal(isPrivateOrReservedIp("255.255.255.255", 4), true, "broadcast");
+  assert.equal(isPrivateOrReservedIp("100.128.0.1", 4), false, "outside CGNAT range");
+});
+
+test("resolveRedirectChain rejects a hostname resolving to an IPv4-mapped private IPv6", async () => {
+  const dnsLookup = async () => [{ address: "::ffff:169.254.169.254", family: 6 }];
+  await assert.rejects(
+    () => resolveRedirectChain("http://metadata.evil.example/", { dnsLookup }),
+    LinkCheckError
+  );
+});
+
 test("resolveRedirectChain rejects non-http(s) protocols before any network call", async () => {
   await assert.rejects(
     () => resolveRedirectChain("javascript:alert(1)", { dnsLookup: async () => { throw new Error("should not be called"); } }),
@@ -96,6 +125,26 @@ test("resolveRedirectChain follows a manual redirect chain via an injected fetch
   };
   const chain = await resolveRedirectChain("http://short.link/abc", { dnsLookup, fetchImpl });
   assert.deepEqual(chain, ["short.link", "final.example"]);
+});
+
+test("defaultHeadFetch connects only to the pinned IP and parses status + location", async () => {
+  const server = http.createServer((req, res) => {
+    res.writeHead(302, { location: "https://elsewhere.example/next" });
+    res.end();
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const { port } = server.address();
+  try {
+    // Hostname is bogus and never resolvable; the pinned loopback address is the
+    // only reason the request can connect — proving DNS is pinned, not re-resolved.
+    const response = await defaultHeadFetch(`http://pinned.invalid:${port}/`, {
+      pinnedAddresses: [{ address: "127.0.0.1", family: 4 }]
+    });
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get("location"), "https://elsewhere.example/next");
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
 });
 
 test("resolveRedirectChain stops following redirects past the hop limit", async () => {

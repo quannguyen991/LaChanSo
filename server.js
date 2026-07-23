@@ -12,6 +12,14 @@ const { validateBase64Media } = require("./src/media-validation");
 const app = express();
 const port = Number(process.env.PORT) || 3000;
 
+// Behind a reverse proxy / Cloud Run, set TRUST_PROXY so request.ip is the real
+// client (not the proxy's socket IP). Without it every client shares one
+// rate-limit bucket and legitimate users get throttled together.
+if (process.env.TRUST_PROXY) {
+  const trustProxy = process.env.TRUST_PROXY;
+  app.set("trust proxy", trustProxy === "true" ? true : (/^\d+$/.test(trustProxy) ? Number(trustProxy) : trustProxy));
+}
+
 const rateBuckets = new Map();
 
 app.disable("x-powered-by");
@@ -29,6 +37,7 @@ app.use((_request, response, next) => {
     "frame-ancestors 'self'",
     "form-action 'self'"
   ].join("; "));
+  response.setHeader("Strict-Transport-Security", "max-age=15552000; includeSubDomains");
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("X-Frame-Options", "SAMEORIGIN");
   response.setHeader("Cross-Origin-Resource-Policy", "same-origin");
