@@ -92,7 +92,7 @@
   {
     "id": "nguoi-than-can-tien-khong-gap",
     "input": "Người tự nhận là em trai nhắn từ tài khoản mới, hỏi tôi có thể cho mượn tiền vào tuần sau không, chưa hối thúc và chưa gửi số tài khoản.",
-    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "expected_risk": "Nghi ngờ",
     "signals": {
       "tu_xung_nguoi_than_nhung_dang_ngo": true
     }
@@ -127,7 +127,7 @@
   {
     "id": "chia-se-man-hinh-ho-tro-ky-thuat",
     "input": "Một người tự xưng là nhân viên kỹ thuật nói điện thoại của tôi có virus và đề nghị điều khiển từ xa để sửa.",
-    "expected_risk": "Nghi ngờ",
+    "expected_risk": "Nguy hiểm cao",
     "signals": {
       "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa": true
     }
@@ -152,7 +152,7 @@
   {
     "id": "nguoi-quen-qua-mang-xin-tien-ve-nuoc",
     "input": "Tôi quen một người tự xưng là bác sĩ đang làm việc ở nước ngoài qua mạng, chưa từng gặp mặt. Người này nhờ tôi trả giúp phí vé máy bay để về Việt Nam.",
-    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "expected_risk": "Nghi ngờ",
     "signals": {
       "nguoi_quen_qua_mang_chua_gap_mat_xin_tien": true
     }
@@ -169,7 +169,7 @@
   {
     "id": "de-doa-video-rieng-tu",
     "input": "Một người lạ quay lại cuộc gọi video nhạy cảm rồi đe dọa gửi cho gia đình tôi nếu không chuyển tiền.",
-    "expected_risk": "Nghi ngờ",
+    "expected_risk": "Nguy hiểm cao",
     "signals": {
       "de_doa_bang_hinh_anh_video_rieng_tu": true
     }

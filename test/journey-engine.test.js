@@ -20,6 +20,12 @@ test("two plain events without danger signals advance to tao_niem_tin", () => {
   assert.equal(result.giai_doan, "tao_niem_tin");
 });
 
+test("a phishing link being sent advances past lam_quen (not reassuring)", () => {
+  const result = classifyJourney([{ type: "link_duoc_gui", signals: null }]);
+  assert.equal(result.giai_doan, "gay_so_hai");
+  assert.notEqual(result.giai_doan, "lam_quen");
+});
+
 test("an urgency/fear signal advances to gay_so_hai", () => {
   const result = classifyJourney([
     { type: "cuoc_goi_dau_tien", signals: { ep_thoi_gian_khan_cap: true } }
