@@ -28,6 +28,11 @@ function validateBase64Media(rawMedia) {
   if (typeof data !== "string" || data.length === 0 || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) {
     return { ok: false, error: "File không hợp lệ. Hãy chọn lại." };
   }
+  // Reject oversized payloads by base64 length BEFORE allocating the decoded
+  // buffer (base64 is ~4/3 of the byte size; small slack for padding).
+  if (data.length > Math.ceil(MAX_MEDIA_BYTES * 4 / 3) + 8) {
+    return { ok: false, error: "File quá lớn. Hãy chọn file dưới 5MB." };
+  }
   const buffer = Buffer.from(data, "base64");
   if (buffer.length === 0 || buffer.length > MAX_MEDIA_BYTES) {
     return { ok: false, error: "File quá lớn. Hãy chọn file dưới 5MB." };

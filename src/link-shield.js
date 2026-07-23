@@ -1,4 +1,6 @@
 const dns = require("node:dns/promises");
+const http = require("node:http");
+const https = require("node:https");
 const { classifyScore } = require("./rule-engine");
 
 const KNOWN_BRAND_DOMAINS = [
@@ -111,29 +113,106 @@ function evaluateLinkRisk({ redirectChain, claimedBrand }) {
   };
 }
 
+function isPrivateIpv4(address) {
+  const parts = String(address).split(".").map(Number);
+  // Malformed IPv4 → fail closed (treat as unsafe).
+  if (parts.length !== 4 || parts.some((part) => Number.isNaN(part) || part < 0 || part > 255)) {
+    return true;
+  }
+  const [a, b] = parts;
+  if (a === 0) return true;                       // "this" network
+  if (a === 10) return true;                      // RFC1918
+  if (a === 127) return true;                     // loopback
+  if (a === 100 && b >= 64 && b <= 127) return true; // CGNAT 100.64.0.0/10
+  if (a === 169 && b === 254) return true;        // link-local (cloud metadata)
+  if (a === 172 && b >= 16 && b <= 31) return true; // RFC1918
+  if (a === 192 && b === 168) return true;        // RFC1918
+  if (a >= 224) return true;                      // multicast / reserved / broadcast
+  return false;
+}
+
 function isPrivateOrReservedIp(address, family) {
+  const value = String(address || "").toLowerCase().trim();
+
   if (family === 6) {
-    const normalized = address.toLowerCase();
-    return (
-      normalized === "::1" ||
-      normalized.startsWith("fe80:") ||
-      normalized.startsWith("fc") ||
-      normalized.startsWith("fd") ||
-      normalized.startsWith("::ffff:127.") ||
-      normalized === "::"
-    );
+    // IPv4-mapped / -compatible IPv6 in dotted form: ::ffff:169.254.169.254
+    const dottedMapped = value.match(/^::(?:ffff:)?(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$/);
+    if (dottedMapped) return isPrivateIpv4(dottedMapped[1]);
+
+    // IPv4-mapped IPv6 in hex form: ::ffff:a00:1  → 10.0.0.1
+    const hexMapped = value.match(/^::ffff:([0-9a-f]{1,4}):([0-9a-f]{1,4})$/);
+    if (hexMapped) {
+      const hi = parseInt(hexMapped[1], 16);
+      const lo = parseInt(hexMapped[2], 16);
+      const ipv4 = `${(hi >> 8) & 255}.${hi & 255}.${(lo >> 8) & 255}.${lo & 255}`;
+      return isPrivateIpv4(ipv4);
+    }
+
+    if (value === "::" || value === "::1") return true;         // unspecified / loopback
+    if (/^(0+:){7}0*1$/.test(value)) return true;               // expanded loopback
+    if (value.startsWith("fe80")) return true;                  // link-local fe80::/10
+    if (value.startsWith("fc") || value.startsWith("fd")) return true; // unique-local fc00::/7
+    if (value.startsWith("ff")) return true;                    // multicast ff00::/8
+    if (value.startsWith("64:ff9b")) return true;               // NAT64 well-known prefix
+    return false;
   }
 
-  const parts = address.split(".").map(Number);
-  if (parts.length !== 4 || parts.some((part) => Number.isNaN(part))) return true;
-  const [a, b] = parts;
-  if (a === 10) return true;
-  if (a === 127) return true;
-  if (a === 169 && b === 254) return true;
-  if (a === 172 && b >= 16 && b <= 31) return true;
-  if (a === 192 && b === 168) return true;
-  if (a === 0) return true;
-  return false;
+  return isPrivateIpv4(value);
+}
+
+// DNS pinning: connect only to an address we already validated, so a rebinding
+// answer that flips between the check and the fetch cannot redirect us inward.
+function pinnedLookup(addresses) {
+  return (_hostname, lookupOptions, callback) => {
+    if (lookupOptions && lookupOptions.all) {
+      return callback(null, addresses.map((entry) => ({ address: entry.address, family: entry.family })));
+    }
+    return callback(null, addresses[0].address, addresses[0].family);
+  };
+}
+
+function defaultHeadFetch(urlString, { pinnedAddresses } = {}) {
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    let url;
+    try {
+      url = new URL(urlString);
+    } catch {
+      reject(new Error("invalid url"));
+      return;
+    }
+    const lib = url.protocol === "https:" ? https : http;
+    const requestOptions = { method: "HEAD" };
+    if (pinnedAddresses && pinnedAddresses.length > 0) {
+      requestOptions.lookup = pinnedLookup(pinnedAddresses);
+    }
+
+    const finish = (fn) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      fn();
+    };
+
+    const req = lib.request(urlString, requestOptions, (res) => {
+      res.resume(); // discard the (HEAD) body; never expose it to the caller
+      const headers = {
+        get(name) {
+          const value = res.headers[name.toLowerCase()];
+          return Array.isArray(value) ? value[0] : (value ?? null);
+        }
+      };
+      finish(() => resolve({ status: res.statusCode, headers }));
+    });
+
+    const timer = setTimeout(() => {
+      finish(() => reject(new Error("timeout")));
+      req.destroy();
+    }, 6000);
+
+    req.on("error", (error) => finish(() => reject(error)));
+    req.end();
+  });
 }
 
 async function assertPublicHostname(hostname, dnsLookup) {
@@ -147,10 +226,12 @@ async function assertPublicHostname(hostname, dnsLookup) {
   if (addresses.length === 0 || addresses.some((entry) => isPrivateOrReservedIp(entry.address, entry.family))) {
     throw new LinkCheckError("Địa chỉ này trỏ tới một mạng nội bộ, không được phép kiểm tra.", 400);
   }
+
+  return addresses;
 }
 
 async function resolveRedirectChain(inputUrl, options = {}) {
-  const fetchImpl = options.fetchImpl || fetch;
+  const fetchImpl = options.fetchImpl || defaultHeadFetch;
   const dnsLookup = options.dnsLookup || dns.lookup;
   const maxHops = options.maxHops || 5;
 
@@ -167,7 +248,7 @@ async function resolveRedirectChain(inputUrl, options = {}) {
       throw new LinkCheckError("Chỉ kiểm tra được link http hoặc https.", 400);
     }
 
-    await assertPublicHostname(current.hostname, dnsLookup);
+    const validatedAddresses = await assertPublicHostname(current.hostname, dnsLookup);
     chain.push(current.hostname);
 
     let response;
@@ -175,7 +256,7 @@ async function resolveRedirectChain(inputUrl, options = {}) {
       response = await fetchImpl(current.toString(), {
         method: "HEAD",
         redirect: "manual",
-        signal: AbortSignal.timeout(6000)
+        pinnedAddresses: validatedAddresses
       });
     } catch {
       throw new LinkCheckError("Không thể kết nối tới link này. Có thể link đã hỏng hoặc bị chặn.", 502);
@@ -204,5 +285,6 @@ module.exports = {
   evaluateLinkRisk,
   resolveRedirectChain,
   isPrivateOrReservedIp,
+  defaultHeadFetch,
   KNOWN_BRAND_DOMAINS
 };

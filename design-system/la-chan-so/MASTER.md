@@ -40,6 +40,7 @@ Không thêm màu hoặc font trực tiếp ngoài token.
 - `public/assets/brand-shield-reference.png`: logo nền trong suốt và icon thương hiệu.
 - `public/assets/avatar-reference.webp`: avatar lời chào.
 - `public/assets/reassurance-reference.webp`: khiên khóa ở banner cuối.
+- `public/assets/icon-192.png`, `icon-512.png`, `apple-touch-icon.png`: icon PWA maskable sinh từ logo khiên (manifest + màn hình chính iOS).
 - `scripts/crop-reference-assets.py`: tái tạo crop từ ảnh tham chiếu của người dùng.
 - `public/vendor/unicons/`: IconScout Unicons Line, dùng cho icon chức năng; giấy phép được giữ nguyên trong `LICENSE.txt`.
 

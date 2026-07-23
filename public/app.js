@@ -1167,7 +1167,13 @@ function editRecognizedText() {
 }
 
 function reportWrongResult() {
-  const queue = JSON.parse(getStored(STORAGE_KEYS.reportQueue, "[]"));
+  let queue;
+  try {
+    const parsed = JSON.parse(getStored(STORAGE_KEYS.reportQueue, "[]"));
+    queue = Array.isArray(parsed) ? parsed : [];
+  } catch {
+    queue = [];
+  }
   queue.unshift({ id: globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : String(Date.now()), type: "ai_result_correction", createdAt: new Date().toISOString(), risk: currentResult?.muc_rui_ro || "unknown" });
   setStored(STORAGE_KEYS.reportQueue, JSON.stringify(queue.slice(0, 20)));
   appendPrivacyAudit("ai_correction", "Báo kết quả AI chưa đúng", false);
@@ -2963,3 +2969,9 @@ loadAccessibilityPreferences();
 applyRetentionPolicy();
 renderPrivacyAuditLists();
 route();
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  });
+}

@@ -37,6 +37,7 @@ const SIGNAL_RULES = [
   {
     key: "doi_otp_hoac_cai_app_la",
     weight: 3,
+    critical: true,
     reason: "Không cơ quan nào xin mã OTP hay bắt cài app qua điện thoại.",
     action: "Không cung cấp, không cài, không bấm",
     citation: "Theo cảnh báo của BHXH Việt Nam: cơ quan bảo hiểm xã hội không yêu cầu OTP hay chuyển tiền để chi trả chế độ."
@@ -86,6 +87,7 @@ const SIGNAL_RULES = [
   {
     key: "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa",
     weight: 3,
+    critical: true,
     reason: "Yêu cầu chia sẻ màn hình hoặc cài phần mềm điều khiển từ xa có thể khiến người khác chiếm toàn bộ điện thoại.",
     action: "Không chia sẻ màn hình, không cài phần mềm điều khiển từ xa, tắt máy nếu đang làm theo hướng dẫn này",
     citation: "Ngân hàng, nhà mạng và cơ quan nhà nước không bao giờ yêu cầu khách hàng chia sẻ màn hình hoặc cài ứng dụng điều khiển thiết bị từ xa."
@@ -121,6 +123,7 @@ const SIGNAL_RULES = [
   {
     key: "de_doa_bang_hinh_anh_video_rieng_tu",
     weight: 3,
+    critical: true,
     reason: "Đe dọa phát tán hình ảnh hoặc video riêng tư nếu không chuyển tiền là hành vi tống tiền, không phải một yêu cầu hợp pháp nào.",
     action: "Không chuyển tiền, lưu lại bằng chứng và trình báo công an — đây là hành vi phạm tội của người đe dọa, không phải lỗi của bác",
     citation: null
@@ -285,16 +288,27 @@ const RECOVERY_BOOST_REASON =
 const RECOVERY_BOOST_CITATION =
   "Theo cảnh báo của Ủy ban Thương mại Liên bang Hoa Kỳ (FTC) về 'refund and recovery scams': không ai lấy lại được tiền đã mất bằng cách đóng thêm phí cho một bên tự nhận có thể giúp thu hồi.";
 
+const RISK_RANK = {
+  "Chưa thấy dấu hiệu rủi ro": 0,
+  "Nghi ngờ": 1,
+  "Nguy hiểm cao": 2
+};
+
 function applyRecoveryBoost(result, text) {
   const normalized = String(text || "").toLowerCase();
   const matched = RECOVERY_SCAM_KEYWORDS.some((keyword) => normalized.includes(keyword));
   if (!matched) return result;
 
   const boostedScore = Math.max(result.diem, 3);
+  // Recovery boost only ever raises the floor to "Nghi ngờ"; it must never
+  // downgrade a result already classified higher (e.g. a critical signal).
+  const boostedLabel = RISK_RANK[result.muc_rui_ro] >= RISK_RANK["Nghi ngờ"]
+    ? result.muc_rui_ro
+    : "Nghi ngờ";
 
   return {
     ...result,
-    muc_rui_ro: classifyScore(boostedScore),
+    muc_rui_ro: boostedLabel,
     diem: boostedScore,
     ly_do: [RECOVERY_BOOST_REASON, ...result.ly_do].slice(0, 3),
     trich_dan: [...new Set([RECOVERY_BOOST_CITATION, ...result.trich_dan])]
@@ -302,9 +316,11 @@ function applyRecoveryBoost(result, text) {
 }
 
 function classifyScore(score) {
-  // 4 points covers the required family-emergency fixture: urgency (2) + suspicious caller (2).
+  // A single moderate red flag (weight 2) must not fall through to the
+  // reassuring "no risk" label, and accumulated signals reach the top tier.
+  // Signals marked `critical` bypass this and force "Nguy hiểm cao" directly.
   if (score >= 4) return "Nguy hiểm cao";
-  if (score >= 3) return "Nghi ngờ";
+  if (score >= 2) return "Nghi ngờ";
   return "Chưa thấy dấu hiệu rủi ro";
 }
 
@@ -334,9 +350,10 @@ function makeEvaluator(rules, safeReasons, safeActions, defaultCitation, tacticR
     const signals = normalize(rawSignals);
     const matches = rules.filter((rule) => signals[rule.key]);
     const score = matches.reduce((total, rule) => total + rule.weight, 0);
+    const hasCritical = matches.some((rule) => rule.critical);
 
     return {
-      muc_rui_ro: classifyScore(score),
+      muc_rui_ro: hasCritical ? "Nguy hiểm cao" : classifyScore(score),
       ly_do: padToThree(matches.map((rule) => rule.reason), safeReasons),
       hanh_dong: padToThree(matches.map((rule) => rule.action), safeActions),
       trich_dan: unique([...matches.map((rule) => rule.citation), defaultCitation]),
