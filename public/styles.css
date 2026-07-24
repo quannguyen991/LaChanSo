@@ -1804,6 +1804,43 @@ dialog::backdrop {
   font-weight: 600;
 }
 
+.danger-dialog__stop-script {
+  text-align: left;
+  width: 100%;
+  max-width: 34ch;
+  margin: var(--space-3, 12px) auto;
+  padding: var(--space-4, 16px);
+  border-radius: var(--radius-2, 12px);
+  background: var(--color-surface, #ffffff);
+  border: 2px solid var(--color-danger, #b42318);
+}
+
+.danger-dialog__stop-opener {
+  margin: 0 0 var(--space-3, 12px);
+  font-size: clamp(1rem, 3.5vw, 1.1rem);
+  line-height: 1.5;
+}
+
+.danger-dialog__stop-label {
+  margin: 0 0 var(--space-1, 4px);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.danger-dialog__stop-sentence {
+  margin: 0 0 var(--space-3, 12px);
+  font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--color-danger, #b42318);
+}
+
+.danger-dialog__stop-refuse {
+  margin: 0;
+  font-size: clamp(1rem, 3.5vw, 1.1rem);
+  font-weight: 700;
+}
+
 .danger-dialog__rules {
   display: grid;
   gap: var(--space-2);
