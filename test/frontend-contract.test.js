@@ -9,11 +9,12 @@ const app = fs.readFileSync(path.join(root, "public", "app.js"), "utf8");
 const services = fs.readFileSync(path.join(root, "public", "services.js"), "utf8");
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "public", "manifest.webmanifest"), "utf8"));
 
-test("primary product surfaces use the KHOAN ĐÃ brand", () => {
-  assert.match(html, /<title>KHOAN ĐÃ/);
-  assert.match(html, /class="brand__title">KHOAN ĐÃ</);
-  assert.doesNotMatch(html, /Lá Chắn Số/i);
-  assert.equal(manifest.name, "KHOAN ĐÃ");
+test("primary product surfaces use the Lá Chắn Số brand with the Khoan đã tagline", () => {
+  // Brand name = "Lá Chắn Số"; "Khoan đã" is the catchphrase/tagline.
+  assert.match(html, /class="brand__title">LÁ CHẮN SỐ</);
+  assert.equal(manifest.name, "Lá Chắn Số");
+  assert.match(html, /name="description" content="Lá Chắn Số/);
+  assert.match(html, /<title>Khoan đã/);
 });
 
 test("critical senior and emergency controls are present", () => {
