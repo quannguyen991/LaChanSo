@@ -127,6 +127,42 @@ const SIGNAL_RULES = [
     reason: "Đe dọa phát tán hình ảnh hoặc video riêng tư nếu không chuyển tiền là hành vi tống tiền, không phải một yêu cầu hợp pháp nào.",
     action: "Không chuyển tiền, lưu lại bằng chứng và trình báo công an — đây là hành vi phạm tội của người đe dọa, không phải lỗi của bác",
     citation: null
+  },
+  {
+    key: "tai_khoan_nguoi_than_bi_hack_muon_tien",
+    weight: 3,
+    reason: "Tài khoản Zalo/Facebook của chính người thân quen có thể đã bị chiếm để nhắn vay hoặc mượn tiền.",
+    action: "Gọi thẳng vào số điện thoại đã lưu của người thân để xác minh, đừng chuyển theo tin nhắn",
+    citation: null
+  },
+  {
+    key: "gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc",
+    weight: 3,
+    reason: "Ngân hàng không gọi hay nhắn bắt 'xác thực sinh trắc học' hoặc 'mở khóa tài khoản' qua link hay ứng dụng lạ.",
+    action: "Không bấm link, không cài app; tự tới phòng giao dịch hoặc gọi tổng đài in trên thẻ để kiểm tra",
+    citation: null
+  },
+  {
+    key: "cai_app_dich_vu_cong_gia",
+    weight: 3,
+    critical: true,
+    reason: "Bị dẫn dụ cài ứng dụng 'Dịch vụ công', 'VNeID' hay 'Thuế' từ link gửi tới hoặc file APK ngoài kho chính thức là cách phát tán mã độc để chiếm điện thoại.",
+    action: "Tuyệt đối không cài app từ link nhận được; chỉ cài từ CH Play/App Store chính thức, tắt máy nếu đang làm theo hướng dẫn",
+    citation: null
+  },
+  {
+    key: "de_doa_khoa_sim_thue_bao",
+    weight: 2,
+    reason: "Đe dọa 'khóa SIM/thuê bao hai chiều nếu không chuẩn hóa ngay' là chiêu ép làm gấp để moi thông tin hoặc tiền.",
+    action: "Không làm theo qua điện thoại; tự ra điểm giao dịch chính thức của nhà mạng để kiểm tra",
+    citation: null
+  },
+  {
+    key: "lam_nhiem_vu_chot_don_hoa_hong",
+    weight: 3,
+    reason: "Mời 'làm nhiệm vụ', 'chốt đơn', 'thả tim' để nhận hoa hồng rồi bắt nạp tiền trước là mô hình lừa đảo phổ biến.",
+    action: "Không nạp bất kỳ khoản tiền nào để 'làm nhiệm vụ' hay để 'rút hoa hồng' ra",
+    citation: null
   }
 ];
 
@@ -135,13 +171,13 @@ const MANIPULATION_TACTIC_RULES = [
     id: "gia-danh-quyen-luc",
     label: "Giả danh người có quyền",
     description: "Họ tự xưng là cơ quan hoặc đơn vị quan trọng để bác khó từ chối.",
-    signals: ["gia_danh_co_quan_nha_nuoc", "mao_danh_dich_vu_thiet_yeu_hoac_thue"]
+    signals: ["gia_danh_co_quan_nha_nuoc", "mao_danh_dich_vu_thiet_yeu_hoac_thue", "gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc"]
   },
   {
     id: "tao-so-hai",
     label: "Tạo sợ hãi",
     description: "Họ dùng lời đe dọa hoặc tin dữ để bác hoảng và làm theo ngay.",
-    signals: ["doa_bat_giu_hoac_cat_tro_cap", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba", "de_doa_bang_hinh_anh_video_rieng_tu"]
+    signals: ["doa_bat_giu_hoac_cat_tro_cap", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba", "de_doa_bang_hinh_anh_video_rieng_tu", "de_doa_khoa_sim_thue_bao"]
   },
   {
     id: "thuc-ep-thoi-gian",
@@ -159,13 +195,13 @@ const MANIPULATION_TACTIC_RULES = [
     id: "chiem-quyen-thiet-bi",
     label: "Tìm cách chiếm quyền thiết bị",
     description: "Họ xin OTP, bắt cài ứng dụng lạ hoặc yêu cầu chia sẻ màn hình.",
-    signals: ["doi_otp_hoac_cai_app_la", "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa"]
+    signals: ["doi_otp_hoac_cai_app_la", "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa", "cai_app_dich_vu_cong_gia"]
   },
   {
     id: "dan-du-bang-loi-ich",
     label: "Dẫn dụ bằng quà hoặc lợi nhuận",
     description: "Họ dùng quà miễn phí hoặc lời hứa lợi nhuận cao để tạo lòng tin.",
-    signals: ["moi_hoi_thao_qua_tang_mien_phi", "dau_tu_loi_nhuan_cao_dam_bao", "nguoi_quen_qua_mang_chua_gap_mat_xin_tien"]
+    signals: ["moi_hoi_thao_qua_tang_mien_phi", "dau_tu_loi_nhuan_cao_dam_bao", "nguoi_quen_qua_mang_chua_gap_mat_xin_tien", "lam_nhiem_vu_chot_don_hoa_hong"]
   },
   {
     id: "ep-giao-dich",
@@ -177,7 +213,7 @@ const MANIPULATION_TACTIC_RULES = [
     id: "gia-danh-nguoi-than",
     label: "Lợi dụng tình cảm gia đình",
     description: "Họ tự xưng là người thân hoặc báo tin khẩn để bác mất bình tĩnh.",
-    signals: ["tu_xung_nguoi_than_nhung_dang_ngo", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba"]
+    signals: ["tu_xung_nguoi_than_nhung_dang_ngo", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba", "tai_khoan_nguoi_than_bi_hack_muon_tien"]
   }
 ];
 

@@ -43,6 +43,19 @@ docker run -p 3000:3000 -e GEMINI_API_KEY=... -e TRUST_PROXY=true khoan-da
 
 Image chạy bằng user không phải root và đọc biến `PORT` (Cloud Run tự đặt). CI tại `.github/workflows/ci.yml` chạy test, `npm audit` và build thử image mỗi lần push/PR.
 
+## Nhà cung cấp AI (Gemini native hoặc gateway OpenAI-compatible)
+
+Mặc định dùng Gemini native (Google AI Studio) qua `GEMINI_API_KEY`. Để chạy qua một gateway OpenAI-compatible (ví dụ vertex-key.com → Claude/GPT), đặt trong `.env`:
+
+```powershell
+LLM_PROVIDER=openai
+LLM_BASE_URL=https://vertex-key.com/api/v1
+LLM_MODEL=aws/claude-haiku-4-5
+LLM_API_KEY=vai-...
+```
+
+Dù dùng nhà cung cấp nào, AI cũng **chỉ trích xuất cờ tín hiệu boolean** — luật cứng trong `src/rule-engine.js` mới quyết định mức rủi ro. Kiểm chứng model đang dùng bằng `npm run test:gemini` (chấm theo hướng an toàn: chỉ báo lỗi khi model *bỏ sót* rủi ro, chấp nhận model thận trọng hơn). **Lưu ý:** nhánh OpenAI-compatible chưa đọc được PDF (chỉ ảnh) — dùng Gemini native nếu cần đọc PDF.
+
 ## Kiểm thử
 
 ```powershell

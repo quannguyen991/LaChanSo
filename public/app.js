@@ -17,7 +17,8 @@ const STORAGE_KEYS = {
   oneTimeCheck: "khoan-da:one-time-check",
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
-  reportQueue: "khoan-da:report-queue"
+  reportQueue: "khoan-da:report-queue",
+  lossScar: "khoan-da:loss-scar"
 };
 
 const ALL_STORAGE_KEYS = Object.values({
@@ -39,7 +40,8 @@ const ALL_STORAGE_KEYS = Object.values({
   oneTimeCheck: "khoan-da:one-time-check",
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
-  reportQueue: "khoan-da:report-queue"
+  reportQueue: "khoan-da:report-queue",
+  lossScar: "khoan-da:loss-scar"
 });
 
 const MAX_CONTACTS = 5;
@@ -100,7 +102,12 @@ const SIGNAL_LABELS = {
   dau_tu_loi_nhuan_cao_dam_bao: "Hứa lợi nhuận cao, chắc chắn không lỗ",
   nguoi_quen_qua_mang_chua_gap_mat_xin_tien: "Người quen qua mạng xin tiền",
   bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba: "Báo tin người thân gặp nạn qua người thứ ba",
-  de_doa_bang_hinh_anh_video_rieng_tu: "Đe dọa bằng hình ảnh hoặc video riêng tư"
+  de_doa_bang_hinh_anh_video_rieng_tu: "Đe dọa bằng hình ảnh hoặc video riêng tư",
+  tai_khoan_nguoi_than_bi_hack_muon_tien: "Tài khoản người thân bị hack để mượn tiền",
+  gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc: "Giả danh ngân hàng, đòi xác thực sinh trắc học",
+  cai_app_dich_vu_cong_gia: "Dụ cài app Dịch vụ công/VNeID giả",
+  de_doa_khoa_sim_thue_bao: "Đe dọa khóa SIM/thuê bao",
+  lam_nhiem_vu_chot_don_hoa_hong: "Mời làm nhiệm vụ, chốt đơn nhận hoa hồng"
 };
 
 function displayRiskLabel(risk) {
@@ -406,6 +413,10 @@ const elements = {
 
   dangerDialog: document.querySelector("#dangerDialog"),
   dangerTitle: document.querySelector("#dangerTitle"),
+  dangerStopScript: document.querySelector("#dangerStopScript"),
+  dangerStopOpener: document.querySelector("#dangerStopOpener"),
+  dangerStopSentence: document.querySelector("#dangerStopSentence"),
+  dangerStopRefuse: document.querySelector("#dangerStopRefuse"),
   pressureGuide: document.querySelector("#pressureGuide"),
   pressureStepCount: document.querySelector("#pressureStepCount"),
   pressureStepTitle: document.querySelector("#pressureStepTitle"),
@@ -990,10 +1001,96 @@ function renderPressureStep() {
   elements.pressureStepNext.textContent = pressureStepIndex === PRESSURE_STEPS.length - 1 ? "Xong" : "Bước tiếp";
 }
 
-function openDangerDialog(mode) {
+// Kịch bản DỪNG theo loại lừa — chọn bằng LUẬT từ chien_thuat_thao_tung (do rule
+// engine tính), không phải AI. Mỗi kịch bản: câu trấn an (xóa xấu hổ) + câu nói
+// to để cúp máy + hành động nguy hiểm nhất cần từ chối.
+const STOP_SCRIPTS = {
+  "chiem-quyen-thiet-bi": {
+    opener: "Họ đang tìm cách chiếm điện thoại của bác — chiêu này rất nhiều người mắc, bác không hề ngốc.",
+    sentence: "Tôi không cài gì và không chia sẻ màn hình. Tôi tắt máy bây giờ.",
+    refuse: "TẮT MÁY ngay — không đọc OTP, không cài app, không chia sẻ màn hình."
+  },
+  "gia-danh-quyen-luc": {
+    opener: "Đây là chiêu giả danh cơ quan/ngân hàng — hàng nghìn người cũng bị gọi y hệt, bác không có lỗi.",
+    sentence: "Tôi sẽ tự tới trụ sở gặp trực tiếp. Bây giờ tôi xin dừng cuộc gọi.",
+    refuse: "Không chuyển tiền, không đọc mã, không bấm link họ gửi."
+  },
+  "tao-so-hai": {
+    opener: "Họ cố làm bác sợ để làm theo ngay — chính sự hù dọa đó là dấu hiệu lừa đảo.",
+    sentence: "Tôi cần thời gian kiểm tra và sẽ gọi lại bằng số chính thức. Tôi dừng máy đây.",
+    refuse: "Không làm gì gấp vì bị dọa; không chuyển tiền, không cung cấp thông tin."
+  },
+  "ep-giao-dich": {
+    opener: "Họ đẩy bác vào một giao dịch khó lấy lại tiền — càng bị hối càng phải dừng.",
+    sentence: "Tôi chưa chuyển gì cả và sẽ kiểm tra kỹ đã. Tôi dừng cuộc gọi.",
+    refuse: "Không chuyển vào tài khoản cá nhân, không chuyển làm nhiều lần."
+  },
+  "gia-danh-nguoi-than": {
+    opener: "Có thể ai đó giả danh người thân hoặc đã chiếm tài khoản của họ — bác bình tĩnh, chuyện này rất phổ biến.",
+    sentence: "Tôi sẽ gọi lại đúng số đã lưu của con/cháu để hỏi trực tiếp.",
+    refuse: "Không chuyển tiền tới khi gọi video hoặc gọi số đã lưu xác minh được."
+  },
+  "dan-du-bang-loi-ich": {
+    opener: "Lời hứa lợi nhuận cao hay quà miễn phí là mồi câu — không có khoản lời nào 'chắc chắn' cả.",
+    sentence: "Tôi cần hỏi người thân trước khi bỏ ra bất kỳ đồng nào. Tôi dừng ở đây.",
+    refuse: "Không nạp tiền, không ký gì để 'làm nhiệm vụ' hay 'nhận thưởng'."
+  },
+  "co-lap-giu-bi-mat": {
+    opener: "Bắt bác 'giữ bí mật, đừng kể ai' là dấu hiệu lừa đảo rõ nhất — người thật không bắt bác giấu.",
+    sentence: "Tôi sẽ kể chuyện này cho người nhà. Tôi dừng máy đây.",
+    refuse: "Kể ngay cho một người thân; đừng giữ bí mật."
+  },
+  "thuc-ep-thoi-gian": {
+    opener: "Họ ép bác quyết ngay để không kịp suy nghĩ — cứ chậm lại là bác an toàn hơn.",
+    sentence: "Việc này không thể gấp tới mức đó. Tôi cần thời gian và xin dừng máy.",
+    refuse: "Không quyết định gì trong lúc đang bị hối thúc."
+  }
+};
+
+const STOP_SCRIPT_PRIORITY = [
+  "chiem-quyen-thiet-bi",
+  "gia-danh-quyen-luc",
+  "tao-so-hai",
+  "ep-giao-dich",
+  "gia-danh-nguoi-than",
+  "dan-du-bang-loi-ich",
+  "co-lap-giu-bi-mat",
+  "thuc-ep-thoi-gian"
+];
+
+const STOP_SCRIPT_FALLBACK = {
+  opener: "Bác đang gặp dấu hiệu lừa đảo rõ — rất nhiều người cũng bị y hệt, bác không có lỗi.",
+  sentence: "Tôi cần dừng lại kiểm tra và sẽ tự gọi lại bằng số chính thức. Tôi xin dừng cuộc gọi.",
+  refuse: "Không chuyển tiền, không đọc mã OTP, không cài app, không bấm link."
+};
+
+function pickStopScript(result) {
+  const ids = new Set((result?.chien_thuat_thao_tung || []).map((tactic) => tactic.id));
+  for (const id of STOP_SCRIPT_PRIORITY) {
+    if (ids.has(id)) return STOP_SCRIPTS[id];
+  }
+  return STOP_SCRIPT_FALLBACK;
+}
+
+function renderStopScript(result) {
+  const script = pickStopScript(result);
+  elements.dangerStopOpener.textContent = script.opener;
+  elements.dangerStopSentence.textContent = `“${script.sentence}”`;
+  elements.dangerStopRefuse.textContent = script.refuse;
+  elements.dangerStopScript.hidden = false;
+  return script;
+}
+
+function openDangerDialog(mode, dialogResult = currentResult) {
   const isPressureMode = mode === "pressure";
   elements.dangerTitle.textContent = isPressureMode ? "Bác đang bị thúc ép" : "Nguy hiểm cao";
   elements.pressureGuide.hidden = !isPressureMode;
+  let stopScript = null;
+  if (isPressureMode) {
+    elements.dangerStopScript.hidden = true;
+  } else {
+    stopScript = renderStopScript(dialogResult);
+  }
   elements.closeDangerButton.hidden = isPressureMode;
   elements.dangerUploadEvidenceButton.hidden = !isPressureMode;
   elements.dangerDialog.dataset.mode = mode;
@@ -1006,6 +1103,8 @@ function openDangerDialog(mode) {
       if (isPressureMode) {
         const step = PRESSURE_STEPS[0];
         window.KhoanDaServices.textToSpeechService.speak(`${step.title}. ${step.text}`);
+      } else if (stopScript) {
+        window.KhoanDaServices.textToSpeechService.speak(`${stopScript.opener} Bác đọc to: ${stopScript.sentence}`);
       } else {
         speakResult();
       }
@@ -1182,7 +1281,7 @@ function reportWrongResult() {
 
 function addCurrentResultToCase() {
   const caseObj = createCase();
-  addEventToCase(caseObj.id, { type: "khac", text: currentResult?.noi_dung_da_doc || "Kết quả kiểm tra từ Khoan Đã", signals: currentResult?.tin_hieu || null, risk: currentResult?.muc_rui_ro || null });
+  addEventToCase(caseObj.id, { type: "khac", text: currentResult?.noi_dung_da_doc || "Kết quả kiểm tra từ Lá Chắn Số", signals: currentResult?.tin_hieu || null, risk: currentResult?.muc_rui_ro || null });
   window.location.hash = "#hanh-trinh";
   showCaseDetail(caseObj.id);
 }
@@ -1206,7 +1305,7 @@ async function analyze(event) {
     const payload = await window.KhoanDaServices.scamAnalysisService.analyze({
       van_ban: text,
       tep: selectedImage ? { mimeType: selectedImage.mimeType, data: selectedImage.data } : undefined,
-      che_do_phuc_hoi: Boolean(getRecoveryMode())
+      che_do_phuc_hoi: Boolean(getRecoveryMode()) || hasLossScar()
     }, { signal: currentAnalysisController.signal });
 
     addHistory(text || payload.noi_dung_da_doc || "Tình huống từ ảnh", payload);
@@ -1248,7 +1347,7 @@ function renderTransferResult(result) {
   elements.transferResultSection.scrollIntoView({ behavior: "smooth", block: "start" });
 
   if (meta.key === "high") {
-    openDangerDialog("analysis");
+    openDangerDialog("analysis", result);
   }
 }
 
@@ -1347,7 +1446,7 @@ function renderLinkCheckResult(result) {
   elements.linkCheckResultSection.scrollIntoView({ behavior: "smooth", block: "start" });
 
   if (meta.key === "high") {
-    openDangerDialog("analysis");
+    openDangerDialog("analysis", result);
   }
 }
 
@@ -1428,7 +1527,7 @@ function saveRescueEvidence() {
 function buildShareableChecklist() {
   const items = [...elements.postTransferChecklist.querySelectorAll(".checklist__item")];
   const lines = [
-    "CHECKLIST CỨU HỘ SAU CHUYỂN TIỀN — KHOAN ĐÃ",
+    "CHECKLIST CỨU HỘ SAU CHUYỂN TIỀN — LÁ CHẮN SỐ",
     "(Để người thân xem và hỗ trợ từ xa)",
     ""
   ];
@@ -1447,7 +1546,7 @@ function shareChecklist() {
 
 async function copySummaryForBank() {
   const lines = [
-    "TÓM TẮT GỬI NGÂN HÀNG — KHOAN ĐÃ",
+    "TÓM TẮT GỬI NGÂN HÀNG — LÁ CHẮN SỐ",
     `Thời điểm báo cáo: ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short" }).format(new Date())}`,
     `Mã giao dịch: ${elements.rescueTransactionCode.value.trim() || "(chưa ghi)"}`,
     `Số tiền đã chuyển: ${elements.rescueAmount.value.trim() || "(chưa ghi)"}`,
@@ -1529,7 +1628,7 @@ function downloadTextFile(filename, content) {
 
 function buildEvidenceDossier(entry) {
   const lines = [
-    "HỒ SƠ BẰNG CHỨNG — KHOAN ĐÃ",
+    "HỒ SƠ BẰNG CHỨNG — LÁ CHẮN SỐ",
     "(Công cụ hỗ trợ độc lập, không thuộc cơ quan nhà nước nào)",
     "",
     `Thời gian lưu: ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short" }).format(new Date(entry.createdAt))}`
@@ -1541,10 +1640,10 @@ function buildEvidenceDossier(entry) {
   if (entry.bankName) lines.push(`Ngân hàng liên quan: ${entry.bankName}`);
   if (entry.account) lines.push(`Số tài khoản liên quan: ${entry.account}`);
   if (entry.transactionCode) lines.push(`Mã giao dịch: ${entry.transactionCode}`);
-  if (entry.riskLevel) lines.push(`Mức rủi ro theo Khoan Đã: ${displayRiskLabel(entry.riskLevel)}`);
+  if (entry.riskLevel) lines.push(`Mức rủi ro theo Lá Chắn Số: ${displayRiskLabel(entry.riskLevel)}`);
   if (entry.riskSignals?.length) lines.push(`Dấu hiệu phát hiện: ${entry.riskSignals.join("; ")}`);
   lines.push("", "Tóm tắt diễn biến:", entry.summary || "(không có)");
-  lines.push("", "Lưu ý: Khoan Đã chưa xác nhận danh tính chủ tài khoản hay kết luận đây chắc chắn là lừa đảo — đây là ghi chép do người dùng và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi làm việc với ngân hàng/công an.");
+  lines.push("", "Lưu ý: Lá Chắn Số chưa xác nhận danh tính chủ tài khoản hay kết luận đây chắc chắn là lừa đảo — đây là ghi chép do người dùng và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi làm việc với ngân hàng/công an.");
   return lines.join("\n");
 }
 
@@ -1816,7 +1915,28 @@ function getRecoveryMode() {
   }
 }
 
+const SCAR_WINDOW_DAYS = 365;
+
+// "Vết sẹo": nhớ rằng người dùng từng báo mất tiền. Chỉ dùng để KÉO DÀI cửa sổ
+// cảnh giác với lừa đảo "lấy lại tiền" — không bao giờ tự hạ mức rủi ro.
+function setLossScar() {
+  try {
+    if (!getStored(STORAGE_KEYS.lossScar, "")) {
+      setStored(STORAGE_KEYS.lossScar, new Date().toISOString());
+    }
+  } catch { /* localStorage có thể bị chặn */ }
+}
+
+function hasLossScar() {
+  const raw = getStored(STORAGE_KEYS.lossScar, "");
+  if (!raw) return false;
+  const t = new Date(raw).getTime();
+  if (Number.isNaN(t)) return false;
+  return (Date.now() - t) <= SCAR_WINDOW_DAYS * 86_400_000;
+}
+
 function activateRecoveryMode(durationDays) {
+  setLossScar();
   const now = new Date();
   setStored(STORAGE_KEYS.recoveryMode, JSON.stringify({
     activatedAt: now.toISOString(),
@@ -1841,10 +1961,17 @@ function formatRemainingTime(expiresAtIso) {
 
 function renderRecoveryBanner() {
   const mode = getRecoveryMode();
-  elements.recoveryBanner.hidden = !mode;
   if (mode) {
+    elements.recoveryBanner.hidden = false;
     elements.recoveryBannerText.textContent = `Đang trong chế độ bảo vệ tăng cường — ${formatRemainingTime(mode.expiresAt)}.`;
+    return;
   }
+  if (hasLossScar()) {
+    elements.recoveryBanner.hidden = false;
+    elements.recoveryBannerText.textContent = "Bác từng báo mất tiền — kẻ lừa hay quay lại giả danh người giúp thu hồi. Đừng đóng bất kỳ khoản phí nào để 'lấy lại tiền'.";
+    return;
+  }
+  elements.recoveryBanner.hidden = true;
 }
 
 function renderRecoveryPanel() {
@@ -1920,7 +2047,7 @@ function updateReportSummary() {
   const evidenceEntries = getEvidence().filter((entry) => reportSelectedEvidence.has(entry.id));
 
   const lines = [
-    "NỘI DUNG CHUẨN BỊ TRÌNH BÁO — KHOAN ĐÃ",
+    "NỘI DUNG CHUẨN BỊ TRÌNH BÁO — LÁ CHẮN SỐ",
     "(Do người dùng tự soạn với sự hỗ trợ của công cụ, chưa gửi tới cơ quan nào)",
     "",
     `Thời điểm soạn: ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short" }).format(new Date())}`,
@@ -1941,7 +2068,7 @@ function updateReportSummary() {
     lines.push("");
   }
 
-  lines.push("Khoan Đã chưa xác nhận danh tính đối tượng hay kết luận chắc chắn đây là lừa đảo — nội dung trên do người dùng tự khai và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi trình báo.");
+  lines.push("Lá Chắn Số chưa xác nhận danh tính đối tượng hay kết luận chắc chắn đây là lừa đảo — nội dung trên do người dùng tự khai và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi trình báo.");
 
   elements.reportSummary.value = lines.join("\n");
 }
@@ -2363,7 +2490,7 @@ function exportCurrentCase() {
   if (!caseObj) return;
   const includeFinancial = elements.caseShareFinancial.checked;
   const lines = [
-    "TÓM TẮT VỤ VIỆC — KHOAN ĐÃ",
+    "TÓM TẮT VỤ VIỆC — LÁ CHẮN SỐ",
     `Tiêu đề: ${caseObj.label}`,
     `Trạng thái: ${caseObj.status || "Đang theo dõi"}`,
     `Mức rủi ro hiện tại: ${caseObj.riskLevel || "Chưa đủ dữ liệu"}`,
@@ -2382,7 +2509,7 @@ function exportCurrentCase() {
   for (const item of [...caseObj.events].reverse()) {
     lines.push(`- ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(new Date(item.createdAt))}: ${CASE_EVENT_LABELS[item.type] || item.type}${item.text ? ` — ${item.text}` : ""}`);
   }
-  lines.push("", "Tệp này do người dùng chủ động tạo; KHOAN ĐÃ chưa xác minh danh tính đối tượng.");
+  lines.push("", "Tệp này do người dùng chủ động tạo; LÁ CHẮN SỐ chưa xác minh danh tính đối tượng.");
   downloadTextFile(`vu-viec-khoan-da-${caseObj.id}.txt`, lines.join("\n"));
   appendPrivacyAudit("case_export", `Tạo bản chia sẻ chọn lọc cho ${caseObj.label}`, true);
   showToast("Đã tạo file; bác tự chọn người nhận.");

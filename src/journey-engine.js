@@ -46,7 +46,9 @@ const GAY_SO_HAI_SIGNALS = [
   "ep_thoi_gian_khan_cap",
   "doa_bat_giu_hoac_cat_tro_cap",
   "gia_danh_co_quan_nha_nuoc",
-  "doi_otp_hoac_cai_app_la"
+  "doi_otp_hoac_cai_app_la",
+  "cai_app_dich_vu_cong_gia",
+  "de_doa_khoa_sim_thue_bao"
 ];
 const GAY_SO_HAI_EVENT_TYPES = ["yeu_cau_cai_app", "link_duoc_gui"];
 
