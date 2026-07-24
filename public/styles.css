@@ -1844,7 +1844,7 @@ dialog::backdrop {
 /* Điện thoại: người đang hoảng không được phải cuộn gần 2 màn hình mới thấy nút
    gọi người thân. Đưa câu-nói-để-dừng, đồng hồ và các nút gọi lên đầu hộp thoại,
    đẩy phần giải thích (5 quy tắc, câu hỏi) xuống dưới, và thu gọn khối câu nói. */
-@media (max-width: 640px) {
+@media (max-width: 55.99rem) {
   .danger-dialog__content > * { order: 9; }
   .danger-dialog__content > .danger-dialog__icon,
   .danger-dialog__content > .danger-dialog__eyebrow,
