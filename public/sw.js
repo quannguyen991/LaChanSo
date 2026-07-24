@@ -1,4 +1,4 @@
-// KHOAN ĐÃ service worker.
+// Lá Chắn Số service worker.
 // Goal: make the app installable and let the shell + local tools (evidence log,
 // family contacts, history) open even with no network. Analysis endpoints under
 // /api are ALWAYS network-only and never cached — results are dynamic and can

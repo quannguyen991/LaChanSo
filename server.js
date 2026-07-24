@@ -254,7 +254,7 @@ app.use((error, _request, response, _next) => {
 
 if (require.main === module) {
   app.listen(port, () => {
-    console.log(`Khoan Đã đang chạy tại http://localhost:${port}`);
+    console.log(`Lá Chắn Số đang chạy tại http://localhost:${port}`);
   });
 }
 

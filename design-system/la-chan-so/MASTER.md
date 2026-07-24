@@ -1,13 +1,13 @@
-# Hệ thống thiết kế KHOAN ĐÃ
+# Hệ thống thiết kế Lá Chắn Số
 
-**Cập nhật:** 2026-07-23 (bản 4 — tái định vị KHOAN ĐÃ)  
+**Cập nhật:** 2026-07-24 (bản 5 — tên thương hiệu là Lá Chắn Số, "Khoan đã" là câu cửa miệng)  
 **Đối tượng:** Người cao tuổi cần kiểm tra và xử lý tình huống lừa đảo  
 **Cấu trúc:** App Hub / Command Center với 5 tab dưới
 
 ## DNA giao diện
 
 - Khung chuẩn để đối chiếu: 941×1672 px, app shell rộng 901 px và căn giữa trên màn hình lớn.
-- Header giấy sáng: tên KHOAN ĐÃ, trạng thái hệ thống, điều chỉnh cỡ chữ và hướng dẫn giọng nói.
+- Header giấy sáng: tên LÁ CHẮN SỐ kèm câu cửa miệng "Khoan đã", trạng thái hệ thống, điều chỉnh cỡ chữ và hướng dẫn giọng nói.
 - Hero dùng ảnh ông bà làm tín hiệu nhận diện; tiêu đề và nội dung luôn là HTML thật để đọc được ở mọi kích thước.
 - Sau hero là lưới 1.92:1: cột tác vụ bên trái, cột hỗ trợ bên phải.
 - Trust Blue là màu tin cậy theo bản giao diện gốc, cam là tín hiệu dừng suy nghĩ, đỏ chỉ dành cho nguy hiểm thật.
