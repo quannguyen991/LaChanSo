@@ -2,7 +2,7 @@
   "name": "la-chan-so",
   "version": "1.2.0",
   "private": true,
-  "description": "Khoan Da - he thong ho tro nguoi cao tuoi dung lai va xac minh truoc khi chuyen tien.",
+  "description": "La Chan So - he thong ho tro nguoi cao tuoi dung lai va xac minh truoc khi chuyen tien.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

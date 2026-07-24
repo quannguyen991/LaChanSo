@@ -1,4 +1,4 @@
-/* Khoan Đã service adapters: one boundary for network calls and local capabilities. */
+/* Lá Chắn Số service adapters: one boundary for network calls and local capabilities. */
 (function attachServices(global) {
   const DEFAULT_TIMEOUT = 30000;
 

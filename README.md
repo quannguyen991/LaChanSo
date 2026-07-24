@@ -1,6 +1,6 @@
-# KHOAN ĐÃ
+# Lá Chắn Số
 
-**KHOAN ĐÃ – Dừng lại trước khi chuyển tiền.** Đây là web app hỗ trợ người cao tuổi nhận diện dấu hiệu lừa đảo, tạo khoảng dừng và kết nối đúng người hỗ trợ. Người dùng có thể kể bằng văn bản/giọng nói, dán SMS/Zalo/email/link, quét QR, hoặc gửi PNG/JPEG/WEBP/PDF tối đa khoảng 5 MB.
+**Lá Chắn Số — "Khoan đã, dừng lại trước khi chuyển tiền."** Đây là web app hỗ trợ người cao tuổi nhận diện dấu hiệu lừa đảo, tạo khoảng dừng và kết nối đúng người hỗ trợ. Người dùng có thể kể bằng văn bản/giọng nói, dán SMS/Zalo/email/link, quét QR, hoặc gửi PNG/JPEG/WEBP/PDF tối đa khoảng 5 MB.
 
 Gemini chỉ đọc nội dung và trích xuất tín hiệu boolean. Rule engine trong code quyết định mức rủi ro, lý do, hành động và trích dẫn tĩnh; AI không tự kết luận rủi ro hoặc tự tạo nguồn. Trạng thái thấp hiển thị là **“Chưa thấy dấu hiệu rủi ro”**, không dùng từ “an toàn” để tránh tạo cảm giác chắc chắn giả.
 
