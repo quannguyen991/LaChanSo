@@ -1841,6 +1841,37 @@ dialog::backdrop {
   font-weight: 700;
 }
 
+/* Điện thoại: người đang hoảng không được phải cuộn gần 2 màn hình mới thấy nút
+   gọi người thân. Đưa câu-nói-để-dừng, đồng hồ và các nút gọi lên đầu hộp thoại,
+   đẩy phần giải thích (5 quy tắc, câu hỏi) xuống dưới, và thu gọn khối câu nói. */
+@media (max-width: 640px) {
+  .danger-dialog__content > * { order: 9; }
+  .danger-dialog__content > .danger-dialog__icon,
+  .danger-dialog__content > .danger-dialog__eyebrow,
+  .danger-dialog__content > #dangerTitle { order: 1; }
+  .danger-dialog__content > .danger-dialog__stop-script,
+  .danger-dialog__content > .pressure-guide { order: 2; }
+  .danger-dialog__content > .danger-dialog__countdown { order: 3; }
+  .danger-dialog__content > .danger-dialog__followup,
+  .danger-dialog__content > .danger-dialog__actions { order: 4; }
+  .danger-dialog__content > .danger-dialog__rules { order: 5; }
+  .danger-dialog__content > .danger-dialog__smart-pause { order: 6; }
+
+  .danger-dialog__stop-script {
+    padding: var(--space-3, 12px);
+    margin: var(--space-2, 8px) auto;
+  }
+  .danger-dialog__stop-opener {
+    font-size: 0.95rem;
+    margin-bottom: var(--space-2, 8px);
+  }
+  .danger-dialog__stop-sentence {
+    font-size: 1.15rem;
+    margin-bottom: var(--space-2, 8px);
+  }
+  .danger-dialog__stop-refuse { font-size: 0.95rem; }
+}
+
 .danger-dialog__rules {
   display: grid;
   gap: var(--space-2);

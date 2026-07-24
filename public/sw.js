@@ -4,7 +4,7 @@
 // /api are ALWAYS network-only and never cached — results are dynamic and can
 // contain sensitive situation text.
 
-const CACHE_VERSION = "khoan-da-v1";
+const CACHE_VERSION = "la-chan-so-v2";
 const SHELL = [
   "/",
   "/index.html",
@@ -52,7 +52,26 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Static assets: serve cached immediately, refresh in the background.
+  // Code (JS/CSS) must never be served stale: a cached old app.js could keep
+  // running outdated detection rules after an update, which is unsafe here.
+  // Prefer the network and fall back to cache only when offline.
+  const isCode = /\.(?:js|css)$/i.test(url.pathname);
+  if (isCode) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_VERSION).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Everything else (fonts, icons, images): serve cached fast, refresh in background.
   event.respondWith(
     caches.match(request).then((cached) => {
       const network = fetch(request)
