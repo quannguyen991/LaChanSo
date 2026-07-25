@@ -92,7 +92,7 @@
   {
     "id": "nguoi-than-can-tien-khong-gap",
     "input": "Người tự nhận là em trai nhắn từ tài khoản mới, hỏi tôi có thể cho mượn tiền vào tuần sau không, chưa hối thúc và chưa gửi số tài khoản.",
-    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "expected_risk": "Nghi ngờ",
     "signals": {
       "tu_xung_nguoi_than_nhung_dang_ngo": true
     }
@@ -127,7 +127,7 @@
   {
     "id": "chia-se-man-hinh-ho-tro-ky-thuat",
     "input": "Một người tự xưng là nhân viên kỹ thuật nói điện thoại của tôi có virus và đề nghị điều khiển từ xa để sửa.",
-    "expected_risk": "Nghi ngờ",
+    "expected_risk": "Nguy hiểm cao",
     "signals": {
       "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa": true
     }
@@ -152,7 +152,7 @@
   {
     "id": "nguoi-quen-qua-mang-xin-tien-ve-nuoc",
     "input": "Tôi quen một người tự xưng là bác sĩ đang làm việc ở nước ngoài qua mạng, chưa từng gặp mặt. Người này nhờ tôi trả giúp phí vé máy bay để về Việt Nam.",
-    "expected_risk": "Chưa thấy dấu hiệu rủi ro",
+    "expected_risk": "Nghi ngờ",
     "signals": {
       "nguoi_quen_qua_mang_chua_gap_mat_xin_tien": true
     }
@@ -169,9 +169,51 @@
   {
     "id": "de-doa-video-rieng-tu",
     "input": "Một người lạ quay lại cuộc gọi video nhạy cảm rồi đe dọa gửi cho gia đình tôi nếu không chuyển tiền.",
-    "expected_risk": "Nghi ngờ",
+    "expected_risk": "Nguy hiểm cao",
     "signals": {
       "de_doa_bang_hinh_anh_video_rieng_tu": true
+    }
+  },
+  {
+    "id": "nguoi-than-bi-hack-nhan-muon-tien",
+    "input": "Con gái nhắn qua Zalo bảo đang kẹt tiền, nhờ chuyển gấp 15 triệu, nhưng cách xưng hô hơi lạ và gọi video thì không nghe máy.",
+    "expected_risk": "Nghi ngờ",
+    "signals": {
+      "tai_khoan_nguoi_than_bi_hack_muon_tien": true
+    }
+  },
+  {
+    "id": "vneid-gia-cai-app-ngoai-store",
+    "input": "Người tự xưng cán bộ phường bảo tôi cài app Dịch vụ công theo đường link họ gửi để đồng bộ dữ liệu dân cư, nói không cần cài trên CH Play.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "cai_app_dich_vu_cong_gia": true
+    }
+  },
+  {
+    "id": "ngan-hang-sinh-trac-hoc-khoa-tai-khoan",
+    "input": "Tin nhắn xưng là ngân hàng báo tài khoản của tôi bị khóa do chưa xác thực sinh trắc học, bấm vào link để mở lại ngay.",
+    "expected_risk": "Nghi ngờ",
+    "signals": {
+      "gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc": true
+    }
+  },
+  {
+    "id": "lam-nhiem-vu-chot-don-nap-tien",
+    "input": "Có người mời tôi làm nhiệm vụ chốt đơn online, nạp trước 2 triệu rồi sẽ được hoàn lại kèm hoa hồng cao.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "lam_nhiem_vu_chot_don_hoa_hong": true,
+      "doi_chuyen_tien_tai_khoan_ca_nhan": true
+    }
+  },
+  {
+    "id": "doa-khoa-sim-chuan-hoa",
+    "input": "Người gọi tự xưng nhà mạng, dọa khóa SIM hai chiều trong hai giờ nếu tôi không chuẩn hóa thông tin ngay bây giờ.",
+    "expected_risk": "Nguy hiểm cao",
+    "signals": {
+      "de_doa_khoa_sim_thue_bao": true,
+      "ep_thoi_gian_khan_cap": true
     }
   }
 ]

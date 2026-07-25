@@ -80,6 +80,38 @@ test("applyRecoveryBoost matches keywords case-insensitively", () => {
   assert.equal(boosted.muc_rui_ro, "Nghi ngờ");
 });
 
+test("a single critical signal alone reaches Nguy hiểm cao (fires the stop-everything warning)", () => {
+  for (const key of [
+    "doi_otp_hoac_cai_app_la",
+    "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa",
+    "de_doa_bang_hinh_anh_video_rieng_tu"
+  ]) {
+    const result = evaluateRisk({ [key]: true });
+    assert.equal(result.muc_rui_ro, "Nguy hiểm cao", `${key} should be high risk alone`);
+  }
+});
+
+test("a single moderate scam signal is never shown as 'no risk'", () => {
+  for (const key of [
+    "nguoi_quen_qua_mang_chua_gap_mat_xin_tien",
+    "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba",
+    "tu_xung_nguoi_than_nhung_dang_ngo",
+    "mao_danh_dich_vu_thiet_yeu_hoac_thue"
+  ]) {
+    const result = evaluateRisk({ [key]: true });
+    assert.notEqual(
+      result.muc_rui_ro,
+      "Chưa thấy dấu hiệu rủi ro",
+      `${key} must not read as safe on its own`
+    );
+  }
+});
+
+test("a lone weight-1 lure signal still stays low risk (no false alarm)", () => {
+  const result = evaluateRisk({ moi_hoi_thao_qua_tang_mien_phi: true });
+  assert.equal(result.muc_rui_ro, "Chưa thấy dấu hiệu rủi ro");
+});
+
 test("only returns citations from the static library", () => {
   const allowed = new Set([
     "Theo cảnh báo của Bộ Công an: lực lượng công an không làm việc, không yêu cầu công dân chuyển tiền qua điện thoại.",

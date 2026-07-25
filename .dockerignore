@@ -1,0 +1,12 @@
+node_modules
+npm-debug.log
+.env
+.git
+.github
+*.log
+.DS_Store
+Thumbs.db
+__pycache__
+AUDIT_*.md
+BRIEF_ALIGNMENT_*.md
+IMPLEMENTATION_REPORT_*.md

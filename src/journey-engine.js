@@ -22,7 +22,7 @@ const STAGE_LABELS = {
 const STAGE_DESCRIPTIONS = {
   lam_quen: "Mới có liên hệ ban đầu, chưa có nhiều dấu hiệu rõ ràng.",
   tao_niem_tin: "Đối tượng đang liên hệ nhiều lần để tạo sự quen thuộc trước khi đưa ra yêu cầu.",
-  gay_so_hai: "Đã xuất hiện lời đe dọa, ép thời gian gấp hoặc tự xưng cơ quan chức năng — dấu hiệu gây sức ép tâm lý.",
+  gay_so_hai: "Đã xuất hiện lời đe dọa, ép thời gian gấp, tự xưng cơ quan chức năng, hoặc đã gửi đường link/yêu cầu cài ứng dụng lạ — dấu hiệu gây sức ép hoặc dẫn dụ bấm vào bẫy.",
   co_lap: "Đã có yêu cầu giữ bí mật, không kể cho người thân — dấu hiệu cô lập khỏi người có thể giúp xác minh.",
   yeu_cau_chuyen_tien: "Đã có yêu cầu chuyển tiền, chuyển thử khoản nhỏ, hoặc chuyển thêm — giai đoạn khai thác tài chính."
 };
@@ -46,9 +46,11 @@ const GAY_SO_HAI_SIGNALS = [
   "ep_thoi_gian_khan_cap",
   "doa_bat_giu_hoac_cat_tro_cap",
   "gia_danh_co_quan_nha_nuoc",
-  "doi_otp_hoac_cai_app_la"
+  "doi_otp_hoac_cai_app_la",
+  "cai_app_dich_vu_cong_gia",
+  "de_doa_khoa_sim_thue_bao"
 ];
-const GAY_SO_HAI_EVENT_TYPES = ["yeu_cau_cai_app"];
+const GAY_SO_HAI_EVENT_TYPES = ["yeu_cau_cai_app", "link_duoc_gui"];
 
 function collectTrueSignals(events) {
   const signals = {};

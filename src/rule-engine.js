@@ -37,6 +37,7 @@ const SIGNAL_RULES = [
   {
     key: "doi_otp_hoac_cai_app_la",
     weight: 3,
+    critical: true,
     reason: "Không cơ quan nào xin mã OTP hay bắt cài app qua điện thoại.",
     action: "Không cung cấp, không cài, không bấm",
     citation: "Theo cảnh báo của BHXH Việt Nam: cơ quan bảo hiểm xã hội không yêu cầu OTP hay chuyển tiền để chi trả chế độ."
@@ -86,6 +87,7 @@ const SIGNAL_RULES = [
   {
     key: "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa",
     weight: 3,
+    critical: true,
     reason: "Yêu cầu chia sẻ màn hình hoặc cài phần mềm điều khiển từ xa có thể khiến người khác chiếm toàn bộ điện thoại.",
     action: "Không chia sẻ màn hình, không cài phần mềm điều khiển từ xa, tắt máy nếu đang làm theo hướng dẫn này",
     citation: "Ngân hàng, nhà mạng và cơ quan nhà nước không bao giờ yêu cầu khách hàng chia sẻ màn hình hoặc cài ứng dụng điều khiển thiết bị từ xa."
@@ -121,8 +123,45 @@ const SIGNAL_RULES = [
   {
     key: "de_doa_bang_hinh_anh_video_rieng_tu",
     weight: 3,
+    critical: true,
     reason: "Đe dọa phát tán hình ảnh hoặc video riêng tư nếu không chuyển tiền là hành vi tống tiền, không phải một yêu cầu hợp pháp nào.",
     action: "Không chuyển tiền, lưu lại bằng chứng và trình báo công an — đây là hành vi phạm tội của người đe dọa, không phải lỗi của bác",
+    citation: null
+  },
+  {
+    key: "tai_khoan_nguoi_than_bi_hack_muon_tien",
+    weight: 3,
+    reason: "Tài khoản Zalo/Facebook của chính người thân quen có thể đã bị chiếm để nhắn vay hoặc mượn tiền.",
+    action: "Gọi thẳng vào số điện thoại đã lưu của người thân để xác minh, đừng chuyển theo tin nhắn",
+    citation: null
+  },
+  {
+    key: "gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc",
+    weight: 3,
+    reason: "Ngân hàng không gọi hay nhắn bắt 'xác thực sinh trắc học' hoặc 'mở khóa tài khoản' qua link hay ứng dụng lạ.",
+    action: "Không bấm link, không cài app; tự tới phòng giao dịch hoặc gọi tổng đài in trên thẻ để kiểm tra",
+    citation: null
+  },
+  {
+    key: "cai_app_dich_vu_cong_gia",
+    weight: 3,
+    critical: true,
+    reason: "Bị dẫn dụ cài ứng dụng 'Dịch vụ công', 'VNeID' hay 'Thuế' từ link gửi tới hoặc file APK ngoài kho chính thức là cách phát tán mã độc để chiếm điện thoại.",
+    action: "Tuyệt đối không cài app từ link nhận được; chỉ cài từ CH Play/App Store chính thức, tắt máy nếu đang làm theo hướng dẫn",
+    citation: null
+  },
+  {
+    key: "de_doa_khoa_sim_thue_bao",
+    weight: 2,
+    reason: "Đe dọa 'khóa SIM/thuê bao hai chiều nếu không chuẩn hóa ngay' là chiêu ép làm gấp để moi thông tin hoặc tiền.",
+    action: "Không làm theo qua điện thoại; tự ra điểm giao dịch chính thức của nhà mạng để kiểm tra",
+    citation: null
+  },
+  {
+    key: "lam_nhiem_vu_chot_don_hoa_hong",
+    weight: 3,
+    reason: "Mời 'làm nhiệm vụ', 'chốt đơn', 'thả tim' để nhận hoa hồng rồi bắt nạp tiền trước là mô hình lừa đảo phổ biến.",
+    action: "Không nạp bất kỳ khoản tiền nào để 'làm nhiệm vụ' hay để 'rút hoa hồng' ra",
     citation: null
   }
 ];
@@ -132,13 +171,13 @@ const MANIPULATION_TACTIC_RULES = [
     id: "gia-danh-quyen-luc",
     label: "Giả danh người có quyền",
     description: "Họ tự xưng là cơ quan hoặc đơn vị quan trọng để bác khó từ chối.",
-    signals: ["gia_danh_co_quan_nha_nuoc", "mao_danh_dich_vu_thiet_yeu_hoac_thue"]
+    signals: ["gia_danh_co_quan_nha_nuoc", "mao_danh_dich_vu_thiet_yeu_hoac_thue", "gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc"]
   },
   {
     id: "tao-so-hai",
     label: "Tạo sợ hãi",
     description: "Họ dùng lời đe dọa hoặc tin dữ để bác hoảng và làm theo ngay.",
-    signals: ["doa_bat_giu_hoac_cat_tro_cap", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba", "de_doa_bang_hinh_anh_video_rieng_tu"]
+    signals: ["doa_bat_giu_hoac_cat_tro_cap", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba", "de_doa_bang_hinh_anh_video_rieng_tu", "de_doa_khoa_sim_thue_bao"]
   },
   {
     id: "thuc-ep-thoi-gian",
@@ -156,13 +195,13 @@ const MANIPULATION_TACTIC_RULES = [
     id: "chiem-quyen-thiet-bi",
     label: "Tìm cách chiếm quyền thiết bị",
     description: "Họ xin OTP, bắt cài ứng dụng lạ hoặc yêu cầu chia sẻ màn hình.",
-    signals: ["doi_otp_hoac_cai_app_la", "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa"]
+    signals: ["doi_otp_hoac_cai_app_la", "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa", "cai_app_dich_vu_cong_gia"]
   },
   {
     id: "dan-du-bang-loi-ich",
     label: "Dẫn dụ bằng quà hoặc lợi nhuận",
     description: "Họ dùng quà miễn phí hoặc lời hứa lợi nhuận cao để tạo lòng tin.",
-    signals: ["moi_hoi_thao_qua_tang_mien_phi", "dau_tu_loi_nhuan_cao_dam_bao", "nguoi_quen_qua_mang_chua_gap_mat_xin_tien"]
+    signals: ["moi_hoi_thao_qua_tang_mien_phi", "dau_tu_loi_nhuan_cao_dam_bao", "nguoi_quen_qua_mang_chua_gap_mat_xin_tien", "lam_nhiem_vu_chot_don_hoa_hong"]
   },
   {
     id: "ep-giao-dich",
@@ -174,7 +213,7 @@ const MANIPULATION_TACTIC_RULES = [
     id: "gia-danh-nguoi-than",
     label: "Lợi dụng tình cảm gia đình",
     description: "Họ tự xưng là người thân hoặc báo tin khẩn để bác mất bình tĩnh.",
-    signals: ["tu_xung_nguoi_than_nhung_dang_ngo", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba"]
+    signals: ["tu_xung_nguoi_than_nhung_dang_ngo", "bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba", "tai_khoan_nguoi_than_bi_hack_muon_tien"]
   }
 ];
 
@@ -285,16 +324,27 @@ const RECOVERY_BOOST_REASON =
 const RECOVERY_BOOST_CITATION =
   "Theo cảnh báo của Ủy ban Thương mại Liên bang Hoa Kỳ (FTC) về 'refund and recovery scams': không ai lấy lại được tiền đã mất bằng cách đóng thêm phí cho một bên tự nhận có thể giúp thu hồi.";
 
+const RISK_RANK = {
+  "Chưa thấy dấu hiệu rủi ro": 0,
+  "Nghi ngờ": 1,
+  "Nguy hiểm cao": 2
+};
+
 function applyRecoveryBoost(result, text) {
   const normalized = String(text || "").toLowerCase();
   const matched = RECOVERY_SCAM_KEYWORDS.some((keyword) => normalized.includes(keyword));
   if (!matched) return result;
 
   const boostedScore = Math.max(result.diem, 3);
+  // Recovery boost only ever raises the floor to "Nghi ngờ"; it must never
+  // downgrade a result already classified higher (e.g. a critical signal).
+  const boostedLabel = RISK_RANK[result.muc_rui_ro] >= RISK_RANK["Nghi ngờ"]
+    ? result.muc_rui_ro
+    : "Nghi ngờ";
 
   return {
     ...result,
-    muc_rui_ro: classifyScore(boostedScore),
+    muc_rui_ro: boostedLabel,
     diem: boostedScore,
     ly_do: [RECOVERY_BOOST_REASON, ...result.ly_do].slice(0, 3),
     trich_dan: [...new Set([RECOVERY_BOOST_CITATION, ...result.trich_dan])]
@@ -302,9 +352,11 @@ function applyRecoveryBoost(result, text) {
 }
 
 function classifyScore(score) {
-  // 4 points covers the required family-emergency fixture: urgency (2) + suspicious caller (2).
+  // A single moderate red flag (weight 2) must not fall through to the
+  // reassuring "no risk" label, and accumulated signals reach the top tier.
+  // Signals marked `critical` bypass this and force "Nguy hiểm cao" directly.
   if (score >= 4) return "Nguy hiểm cao";
-  if (score >= 3) return "Nghi ngờ";
+  if (score >= 2) return "Nghi ngờ";
   return "Chưa thấy dấu hiệu rủi ro";
 }
 
@@ -334,9 +386,10 @@ function makeEvaluator(rules, safeReasons, safeActions, defaultCitation, tacticR
     const signals = normalize(rawSignals);
     const matches = rules.filter((rule) => signals[rule.key]);
     const score = matches.reduce((total, rule) => total + rule.weight, 0);
+    const hasCritical = matches.some((rule) => rule.critical);
 
     return {
-      muc_rui_ro: classifyScore(score),
+      muc_rui_ro: hasCritical ? "Nguy hiểm cao" : classifyScore(score),
       ly_do: padToThree(matches.map((rule) => rule.reason), safeReasons),
       hanh_dong: padToThree(matches.map((rule) => rule.action), safeActions),
       trich_dan: unique([...matches.map((rule) => rule.citation), defaultCitation]),

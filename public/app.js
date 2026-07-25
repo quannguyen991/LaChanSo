@@ -102,7 +102,12 @@ const SIGNAL_LABELS = {
   dau_tu_loi_nhuan_cao_dam_bao: "Hứa lợi nhuận cao, chắc chắn không lỗ",
   nguoi_quen_qua_mang_chua_gap_mat_xin_tien: "Người quen qua mạng xin tiền",
   bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba: "Báo tin người thân gặp nạn qua người thứ ba",
-  de_doa_bang_hinh_anh_video_rieng_tu: "Đe dọa bằng hình ảnh hoặc video riêng tư"
+  de_doa_bang_hinh_anh_video_rieng_tu: "Đe dọa bằng hình ảnh hoặc video riêng tư",
+  tai_khoan_nguoi_than_bi_hack_muon_tien: "Tài khoản người thân bị hack để mượn tiền",
+  gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc: "Giả danh ngân hàng, đòi xác thực sinh trắc học",
+  cai_app_dich_vu_cong_gia: "Dụ cài app Dịch vụ công/VNeID giả",
+  de_doa_khoa_sim_thue_bao: "Đe dọa khóa SIM/thuê bao",
+  lam_nhiem_vu_chot_don_hoa_hong: "Mời làm nhiệm vụ, chốt đơn nhận hoa hồng"
 };
 
 function displayRiskLabel(risk) {
@@ -171,6 +176,7 @@ const elements = {
   mobileSituationFile: document.querySelector("#mobileSituationFile"),
   mobileSituationFileButton: document.querySelector("#mobileSituationFileButton"),
   mobileSituationVoiceButton: document.querySelector("#mobileSituationVoiceButton"),
+  mobileSituationSubmit: document.querySelector(".mobile-situation-submit"),
   mobileSituationFileStatus: document.querySelector("#mobileSituationFileStatus"),
   mobileSituationError: document.querySelector("#mobileSituationError"),
   homeChatUserMessage: document.querySelector("#homeChatUserMessage"),
@@ -801,7 +807,7 @@ function migrateLegacyFamilyPhone() {
 function buildTrustedVerificationMessage() {
   const latest = getHistory()[0];
   const riskSummary = latest?.risk
-    ? ` Kết quả tham khảo trên Khoan Đã: ${displayRiskLabel(latest.risk)}.`
+    ? ` Kết quả tham khảo trên Lá Chắn Số: ${displayRiskLabel(latest.risk)}.`
     : "";
   return `Bác đang cần con/cháu gọi lại để cùng xác minh một tình huống đáng ngờ.${riskSummary} Không yêu cầu bác gửi OTP, mật khẩu hoặc chuyển tiền qua tin nhắn này.`;
 }
@@ -1241,7 +1247,13 @@ function editRecognizedText() {
 }
 
 function reportWrongResult() {
-  const queue = JSON.parse(getStored(STORAGE_KEYS.reportQueue, "[]"));
+  let queue;
+  try {
+    const parsed = JSON.parse(getStored(STORAGE_KEYS.reportQueue, "[]"));
+    queue = Array.isArray(parsed) ? parsed : [];
+  } catch {
+    queue = [];
+  }
   queue.unshift({ id: globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : String(Date.now()), type: "ai_result_correction", createdAt: new Date().toISOString(), risk: currentResult?.muc_rui_ro || "unknown" });
   setStored(STORAGE_KEYS.reportQueue, JSON.stringify(queue.slice(0, 20)));
   appendPrivacyAudit("ai_correction", "Báo kết quả AI chưa đúng", false);
@@ -1250,7 +1262,7 @@ function reportWrongResult() {
 
 function addCurrentResultToCase() {
   const caseObj = createCase();
-  addEventToCase(caseObj.id, { type: "khac", text: currentResult?.noi_dung_da_doc || "Kết quả kiểm tra từ Khoan Đã", signals: currentResult?.tin_hieu || null, risk: currentResult?.muc_rui_ro || null });
+  addEventToCase(caseObj.id, { type: "khac", text: currentResult?.noi_dung_da_doc || "Kết quả kiểm tra từ Lá Chắn Số", signals: currentResult?.tin_hieu || null, risk: currentResult?.muc_rui_ro || null });
   window.location.hash = "#hanh-trinh";
   showCaseDetail(caseObj.id);
 }
@@ -1496,7 +1508,7 @@ function saveRescueEvidence() {
 function buildShareableChecklist() {
   const items = [...elements.postTransferChecklist.querySelectorAll(".checklist__item")];
   const lines = [
-    "CHECKLIST CỨU HỘ SAU CHUYỂN TIỀN — KHOAN ĐÃ",
+    "CHECKLIST CỨU HỘ SAU CHUYỂN TIỀN — LÁ CHẮN SỐ",
     "(Để người thân xem và hỗ trợ từ xa)",
     ""
   ];
@@ -1515,7 +1527,7 @@ function shareChecklist() {
 
 async function copySummaryForBank() {
   const lines = [
-    "TÓM TẮT GỬI NGÂN HÀNG — KHOAN ĐÃ",
+    "TÓM TẮT GỬI NGÂN HÀNG — LÁ CHẮN SỐ",
     `Thời điểm báo cáo: ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short" }).format(new Date())}`,
     `Mã giao dịch: ${elements.rescueTransactionCode.value.trim() || "(chưa ghi)"}`,
     `Số tiền đã chuyển: ${elements.rescueAmount.value.trim() || "(chưa ghi)"}`,
@@ -1597,7 +1609,7 @@ function downloadTextFile(filename, content) {
 
 function buildEvidenceDossier(entry) {
   const lines = [
-    "HỒ SƠ BẰNG CHỨNG — KHOAN ĐÃ",
+    "HỒ SƠ BẰNG CHỨNG — LÁ CHẮN SỐ",
     "(Công cụ hỗ trợ độc lập, không thuộc cơ quan nhà nước nào)",
     "",
     `Thời gian lưu: ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short" }).format(new Date(entry.createdAt))}`
@@ -1609,10 +1621,10 @@ function buildEvidenceDossier(entry) {
   if (entry.bankName) lines.push(`Ngân hàng liên quan: ${entry.bankName}`);
   if (entry.account) lines.push(`Số tài khoản liên quan: ${entry.account}`);
   if (entry.transactionCode) lines.push(`Mã giao dịch: ${entry.transactionCode}`);
-  if (entry.riskLevel) lines.push(`Mức rủi ro theo Khoan Đã: ${displayRiskLabel(entry.riskLevel)}`);
+  if (entry.riskLevel) lines.push(`Mức rủi ro theo Lá Chắn Số: ${displayRiskLabel(entry.riskLevel)}`);
   if (entry.riskSignals?.length) lines.push(`Dấu hiệu phát hiện: ${entry.riskSignals.join("; ")}`);
   lines.push("", "Tóm tắt diễn biến:", entry.summary || "(không có)");
-  lines.push("", "Lưu ý: Khoan Đã chưa xác nhận danh tính chủ tài khoản hay kết luận đây chắc chắn là lừa đảo — đây là ghi chép do người dùng và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi làm việc với ngân hàng/công an.");
+  lines.push("", "Lưu ý: Lá Chắn Số chưa xác nhận danh tính chủ tài khoản hay kết luận đây chắc chắn là lừa đảo — đây là ghi chép do người dùng và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi làm việc với ngân hàng/công an.");
   return lines.join("\n");
 }
 
@@ -1988,7 +2000,7 @@ function updateReportSummary() {
   const evidenceEntries = getEvidence().filter((entry) => reportSelectedEvidence.has(entry.id));
 
   const lines = [
-    "NỘI DUNG CHUẨN BỊ TRÌNH BÁO — KHOAN ĐÃ",
+    "NỘI DUNG CHUẨN BỊ TRÌNH BÁO — LÁ CHẮN SỐ",
     "(Do người dùng tự soạn với sự hỗ trợ của công cụ, chưa gửi tới cơ quan nào)",
     "",
     `Thời điểm soạn: ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short" }).format(new Date())}`,
@@ -2009,7 +2021,7 @@ function updateReportSummary() {
     lines.push("");
   }
 
-  lines.push("Khoan Đã chưa xác nhận danh tính đối tượng hay kết luận chắc chắn đây là lừa đảo — nội dung trên do người dùng tự khai và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi trình báo.");
+  lines.push("Lá Chắn Số chưa xác nhận danh tính đối tượng hay kết luận chắc chắn đây là lừa đảo — nội dung trên do người dùng tự khai và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi trình báo.");
 
   elements.reportSummary.value = lines.join("\n");
 }
@@ -2487,7 +2499,7 @@ function exportCurrentCase() {
   if (!caseObj) return;
   const includeFinancial = elements.caseShareFinancial.checked;
   const lines = [
-    "TÓM TẮT VỤ VIỆC — KHOAN ĐÃ",
+    "TÓM TẮT VỤ VIỆC — LÁ CHẮN SỐ",
     `Tiêu đề: ${caseObj.label}`,
     `Trạng thái: ${caseObj.status || "Đang theo dõi"}`,
     `Mức rủi ro hiện tại: ${caseObj.riskLevel || "Chưa đủ dữ liệu"}`,
@@ -2506,7 +2518,7 @@ function exportCurrentCase() {
   for (const item of [...caseObj.events].reverse()) {
     lines.push(`- ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "short", timeStyle: "short" }).format(new Date(item.createdAt))}: ${CASE_EVENT_LABELS[item.type] || item.type}${item.text ? ` — ${item.text}` : ""}`);
   }
-  lines.push("", "Tệp này do người dùng chủ động tạo; KHOAN ĐÃ chưa xác minh danh tính đối tượng.");
+  lines.push("", "Tệp này do người dùng chủ động tạo; LÁ CHẮN SỐ chưa xác minh danh tính đối tượng.");
   downloadTextFile(`vu-viec-khoan-da-${caseObj.id}.txt`, lines.join("\n"));
   appendPrivacyAudit("case_export", `Tạo bản chia sẻ chọn lọc cho ${caseObj.label}`, true);
   showToast("Đã tạo file; bác tự chọn người nhận.");
@@ -2831,7 +2843,7 @@ function chooseOnboardingMethod(button) {
 function chooseOnboardingBranch(button) {
   elements.onboardingBranchButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
   if (button.dataset.onboardingBranch === "transferred") {
-    elements.onboardingBranchStatus.textContent = "Khoan Đã sẽ ưu tiên hướng dẫn gọi ngân hàng, lưu bằng chứng và nhờ người thân hỗ trợ.";
+    elements.onboardingBranchStatus.textContent = "Lá Chắn Số sẽ ưu tiên hướng dẫn gọi ngân hàng, lưu bằng chứng và nhờ người thân hỗ trợ.";
     elements.onboardingBranchStatus.dataset.state = "danger";
   } else {
     elements.onboardingBranchStatus.textContent = "Tốt rồi. Hãy dừng cuộc gọi, không chuyển tiền và tự gọi lại người thân qua số đã lưu.";
@@ -2981,27 +2993,19 @@ function setMobileSituationError(message = "") {
   elements.mobileSituationInput.setAttribute("aria-invalid", message ? "true" : "false");
 }
 
+// Chỉ cập nhật dòng "Đã chọn: ..." — KHÔNG được xóa thông báo lỗi, vì hàm này
+// còn chạy trong finally sau khi phân tích hỏng; xóa lỗi ở đó sẽ khiến màn hình
+// im lặng hoàn toàn và người dùng bấm đi bấm lại.
 function updateMobileSituationFileStatus() {
   const file = elements.mobileSituationFile.files?.[0];
   elements.mobileSituationFileStatus.textContent = file ? `Đã chọn: ${file.name}` : "";
   elements.mobileSituationFileStatus.hidden = !file;
-  if (file) setMobileSituationError();
 }
 
-function transferMobileSituationFile() {
-  const files = elements.mobileSituationFile.files;
-  if (!files?.length) return true;
-
-  try {
-    const transfer = new DataTransfer();
-    Array.from(files).forEach((file) => transfer.items.add(file));
-    elements.imageInput.files = transfer.files;
-    elements.imageInput.dispatchEvent(new Event("change", { bubbles: true }));
-    return true;
-  } catch {
-    setMobileSituationError("Không thể chuyển tệp này. Bác hãy thử chọn lại.");
-    return false;
-  }
+// Người dùng vừa chọn tệp = đã khắc phục "chưa nhập gì", lúc đó mới xóa lỗi.
+function handleMobileSituationFileChange() {
+  updateMobileSituationFileStatus();
+  if (elements.mobileSituationFile.files?.[0]) setMobileSituationError();
 }
 
 function clearMobileQuickResult() {
@@ -3049,10 +3053,14 @@ async function analyzeMobileSituationInline() {
   const file = elements.mobileSituationFile.files?.[0];
   if (!text && !file) return;
 
-  mobileAnalysisController?.abort();
+  // Đang chạy dở thì bỏ qua lần bấm mới: bấm liên tiếp sẽ hủy chính yêu cầu
+  // sắp trả về, khiến người dùng kẹt trong trạng thái chờ vô tận.
+  if (mobileAnalysisController) return;
   mobileAnalysisController = new AbortController();
   elements.mobileSituationVoiceButton.disabled = true;
-  elements.mobileSituationFileStatus.textContent = "Đang kiểm tra nội dung bác vừa nói...";
+  elements.mobileSituationSubmit.disabled = true;
+  elements.mobileSituationSubmit.dataset.busy = "true";
+  elements.mobileSituationFileStatus.textContent = "Đang kiểm tra, bác chờ một chút...";
   elements.mobileSituationFileStatus.hidden = false;
   setMobileSituationError();
   elements.homeChatUserText.textContent = text || `Đã gửi tệp: ${file.name}`;
@@ -3082,6 +3090,9 @@ async function analyzeMobileSituationInline() {
     }
     addHistory(text || result.noi_dung_da_doc || file?.name || "Tình huống đã gửi", result);
     renderMobileQuickResult(result);
+    // Xóa tệp đã dùng, nếu không lần kiểm tra sau sẽ âm thầm gửi lại ảnh cũ
+    // kèm nội dung mới và cho ra kết luận về một tình huống pha trộn.
+    elements.mobileSituationFile.value = "";
     if (riskKey(result.muc_rui_ro) === "high") openDangerDialog("analysis");
   } catch (error) {
     if (error?.name !== "AbortError") {
@@ -3089,6 +3100,8 @@ async function analyzeMobileSituationInline() {
     }
   } finally {
     elements.mobileSituationVoiceButton.disabled = false;
+    elements.mobileSituationSubmit.disabled = false;
+    delete elements.mobileSituationSubmit.dataset.busy;
     mobileAnalysisController = null;
     updateMobileSituationFileStatus();
   }
@@ -3105,7 +3118,7 @@ function handleMobileResultBranch(button) {
     const link = document.createElement("a");
     link.className = "button button-danger";
     link.href = "#vua-chuyen-tien";
-    link.textContent = "Mở Khoan Đã SOS";
+    link.textContent = "Mở Lá Chắn Số SOS";
     elements.mobileQuickResultNext.append(text, link);
     return;
   }
@@ -3139,7 +3152,9 @@ function openMobileQuickResultDetails() {
   elements.situation.value = elements.mobileSituationInput.value.trim();
   elements.situation.dispatchEvent(new Event("input", { bubbles: true }));
   window.location.hash = "#kiem-tra";
-  window.setTimeout(() => renderResult(mobileQuickResultPayload), 350);
+  // Hộp cảnh báo đã bật một lần ở trang chủ rồi; bật lại đè lên đúng phần
+  // hướng dẫn mà người dùng vừa chủ động mở ra để đọc.
+  window.setTimeout(() => renderResult(mobileQuickResultPayload, { showDanger: false }), 350);
 }
 
 function submitMobileSituation(event) {
@@ -3169,7 +3184,7 @@ elements.checkHubVoiceButton.addEventListener("click", () => {
 });
 elements.mobileSituationForm.addEventListener("submit", submitMobileSituation);
 elements.mobileSituationFileButton.addEventListener("click", () => elements.mobileSituationFile.click());
-elements.mobileSituationFile.addEventListener("change", updateMobileSituationFileStatus);
+elements.mobileSituationFile.addEventListener("change", handleMobileSituationFileChange);
 elements.mobileSituationInput.addEventListener("input", () => {
   clearMobileQuickResult();
   if (elements.mobileSituationInput.value.trim()) setMobileSituationError();
