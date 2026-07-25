@@ -136,3 +136,75 @@ test("rejects when neither text nor image is provided", async () => {
   );
   assert.equal(calls, 0);
 });
+
+test("openai-compat provider builds a chat-completions request and parses fenced JSON", async () => {
+  let capturedUrl;
+  let capturedRequest;
+  const fetchImpl = async (url, request) => {
+    capturedUrl = url;
+    capturedRequest = request;
+    return {
+      ok: true,
+      json: async () => ({
+        choices: [{
+          message: {
+            // Claude often wraps JSON in a markdown fence — parser must tolerate it.
+            content: "```json\n" + JSON.stringify({
+              noi_dung_da_doc: "Công an gọi đòi chuyển tiền",
+              loi_dong_cam: "Bác đang lo lắng là điều dễ hiểu.",
+              ...Object.fromEntries(SIGNAL_KEYS.map((key) => [key, false])),
+              gia_danh_co_quan_nha_nuoc: true
+            }) + "\n```"
+          }
+        }]
+      })
+    };
+  };
+
+  const result = await extractSignals("Có người xưng công an bảo tôi chuyển tiền.", {
+    provider: "openai",
+    baseUrl: "https://vertex-key.com/api/v1",
+    model: "aws/claude-haiku-4-5",
+    apiKey: "vai-test-key",
+    fetchImpl
+  });
+
+  assert.equal(capturedUrl, "https://vertex-key.com/api/v1/chat/completions");
+  assert.equal(capturedRequest.headers.Authorization, "Bearer vai-test-key");
+  const body = JSON.parse(capturedRequest.body);
+  assert.equal(body.model, "aws/claude-haiku-4-5");
+  assert.equal(body.messages[0].role, "system");
+  assert.equal(body.messages[1].role, "user");
+  assert.equal(result.signals.gia_danh_co_quan_nha_nuoc, true);
+  assert.deepEqual(Object.keys(result.signals), SIGNAL_KEYS);
+});
+
+test("openai-compat provider sends an image as an image_url data URI", async () => {
+  let capturedRequest;
+  const fetchImpl = async (_url, request) => {
+    capturedRequest = request;
+    return {
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: JSON.stringify({
+          noi_dung_da_doc: "", loi_dong_cam: "",
+          ...Object.fromEntries(SIGNAL_KEYS.map((key) => [key, false]))
+        }) } }]
+      })
+    };
+  };
+
+  await extractSignals("", {
+    provider: "openai",
+    baseUrl: "https://vertex-key.com/api/v1",
+    model: "aws/claude-haiku-4-5",
+    apiKey: "vai-test-key",
+    fetchImpl,
+    image: { mimeType: "image/png", data: "aGVsbG8=" }
+  });
+
+  const body = JSON.parse(capturedRequest.body);
+  const imagePart = body.messages[1].content.find((c) => c.type === "image_url");
+  assert.ok(imagePart, "expected an image_url content part");
+  assert.equal(imagePart.image_url.url, "data:image/png;base64,aGVsbG8=");
+});

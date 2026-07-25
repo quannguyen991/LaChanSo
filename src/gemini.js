@@ -44,6 +44,11 @@ Quy tắc nhận diện:
 - nguoi_quen_qua_mang_chua_gap_mat_xin_tien: người quen qua mạng xã hội/ứng dụng hẹn hò, chưa từng gặp mặt trực tiếp, xin vay hoặc chuyển tiền.
 - bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba: một người thứ ba (không phải người thân) tự xưng giáo viên, bác sĩ, bệnh viện hoặc công an, báo tin người thân gặp nạn và cần tiền gấp.
 - de_doa_bang_hinh_anh_video_rieng_tu: đe dọa phát tán hình ảnh hoặc video riêng tư nếu không chuyển tiền.
+- tai_khoan_nguoi_than_bi_hack_muon_tien: tin nhắn đến từ chính tài khoản Zalo/Facebook của người thân quen biết (không phải người lạ) hỏi vay/mượn/chuyển tiền, nhưng cách xưng hô, lý do hoặc việc không gọi video được cho thấy tài khoản có thể đã bị chiếm.
+- gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc: tự xưng ngân hàng, báo tài khoản bị khóa, lỗi hoặc cần xác thực sinh trắc học/định danh lại, kèm link hoặc yêu cầu cài ứng dụng để 'mở khóa'.
+- cai_app_dich_vu_cong_gia: yêu cầu cài ứng dụng Dịch vụ công, VNeID, Thuế hoặc app cơ quan nhà nước từ link gửi tới hoặc file APK ngoài CH Play/App Store chính thức.
+- de_doa_khoa_sim_thue_bao: dọa khóa SIM hoặc thuê bao hai chiều nếu không 'chuẩn hóa thông tin' ngay.
+- lam_nhiem_vu_chot_don_hoa_hong: mời làm nhiệm vụ online, chốt đơn, thả tim, đánh giá sản phẩm và nạp tiền trước để nhận hoa hồng hoặc được hoàn tiền.
 
 Chỉ bật tín hiệu được nêu trực tiếp hoặc suy ra rất rõ từ tình huống. Không mở rộng sang các loại lừa đảo khác.`;
 
@@ -131,10 +136,113 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
   }
 }
 
-async function extractSignals(text, options = {}) {
-  const apiKey = options.apiKey || process.env.GEMINI_API_KEY;
-  const model = options.model || process.env.GEMINI_MODEL || DEFAULT_MODEL;
+// Some OpenAI-compatible providers (and models like Claude) wrap JSON in
+// markdown fences or extra prose; parse tolerantly instead of failing hard.
+function parseJsonLoose(text) {
+  let value = String(text || "").trim();
+  if (value.startsWith("```")) {
+    value = value.replace(/^```[a-z]*\s*/i, "").replace(/\s*```$/, "").trim();
+  }
+  try {
+    return JSON.parse(value);
+  } catch {
+    const match = value.match(/\{[\s\S]*\}/);
+    if (match) {
+      try {
+        return JSON.parse(match[0]);
+      } catch {
+        /* fall through to the error below */
+      }
+    }
+    throw new GeminiError("AI trả về dữ liệu không đúng định dạng.");
+  }
+}
+
+// OpenAI-compatible Chat Completions path (e.g. vertex-key.com → Claude/GPT).
+// The LLM still only extracts the boolean signals; the deterministic rule
+// engine remains the sole decider.
+async function callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstruction, parts, responseSchema, schemaName }) {
+  if (!apiKey) {
+    throw new GeminiError("Máy chủ chưa được cấu hình khóa AI.", 503);
+  }
+  if (!baseUrl) {
+    throw new GeminiError("Máy chủ chưa cấu hình LLM_BASE_URL cho nhà cung cấp OpenAI-compatible.", 503);
+  }
+  if (!model) {
+    throw new GeminiError("Máy chủ chưa cấu hình LLM_MODEL.", 503);
+  }
+  if (parts.length === 0) {
+    throw new GeminiError("Cần có văn bản hoặc ảnh để phân tích.", 400);
+  }
+
+  const content = [];
+  for (const part of parts) {
+    if (typeof part.text === "string") {
+      content.push({ type: "text", text: part.text });
+    } else if (part.inlineData) {
+      if (part.inlineData.mimeType === "application/pdf") {
+        throw new GeminiError("Nhà cung cấp AI hiện tại chưa đọc được PDF; hãy chụp màn hình rồi gửi ảnh.", 400);
+      }
+      content.push({
+        type: "image_url",
+        image_url: { url: `data:${part.inlineData.mimeType};base64,${part.inlineData.data}` }
+      });
+    }
+  }
+
+  const endpoint = `${baseUrl.replace(/\/+$/, "")}/chat/completions`;
+  const response = await fetchImpl(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model,
+      temperature: 0,
+      response_format: {
+        type: "json_schema",
+        json_schema: { name: schemaName || "signals", strict: true, schema: responseSchema }
+      },
+      messages: [
+        { role: "system", content: systemInstruction },
+        { role: "user", content }
+      ]
+    }),
+    signal: AbortSignal.timeout(30000)
+  });
+
+  if (!response.ok) {
+    throw new GeminiError("AI chưa thể phân tích tình huống. Vui lòng thử lại.");
+  }
+
+  const payload = await response.json();
+  const outputText = payload.choices?.[0]?.message?.content;
+  if (!outputText) {
+    throw new GeminiError("AI không trả về dữ liệu có thể sử dụng.");
+  }
+  return parseJsonLoose(outputText);
+}
+
+function resolveLlmConfig(options) {
+  const provider = options.provider || process.env.LLM_PROVIDER || "gemini";
+  const apiKey = options.apiKey || process.env.LLM_API_KEY || process.env.GEMINI_API_KEY;
+  const baseUrl = options.baseUrl || process.env.LLM_BASE_URL;
+  const model = options.model || process.env.LLM_MODEL
+    || (provider === "gemini" ? (process.env.GEMINI_MODEL || DEFAULT_MODEL) : undefined);
   const fetchImpl = options.fetchImpl || fetch;
+  return { provider, apiKey, baseUrl, model, fetchImpl };
+}
+
+async function callLLM({ provider, systemInstruction, parts, responseSchema, schemaName, apiKey, baseUrl, model, fetchImpl }) {
+  if (provider === "openai") {
+    return callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstruction, parts, responseSchema, schemaName });
+  }
+  return callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, responseSchema });
+}
+
+async function extractSignals(text, options = {}) {
+  const { provider, apiKey, baseUrl, model, fetchImpl } = resolveLlmConfig(options);
 
   const parts = [];
   if (options.image) {
@@ -149,13 +257,16 @@ async function extractSignals(text, options = {}) {
     parts.push({ text });
   }
 
-  const parsed = await callGemini({
+  const parsed = await callLLM({
+    provider,
     apiKey,
+    baseUrl,
     model,
     fetchImpl,
     systemInstruction: SYSTEM_INSTRUCTION,
     parts,
-    responseSchema: RESPONSE_SCHEMA
+    responseSchema: RESPONSE_SCHEMA,
+    schemaName: "tin_hieu_lua_dao"
   });
 
   return {
@@ -170,19 +281,20 @@ async function extractSignals(text, options = {}) {
 }
 
 async function extractTransferSignals(text, options = {}) {
-  const apiKey = options.apiKey || process.env.GEMINI_API_KEY;
-  const model = options.model || process.env.GEMINI_MODEL || DEFAULT_MODEL;
-  const fetchImpl = options.fetchImpl || fetch;
+  const { provider, apiKey, baseUrl, model, fetchImpl } = resolveLlmConfig(options);
 
   const parts = text ? [{ text }] : [];
 
-  const parsed = await callGemini({
+  const parsed = await callLLM({
+    provider,
     apiKey,
+    baseUrl,
     model,
     fetchImpl,
     systemInstruction: TRANSFER_SYSTEM_INSTRUCTION,
     parts,
-    responseSchema: TRANSFER_RESPONSE_SCHEMA
+    responseSchema: TRANSFER_RESPONSE_SCHEMA,
+    schemaName: "tin_hieu_chuyen_khoan"
   });
 
   return { signals: normalizeTransferSignals(parsed) };

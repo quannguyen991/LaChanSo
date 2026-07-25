@@ -102,7 +102,12 @@ const SIGNAL_LABELS = {
   dau_tu_loi_nhuan_cao_dam_bao: "Hứa lợi nhuận cao, chắc chắn không lỗ",
   nguoi_quen_qua_mang_chua_gap_mat_xin_tien: "Người quen qua mạng xin tiền",
   bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba: "Báo tin người thân gặp nạn qua người thứ ba",
-  de_doa_bang_hinh_anh_video_rieng_tu: "Đe dọa bằng hình ảnh hoặc video riêng tư"
+  de_doa_bang_hinh_anh_video_rieng_tu: "Đe dọa bằng hình ảnh hoặc video riêng tư",
+  tai_khoan_nguoi_than_bi_hack_muon_tien: "Tài khoản người thân bị hack để mượn tiền",
+  gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc: "Giả danh ngân hàng, đòi xác thực sinh trắc học",
+  cai_app_dich_vu_cong_gia: "Dụ cài app Dịch vụ công/VNeID giả",
+  de_doa_khoa_sim_thue_bao: "Đe dọa khóa SIM/thuê bao",
+  lam_nhiem_vu_chot_don_hoa_hong: "Mời làm nhiệm vụ, chốt đơn nhận hoa hồng"
 };
 
 function displayRiskLabel(risk) {
@@ -1241,7 +1246,13 @@ function editRecognizedText() {
 }
 
 function reportWrongResult() {
-  const queue = JSON.parse(getStored(STORAGE_KEYS.reportQueue, "[]"));
+  let queue;
+  try {
+    const parsed = JSON.parse(getStored(STORAGE_KEYS.reportQueue, "[]"));
+    queue = Array.isArray(parsed) ? parsed : [];
+  } catch {
+    queue = [];
+  }
   queue.unshift({ id: globalThis.crypto?.randomUUID ? globalThis.crypto.randomUUID() : String(Date.now()), type: "ai_result_correction", createdAt: new Date().toISOString(), risk: currentResult?.muc_rui_ro || "unknown" });
   setStored(STORAGE_KEYS.reportQueue, JSON.stringify(queue.slice(0, 20)));
   appendPrivacyAudit("ai_correction", "Báo kết quả AI chưa đúng", false);
