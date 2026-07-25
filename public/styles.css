@@ -6743,7 +6743,12 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .home-main > * { order: 5; }
-  #homeView .home-main > .mobile-reference-top { order: 1; }
+  /* Phần đầu trang luôn đứng đầu — dù đang là bản điện thoại
+     (.mobile-reference-top, dưới 40rem) hay bản rộng (.hero-band, 40–56rem).
+     Thiếu dòng .hero-band này thì ở khổ máy tính bảng, banner lớn bị rơi
+     xuống giữa trang, nằm dưới cả ô nhập. */
+  #homeView .home-main > .mobile-reference-top,
+  #homeView .home-main > .hero-band { order: 1; }
   #homeView .home-main > .home-chat-message,
   #homeView .home-main > .mobile-situation-form { order: 2; }
   #homeView .home-main > .mobile-quick-result { order: 3; }

@@ -176,7 +176,7 @@ const elements = {
   mobileSituationFile: document.querySelector("#mobileSituationFile"),
   mobileSituationFileButton: document.querySelector("#mobileSituationFileButton"),
   mobileSituationVoiceButton: document.querySelector("#mobileSituationVoiceButton"),
-  mobileSituationSubmit: document.querySelector(".mobile-situation-submit"),
+  mobileSituationSubmit: document.querySelector("#mobileSituationSubmit"),
   mobileSituationFileStatus: document.querySelector("#mobileSituationFileStatus"),
   mobileSituationError: document.querySelector("#mobileSituationError"),
   homeChatUserMessage: document.querySelector("#homeChatUserMessage"),
