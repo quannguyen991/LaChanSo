@@ -85,7 +85,11 @@ test("mobile home exposes the reference workflow without replacing desktop route
   assert.match(styles, /@media \(max-width: 40rem\)[\s\S]*?\.mobile-bottom-nav/);
   assert.match(styles, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(html, /class="mobile-reference-top"/);
-  assert.match(html, /src="\/assets\/mobile-home-top-reference\.webp"[^>]*width="941"[^>]*height="680"/);
+  // The mobile header must be REAL TEXT, not a bitmap with baked-in wording:
+  // the font-size control and the screen reader cannot enlarge or read a picture,
+  // and enlarging text is the whole reason this audience uses the app.
+  assert.match(html, /<h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì\?<\/h2>/);
+  assert.doesNotMatch(html, /mobile-home-top-reference\.webp/);
   assert.match(html, /id="mobileSituationForm"[\s\S]*?id="mobileSituationInput"[\s\S]*?id="mobileSituationFile"/);
   assert.match(html, /id="mobileSituationVoiceButton"[^>]*aria-label="Ghi âm tình huống"/);
   assert.match(html, /class="mobile-situation-submit"[^>]*type="submit"[\s\S]*?<span>Tiếp tục<\/span>[\s\S]*?icon-chevron-right/);

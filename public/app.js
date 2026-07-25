@@ -176,6 +176,7 @@ const elements = {
   mobileSituationFile: document.querySelector("#mobileSituationFile"),
   mobileSituationFileButton: document.querySelector("#mobileSituationFileButton"),
   mobileSituationVoiceButton: document.querySelector("#mobileSituationVoiceButton"),
+  mobileSituationSubmit: document.querySelector(".mobile-situation-submit"),
   mobileSituationFileStatus: document.querySelector("#mobileSituationFileStatus"),
   mobileSituationError: document.querySelector("#mobileSituationError"),
   homeChatUserMessage: document.querySelector("#homeChatUserMessage"),
@@ -2992,11 +2993,19 @@ function setMobileSituationError(message = "") {
   elements.mobileSituationInput.setAttribute("aria-invalid", message ? "true" : "false");
 }
 
+// Chỉ cập nhật dòng "Đã chọn: ..." — KHÔNG được xóa thông báo lỗi, vì hàm này
+// còn chạy trong finally sau khi phân tích hỏng; xóa lỗi ở đó sẽ khiến màn hình
+// im lặng hoàn toàn và người dùng bấm đi bấm lại.
 function updateMobileSituationFileStatus() {
   const file = elements.mobileSituationFile.files?.[0];
   elements.mobileSituationFileStatus.textContent = file ? `Đã chọn: ${file.name}` : "";
   elements.mobileSituationFileStatus.hidden = !file;
-  if (file) setMobileSituationError();
+}
+
+// Người dùng vừa chọn tệp = đã khắc phục "chưa nhập gì", lúc đó mới xóa lỗi.
+function handleMobileSituationFileChange() {
+  updateMobileSituationFileStatus();
+  if (elements.mobileSituationFile.files?.[0]) setMobileSituationError();
 }
 
 function transferMobileSituationFile() {
@@ -3060,10 +3069,14 @@ async function analyzeMobileSituationInline() {
   const file = elements.mobileSituationFile.files?.[0];
   if (!text && !file) return;
 
-  mobileAnalysisController?.abort();
+  // Đang chạy dở thì bỏ qua lần bấm mới: bấm liên tiếp sẽ hủy chính yêu cầu
+  // sắp trả về, khiến người dùng kẹt trong trạng thái chờ vô tận.
+  if (mobileAnalysisController) return;
   mobileAnalysisController = new AbortController();
   elements.mobileSituationVoiceButton.disabled = true;
-  elements.mobileSituationFileStatus.textContent = "Đang kiểm tra nội dung bác vừa nói...";
+  elements.mobileSituationSubmit.disabled = true;
+  elements.mobileSituationSubmit.dataset.busy = "true";
+  elements.mobileSituationFileStatus.textContent = "Đang kiểm tra, bác chờ một chút...";
   elements.mobileSituationFileStatus.hidden = false;
   setMobileSituationError();
   elements.homeChatUserText.textContent = text || `Đã gửi tệp: ${file.name}`;
@@ -3093,6 +3106,9 @@ async function analyzeMobileSituationInline() {
     }
     addHistory(text || result.noi_dung_da_doc || file?.name || "Tình huống đã gửi", result);
     renderMobileQuickResult(result);
+    // Xóa tệp đã dùng, nếu không lần kiểm tra sau sẽ âm thầm gửi lại ảnh cũ
+    // kèm nội dung mới và cho ra kết luận về một tình huống pha trộn.
+    elements.mobileSituationFile.value = "";
     if (riskKey(result.muc_rui_ro) === "high") openDangerDialog("analysis");
   } catch (error) {
     if (error?.name !== "AbortError") {
@@ -3100,6 +3116,8 @@ async function analyzeMobileSituationInline() {
     }
   } finally {
     elements.mobileSituationVoiceButton.disabled = false;
+    elements.mobileSituationSubmit.disabled = false;
+    delete elements.mobileSituationSubmit.dataset.busy;
     mobileAnalysisController = null;
     updateMobileSituationFileStatus();
   }
@@ -3150,7 +3168,9 @@ function openMobileQuickResultDetails() {
   elements.situation.value = elements.mobileSituationInput.value.trim();
   elements.situation.dispatchEvent(new Event("input", { bubbles: true }));
   window.location.hash = "#kiem-tra";
-  window.setTimeout(() => renderResult(mobileQuickResultPayload), 350);
+  // Hộp cảnh báo đã bật một lần ở trang chủ rồi; bật lại đè lên đúng phần
+  // hướng dẫn mà người dùng vừa chủ động mở ra để đọc.
+  window.setTimeout(() => renderResult(mobileQuickResultPayload, { showDanger: false }), 350);
 }
 
 function submitMobileSituation(event) {
@@ -3180,7 +3200,7 @@ elements.checkHubVoiceButton.addEventListener("click", () => {
 });
 elements.mobileSituationForm.addEventListener("submit", submitMobileSituation);
 elements.mobileSituationFileButton.addEventListener("click", () => elements.mobileSituationFile.click());
-elements.mobileSituationFile.addEventListener("change", updateMobileSituationFileStatus);
+elements.mobileSituationFile.addEventListener("change", handleMobileSituationFileChange);
 elements.mobileSituationInput.addEventListener("input", () => {
   clearMobileQuickResult();
   if (elements.mobileSituationInput.value.trim()) setMobileSituationError();

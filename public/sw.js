@@ -1,4 +1,4 @@
-const CACHE_NAME = "khoan-da-shell-v1";
+const CACHE_NAME = "khoan-da-shell-v2";
 const APP_SHELL = [
   "/",
   "/index.html",
@@ -9,8 +9,7 @@ const APP_SHELL = [
   "/manifest.webmanifest",
   "/assets/brand-shield-reference.png",
   "/assets/avatar-reference.webp",
-  "/assets/home-couple-reference.webp",
-  "/assets/mobile-home-top-reference.webp"
+  "/assets/home-couple-reference.webp"
 ];
 
 self.addEventListener("install", (event) => {

@@ -2898,11 +2898,8 @@ body[data-onboarding="true"] > :not(.onboarding) {
     border-radius: var(--radius-xl);
   }
 
-  #homeView .mobile-reference-top__link--greeting {
+  #homeView .mobile-reference-top__profile {
     appearance: none;
-    padding: 0;
-    border: 0;
-    background: transparent;
   }
 }
 
@@ -5888,64 +5885,91 @@ body:has(#homeView:not([hidden])) {
     pointer-events: none;
   }
 
-  #homeView .mobile-reference-top__image {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-start-start-radius: var(--radius-xl);
-    border-start-end-radius: var(--radius-xl);
-    pointer-events: none;
-    user-select: none;
+  /* Phần đầu là CHỮ THẬT (không phải ảnh có chữ nướng sẵn) để nút "Cỡ chữ"
+     và tính năng đọc màn hình hoạt động được — đây là lý do app tồn tại. */
+  #homeView .mobile-reference-top {
+    padding: calc(env(safe-area-inset-top, 0px) + var(--space-4)) clamp(var(--space-3), 4vw, var(--space-5)) var(--space-5);
   }
 
-  #homeView .mobile-reference-top__link {
-    position: absolute;
-    z-index: 2;
-    display: block;
-    min-width: var(--touch-target);
+  #homeView .mobile-reference-top__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+
+  #homeView .mobile-reference-top__brand,
+  #homeView .mobile-reference-top__profile {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
     min-height: var(--touch-target);
-    margin: 0;
-    padding: 0;
+    padding: var(--space-2) var(--space-3);
     border: 0;
     border-radius: var(--radius-lg);
-    outline-offset: calc(var(--space-1) * -1);
     background: transparent;
-    box-shadow: none;
-    color: transparent;
+    color: var(--color-ink);
+    font-size: clamp(1rem, 3.8vw, 1.15rem);
+    font-weight: 700;
     text-decoration: none;
     touch-action: manipulation;
-    transition: background-color var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);
   }
 
-  #homeView .mobile-reference-top__link:hover {
-    background: transparent;
+  #homeView .mobile-reference-top__profile {
+    background: var(--color-surface);
+    font-weight: 600;
   }
 
-  #homeView .mobile-reference-top__link:focus-visible {
+  #homeView .mobile-reference-top__brand img {
+    width: auto;
+    height: 2.1em;
+  }
+
+  #homeView .mobile-reference-top__brand:focus-visible,
+  #homeView .mobile-reference-top__profile:focus-visible {
     outline: 3px solid var(--color-focus-inner);
     box-shadow: 0 0 0 6px var(--color-focus-outer);
   }
 
-  #homeView .mobile-reference-top__link:active {
+  #homeView .mobile-reference-top__brand:active,
+  #homeView .mobile-reference-top__profile:active {
     opacity: 0.72;
   }
 
-  #homeView .mobile-reference-top__link[aria-disabled="true"] {
-    cursor: not-allowed;
-    opacity: 0.45;
-    pointer-events: none;
+  #homeView .mobile-reference-top__intro {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-block-start: var(--space-4);
   }
 
-  #homeView .mobile-reference-top__link--brand {
-    inset: 2% auto auto 4%;
-    width: 42%;
-    height: 21%;
+  #homeView .mobile-reference-top__copy {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
-  #homeView .mobile-reference-top__link--greeting {
-    inset: 2% 3% auto auto;
-    width: 34%;
-    height: 19%;
+  #homeView .mobile-reference-top__copy h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 6vw, 1.9rem);
+    line-height: 1.25;
+  }
+
+  #homeView .mobile-reference-top__copy p {
+    margin: var(--space-2) 0 0;
+    font-size: clamp(1rem, 3.8vw, 1.15rem);
+    line-height: 1.5;
+  }
+
+  #homeView .mobile-reference-top__art {
+    flex: 0 0 auto;
+    width: clamp(5rem, 26vw, 7.5rem);
+    height: auto;
+    border-radius: var(--radius-lg);
+  }
+
+  @media (max-width: 22rem) {
+    #homeView .mobile-reference-top__art { display: none; }
   }
 
   #homeView .mobile-situation-form {
@@ -6115,7 +6139,7 @@ body:has(#homeView:not([hidden])) {
 }
 
 @media (max-width: 40rem) and (prefers-reduced-motion: reduce) {
-  #homeView .mobile-reference-top__link,
+  #homeView .mobile-reference-top__profile,
   #homeView .mobile-situation-attach,
   #homeView .mobile-situation-voice,
   #homeView .mobile-situation-submit {
@@ -6702,5 +6726,106 @@ body:has(#homeView:not([hidden])) {
   .bottom-nav__item:hover,
   .mobile-bottom-nav__item:hover {
     background: color-mix(in oklch, var(--color-accent-soft) 50%, transparent);
+  }
+}
+
+/* ============================================================
+   Trải nghiệm điện thoại cho người cao tuổi (đặt cuối để đè đúng)
+   Nguyên tắc: HÀNH ĐỘNG TRƯỚC, GIẢI THÍCH SAU — và mọi chữ phải
+   đọc được, không bị cắt, không bị chặn cỡ.
+   ============================================================ */
+@media (max-width: 55.99rem) {
+  /* 1. Đưa lối thoát khẩn cấp lên ngay sau ô nhập; đẩy phần
+        giới thiệu/quảng cáo xuống cuối. */
+  #homeView .home-main {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #homeView .home-main > * { order: 5; }
+  #homeView .home-main > .mobile-reference-top { order: 1; }
+  #homeView .home-main > .home-chat-message,
+  #homeView .home-main > .mobile-situation-form { order: 2; }
+  #homeView .home-main > .mobile-quick-result { order: 3; }
+  #homeView .home-main > .home-suggestion-chips { order: 4; }
+  #homeView .home-main > .eyebrow--danger { order: 5; }
+  #homeView .home-main > .emergency-zone { order: 6; }
+  #homeView .home-main > .hub-cards { order: 7; }
+  #homeView .home-main > .hub-tile-grid { order: 8; }
+  #homeView .home-main > .home-quick-links { order: 9; }
+  #homeView .home-main > .reassurance-band { order: 10; }
+
+  /* 2. Nhãn thanh điều hướng dưới: 9.8px là không đọc nổi, và bản cũ còn
+        THU NHỎ lại khi người dùng bật "Cỡ chữ lớn". Chọn selector đủ mạnh để
+        thắng luật html[data-font-size="large"] .bottom-nav__item. */
+  .mobile-bottom-nav .mobile-bottom-nav__item,
+  html[data-font-size] .mobile-bottom-nav .mobile-bottom-nav__item {
+    font-size: clamp(0.85rem, 3.4vw, 1rem);
+    line-height: 1.15;
+    white-space: normal;
+  }
+
+  .mobile-bottom-nav .mobile-bottom-nav__item .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  /* 3. Nút gửi chính không được nhỏ hơn chữ xung quanh. */
+  #homeView .mobile-situation-submit {
+    font-size: clamp(1rem, 3.6vw, 1.15rem);
+  }
+
+  /* 4. Báo lỗi/trạng thái: cho xuống dòng, không cắt bằng "…",
+        không đè lên chữ người dùng đang gõ. */
+  #homeView .mobile-situation-form__status,
+  #homeView .mobile-situation-form__error {
+    position: static;
+    inset: auto;
+    margin: var(--space-2) 0 0;
+    overflow: visible;
+    font-size: 1rem;
+    line-height: 1.45;
+    text-overflow: clip;
+    white-space: normal;
+  }
+
+  /* 5. Hàng nút (chụp ảnh/QR/mic/gửi) được xuống dòng thay vì
+        tràn ra ngoài màn hình khi bật cỡ chữ lớn ở máy nhỏ. */
+  #homeView .mobile-situation-form__actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--space-2);
+  }
+
+  /* 6. Nhãn nút quan trọng không bị cắt cụt. */
+  #homeView .hub-card__title,
+  #homeView .hub-card__lead,
+  #homeView .mobile-action > span:last-child {
+    white-space: normal;
+  }
+
+  /* 7b. Dòng nhắc an toàn dưới ô nhập (đừng gõ OTP/mật khẩu). */
+  #homeView .mobile-situation-form__hint {
+    margin: var(--space-2) 0 0;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  /* 7c. Nút gửi khi đang chờ kết quả: hiện rõ là đang chạy. */
+  #homeView .mobile-situation-submit[data-busy="true"] {
+    opacity: 0.65;
+    cursor: progress;
+  }
+
+  /* 7. Thẻ ở cột phụ không được đẩy quá mép phải khi bật cỡ chữ lớn
+        (ô lưới mặc định có chiều rộng tối thiểu là auto, không co lại được). */
+  #homeView .home-sidebar,
+  #homeView .home-sidebar > * {
+    min-width: 0;
+  }
+
+  #homeView .home-sidebar {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

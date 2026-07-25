@@ -198,13 +198,23 @@
         </div>
 
         <section class="mobile-reference-top" aria-labelledby="mobileReferenceTitle">
-          <img class="mobile-reference-top__image" src="/assets/mobile-home-top-reference.webp" width="941" height="680" alt="" aria-hidden="true" fetchpriority="high" decoding="async">
-          <div class="visually-hidden">
-            <h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì?</h2>
-            <p>Ứng dụng Khoan Đã sẽ hỗ trợ bác kiểm tra và xử lý an toàn.</p>
+          <div class="mobile-reference-top__bar">
+            <a class="mobile-reference-top__brand" href="#trang-chu" aria-label="Khoan Đã, về trang chủ">
+              <img src="/assets/brand-shield-reference.png" width="66" height="74" alt="" decoding="async">
+              <span>Khoan Đã</span>
+            </a>
+            <button class="mobile-reference-top__profile" type="button" id="mobileProfileMenuButton" aria-label="Mở menu hồ sơ" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+              <span class="icon icon-user" aria-hidden="true"></span>
+              <span>Chào bác</span>
+            </button>
           </div>
-          <a class="mobile-reference-top__link mobile-reference-top__link--brand" href="#trang-chu" aria-label="Khoan Đã, về trang chủ"></a>
-          <button class="mobile-reference-top__link mobile-reference-top__link--greeting" type="button" id="mobileProfileMenuButton" aria-label="Mở menu hồ sơ" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu"></button>
+          <div class="mobile-reference-top__intro">
+            <div class="mobile-reference-top__copy">
+              <h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì?</h2>
+              <p>Kể lại hoặc gửi nội dung, Khoan Đã kiểm tra giúp bác.</p>
+            </div>
+            <img class="mobile-reference-top__art" src="/assets/home-couple-reference.webp" width="334" height="339" alt="" aria-hidden="true" decoding="async">
+          </div>
         </section>
 
         <section class="home-chat-message home-chat-message--user" id="homeChatUserMessage" aria-label="Nội dung bác đã gửi" hidden>
@@ -214,7 +224,8 @@
 
         <form class="mobile-situation-form" id="mobileSituationForm" novalidate>
           <label class="visually-hidden" for="mobileSituationInput">Nội dung cần kiểm tra</label>
-          <textarea id="mobileSituationInput" rows="4" maxlength="5000" aria-describedby="mobileSituationFileStatus mobileSituationError" placeholder="Nhập nội dung, mô tả tình huống hoặc dán tin nhắn ở đây..."></textarea>
+          <textarea id="mobileSituationInput" rows="4" maxlength="5000" aria-describedby="mobileSituationHint mobileSituationFileStatus mobileSituationError" placeholder="Nhập nội dung, mô tả tình huống hoặc dán tin nhắn ở đây..."></textarea>
+          <p class="mobile-situation-form__hint" id="mobileSituationHint">Không nhập mã OTP, mật khẩu hoặc số tài khoản đầy đủ.</p>
           <input class="visually-hidden" type="file" id="mobileSituationFile" accept="image/png,image/jpeg,image/webp,application/pdf" aria-label="Chọn ảnh hoặc PDF tình huống">
           <div class="mobile-situation-form__actions">
             <button class="mobile-situation-attach" type="button" id="mobileSituationFileButton" aria-label="Đính kèm ảnh hoặc PDF">
