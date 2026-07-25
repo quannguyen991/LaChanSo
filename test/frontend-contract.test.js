@@ -11,11 +11,14 @@ const styles = fs.readFileSync(path.join(root, "public", "styles.css"), "utf8");
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "public", "manifest.webmanifest"), "utf8"));
 const serviceWorker = fs.readFileSync(path.join(root, "public", "sw.js"), "utf8");
 
-test("primary product surfaces use the KHOAN ĐÃ brand", () => {
-  assert.match(html, /<title>KHOAN ĐÃ/);
-  assert.match(html, /class="brand__title">Khoan Đã</i);
-  assert.doesNotMatch(html, /Lá Chắn Số/i);
-  assert.equal(manifest.name, "KHOAN ĐÃ");
+test("primary product surfaces use the Lá Chắn Số brand with the Khoan đã tagline", () => {
+  // "Lá Chắn Số" is the product name; "Khoan đã" is the catchphrase that leads
+  // the page title and the tagline under the logo.
+  assert.match(html, /class="brand__title">Lá Chắn Số</);
+  assert.equal(manifest.name, "Lá Chắn Số");
+  assert.match(html, /name="description" content="Lá Chắn Số/);
+  assert.match(html, /<title>Khoan đã/);
+  assert.match(html, /class="brand__tagline">Khoan đã/);
 });
 
 test("critical senior and emergency controls are present", () => {
@@ -109,8 +112,9 @@ test("mobile home exposes the reference workflow without replacing desktop route
   assert.doesNotMatch(mobileRecordingHandler, /location\.hash/);
   assert.match(app, /activeSpeechTarget\.value = `[\s\S]*?transcript[\s\S]*?dispatchEvent\(new Event\("input"/);
   assert.match(app, /function submitMobileSituation\(event\)[\s\S]*?analyzeMobileSituationInline\(\)/);
-  assert.match(app, /elements\.imageInput\.files = transfer\.files/);
-  assert.match(styles, /#homeView \.mobile-reference-top::after[\s\S]*?linear-gradient/);
+  // The attached file is cleared after each check so the next, unrelated check
+  // cannot silently re-send the previous photo.
+  assert.match(app, /elements\.mobileSituationFile\.value = ""/);
   assert.match(styles, /#homeView \.hub-tile \{[\s\S]*?justify-content:\s*center/);
 });
 
@@ -152,7 +156,7 @@ test("onboarding is a functional four-step flow and can be reopened", () => {
   for (const step of [1, 2, 3, 4]) assert.match(html, new RegExp(`data-onboarding-step="${step}"`));
   assert.match(html, /data-onboarding-method="Cuộc gọi đáng ngờ"/);
   assert.match(html, /data-onboarding-branch="transferred"/);
-  assert.match(html, /onboarding-welcome-scene\.png/);
+  assert.match(html, /onboarding-welcome-scene.webp/);
   assert.match(html, /id="reopenOnboardingButton"/);
   assert.match(app, /onboardingComplete:\s*"khoan-da:onboarding-complete"/);
   assert.match(app, /function renderOnboardingStep\(/);
