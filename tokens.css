@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
-  --font-display: "Nunito Sans Variable", sans-serif;
-  --font-body: "Nunito Sans Variable", sans-serif;
+  --font-display: "Manrope Variable", "Be Vietnam Pro", system-ui, sans-serif;
+  --font-body: "Manrope Variable", "Be Vietnam Pro", system-ui, sans-serif;
 
   --color-paper: oklch(97% 0.018 245);
   --color-surface: oklch(99.4% 0.004 245);
@@ -20,6 +20,11 @@
   --color-accent-soft-line: oklch(80% 0.075 245);
   --color-accent-ink: oklch(99% 0.003 245);
   --color-sky-soft: oklch(94% 0.045 240);
+  --color-sky-pale: oklch(97% 0.022 240);
+  --color-sky-line: oklch(85% 0.052 240);
+  --color-onboarding-canvas-top: oklch(96% 0.019 250);
+  --color-onboarding-canvas-mid: oklch(94% 0.032 248);
+  --color-onboarding-canvas-bottom: oklch(91% 0.043 249);
 
   --color-leaf: oklch(58% 0.15 150);
   --color-teal-soft: oklch(90% 0.05 165);
@@ -60,6 +65,7 @@
   --space-6: 2rem;
   --space-7: 3rem;
   --space-8: 4rem;
+  --touch-target: 52px;
 
   --radius-sm: 12px;
   --radius-md: 18px;
@@ -75,6 +81,7 @@
   --reading-width: 46rem;
   --duration-fast: 160ms;
   --duration-base: 240ms;
+  --duration-slow: 420ms;
   --duration-route-exit: 170ms;
   --duration-route-enter: 340ms;
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);

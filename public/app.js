@@ -17,7 +17,8 @@ const STORAGE_KEYS = {
   oneTimeCheck: "khoan-da:one-time-check",
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
-  reportQueue: "khoan-da:report-queue"
+  reportQueue: "khoan-da:report-queue",
+  onboardingComplete: "khoan-da:onboarding-complete"
 };
 
 const ALL_STORAGE_KEYS = Object.values({
@@ -39,7 +40,8 @@ const ALL_STORAGE_KEYS = Object.values({
   oneTimeCheck: "khoan-da:one-time-check",
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
-  reportQueue: "khoan-da:report-queue"
+  reportQueue: "khoan-da:report-queue",
+  onboardingComplete: "khoan-da:onboarding-complete"
 });
 
 const MAX_CONTACTS = 5;
@@ -163,7 +165,27 @@ const EDUCATION_LESSONS = [
 
 const elements = {
   homeView: document.querySelector("#homeView"),
-  homeVoiceButton: document.querySelector("#homeVoiceButton"),
+  homeSupportButton: document.querySelector("#homeSupportButton"),
+  mobileSituationForm: document.querySelector("#mobileSituationForm"),
+  mobileSituationInput: document.querySelector("#mobileSituationInput"),
+  mobileSituationFile: document.querySelector("#mobileSituationFile"),
+  mobileSituationFileButton: document.querySelector("#mobileSituationFileButton"),
+  mobileSituationVoiceButton: document.querySelector("#mobileSituationVoiceButton"),
+  mobileSituationFileStatus: document.querySelector("#mobileSituationFileStatus"),
+  mobileSituationError: document.querySelector("#mobileSituationError"),
+  homeChatUserMessage: document.querySelector("#homeChatUserMessage"),
+  homeChatUserText: document.querySelector("#homeChatUserText"),
+  homeSuggestionButtons: document.querySelectorAll("[data-home-suggestion]"),
+  mobileQuickResult: document.querySelector("#mobileQuickResult"),
+  mobileQuickResultTitle: document.querySelector("#mobileQuickResultTitle"),
+  mobileQuickResultLead: document.querySelector("#mobileQuickResultLead"),
+  mobileQuickResultReasons: document.querySelector("#mobileQuickResultReasons"),
+  mobileQuickResultActions: document.querySelector("#mobileQuickResultActions"),
+  mobileQuickResultBranches: document.querySelectorAll("[data-mobile-result-branch]"),
+  mobileQuickResultNext: document.querySelector("#mobileQuickResultNext"),
+  mobileQuickResultFamily: document.querySelector("#mobileQuickResultFamily"),
+  mobileQuickResultDetail: document.querySelector("#mobileQuickResultDetail"),
+  mobileQuickResultSaveCase: document.querySelector("#mobileQuickResultSaveCase"),
   voiceGuideToggle: document.querySelector("#voiceGuideToggle"),
   fontSizeButtons: document.querySelectorAll("[data-font-size]"),
   supportView: document.querySelector("#supportView"),
@@ -311,6 +333,7 @@ const elements = {
   inputError: document.querySelector("#inputError"),
   analyzeButton: document.querySelector("#analyzeButton"),
   speechButton: document.querySelector("#speechButton"),
+  checkHubVoiceButton: document.querySelector("#checkHubVoiceButton"),
   speechButtonLabel: document.querySelector("#speechButtonLabel"),
   imageInput: document.querySelector("#imageInput"),
   imagePickButton: document.querySelector("#imagePickButton"),
@@ -428,12 +451,33 @@ const elements = {
   dangerEvidenceInput: document.querySelector("#dangerEvidenceInput"),
   closeDangerButton: document.querySelector("#closeDangerButton"),
 
+  onboarding: document.querySelector("#onboarding"),
+  onboardingScreens: document.querySelectorAll("[data-onboarding-step]"),
+  onboardingNextButtons: document.querySelectorAll("[data-onboarding-next]"),
+  onboardingBackButtons: document.querySelectorAll("[data-onboarding-back]"),
+  onboardingSkipButtons: document.querySelectorAll("[data-onboarding-skip]"),
+  onboardingMethodButtons: document.querySelectorAll("[data-onboarding-method]"),
+  onboardingMethodStatus: document.querySelector("#onboardingMethodStatus"),
+  onboardingBranchButtons: document.querySelectorAll("[data-onboarding-branch]"),
+  onboardingBranchStatus: document.querySelector("#onboardingBranchStatus"),
+  finishOnboardingButton: document.querySelector("#finishOnboardingButton"),
+  finishOnboardingLaterButton: document.querySelector("#finishOnboardingLaterButton"),
+  profileMenu: document.querySelector("#profileMenu"),
+  profileMenuButton: document.querySelector("#profileMenuButton"),
+  mobileProfileMenuButton: document.querySelector("#mobileProfileMenuButton"),
+  profileMenuClose: document.querySelector("#profileMenuClose"),
+  reopenOnboardingButton: document.querySelector("#reopenOnboardingButton"),
   bottomNavItems: document.querySelectorAll(".bottom-nav__item"),
   toast: document.querySelector("#toast")
 };
 
 let currentResult = null;
 let recognition = null;
+let activeSpeechTarget = null;
+let activeSpeechButton = null;
+let activeSpeechLabel = null;
+let activeSpeechPrefix = "";
+let speechRecognitionHadResult = false;
 let toastTimer = null;
 let selectedImage = null;
 let selectedFile = null;
@@ -445,6 +489,9 @@ let selectedCaseEventType = CASE_EVENT_TYPES[0].id;
 let currentEducationIndex = 0;
 let currentEducationChoice = null;
 let pressureStepIndex = 0;
+let mobileQuickResultPayload = null;
+let mobileAnalysisController = null;
+let onboardingStep = 1;
 
 function loadImageElement(file) {
   return new Promise((resolve, reject) => {
@@ -751,6 +798,36 @@ function migrateLegacyFamilyPhone() {
   }]);
 }
 
+function buildTrustedVerificationMessage() {
+  const latest = getHistory()[0];
+  const riskSummary = latest?.risk
+    ? ` Kết quả tham khảo trên Khoan Đã: ${displayRiskLabel(latest.risk)}.`
+    : "";
+  return `Bác đang cần con/cháu gọi lại để cùng xác minh một tình huống đáng ngờ.${riskSummary} Không yêu cầu bác gửi OTP, mật khẩu hoặc chuyển tiền qua tin nhắn này.`;
+}
+
+async function shareTrustedVerificationRequest(contact) {
+  const message = buildTrustedVerificationMessage();
+  appendPrivacyAudit("support_request_shared", `Mở chia sẻ để nhờ ${contact.name} xác minh`, false);
+
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "Nhờ người thân xác minh", text: message });
+      return;
+    }
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(message);
+      showToast("Đã sao chép lời nhờ xác minh để bác gửi cho người thân.");
+      return;
+    }
+    window.location.href = `sms:${contact.phone.replace(/[^+\d]/g, "")}?body=${encodeURIComponent(message)}`;
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      showToast("Chưa mở được ứng dụng chia sẻ. Bác hãy gọi trực tiếp cho người thân.");
+    }
+  }
+}
+
 function renderContactList() {
   const contacts = getContacts();
   elements.contactList.replaceChildren();
@@ -788,11 +865,8 @@ function renderContactList() {
     const verifyButton = document.createElement("button");
     verifyButton.className = "button button-secondary";
     verifyButton.type = "button";
-    verifyButton.textContent = "Nhờ xác minh";
-    verifyButton.addEventListener("click", () => {
-      appendPrivacyAudit("support_request_draft", `Chuẩn bị yêu cầu ${contact.name} xác minh`, false);
-      showToast("Đã chuẩn bị yêu cầu trên máy này; chưa tự gửi cho người thân.");
-    });
+    verifyButton.textContent = "Gửi nhờ xác minh";
+    verifyButton.addEventListener("click", () => shareTrustedVerificationRequest(contact));
 
     const deleteButton = document.createElement("button");
     deleteButton.className = "button button-danger-quiet";
@@ -2048,12 +2122,58 @@ function openExitCallView() {
   window.location.hash = "#thoat-cuoc-goi";
 }
 
+function setSpeechControlState(isListening) {
+  if (!activeSpeechButton) return;
+
+  activeSpeechButton.setAttribute("aria-pressed", String(isListening));
+  if (activeSpeechButton === elements.mobileSituationVoiceButton) {
+    activeSpeechButton.setAttribute("aria-label", isListening ? "Dừng ghi âm tình huống" : "Ghi âm tình huống");
+    if (isListening) {
+      elements.mobileSituationFileStatus.textContent = "Đang nghe...";
+      elements.mobileSituationFileStatus.hidden = false;
+    } else {
+      updateMobileSituationFileStatus();
+    }
+  } else if (activeSpeechLabel) {
+    activeSpeechLabel.textContent = isListening ? "Đang nghe..." : "Nói thay vì gõ";
+  }
+}
+
+function toggleSpeechRecognition(target, button, label = null) {
+  if (!recognition) return;
+  if (activeSpeechButton?.getAttribute("aria-pressed") === "true") {
+    recognition.stop();
+    return;
+  }
+
+  activeSpeechTarget = target;
+  activeSpeechButton = button;
+  activeSpeechLabel = label;
+  activeSpeechPrefix = target.value.trim();
+  speechRecognitionHadResult = false;
+  setSpeechControlState(true);
+
+  try {
+    recognition.start();
+  } catch {
+    setSpeechControlState(false);
+    activeSpeechTarget = null;
+    activeSpeechButton = null;
+    activeSpeechLabel = null;
+    activeSpeechPrefix = "";
+    speechRecognitionHadResult = false;
+    showToast("Không thể bắt đầu ghi âm. Bác hãy thử lại.");
+  }
+}
+
 function setupSpeechRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    elements.speechButton.addEventListener("click", () => {
+    const showUnsupportedSpeechMessage = () => {
       showToast("Trình duyệt này chưa hỗ trợ nhập bằng giọng nói.");
-    });
+    };
+    elements.speechButton.addEventListener("click", showUnsupportedSpeechMessage);
+    elements.mobileSituationVoiceButton.addEventListener("click", showUnsupportedSpeechMessage);
     return;
   }
 
@@ -2063,36 +2183,46 @@ function setupSpeechRecognition() {
   recognition.continuous = false;
 
   recognition.addEventListener("start", () => {
-    elements.speechButton.setAttribute("aria-pressed", "true");
-    elements.speechButtonLabel.textContent = "Đang nghe...";
+    setSpeechControlState(true);
   });
 
   recognition.addEventListener("result", (event) => {
     const transcript = Array.from(event.results)
       .map((result) => result[0].transcript)
       .join(" ");
-    elements.situation.value = transcript;
-    updateCharacterCount();
-    setInputError();
+    if (!activeSpeechTarget) return;
+    speechRecognitionHadResult = Boolean(transcript.trim());
+    const separator = activeSpeechPrefix && transcript ? " " : "";
+    const configuredMaxLength = Number(activeSpeechTarget.maxLength);
+    const maxLength = configuredMaxLength > 0 ? configuredMaxLength : 5000;
+    activeSpeechTarget.value = `${activeSpeechPrefix}${separator}${transcript}`.slice(0, maxLength);
+    activeSpeechTarget.dispatchEvent(new Event("input", { bubbles: true }));
   });
 
   recognition.addEventListener("end", () => {
-    elements.speechButton.setAttribute("aria-pressed", "false");
-    elements.speechButtonLabel.textContent = "Nói thay vì gõ";
-    elements.situation.focus();
+    const completedTarget = activeSpeechTarget;
+    const shouldAnalyzeInline = speechRecognitionHadResult
+      && completedTarget === elements.mobileSituationInput
+      && Boolean(completedTarget.value.trim());
+    setSpeechControlState(false);
+    activeSpeechTarget = null;
+    activeSpeechButton = null;
+    activeSpeechLabel = null;
+    activeSpeechPrefix = "";
+    speechRecognitionHadResult = false;
+    completedTarget?.focus({ preventScroll: true });
+    if (shouldAnalyzeInline) analyzeMobileSituationInline();
   });
 
   recognition.addEventListener("error", () => {
+    speechRecognitionHadResult = false;
     showToast("Không nghe rõ. Hãy thử lại hoặc nhập bằng bàn phím.");
   });
 
   elements.speechButton.addEventListener("click", () => {
-    if (elements.speechButton.getAttribute("aria-pressed") === "true") {
-      recognition.stop();
-    } else {
-      recognition.start();
-    }
+    toggleSpeechRecognition(elements.situation, elements.speechButton, elements.speechButtonLabel);
   });
+  elements.mobileSituationVoiceButton.addEventListener("click", startMobileSituationRecording);
 }
 
 function loadFamilySettings() {
@@ -2606,6 +2736,109 @@ function applyFontSize(size) {
   elements.fontSizeButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.fontSize === safe)));
 }
 
+function setProfileMenu(open, { restoreFocus = false } = {}) {
+  const shouldOpen = Boolean(open);
+  elements.profileMenu.hidden = !shouldOpen;
+  elements.profileMenuButton.setAttribute("aria-expanded", String(shouldOpen));
+  elements.mobileProfileMenuButton.setAttribute("aria-expanded", String(shouldOpen));
+  if (shouldOpen) {
+    elements.profileMenu.querySelector("a, button")?.focus({ preventScroll: true });
+  } else if (restoreFocus) {
+    const trigger = window.matchMedia("(max-width: 40rem)").matches
+      ? elements.mobileProfileMenuButton
+      : elements.profileMenuButton;
+    trigger.focus({ preventScroll: true });
+  }
+}
+
+let onboardingTransitionToken = 0;
+
+function renderOnboardingStep(step, { focus = true } = {}) {
+  const nextStep = Math.min(4, Math.max(1, Number(step) || 1));
+  const previousStep = onboardingStep;
+  const activeScreen = elements.onboarding.querySelector(`[data-onboarding-step="${previousStep}"]:not([hidden])`);
+  const nextScreen = elements.onboarding.querySelector(`[data-onboarding-step="${nextStep}"]`);
+  const shouldAnimate = activeScreen && nextScreen && activeScreen !== nextScreen
+    && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const direction = nextStep > previousStep ? "forward" : "back";
+  const token = ++onboardingTransitionToken;
+
+  onboardingStep = nextStep;
+  elements.onboardingScreens.forEach((screen) => {
+    screen.classList.remove("is-entering-forward", "is-entering-back", "is-leaving-forward", "is-leaving-back");
+    if (screen !== activeScreen && screen !== nextScreen) {
+      screen.hidden = true;
+      screen.setAttribute("aria-hidden", "true");
+    }
+  });
+
+  const focusHeading = () => {
+    if (!focus || token !== onboardingTransitionToken) return;
+    const heading = nextScreen?.querySelector("h1, h2");
+    if (heading) {
+      heading.setAttribute("tabindex", "-1");
+      heading.focus({ preventScroll: true });
+    }
+  };
+
+  if (!shouldAnimate) {
+    if (activeScreen && activeScreen !== nextScreen) {
+      activeScreen.hidden = true;
+      activeScreen.setAttribute("aria-hidden", "true");
+    }
+    nextScreen.hidden = false;
+    nextScreen.setAttribute("aria-hidden", "false");
+    window.requestAnimationFrame(focusHeading);
+    return;
+  }
+
+  activeScreen.classList.add(`is-leaving-${direction}`);
+  activeScreen.setAttribute("aria-hidden", "true");
+  nextScreen.hidden = false;
+  nextScreen.setAttribute("aria-hidden", "false");
+  nextScreen.classList.add(`is-entering-${direction}`);
+
+  window.setTimeout(() => {
+    if (token !== onboardingTransitionToken) return;
+    activeScreen.hidden = true;
+    activeScreen.classList.remove(`is-leaving-${direction}`);
+    nextScreen.classList.remove(`is-entering-${direction}`);
+    focusHeading();
+  }, 380);
+}
+
+function openOnboarding() {
+  setProfileMenu(false);
+  elements.onboarding.hidden = false;
+  document.body.dataset.onboarding = "true";
+  renderOnboardingStep(1);
+}
+
+function completeOnboarding() {
+  setStored(STORAGE_KEYS.onboardingComplete, "1");
+  elements.onboarding.hidden = true;
+  delete document.body.dataset.onboarding;
+  if (!ROUTES[window.location.hash]) window.location.hash = "#trang-chu";
+  route();
+  document.querySelector("#homeTitle")?.focus({ preventScroll: true });
+}
+
+function chooseOnboardingMethod(button) {
+  elements.onboardingMethodButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+  elements.onboardingMethodStatus.textContent = `${button.dataset.onboardingMethod}: bác chỉ chọn thử cách kiểm tra, ứng dụng chưa xin quyền và chưa gửi dữ liệu.`;
+}
+
+function chooseOnboardingBranch(button) {
+  elements.onboardingBranchButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+  if (button.dataset.onboardingBranch === "transferred") {
+    elements.onboardingBranchStatus.textContent = "Khoan Đã sẽ ưu tiên hướng dẫn gọi ngân hàng, lưu bằng chứng và nhờ người thân hỗ trợ.";
+    elements.onboardingBranchStatus.dataset.state = "danger";
+  } else {
+    elements.onboardingBranchStatus.textContent = "Tốt rồi. Hãy dừng cuộc gọi, không chuyển tiền và tự gọi lại người thân qua số đã lưu.";
+    elements.onboardingBranchStatus.dataset.state = "safe";
+  }
+}
+
 function loadAccessibilityPreferences() {
   applyFontSize(getStored(STORAGE_KEYS.fontSize, "medium"));
   const enabled = getStored(STORAGE_KEYS.voiceGuide, "0") === "1";
@@ -2620,6 +2853,12 @@ let activeRouteTransition = null;
 function route() {
   const nextHash = ROUTES[window.location.hash] ? window.location.hash : "#trang-chu";
   const previousHash = currentRouteHash;
+
+  // A danger dialog belongs to the view that opened it; never let it cover a new route.
+  if (previousHash && previousHash !== nextHash && elements.dangerDialog.open) {
+    elements.dangerDialog.close();
+  }
+
   const nextIndex = ROUTE_SEQUENCE.indexOf(nextHash);
   const previousIndex = ROUTE_SEQUENCE.indexOf(previousHash);
   const direction = previousIndex >= 0 && nextIndex < previousIndex ? "back" : "forward";
@@ -2668,6 +2907,7 @@ function route() {
 }
 
 function applyRoute(hash) {
+  setProfileMenu(false);
   const activeKey = ROUTES[hash];
 
   for (const [key, el] of Object.entries(elements)) {
@@ -2735,11 +2975,223 @@ function applyRoute(hash) {
   document.documentElement.style.scrollBehavior = previousScrollBehavior;
 }
 
-elements.analysisForm.addEventListener("submit", analyze);
-elements.homeVoiceButton.addEventListener("click", () => {
+function setMobileSituationError(message = "") {
+  elements.mobileSituationError.textContent = message;
+  elements.mobileSituationError.hidden = !message;
+  elements.mobileSituationInput.setAttribute("aria-invalid", message ? "true" : "false");
+}
+
+function updateMobileSituationFileStatus() {
+  const file = elements.mobileSituationFile.files?.[0];
+  elements.mobileSituationFileStatus.textContent = file ? `Đã chọn: ${file.name}` : "";
+  elements.mobileSituationFileStatus.hidden = !file;
+  if (file) setMobileSituationError();
+}
+
+function transferMobileSituationFile() {
+  const files = elements.mobileSituationFile.files;
+  if (!files?.length) return true;
+
+  try {
+    const transfer = new DataTransfer();
+    Array.from(files).forEach((file) => transfer.items.add(file));
+    elements.imageInput.files = transfer.files;
+    elements.imageInput.dispatchEvent(new Event("change", { bubbles: true }));
+    return true;
+  } catch {
+    setMobileSituationError("Không thể chuyển tệp này. Bác hãy thử chọn lại.");
+    return false;
+  }
+}
+
+function clearMobileQuickResult() {
+  mobileQuickResultPayload = null;
+  elements.mobileQuickResult.hidden = true;
+  elements.mobileQuickResultReasons.replaceChildren();
+  elements.mobileQuickResultActions.replaceChildren();
+  elements.mobileQuickResultNext.hidden = true;
+  elements.mobileQuickResultNext.replaceChildren();
+  elements.mobileQuickResultBranches.forEach((button) => button.setAttribute("aria-pressed", "false"));
+}
+
+function renderMobileQuickResult(result) {
+  const riskLabel = displayRiskLabel(result.muc_rui_ro);
+  const meta = RISK_META[riskLabel] || RISK_META["Nghi ngờ"];
+  mobileQuickResultPayload = { ...result, muc_rui_ro: riskLabel };
+  elements.mobileQuickResult.dataset.risk = meta.key;
+  elements.mobileQuickResultTitle.textContent = riskLabel;
+  elements.mobileQuickResultLead.textContent = meta.lead;
+  elements.mobileQuickResultReasons.replaceChildren();
+
+  const reasons = (result.ly_do || []).slice(0, 3);
+  for (const reason of reasons.length ? reasons : ["Chưa thấy tín hiệu nguy hiểm rõ trong nội dung bác vừa nói."]) {
+    const item = document.createElement("li");
+    item.textContent = reason;
+    elements.mobileQuickResultReasons.append(item);
+  }
+
+  elements.mobileQuickResultActions.replaceChildren();
+  const actions = (result.hanh_dong || []).slice(0, 3);
+  for (const action of actions.length ? actions : ["Tạm dừng và xác minh qua kênh chính thức."]) {
+    const item = document.createElement("li");
+    item.textContent = action;
+    elements.mobileQuickResultActions.append(item);
+  }
+
+  elements.mobileQuickResult.hidden = false;
+  elements.mobileQuickResult.focus({ preventScroll: true });
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  elements.mobileQuickResult.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
+}
+
+async function analyzeMobileSituationInline() {
+  const text = elements.mobileSituationInput.value.trim();
+  const file = elements.mobileSituationFile.files?.[0];
+  if (!text && !file) return;
+
+  mobileAnalysisController?.abort();
+  mobileAnalysisController = new AbortController();
+  elements.mobileSituationVoiceButton.disabled = true;
+  elements.mobileSituationFileStatus.textContent = "Đang kiểm tra nội dung bác vừa nói...";
+  elements.mobileSituationFileStatus.hidden = false;
+  setMobileSituationError();
+  elements.homeChatUserText.textContent = text || `Đã gửi tệp: ${file.name}`;
+  elements.homeChatUserMessage.hidden = false;
+
+  try {
+    let result;
+    const standaloneUrl = text && /^https?:\/\/\S+$/i.test(text) ? text : "";
+    if (standaloneUrl && !file) {
+      result = await window.KhoanDaServices.scamAnalysisService.link({
+        duong_dan: standaloneUrl,
+        thuong_hieu: ""
+      }, { signal: mobileAnalysisController.signal });
+    } else {
+      let media;
+      if (file) {
+        if (!["image/png", "image/jpeg", "image/webp", "application/pdf"].includes(file.type)) {
+          throw new Error("Chỉ nhận ảnh PNG, JPEG, WEBP hoặc PDF.");
+        }
+        media = file.type === "application/pdf" ? await readFileAsBase64(file) : await compressImage(file);
+      }
+      result = await window.KhoanDaServices.scamAnalysisService.analyze({
+        van_ban: text,
+        tep: media ? { mimeType: media.mimeType, data: media.data } : undefined,
+        che_do_phuc_hoi: Boolean(getRecoveryMode())
+      }, { signal: mobileAnalysisController.signal });
+    }
+    addHistory(text || result.noi_dung_da_doc || file?.name || "Tình huống đã gửi", result);
+    renderMobileQuickResult(result);
+    if (riskKey(result.muc_rui_ro) === "high") openDangerDialog("analysis");
+  } catch (error) {
+    if (error?.name !== "AbortError") {
+      setMobileSituationError(error.message || "Chưa kiểm tra được nội dung. Bác hãy thử lại.");
+    }
+  } finally {
+    elements.mobileSituationVoiceButton.disabled = false;
+    mobileAnalysisController = null;
+    updateMobileSituationFileStatus();
+  }
+}
+
+function handleMobileResultBranch(button) {
+  elements.mobileQuickResultBranches.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+  elements.mobileQuickResultNext.hidden = false;
+  elements.mobileQuickResultNext.replaceChildren();
+
+  if (button.dataset.mobileResultBranch === "transferred") {
+    const text = document.createElement("p");
+    text.textContent = "Ưu tiên dừng giao dịch tiếp theo và liên hệ ngân hàng ngay.";
+    const link = document.createElement("a");
+    link.className = "button button-danger";
+    link.href = "#vua-chuyen-tien";
+    link.textContent = "Mở Khoan Đã SOS";
+    elements.mobileQuickResultNext.append(text, link);
+    return;
+  }
+
+  const list = document.createElement("ol");
+  const steps = button.dataset.mobileResultBranch === "unsure"
+    ? ["Không thực hiện thêm giao dịch.", "Kiểm tra ứng dụng ngân hàng hoặc gọi hotline chính thức.", "Nhờ người thân xem cùng."]
+    : ["Dừng cuộc gọi.", "Không chuyển tiền hoặc đọc OTP.", "Gọi người thân và tự gọi lại số chính thức."];
+  for (const step of steps) {
+    const item = document.createElement("li");
+    item.textContent = step;
+    list.append(item);
+  }
+  elements.mobileQuickResultNext.append(list);
+}
+
+function saveMobileResultToCase() {
+  if (!mobileQuickResultPayload) return;
+  const caseObj = createCase();
+  addEventToCase(caseObj.id, {
+    type: "khac",
+    text: elements.mobileSituationInput.value.trim() || mobileQuickResultPayload.noi_dung_da_doc || "Tình huống từ Trang chủ",
+    signals: mobileQuickResultPayload.tin_hieu || null,
+    risk: mobileQuickResultPayload.muc_rui_ro || null
+  });
+  showToast("Đã lưu vào Vụ việc trên thiết bị này.");
+}
+
+function openMobileQuickResultDetails() {
+  if (!mobileQuickResultPayload) return;
+  elements.situation.value = elements.mobileSituationInput.value.trim();
+  elements.situation.dispatchEvent(new Event("input", { bubbles: true }));
   window.location.hash = "#kiem-tra";
-  window.setTimeout(() => elements.speechButton.click(), 300);
+  window.setTimeout(() => renderResult(mobileQuickResultPayload), 350);
+}
+
+function submitMobileSituation(event) {
+  event.preventDefault();
+  const text = elements.mobileSituationInput.value.trim();
+  const hasFile = Boolean(elements.mobileSituationFile.files?.length);
+
+  if (!text && !hasFile) {
+    setMobileSituationError("Hãy nhập nội dung hoặc chọn một ảnh/PDF.");
+    elements.mobileSituationInput.focus();
+    return;
+  }
+
+  setMobileSituationError();
+  analyzeMobileSituationInline();
+}
+
+function startMobileSituationRecording() {
+  setMobileSituationError();
+  toggleSpeechRecognition(elements.mobileSituationInput, elements.mobileSituationVoiceButton);
+}
+
+elements.analysisForm.addEventListener("submit", analyze);
+elements.checkHubVoiceButton.addEventListener("click", () => {
+  elements.analysisForm.scrollIntoView({ behavior: "smooth", block: "start" });
+  window.setTimeout(() => elements.speechButton.click(), 280);
 });
+elements.mobileSituationForm.addEventListener("submit", submitMobileSituation);
+elements.mobileSituationFileButton.addEventListener("click", () => elements.mobileSituationFile.click());
+elements.mobileSituationFile.addEventListener("change", updateMobileSituationFileStatus);
+elements.mobileSituationInput.addEventListener("input", () => {
+  clearMobileQuickResult();
+  if (elements.mobileSituationInput.value.trim()) setMobileSituationError();
+});
+elements.mobileSituationInput.addEventListener("keydown", (event) => {
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    event.preventDefault();
+    elements.mobileSituationForm.requestSubmit();
+  }
+});
+elements.mobileQuickResultFamily.addEventListener("click", callFamily);
+elements.mobileQuickResultDetail.addEventListener("click", openMobileQuickResultDetails);
+elements.mobileQuickResultSaveCase.addEventListener("click", saveMobileResultToCase);
+elements.mobileQuickResultBranches.forEach((button) => button.addEventListener("click", () => handleMobileResultBranch(button)));
+elements.homeSuggestionButtons.forEach((button) => button.addEventListener("click", () => {
+  elements.mobileSituationInput.value = button.dataset.homeSuggestion === "call"
+    ? "Có người gọi cho tôi và yêu cầu làm theo ngay."
+    : "Tôi vừa nhận một tin nhắn lạ và muốn kiểm tra.";
+  elements.mobileSituationInput.dispatchEvent(new Event("input", { bubbles: true }));
+  elements.mobileSituationInput.focus({ preventScroll: true });
+}));
+elements.homeSupportButton.addEventListener("click", callFamily);
 elements.situation.addEventListener("input", () => {
   updateCharacterCount();
   if (elements.situation.value.trim()) setInputError();
@@ -2898,6 +3350,26 @@ elements.recoveryActive.querySelectorAll("[data-recovery-step]").forEach((checkb
 });
 
 elements.fontSizeButtons.forEach((button) => button.addEventListener("click", () => applyFontSize(button.dataset.fontSize)));
+elements.profileMenuButton.addEventListener("click", () => setProfileMenu(elements.profileMenu.hidden));
+elements.mobileProfileMenuButton.addEventListener("click", () => setProfileMenu(elements.profileMenu.hidden));
+elements.profileMenuClose.addEventListener("click", () => setProfileMenu(false, { restoreFocus: true }));
+elements.profileMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setProfileMenu(false)));
+elements.reopenOnboardingButton.addEventListener("click", openOnboarding);
+elements.onboardingNextButtons.forEach((button) => button.addEventListener("click", () => renderOnboardingStep(onboardingStep + 1)));
+elements.onboardingBackButtons.forEach((button) => button.addEventListener("click", () => renderOnboardingStep(onboardingStep - 1)));
+elements.onboardingSkipButtons.forEach((button) => button.addEventListener("click", completeOnboarding));
+elements.onboardingMethodButtons.forEach((button) => button.addEventListener("click", () => chooseOnboardingMethod(button)));
+elements.onboardingBranchButtons.forEach((button) => button.addEventListener("click", () => chooseOnboardingBranch(button)));
+elements.finishOnboardingButton.addEventListener("click", completeOnboarding);
+elements.finishOnboardingLaterButton.addEventListener("click", completeOnboarding);
+document.addEventListener("click", (event) => {
+  if (elements.profileMenu.hidden) return;
+  if (elements.profileMenu.contains(event.target) || elements.profileMenuButton.contains(event.target) || elements.mobileProfileMenuButton.contains(event.target)) return;
+  setProfileMenu(false);
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !elements.profileMenu.hidden) setProfileMenu(false, { restoreFocus: true });
+});
 elements.voiceGuideToggle.addEventListener("click", () => {
   const enabled = elements.voiceGuideToggle.getAttribute("aria-pressed") !== "true";
   elements.voiceGuideToggle.setAttribute("aria-pressed", String(enabled));
@@ -2963,3 +3435,7 @@ loadAccessibilityPreferences();
 applyRetentionPolicy();
 renderPrivacyAuditLists();
 route();
+if (getStored(STORAGE_KEYS.onboardingComplete) !== "1") openOnboarding();
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}

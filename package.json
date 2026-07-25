@@ -7,6 +7,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check public/app.js && node --check public/services.js && node --check public/sw.js",
+    "build": "node scripts/build.js",
+    "start:production": "node scripts/start-production.js",
     "test": "node --test",
     "test:gemini": "node scripts/gemini-live.js"
   },
@@ -15,7 +18,9 @@
   },
   "dependencies": {
     "@fontsource-variable/lexend": "^5.3.0",
+    "@fontsource-variable/manrope": "^5.3.0",
     "@fontsource-variable/nunito-sans": "^5.3.0",
+    "@fontsource/be-vietnam-pro": "^5.3.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "jsqr": "^1.4.0"

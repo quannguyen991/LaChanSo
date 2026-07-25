@@ -11,6 +11,9 @@ const { validateBase64Media } = require("./src/media-validation");
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
+const staticDirectory = process.env.STATIC_DIR === "dist" ? "dist" : "public";
+const staticRoot = path.join(__dirname, staticDirectory);
+const tokensPath = staticDirectory === "dist" ? path.join(staticRoot, "tokens.css") : path.join(__dirname, "tokens.css");
 
 const rateBuckets = new Map();
 
@@ -54,15 +57,23 @@ app.use("/api", (request, response, next) => {
   if (bucket.count > 90) return response.status(429).json({ error: "Bác thử lại sau một phút để hệ thống xử lý ổn định hơn." });
   next();
 });
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(staticRoot));
 app.get("/tokens.css", (_request, response) => {
-  response.sendFile(path.join(__dirname, "tokens.css"));
+  response.sendFile(tokensPath);
 });
 app.use("/fonts/lexend", express.static(path.join(__dirname, "node_modules", "@fontsource-variable", "lexend"), {
   immutable: true,
   maxAge: "7d"
 }));
 app.use("/fonts/nunito-sans", express.static(path.join(__dirname, "node_modules", "@fontsource-variable", "nunito-sans"), {
+  immutable: true,
+  maxAge: "7d"
+}));
+app.use("/fonts/manrope", express.static(path.join(__dirname, "node_modules", "@fontsource-variable", "manrope"), {
+  immutable: true,
+  maxAge: "7d"
+}));
+app.use("/fonts/be-vietnam-pro", express.static(path.join(__dirname, "node_modules", "@fontsource", "be-vietnam-pro"), {
   immutable: true,
   maxAge: "7d"
 }));
