@@ -15,7 +15,8 @@ def main() -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     image = Image.open(SOURCE).convert("RGB")
 
-    crop_webp(image, (20, 143, 921, 531), "home-hero-reference.webp")
+    # Không tái tạo hero: bản cũ nướng chữ vào ảnh (sai tên thương hiệu,
+    # nút phóng to chữ vô tác dụng). Hero giờ là HTML thật trong index.html.
     crop_webp(image, (52, 175, 386, 514), "home-couple-reference.webp")
     crop_webp(image, (18, 1304, 340, 1545), "reassurance-reference.webp")
     crop_webp(image, (42, 40, 108, 114), "brand-shield-reference.webp")

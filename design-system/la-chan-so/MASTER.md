@@ -35,7 +35,6 @@ Không thêm màu hoặc font trực tiếp ngoài token.
 
 ## Asset
 
-- `public/assets/home-hero-reference.webp`: hero ở khung chuẩn.
 - `public/assets/home-couple-reference.webp`: crop ông bà dùng cho mobile.
 - `public/assets/brand-shield-reference.png`: logo nền trong suốt và icon thương hiệu.
 - `public/assets/avatar-reference.webp`: avatar lời chào.
