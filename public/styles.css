@@ -1702,13 +1702,6 @@ dialog::backdrop {
   height: 1.6rem;
 }
 
-.danger-dialog__eyebrow {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
 .danger-dialog h2 {
   margin: 0;
   font-size: clamp(1.35rem, 5.5vw, 1.75rem);
@@ -1717,7 +1710,7 @@ dialog::backdrop {
   text-wrap: balance;
 }
 
-.danger-dialog p:not(.danger-dialog__eyebrow) {
+.danger-dialog p {
   max-width: none;
   margin: 0;
   font-size: 1rem;
@@ -1854,6 +1847,7 @@ dialog::backdrop {
 
 .danger-dialog__followup {
   width: min(100%, 28rem);
+  justify-self: center;
   padding: var(--space-5);
   margin-block-end: var(--space-4);
   border-radius: var(--radius-md);
