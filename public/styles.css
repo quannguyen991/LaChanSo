@@ -338,14 +338,6 @@ main {
   background: linear-gradient(160deg, var(--color-accent-soft), var(--color-surface) 78%);
 }
 
-@media (min-width: 40rem) {
-  .hero-band {
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-  }
-}
-
 .workspace-head {
   max-width: var(--reading-width);
   margin-block-end: var(--space-5);
@@ -3081,19 +3073,6 @@ body {
   object-position: left center;
 }
 
-.hero-band__reference {
-  display: none;
-}
-
-#homeView .hero-band {
-  padding-block-start: min(64vw, 16rem);
-  background-color: var(--color-sky-soft);
-  background-image: url("/assets/home-couple-reference.webp");
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-}
-
 #homeView .hub-card {
   width: 100%;
   font-family: var(--font-body);
@@ -3204,26 +3183,6 @@ body {
 
   #homeView .home-main {
     display: contents;
-  }
-
-  #homeView .hero-band {
-    grid-area: hero;
-    display: block;
-    width: 100%;
-    min-height: 0;
-    margin: 0;
-    padding: 0;
-    aspect-ratio: 901 / 388;
-    border-radius: var(--radius-xl);
-    background: var(--color-sky-soft);
-  }
-
-  #homeView .hero-band__reference {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    object-fit: cover;
   }
 
   #homeView .hub-cards {
@@ -3696,19 +3655,6 @@ html[data-font-size="large"] { font-size: 20px; }
 
 @media (min-width: 56rem) {
   .topbar { gap: var(--space-4); }
-  #homeView .hero-band__reference { display: none; }
-  #homeView .hero-band {
-    display: grid;
-    grid-template-columns: minmax(17rem, 0.9fr) minmax(0, 1.1fr);
-    align-items: center;
-    min-height: 24rem;
-    padding: var(--space-6);
-    background-color: var(--color-sky-soft);
-    background-image: url("/assets/home-couple-reference.webp");
-    background-position: left bottom;
-    background-repeat: no-repeat;
-    background-size: 48% auto;
-  }
 }
 
 @media (max-width: 55.99rem) {
@@ -4201,12 +4147,8 @@ body:has(#homeView:not([hidden])) {
 
 #homeView .hero-band {
   display: block;
-  aspect-ratio: auto;
-  gap: 0;
-  min-height: 0;
   margin: 0 0 var(--space-5);
-  padding: 0;
-  overflow: hidden;
+  padding: var(--space-5);
   border: 1px solid var(--color-sky-line);
   border-radius: var(--radius-lg);
   background-color: var(--color-sky-soft);
@@ -4214,12 +4156,13 @@ body:has(#homeView:not([hidden])) {
   box-shadow: var(--shadow-sm);
 }
 
-#homeView .hero-band__reference {
+#homeView .hero-band__copy {
+  max-width: var(--reading-width);
+}
+
+#homeView .hero-band__copy h1 span {
   display: block;
-  width: 100%;
-  height: auto;
-  border-radius: inherit;
-  object-fit: contain;
+  color: var(--color-accent-deep);
 }
 
 #homeView .hub-cards,
@@ -4441,11 +4384,6 @@ body:has(#homeView:not([hidden])) {
 }
 
 @media (min-width: 48rem) and (max-width: 55.999rem) {
-  #homeView .hero-band {
-    display: block;
-    min-height: 0;
-  }
-
   #homeView .hub-card__icon {
     width: 4.25rem;
     height: 4.25rem;
@@ -4525,15 +4463,9 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .hero-band {
     grid-area: hero;
-    display: block;
-    height: auto;
-    min-height: 0;
     margin: 0;
+    padding: var(--space-6);
     border-radius: var(--radius-xl);
-  }
-
-  #homeView .hero-band::after {
-    display: none;
   }
 
   #homeView #recoveryBanner { grid-area: recovery; margin: 0; }
@@ -4748,17 +4680,6 @@ body:has(#homeView:not([hidden])) {
   .system-status__prefix,
   .voice-guide-toggle__label {
     display: none;
-  }
-
-  #homeView .hero-band {
-    aspect-ratio: 1.72;
-  }
-
-  #homeView .hero-band__reference {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
   }
 
   #homeView .hub-card--primary {

@@ -64,8 +64,16 @@ test("route changes close a danger dialog before showing another view", () => {
   assert.match(app, /elements\.dangerDialog\.close\(\)/);
 });
 
-test("home images use optimized loading paths", () => {
-  assert.match(html, /class="hero-band__reference"[^>]*src="\/assets\/home-hero-reference-optimized\.webp"/);
+test("the home hero is real text, not a bitmap with baked-in wording", () => {
+  // The old <img> drew the heading as pixels: the A/A+/A++ control could not
+  // enlarge it, it still carried the retired "Khoan Đã" name and the banned
+  // word "An toàn". The hero heading must stay live, resizable text.
+  assert.doesNotMatch(html, /home-hero-reference/);
+  assert.doesNotMatch(html, /hero-band__reference/);
+  assert.doesNotMatch(styles, /hero-band__reference/);
+  assert.doesNotMatch(html, /hero-accessible-copy/);
+  assert.match(html, /<div class="hero-band__copy">/);
+  assert.match(html, /<h1 id="homeTitle" tabindex="-1"><span>Lá Chắn Số,<\/span> bác cần kiểm tra điều gì\?<\/h1>/);
   assert.match(html, /src="\/assets\/reassurance-reference\.webp"[^>]*loading="lazy"/);
 });
 
