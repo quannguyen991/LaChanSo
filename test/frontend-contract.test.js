@@ -11,14 +11,14 @@ const styles = fs.readFileSync(path.join(root, "public", "styles.css"), "utf8");
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "public", "manifest.webmanifest"), "utf8"));
 const serviceWorker = fs.readFileSync(path.join(root, "public", "sw.js"), "utf8");
 
-test("primary product surfaces use the Lá Chắn Số brand with the Khoan đã tagline", () => {
-  // "Lá Chắn Số" is the product name; "Khoan đã" is the catchphrase that leads
-  // the page title and the tagline under the logo.
-  assert.match(html, /class="brand__title">Lá Chắn Số</);
-  assert.equal(manifest.name, "Lá Chắn Số");
-  assert.match(html, /name="description" content="Lá Chắn Số/);
+test("primary product surfaces use the Khoan Đã brand", () => {
+  // "Khoan Đã" is the product name that leads the logo and page title; the
+  // tagline under the logo is the reassurance line "Cùng bạn an toàn...".
+  assert.match(html, /class="brand__title">Khoan Đã</);
+  assert.equal(manifest.name, "Khoan Đã");
+  assert.match(html, /name="description" content="Khoan Đã/);
   assert.match(html, /<title>Khoan đã/);
-  assert.match(html, /class="brand__tagline">Khoan đã/);
+  assert.match(html, /class="brand__tagline">Cùng bạn an toàn/);
 });
 
 test("critical senior and emergency controls are present", () => {
@@ -65,7 +65,10 @@ test("route changes close a danger dialog before showing another view", () => {
 });
 
 test("home images use optimized loading paths", () => {
-  assert.match(html, /class="hero-band__reference"[^>]*src="\/assets\/home-hero-reference-optimized\.webp"/);
+  // The desktop hero heading is real HTML text (not baked into a bitmap) so the
+  // font-size control can enlarge it; the hero image is a text-free couple photo.
+  assert.match(html, /class="hero-band__reference"[^>]*src="\/assets\/home-couple-reference\.webp"/);
+  assert.match(html, /class="hero-accessible-copy"[^>]*>[\s\S]*?<h1 id="homeTitle">/);
   assert.match(html, /src="\/assets\/reassurance-reference\.webp"[^>]*loading="lazy"/);
 });
 

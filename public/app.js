@@ -807,7 +807,7 @@ function migrateLegacyFamilyPhone() {
 function buildTrustedVerificationMessage() {
   const latest = getHistory()[0];
   const riskSummary = latest?.risk
-    ? ` Kết quả tham khảo trên Lá Chắn Số: ${displayRiskLabel(latest.risk)}.`
+    ? ` Kết quả tham khảo trên Khoan Đã: ${displayRiskLabel(latest.risk)}.`
     : "";
   return `Bác đang cần con/cháu gọi lại để cùng xác minh một tình huống đáng ngờ.${riskSummary} Không yêu cầu bác gửi OTP, mật khẩu hoặc chuyển tiền qua tin nhắn này.`;
 }
@@ -1262,7 +1262,7 @@ function reportWrongResult() {
 
 function addCurrentResultToCase() {
   const caseObj = createCase();
-  addEventToCase(caseObj.id, { type: "khac", text: currentResult?.noi_dung_da_doc || "Kết quả kiểm tra từ Lá Chắn Số", signals: currentResult?.tin_hieu || null, risk: currentResult?.muc_rui_ro || null });
+  addEventToCase(caseObj.id, { type: "khac", text: currentResult?.noi_dung_da_doc || "Kết quả kiểm tra từ Khoan Đã", signals: currentResult?.tin_hieu || null, risk: currentResult?.muc_rui_ro || null });
   window.location.hash = "#hanh-trinh";
   showCaseDetail(caseObj.id);
 }
@@ -1621,10 +1621,10 @@ function buildEvidenceDossier(entry) {
   if (entry.bankName) lines.push(`Ngân hàng liên quan: ${entry.bankName}`);
   if (entry.account) lines.push(`Số tài khoản liên quan: ${entry.account}`);
   if (entry.transactionCode) lines.push(`Mã giao dịch: ${entry.transactionCode}`);
-  if (entry.riskLevel) lines.push(`Mức rủi ro theo Lá Chắn Số: ${displayRiskLabel(entry.riskLevel)}`);
+  if (entry.riskLevel) lines.push(`Mức rủi ro theo Khoan Đã: ${displayRiskLabel(entry.riskLevel)}`);
   if (entry.riskSignals?.length) lines.push(`Dấu hiệu phát hiện: ${entry.riskSignals.join("; ")}`);
   lines.push("", "Tóm tắt diễn biến:", entry.summary || "(không có)");
-  lines.push("", "Lưu ý: Lá Chắn Số chưa xác nhận danh tính chủ tài khoản hay kết luận đây chắc chắn là lừa đảo — đây là ghi chép do người dùng và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi làm việc với ngân hàng/công an.");
+  lines.push("", "Lưu ý: Khoan Đã chưa xác nhận danh tính chủ tài khoản hay kết luận đây chắc chắn là lừa đảo — đây là ghi chép do người dùng và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi làm việc với ngân hàng/công an.");
   return lines.join("\n");
 }
 
@@ -2021,7 +2021,7 @@ function updateReportSummary() {
     lines.push("");
   }
 
-  lines.push("Lá Chắn Số chưa xác nhận danh tính đối tượng hay kết luận chắc chắn đây là lừa đảo — nội dung trên do người dùng tự khai và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi trình báo.");
+  lines.push("Khoan Đã chưa xác nhận danh tính đối tượng hay kết luận chắc chắn đây là lừa đảo — nội dung trên do người dùng tự khai và các dấu hiệu hành vi tự động tổng hợp, dùng để tham khảo khi trình báo.");
 
   elements.reportSummary.value = lines.join("\n");
 }
@@ -2843,7 +2843,7 @@ function chooseOnboardingMethod(button) {
 function chooseOnboardingBranch(button) {
   elements.onboardingBranchButtons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
   if (button.dataset.onboardingBranch === "transferred") {
-    elements.onboardingBranchStatus.textContent = "Lá Chắn Số sẽ ưu tiên hướng dẫn gọi ngân hàng, lưu bằng chứng và nhờ người thân hỗ trợ.";
+    elements.onboardingBranchStatus.textContent = "Khoan Đã sẽ ưu tiên hướng dẫn gọi ngân hàng, lưu bằng chứng và nhờ người thân hỗ trợ.";
     elements.onboardingBranchStatus.dataset.state = "danger";
   } else {
     elements.onboardingBranchStatus.textContent = "Tốt rồi. Hãy dừng cuộc gọi, không chuyển tiền và tự gọi lại người thân qua số đã lưu.";
@@ -3118,7 +3118,7 @@ function handleMobileResultBranch(button) {
     const link = document.createElement("a");
     link.className = "button button-danger";
     link.href = "#vua-chuyen-tien";
-    link.textContent = "Mở Lá Chắn Số SOS";
+    link.textContent = "Mở Khoan Đã SOS";
     elements.mobileQuickResultNext.append(text, link);
     return;
   }

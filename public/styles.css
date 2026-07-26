@@ -3948,6 +3948,25 @@ html[data-font-size="large"] { font-size: 20px; }
   margin-top: 0;
 }
 
+/* The screen scrolls internally (a full-height panel is needed for the slide
+   animation), but its content grows with the font-size control and on short
+   phones. Pin the primary CTA to the bottom of the scroll area so "Bắt đầu
+   tìm hiểu" is never pushed below the fold without a visible scrollbar. */
+.onboarding__screen > .onboarding__primary {
+  position: sticky;
+  bottom: max(0.5rem, env(safe-area-inset-bottom));
+  z-index: 3;
+}
+
+.onboarding__screen > .onboarding__primary::before {
+  content: "";
+  position: absolute;
+  inset: -1.4rem 0 auto;
+  height: 1.4rem;
+  background: linear-gradient(to top, var(--color-onboarding-canvas-bottom), transparent);
+  pointer-events: none;
+}
+
 .onboarding__heading {
   display: grid;
   justify-items: center;
@@ -4220,6 +4239,30 @@ body:has(#homeView:not([hidden])) {
   height: auto;
   border-radius: inherit;
   object-fit: contain;
+}
+
+/* Base styling for the real-text hero copy so it also reads well at tablet
+   widths (where the hero stacks). The two-column layout lives in the desktop
+   media block. The hero is hidden below 48rem, so this never affects phones. */
+#homeView .hero-accessible-copy h1 {
+  margin: 0 0 var(--space-2);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  /* rem so the font-size control enlarges the heading (brief §3.4). */
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.12;
+}
+
+#homeView .hero-accessible-copy h1 span {
+  color: var(--color-accent);
+}
+
+#homeView .hero-accessible-copy .calm-line {
+  margin: 0;
+  color: var(--color-ink-2);
+  font-size: 1.05rem;
+  line-height: 1.5;
 }
 
 #homeView .hub-cards,
@@ -4505,31 +4548,90 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .home-layout {
     display: grid;
-    grid-template-columns: minmax(0, 2.85fr) minmax(17.5rem, 1.35fr);
+    grid-template-columns: minmax(0, 2.85fr) minmax(19rem, 1.35fr);
     grid-template-areas:
       "hero hero"
       "recovery recovery"
+      "compose emergency"
+      "chips emergency"
+      "tiles tiles"
       "voice sidebar"
-      "tiles sidebar"
-      "label label"
-      "emergency emergency"
       "reassurance reassurance"
       "quick quick";
     gap: var(--space-5);
     align-items: stretch;
   }
 
+  /* The composer and the suggestion chips previously had no grid-area, so the
+     grid auto-placed them into leftover cells (a cramped composer next to
+     orphaned chips). Give them explicit spots on the left, and pull the
+     emergency panel up beside the composer so it stays above the fold. */
+  #homeView .mobile-situation-form { grid-area: compose; margin: 0; }
+  #homeView .home-suggestion-chips { grid-area: chips; margin: 0; }
+  #homeView .eyebrow--danger { display: none; }
+
   #homeView .home-main {
     display: contents;
   }
 
+  /* Real-text hero (brief §3.4): the heading is HTML, not baked into a bitmap,
+     so the font-size control can enlarge it. The couple photo is a text-free
+     decoration on the left; the reassuring copy sits on the right. Capped in
+     height so the composer and the emergency panel stay above the fold. */
   #homeView .hero-band {
     grid-area: hero;
-    display: block;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(var(--space-4), 3vw, var(--space-6));
     height: auto;
+    max-height: 20rem;
     min-height: 0;
     margin: 0;
+    padding: clamp(var(--space-4), 2.4vw, var(--space-6));
+    border: 1px solid var(--color-sky-line);
     border-radius: var(--radius-xl);
+    background:
+      radial-gradient(120% 150% at 90% 8%, rgb(255 255 255 / 0.6), transparent 55%),
+      linear-gradient(122deg, var(--color-sky-pale) 0%, var(--color-sky-soft) 58%, #dce6fb 100%);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  #homeView .hero-band__reference {
+    width: clamp(11rem, 21vw, 16.5rem);
+    height: auto;
+    max-height: 16.5rem;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+  }
+
+  #homeView .hero-accessible-copy {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 34rem;
+  }
+
+  #homeView .hero-accessible-copy h1 {
+    margin: 0;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    /* rem, not vw, so the A / A+ / A++ font-size control actually enlarges it. */
+    font-size: 2.45rem;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  #homeView .hero-accessible-copy h1 span {
+    color: var(--color-accent);
+  }
+
+  #homeView .hero-accessible-copy .calm-line {
+    max-width: 32rem;
+    margin: 0;
+    color: var(--color-ink-2);
+    font-size: 1.15rem;
+    line-height: 1.5;
   }
 
   #homeView .hero-band::after {
@@ -4537,7 +4639,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView #recoveryBanner { grid-area: recovery; margin: 0; }
-  #homeView .hub-cards { grid-area: voice; min-width: 0; }
+  #homeView .hub-cards { grid-area: voice; min-width: 0; align-self: start; }
 
   #homeView .hub-card--primary {
     min-height: 8.25rem;
@@ -5469,8 +5571,12 @@ body:has(#homeView:not([hidden])) {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
+
+  #homeView .mobile-reference-top__brand { min-width: 0; flex: 1 1 auto; }
+  #homeView .mobile-reference-top__profile { flex: 0 0 auto; }
+  #homeView .mobile-reference-top__brand-text { min-width: 0; }
 
   #homeView .mobile-reference-top__brand,
   #homeView .mobile-reference-top__profile {
@@ -5497,6 +5603,19 @@ body:has(#homeView:not([hidden])) {
   #homeView .mobile-reference-top__brand img {
     width: auto;
     height: 2.1em;
+  }
+
+  #homeView .mobile-reference-top__brand-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+
+  #homeView .mobile-reference-top__brand-tagline {
+    color: var(--color-ink-2);
+    font-size: 0.72rem;
+    font-weight: 500;
+    line-height: 1.2;
   }
 
   #homeView .mobile-reference-top__brand:focus-visible,
@@ -5543,6 +5662,9 @@ body:has(#homeView:not([hidden])) {
 
   @media (max-width: 22rem) {
     #homeView .mobile-reference-top__art { display: none; }
+    /* The tagline would squash into a 3-line stack next to the profile chip on
+       the narrowest phones, so drop it there and keep just the brand name. */
+    #homeView .mobile-reference-top__brand-tagline { display: none; }
   }
 
   #homeView .mobile-situation-form {
@@ -6422,7 +6544,7 @@ body:has(#homeView:not([hidden])) {
     padding-block: var(--space-4);
   }
 
-  /* 2. Thẻ "Lá Chắn Số giúp bác" ở cột phụ lặp lại đúng nội dung
+  /* 2. Thẻ "Khoan Đã giúp bác" ở cột phụ lặp lại đúng nội dung
         của dải giới thiệu phía trên -> ẩn trên điện thoại.
         Giữ thẻ "Mẹo nhỏ" vì đó là lời khuyên an toàn thật. */
   #homeView .home-sidebar > .sidebar-card:first-child {
