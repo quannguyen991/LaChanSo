@@ -82,6 +82,27 @@ class GeminiError extends Error {
   }
 }
 
+const JSON_ONLY_REMINDER =
+  "Chỉ trả về đúng một đối tượng JSON theo schema đã cho. Không thêm lời dẫn, không giải thích, không bọc trong dấu nháy.";
+
+// Đánh dấu lỗi nào thử lại thì có cơ may cứu được.
+function retryableIf(error, retryable) {
+  return Object.assign(error, { retryable });
+}
+
+// Một lớp chịu lỗi dùng chung cho mọi nhà cung cấp: gọi lại ĐÚNG MỘT LẦN khi
+// gặp lỗi có thể cứu được (đọc JSON hỏng, phản hồi rỗng, lỗi 5xx), lần hai có
+// kèm lời nhắc chỉ-trả-JSON. Lỗi 4xx (sai khóa, yêu cầu hỏng) báo ngay vì thử
+// lại cũng cho kết quả y hệt.
+async function withOneRetry(attempt) {
+  try {
+    return await attempt(false);
+  } catch (error) {
+    if (!error?.retryable) throw error;
+    return attempt(true);
+  }
+}
+
 async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, responseSchema }) {
   if (!apiKey) {
     throw new GeminiError("Máy chủ chưa được cấu hình khóa Gemini.", 503);
@@ -90,6 +111,7 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
     throw new GeminiError("Cần có văn bản hoặc ảnh để phân tích.", 400);
   }
 
+  return withOneRetry(async (nhacLaiJson) => {
   const response = await fetchImpl(
     `${GEMINI_ENDPOINT}/${encodeURIComponent(model)}:generateContent`,
     {
@@ -105,7 +127,7 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
         contents: [
           {
             role: "user",
-            parts
+            parts: nhacLaiJson ? [...parts, { text: JSON_ONLY_REMINDER }] : parts
           }
         ],
         generationConfig: {
@@ -119,21 +141,25 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
   );
 
   if (!response.ok) {
-    throw new GeminiError("Gemini chưa thể phân tích tình huống. Vui lòng thử lại.");
+    throw retryableIf(
+      new GeminiError("Gemini chưa thể phân tích tình huống. Vui lòng thử lại."),
+      response.status >= 500
+    );
   }
 
   const payload = await response.json();
   const outputText = payload.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!outputText) {
-    throw new GeminiError("Gemini không trả về dữ liệu có thể sử dụng.");
+    throw retryableIf(new GeminiError("Gemini không trả về dữ liệu có thể sử dụng."), true);
   }
 
   try {
-    return JSON.parse(outputText);
-  } catch {
-    throw new GeminiError("Gemini trả về dữ liệu không đúng định dạng.");
+    return parseJsonLoose(outputText);
+  } catch (error) {
+    throw retryableIf(error, true);
   }
+  });
 }
 
 // Some OpenAI-compatible providers (and models like Claude) wrap JSON in
@@ -194,18 +220,13 @@ async function callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstr
 
   // Gateway này không thực sự ép response_format: đã gặp lần nó trả văn xuôi
   // ("I can't discuss that...") thay vì JSON, làm người dùng thấy lỗi 502.
-  // Thử lại đúng MỘT lần với lời nhắc cứng hơn — đủ để lỗi chập chờn biến mất
-  // mà không nhân đôi chi phí trong trường hợp bình thường.
-  const attempt = async (nhacLaiJson) => {
+  return withOneRetry(async (nhacLaiJson) => {
     const messages = [
       { role: "system", content: systemInstruction },
       { role: "user", content }
     ];
     if (nhacLaiJson) {
-      messages.push({
-        role: "user",
-        content: "Chỉ trả về đúng một đối tượng JSON theo schema đã cho. Không thêm lời dẫn, không giải thích, không bọc trong dấu nháy."
-      });
+      messages.push({ role: "user", content: JSON_ONLY_REMINDER });
     }
 
     const response = await fetchImpl(endpoint, {
@@ -226,33 +247,24 @@ async function callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstr
       signal: AbortSignal.timeout(30000)
     });
 
-    // 4xx là lỗi cấu hình/yêu cầu — thử lại cũng vậy, nên báo luôn.
     if (!response.ok) {
-      const retryable = response.status >= 500 && response.status !== 501;
-      throw Object.assign(
+      throw retryableIf(
         new GeminiError("AI chưa thể phân tích tình huống. Vui lòng thử lại."),
-        { retryable }
+        response.status >= 500
       );
     }
 
     const payload = await response.json();
     const outputText = payload.choices?.[0]?.message?.content;
     if (!outputText) {
-      throw Object.assign(new GeminiError("AI không trả về dữ liệu có thể sử dụng."), { retryable: true });
+      throw retryableIf(new GeminiError("AI không trả về dữ liệu có thể sử dụng."), true);
     }
     try {
       return parseJsonLoose(outputText);
     } catch (error) {
-      throw Object.assign(error, { retryable: true });
+      throw retryableIf(error, true);
     }
-  };
-
-  try {
-    return await attempt(false);
-  } catch (error) {
-    if (!error?.retryable) throw error;
-    return attempt(true);
-  }
+  });
 }
 
 function resolveLlmConfig(options) {

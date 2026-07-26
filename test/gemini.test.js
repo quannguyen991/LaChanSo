@@ -266,6 +266,35 @@ test("openai-compat retries a 5xx but not a 4xx", async () => {
   assert.equal(badKeyCalls, 1, "must not retry a 4xx");
 });
 
+test("the native Gemini path gets the same one-retry resilience", async () => {
+  const geminiReply = (text) => ({
+    ok: true,
+    json: async () => ({ candidates: [{ content: { parts: [{ text }] } }] })
+  });
+
+  // A 5xx recovers on the retry.
+  let calls = 0;
+  const flaky = async () => {
+    calls += 1;
+    if (calls === 1) return { ok: false, status: 503, json: async () => ({}) };
+    return geminiReply(okSignals());
+  };
+  const recovered = await extractSignals("Tình huống", { apiKey: "fake-test-key", fetchImpl: flaky });
+  assert.equal(calls, 2);
+  assert.equal(recovered.signals.gia_danh_co_quan_nha_nuoc, true);
+
+  // A fenced reply now parses instead of failing, matching the openai path.
+  const fenced = async () => geminiReply("```json\n" + okSignals() + "\n```");
+  const parsed = await extractSignals("Tình huống", { apiKey: "fake-test-key", fetchImpl: fenced });
+  assert.equal(parsed.signals.gia_danh_co_quan_nha_nuoc, true);
+
+  // A 400 is a request problem: fail immediately.
+  let badCalls = 0;
+  const bad = async () => { badCalls += 1; return { ok: false, status: 400, json: async () => ({}) }; };
+  await assert.rejects(() => extractSignals("Tình huống", { apiKey: "fake-test-key", fetchImpl: bad }));
+  assert.equal(badCalls, 1, "must not retry a 4xx");
+});
+
 test("openai-compat gives up after one retry instead of looping", async () => {
   let calls = 0;
   const alwaysProse = async () => {
