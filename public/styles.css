@@ -6459,3 +6459,22 @@ body:has(#homeView:not([hidden])) {
     display: none;
   }
 }
+
+/* ============================================================
+   Hàng nút (chụp ảnh / QR / mic / Tiếp tục) được định vị tuyệt đối.
+   Trước đây nó neo vào cả <form>, nên khi thêm dòng nhắc an toàn phía
+   dưới thì form cao lên và cụm nút tụt xuống ĐÈ LÊN dòng chữ đó
+   (thấy ở cả điện thoại lẫn máy tính).
+   Bọc riêng ô nhập + hàng nút vào một khối để nút neo vào ĐÁY Ô NHẬP;
+   mọi thứ đặt sau khối này luôn nằm dưới, không bao giờ bị đè.
+   ============================================================ */
+#homeView .mobile-situation-form__box {
+  position: relative;
+}
+
+#homeView .mobile-situation-form__hint {
+  margin: var(--space-2) 0 0;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
