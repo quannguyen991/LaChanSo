@@ -100,11 +100,9 @@ test-utils/             # tiện ích dùng chung (KHÔNG đặt trong test/ vì
 1. **`public/styles.css` ~6.400 dòng, ~24 ngưỡng màn hình đè nhau.** Đã từng làm
    4 nút biến mất khỏi giao diện mà không ai phát hiện. Khi sửa CSS ở đây:
    **luôn kiểm bằng số đo trên trình duyệt**, đừng tin mắt.
-2. **Trang chủ có nhiều lối vào cho cùng một việc** (ô nhập + chip + thẻ hub +
-   lưới thẻ). Người già bị rối. Cần gom còn 1–2 lối rõ ràng. **Chưa làm.**
-3. **Nhân đôi mobile/desktop trong cùng DOM** — ví dụ có hai thanh nav dưới
-   (`.bottom-nav` và `.mobile-bottom-nav`). Mobile và desktop nên là **một hệ**,
-   không phải hai sản phẩm.
+2. **Nhân đôi mobile/desktop trong cùng DOM** — còn hai thanh nav dưới
+   (`.bottom-nav` và `.mobile-bottom-nav`) giống hệt nhau. Mobile và desktop nên
+   là **một hệ**, không phải hai sản phẩm. Kế hoạch gộp: `plans/nav-merge.md`.
 4. Nhiều file `.md` ở gốc repo (AUDIT_, IMPLEMENTATION_REPORT_, PROGRESS…) là
    nhật ký cũ. Tài liệu còn hiệu lực: **file này** và `DESIGN_BRIEF.md`.
 
