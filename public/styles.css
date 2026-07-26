@@ -1017,13 +1017,13 @@ textarea {
 }
 
 input {
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: var(--space-3) var(--space-4);
   font-size: 1rem;
 }
 
 select {
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: var(--space-3) 3rem var(--space-3) var(--space-4);
   appearance: none;
   background-color: var(--color-surface);
@@ -1175,7 +1175,7 @@ select[aria-invalid="true"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
   border: 2px solid transparent;
@@ -1883,7 +1883,7 @@ dialog::backdrop {
 }
 
 .danger-dialog__call {
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   border-radius: var(--radius-md);
   background: var(--color-danger-ink);
   color: var(--color-danger-deep);
@@ -1980,7 +1980,10 @@ dialog::backdrop {
   }
 
   .danger-dialog__call {
-    min-height: 3.25rem;
+    /* Màn hình thấp: hạ khỏi sàn 56px của nút chính để thu hồi chỗ,
+       nhưng KHÔNG bao giờ xuống dưới sàn chung 52px (bậc chữ A là 48,75px
+       nếu để rem trần). */
+    min-height: max(52px, 3.25rem);
   }
 }
 
@@ -2199,7 +2202,7 @@ dialog::backdrop {
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: 0.4rem 0.1rem;
   border-radius: var(--radius-full);
   color: var(--color-muted);
@@ -2553,7 +2556,7 @@ body[data-onboarding="true"] > :not(.onboarding) {
 .onboarding__primary {
   display: flex;
   width: 100%;
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
@@ -2732,7 +2735,7 @@ body[data-onboarding="true"] > :not(.onboarding) {
 }
 
 .onboarding__branch-actions button {
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   border: 1px solid #0768ef;
   border-radius: 0.8rem;
   background: #fff;
@@ -3743,7 +3746,7 @@ html[data-font-size="large"] { font-size: 20px; }
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: var(--space-3);
   border-block: 1px solid var(--color-rule);
   color: var(--color-accent-deep);
@@ -3780,7 +3783,7 @@ html[data-font-size="large"] { font-size: 20px; }
   margin-block: var(--space-4);
   padding: var(--space-4);
   border: 2px solid var(--color-warning);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-md);
   background: var(--color-warning-soft);
   color: var(--color-ink);
 }
