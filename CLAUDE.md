@@ -131,3 +131,33 @@ test-utils/             # tiện ích dùng chung (KHÔNG đặt trong test/ vì
 3. Mở `localhost:8089`, quét bằng số đo: tràn ngang, chồng lấn, vùng chạm < 52px,
    cỡ chữ < 14px — ở **cả 3 bậc chữ**.
 4. Chỉ báo "xong" khi có **bằng chứng đo được**, không phải "trông có vẻ ổn".
+
+## Việc còn dang dở (có kế hoạch sẵn trong `plans/`)
+
+Hai việc đã được khảo sát kỹ nhưng **CHƯA thực hiện**. Kế hoạch kèm điểm neo
+verbatim nằm trong `plans/`:
+
+| Việc | Kế hoạch | Quy mô |
+|---|---|---|
+| Gộp 2 thanh nav dưới trùng nhau | `plans/nav-merge.md` | 24 sửa đổi, đụng điều hướng toàn cục 16 màn |
+| Xoá CSS mồ côi sau khi dọn markup | `plans/dead-css.md` | 27 sửa đổi |
+
+**Trước khi áp:** số dòng trong kế hoạch chỉ là gợi ý — file đã thay đổi sau khi
+khảo sát. **Điểm neo (đoạn text verbatim) mới là hợp đồng** — grep lại xác nhận
+duy nhất trước khi sửa.
+
+Hai bẫy kế hoạch nav đã chỉ ra, đừng bỏ qua:
+- Có 4 rule `display:none` phải **XOÁ**, không được đổi tên — đổi tên là thanh
+  nav còn lại biến mất.
+- Khối `@media (max-width: 55.99rem)` phải **DI CHUYỂN** vào khối `40rem`, không
+  được đổi tên tại chỗ — 55.99rem phủ cả máy tính bảng, đổi tên tại chỗ sẽ khiến
+  nhãn nav nhảy 14,9px→17px ở khổ 641–895px.
+
+### Nợ khác
+
+- `--leading-*` (5 token) khai báo mà **chưa dùng ở đâu**. Tiêu đề hero đang có
+  tỉ lệ `line-height` **1,08** — nét dấu tiếng Việt tràn 8px trên/dưới hộp dòng,
+  hiện chưa bị cắt chỉ vì đệm 34px đỡ được. Áp `--leading-tight` (1.3) sẽ sửa
+  đúng chỗ, nhưng đổi chiều cao mọi khối nên phải đo lại 16 màn × 3 cỡ chữ.
+- Bậc chữ "small" là 15px, dưới sàn 17px của brief. Đã đo: nâng thang lên
+  17/20/24 thì 13 màn vẫn sạch **nhưng hộp cảnh báo vượt nếp gấp**. Cần quyết định.
