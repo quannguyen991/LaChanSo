@@ -3679,9 +3679,10 @@ body {
 /* Khoan Đã · decision-support workspace · calm utility · green/orange */
 .icon-stop-circle { --icon-source: url("/vendor/unicons/stop-circle.svg"); }
 
-html[data-font-size="small"] { font-size: 15px; }
-html[data-font-size="medium"] { font-size: 17px; }
-html[data-font-size="large"] { font-size: 20px; }
+/* Bậc cỡ chữ lấy từ token — sửa một chỗ duy nhất trong tokens.css. */
+html[data-font-size="small"] { font-size: var(--root-font-small); }
+html[data-font-size="medium"] { font-size: var(--root-font-medium); }
+html[data-font-size="large"] { font-size: var(--root-font-large); }
 
 .brand__title { color: var(--color-accent-deep); }
 .brand__tagline { color: var(--color-ink-2); }
