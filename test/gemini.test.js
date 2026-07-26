@@ -295,12 +295,48 @@ test("the native Gemini path gets the same one-retry resilience", async () => {
   assert.equal(badCalls, 1, "must not retry a 4xx");
 });
 
-test("openai-compat gives up after one retry instead of looping", async () => {
+test("openai-compat stops after a bounded number of attempts instead of looping", async () => {
   let calls = 0;
   const alwaysProse = async () => {
     calls += 1;
     return { ok: true, json: async () => ({ choices: [{ message: { content: "vẫn không phải JSON" } }] }) };
   };
   await assert.rejects(() => extractSignals("Tình huống", openaiOpts(alwaysProse)));
-  assert.equal(calls, 2, "one original attempt plus one retry, then stop");
+  assert.equal(calls, 3, "three attempts total, then give up");
+});
+
+test("openai-compat escalates: reminder on attempt 2, assistant prefill on attempt 3", async () => {
+  // The gateway enforces neither response_format nor tool_choice, so each retry
+  // has to push harder rather than just repeat the same request.
+  const bodies = [];
+  let calls = 0;
+  const fetchImpl = async (_url, request) => {
+    calls += 1;
+    bodies.push(JSON.parse(request.body));
+    // Refuse twice, then answer only once prefilled.
+    const content = calls < 3 ? "I can't help with that." : okSignals();
+    return { ok: true, json: async () => ({ choices: [{ message: { content } }] }) };
+  };
+
+  const result = await extractSignals("Tình huống", openaiOpts(fetchImpl));
+
+  assert.equal(calls, 3);
+  assert.equal(result.signals.gia_danh_co_quan_nha_nuoc, true);
+  assert.equal(bodies[0].messages.length, 2, "attempt 1: system + user");
+  assert.equal(bodies[1].messages.length, 3, "attempt 2: adds the JSON-only reminder");
+  assert.equal(bodies[2].messages.length, 4, "attempt 3: also prefills the answer");
+  assert.equal(bodies[2].messages[3].role, "assistant");
+  assert.equal(bodies[2].messages[3].content, "{");
+});
+
+test("openai-compat repairs a prefilled reply that is missing its opening brace", async () => {
+  let calls = 0;
+  const fetchImpl = async () => {
+    calls += 1;
+    if (calls < 3) return { ok: true, json: async () => ({ choices: [{ message: { content: "xin lỗi" } }] }) };
+    // Model continues from the "{" it was primed with, so the brace is absent.
+    return { ok: true, json: async () => ({ choices: [{ message: { content: okSignals().slice(1) } }] }) };
+  };
+  const result = await extractSignals("Tình huống", openaiOpts(fetchImpl));
+  assert.equal(result.signals.gia_danh_co_quan_nha_nuoc, true);
 });

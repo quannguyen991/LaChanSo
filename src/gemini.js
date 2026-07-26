@@ -93,17 +93,26 @@ function retryableIf(error, retryable) {
   return Object.assign(error, { retryable });
 }
 
-// Một lớp chịu lỗi dùng chung cho mọi nhà cung cấp: gọi lại ĐÚNG MỘT LẦN khi
-// gặp lỗi có thể cứu được (đọc JSON hỏng, phản hồi rỗng, lỗi 5xx), lần hai có
-// kèm lời nhắc chỉ-trả-JSON. Lỗi 4xx (sai khóa, yêu cầu hỏng) báo ngay vì thử
-// lại cũng cho kết quả y hệt.
-async function withOneRetry(attempt) {
-  try {
-    return await attempt(false);
-  } catch (error) {
-    if (!error?.retryable) throw error;
-    return attempt(true);
+// Một lớp chịu lỗi dùng chung cho mọi nhà cung cấp. Gọi lại tối đa MAX_ATTEMPTS
+// lần khi gặp lỗi có thể cứu được (đọc JSON hỏng, phản hồi rỗng, lỗi 5xx), mỗi
+// lần sau ép mạnh hơn một chút. Lỗi 4xx (sai khóa, yêu cầu hỏng) báo ngay vì
+// thử lại cũng cho kết quả y hệt.
+//
+// Cần nhiều hơn một lần vì gateway không ép được định dạng: đo trên bản chạy
+// thật, cùng một câu hỏi có lúc được trả JSON, có lúc bị trả lời bằng văn xuôi.
+const MAX_ATTEMPTS = 3;
+
+async function withRetries(attempt) {
+  let lastError;
+  for (let lan = 0; lan < MAX_ATTEMPTS; lan += 1) {
+    try {
+      return await attempt(lan);
+    } catch (error) {
+      if (!error?.retryable) throw error;
+      lastError = error;
+    }
   }
+  throw lastError;
 }
 
 async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, responseSchema }) {
@@ -114,7 +123,7 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
     throw new GeminiError("Cần có văn bản hoặc ảnh để phân tích.", 400);
   }
 
-  return withOneRetry(async (nhacLaiJson) => {
+  return withRetries(async (lan) => {
   const response = await fetchImpl(
     `${GEMINI_ENDPOINT}/${encodeURIComponent(model)}:generateContent`,
     {
@@ -130,7 +139,7 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
         contents: [
           {
             role: "user",
-            parts: nhacLaiJson ? [...parts, { text: JSON_ONLY_REMINDER }] : parts
+            parts: lan >= 1 ? [...parts, { text: JSON_ONLY_REMINDER }] : parts
           }
         ],
         generationConfig: {
@@ -223,13 +232,18 @@ async function callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstr
 
   // Gateway này không thực sự ép response_format: đã gặp lần nó trả văn xuôi
   // ("I can't discuss that...") thay vì JSON, làm người dùng thấy lỗi 502.
-  return withOneRetry(async (nhacLaiJson) => {
+  return withRetries(async (lan) => {
     const messages = [
       { role: "system", content: systemInstruction },
       { role: "user", content }
     ];
-    if (nhacLaiJson) {
+    if (lan >= 1) {
       messages.push({ role: "user", content: JSON_ONLY_REMINDER });
+    }
+    if (lan >= 2) {
+      // Mồi sẵn lượt trả lời bằng "{" để model buộc phải viết tiếp JSON thay
+      // vì mở đầu bằng một câu từ chối.
+      messages.push({ role: "assistant", content: "{" });
     }
 
     const response = await fetchImpl(endpoint, {
@@ -265,6 +279,12 @@ async function callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstr
     try {
       return parseJsonLoose(outputText);
     } catch (error) {
+      // Khi đã mồi "{", model có thể trả về phần tiếp theo mà thiếu dấu mở đầu.
+      if (lan >= 2) {
+        try {
+          return parseJsonLoose("{" + outputText);
+        } catch { /* rơi xuống báo lỗi bên dưới */ }
+      }
       throw retryableIf(error, true);
     }
   });
