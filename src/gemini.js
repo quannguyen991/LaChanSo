@@ -191,37 +191,68 @@ async function callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstr
   }
 
   const endpoint = `${baseUrl.replace(/\/+$/, "")}/chat/completions`;
-  const response = await fetchImpl(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model,
-      temperature: 0,
-      response_format: {
-        type: "json_schema",
-        json_schema: { name: schemaName || "signals", strict: true, schema: responseSchema }
+
+  // Gateway này không thực sự ép response_format: đã gặp lần nó trả văn xuôi
+  // ("I can't discuss that...") thay vì JSON, làm người dùng thấy lỗi 502.
+  // Thử lại đúng MỘT lần với lời nhắc cứng hơn — đủ để lỗi chập chờn biến mất
+  // mà không nhân đôi chi phí trong trường hợp bình thường.
+  const attempt = async (nhacLaiJson) => {
+    const messages = [
+      { role: "system", content: systemInstruction },
+      { role: "user", content }
+    ];
+    if (nhacLaiJson) {
+      messages.push({
+        role: "user",
+        content: "Chỉ trả về đúng một đối tượng JSON theo schema đã cho. Không thêm lời dẫn, không giải thích, không bọc trong dấu nháy."
+      });
+    }
+
+    const response = await fetchImpl(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`
       },
-      messages: [
-        { role: "system", content: systemInstruction },
-        { role: "user", content }
-      ]
-    }),
-    signal: AbortSignal.timeout(30000)
-  });
+      body: JSON.stringify({
+        model,
+        temperature: 0,
+        response_format: {
+          type: "json_schema",
+          json_schema: { name: schemaName || "signals", strict: true, schema: responseSchema }
+        },
+        messages
+      }),
+      signal: AbortSignal.timeout(30000)
+    });
 
-  if (!response.ok) {
-    throw new GeminiError("AI chưa thể phân tích tình huống. Vui lòng thử lại.");
-  }
+    // 4xx là lỗi cấu hình/yêu cầu — thử lại cũng vậy, nên báo luôn.
+    if (!response.ok) {
+      const retryable = response.status >= 500 && response.status !== 501;
+      throw Object.assign(
+        new GeminiError("AI chưa thể phân tích tình huống. Vui lòng thử lại."),
+        { retryable }
+      );
+    }
 
-  const payload = await response.json();
-  const outputText = payload.choices?.[0]?.message?.content;
-  if (!outputText) {
-    throw new GeminiError("AI không trả về dữ liệu có thể sử dụng.");
+    const payload = await response.json();
+    const outputText = payload.choices?.[0]?.message?.content;
+    if (!outputText) {
+      throw Object.assign(new GeminiError("AI không trả về dữ liệu có thể sử dụng."), { retryable: true });
+    }
+    try {
+      return parseJsonLoose(outputText);
+    } catch (error) {
+      throw Object.assign(error, { retryable: true });
+    }
+  };
+
+  try {
+    return await attempt(false);
+  } catch (error) {
+    if (!error?.retryable) throw error;
+    return attempt(true);
   }
-  return parseJsonLoose(outputText);
 }
 
 function resolveLlmConfig(options) {

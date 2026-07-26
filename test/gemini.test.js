@@ -208,3 +208,70 @@ test("openai-compat provider sends an image as an image_url data URI", async () 
   assert.ok(imagePart, "expected an image_url content part");
   assert.equal(imagePart.image_url.url, "data:image/png;base64,aGVsbG8=");
 });
+
+const okSignals = () => JSON.stringify({
+  noi_dung_da_doc: "Công an gọi đòi chuyển tiền",
+  loi_dong_cam: "Bác đang lo lắng là điều dễ hiểu.",
+  ...Object.fromEntries(SIGNAL_KEYS.map((key) => [key, false])),
+  gia_danh_co_quan_nha_nuoc: true
+});
+
+const openaiOpts = (fetchImpl) => ({
+  provider: "openai",
+  baseUrl: "https://vertex-key.com/api/v1",
+  model: "aws/claude-haiku-4-5",
+  apiKey: "vai-test-key",
+  fetchImpl
+});
+
+test("openai-compat retries once when the model answers with prose instead of JSON", async () => {
+  // Seen in production: the gateway does not actually enforce response_format,
+  // so the model can reply "I can't discuss that..." and the parse fails.
+  const bodies = [];
+  let calls = 0;
+  const fetchImpl = async (_url, request) => {
+    calls += 1;
+    bodies.push(JSON.parse(request.body));
+    const content = calls === 1 ? "I can't discuss that. What are you working on?" : okSignals();
+    return { ok: true, json: async () => ({ choices: [{ message: { content } }] }) };
+  };
+
+  const result = await extractSignals("Công an gọi đòi chuyển tiền.", openaiOpts(fetchImpl));
+
+  assert.equal(calls, 2, "should retry exactly once");
+  assert.equal(result.signals.gia_danh_co_quan_nha_nuoc, true);
+  assert.equal(bodies[0].messages.length, 2, "first attempt sends system + user only");
+  assert.equal(bodies[1].messages.length, 3, "retry appends a JSON-only reminder");
+  assert.match(bodies[1].messages[2].content, /Chỉ trả về đúng một đối tượng JSON/);
+});
+
+test("openai-compat retries a 5xx but not a 4xx", async () => {
+  let serverErrorCalls = 0;
+  const flaky = async () => {
+    serverErrorCalls += 1;
+    if (serverErrorCalls === 1) return { ok: false, status: 502, json: async () => ({}) };
+    return { ok: true, json: async () => ({ choices: [{ message: { content: okSignals() } }] }) };
+  };
+  const recovered = await extractSignals("Tình huống", openaiOpts(flaky));
+  assert.equal(serverErrorCalls, 2);
+  assert.equal(recovered.signals.gia_danh_co_quan_nha_nuoc, true);
+
+  // A 401 is a configuration problem; retrying just burns another request.
+  let badKeyCalls = 0;
+  const badKey = async () => {
+    badKeyCalls += 1;
+    return { ok: false, status: 401, json: async () => ({}) };
+  };
+  await assert.rejects(() => extractSignals("Tình huống", openaiOpts(badKey)));
+  assert.equal(badKeyCalls, 1, "must not retry a 4xx");
+});
+
+test("openai-compat gives up after one retry instead of looping", async () => {
+  let calls = 0;
+  const alwaysProse = async () => {
+    calls += 1;
+    return { ok: true, json: async () => ({ choices: [{ message: { content: "vẫn không phải JSON" } }] }) };
+  };
+  await assert.rejects(() => extractSignals("Tình huống", openaiOpts(alwaysProse)));
+  assert.equal(calls, 2, "one original attempt plus one retry, then stop");
+});
