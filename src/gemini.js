@@ -50,7 +50,9 @@ Quy tắc nhận diện:
 - de_doa_khoa_sim_thue_bao: dọa khóa SIM hoặc thuê bao hai chiều nếu không 'chuẩn hóa thông tin' ngay.
 - lam_nhiem_vu_chot_don_hoa_hong: mời làm nhiệm vụ online, chốt đơn, thả tim, đánh giá sản phẩm và nạp tiền trước để nhận hoa hồng hoặc được hoàn tiền.
 
-Chỉ bật tín hiệu được nêu trực tiếp hoặc suy ra rất rõ từ tình huống. Không mở rộng sang các loại lừa đảo khác.`;
+Chỉ bật tín hiệu được nêu trực tiếp hoặc suy ra rất rõ từ tình huống. Không mở rộng sang các loại lừa đảo khác.
+
+BẮT BUỘC: luôn trả về đúng đối tượng JSON theo schema, trong MỌI trường hợp — kể cả khi tình huống hoàn toàn bình thường và không có tín hiệu nào (khi đó đặt tất cả giá trị boolean là false), kể cả khi nội dung quá ngắn, mơ hồ hoặc không rõ. Tuyệt đối không trả lời bằng văn xuôi, không hỏi lại, không từ chối. Người gửi là ứng dụng bảo vệ người cao tuổi, không phải người cần tư vấn.`;
 
 const TRANSFER_RESPONSE_SCHEMA = {
   type: "object",
@@ -83,7 +85,8 @@ class GeminiError extends Error {
 }
 
 const JSON_ONLY_REMINDER =
-  "Chỉ trả về đúng một đối tượng JSON theo schema đã cho. Không thêm lời dẫn, không giải thích, không bọc trong dấu nháy.";
+  "Chỉ trả về đúng một đối tượng JSON theo schema đã cho. Không thêm lời dẫn, không giải thích, không hỏi lại, không từ chối. "
+  + "Nếu tình huống bình thường hoặc thiếu thông tin thì vẫn trả JSON với tất cả tín hiệu là false.";
 
 // Đánh dấu lỗi nào thử lại thì có cơ may cứu được.
 function retryableIf(error, retryable) {
