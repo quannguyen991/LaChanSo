@@ -85,11 +85,16 @@ test("file inputs and editable report summary have accessible names", () => {
 
 test("mobile home exposes the reference workflow without replacing desktop routes", () => {
   for (const className of [
-    "mobile-reference-top", "mobile-situation-form", "mobile-action-grid",
-    "mobile-trust-strip", "mobile-bottom-nav"
+    "mobile-reference-top", "mobile-situation-form", "mobile-bottom-nav"
   ]) {
     assert.match(html, new RegExp(`class="[^"]*${className}`));
   }
+  // .mobile-action-grid was a byte-for-byte destination clone of .hub-tile-grid
+  // and .mobile-trust-strip carried a hardcoded "An toàn" badge. Both computed
+  // to display:none at every width, so they were dead markup that still had to
+  // be read and maintained. They must not come back.
+  assert.doesNotMatch(html, /mobile-action-grid/);
+  assert.doesNotMatch(html, /mobile-trust-strip/);
   for (const hash of ["#xac-minh", "#kiem-tra", "#kiem-tra-lien-ket", "#chuyen-khoan", "#hanh-trinh", "#huong-dan", "#quyen-rieng-tu"]) {
     assert.match(html, new RegExp(`href="${hash}"`));
   }
@@ -109,7 +114,10 @@ test("mobile home exposes the reference workflow without replacing desktop route
     assert.match(styles, new RegExp(`#homeView \\.${className.replaceAll("-", "\\-")}`));
   }
   assert.match(html, /hub-tile__title--desktop[\s\S]*?hub-tile__title--mobile/);
-  assert.match(styles, /#homeView \.mobile-action-grid,[\s\S]*?#homeView \.mobile-trust-strip,[\s\S]*?display:\s*none/);
+  // All FOUR shortcut tiles must be reachable on mobile. Two of them used to be
+  // hidden because suggestion chips above duplicated their destinations; those
+  // chips are gone, so hiding the tiles would strand #chuyen-khoan entirely.
+  assert.doesNotMatch(styles, /hub-tile-grid > a\[href="#chuyen-khoan"\][\s\S]{0,60}display:\s*none/);
   assert.match(styles, /#homeView \.hub-tile__arrow\s*\{\s*display:\s*none;/);
   assert.match(app, /function submitMobileSituation\(event\)/);
   assert.match(app, /function startMobileSituationRecording\(\)/);

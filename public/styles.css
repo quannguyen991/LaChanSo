@@ -4609,8 +4609,7 @@ body:has(#homeView:not([hidden])) {
       "tiles sidebar"
       "label label"
       "emergency emergency"
-      "reassurance reassurance"
-      "quick quick";
+      "reassurance reassurance";
     gap: var(--space-5);
     align-items: stretch;
   }
@@ -6508,15 +6507,9 @@ body:has(#homeView:not([hidden])) {
     display: none;
   }
 
-  /* 3. Hai thẻ trùng đích với chip ngay phía trên:
-        "Tin nhắn" -> #kiem-tra (đã có ở thanh tab dưới)
-        "Chuyển tiền" -> #chuyen-khoan (đã có chip "Tôi sắp chuyển tiền")
-        Giữ 2 thẻ dẫn tới nơi KHÔNG có lối nào khác. */
-  #homeView .hub-tile-grid > a[href="#kiem-tra"],
-  #homeView .hub-tile-grid > a[href="#chuyen-khoan"] {
-    display: none;
-  }
-
+  /* 3. Trước đây ẩn 2 trong 4 thẻ vì chip ngay phía trên trùng đích. Các chip
+        trùng đường dẫn đã bị xoá, nên 4 thẻ lối tắt lại là bộ đầy đủ và duy
+        nhất: Tin nhắn · Chuyển tiền · Cuộc gọi lạ · Link/QR. Xếp 2x2. */
   #homeView .hub-tile-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
