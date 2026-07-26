@@ -3248,10 +3248,6 @@ body {
   border-radius: var(--radius-lg);
 }
 
-.notice-banner--scam-types {
-  display: none;
-}
-
 @media (min-width: 56rem) {
   body {
     font-size: 1rem;
@@ -5835,12 +5831,6 @@ body:has(#homeView:not([hidden])) {
   #homeView .home-layout {
     position: relative;
     z-index: 1;
-  }
-
-  #homeView .mobile-action-grid,
-  #homeView .mobile-trust-strip,
-  #homeView .notice-banner--scam-types {
-    display: none;
   }
 
   #homeView .hub-cards,
