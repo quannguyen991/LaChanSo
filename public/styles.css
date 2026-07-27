@@ -2631,16 +2631,6 @@ body[data-onboarding="true"] > :not(.onboarding) {
   box-shadow: inset 0 0 2rem rgb(63 138 238 / 0.13), 0 0 2rem rgb(255 255 255 / 0.7);
 }
 
-.onboarding__welcome-art img,
-.onboarding__family-art img {
-  position: relative;
-  z-index: 1;
-  width: min(90%, 26rem);
-  height: min(44vh, 25rem);
-  object-fit: contain;
-  object-position: center bottom;
-}
-
 .onboarding__welcome-panel,
 .onboarding__trust-card,
 .onboarding__chat {

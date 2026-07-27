@@ -26,36 +26,51 @@
   <body>
     <a class="skip-link" href="#noi-dung">Bỏ qua phần đầu trang</a>
 
-    <section class="onboarding onboarding--reference" id="onboarding" aria-label="Hướng dẫn bắt đầu" hidden>
+    <section class="onboarding" id="onboarding" aria-label="Hướng dẫn bắt đầu" hidden>
       <div class="onboarding__shell">
         <article class="onboarding__screen" data-onboarding-step="1" aria-labelledby="onboardingWelcomeTitle">
-          <h1 class="visually-hidden" id="onboardingWelcomeTitle">Khoan Đã, cùng bác an toàn trong thế giới số</h1>
-          <img class="onboarding__reference" src="/assets/onboarding-reference-1.webp" width="942" height="1672" alt="" aria-hidden="true">
-          <button class="onboarding__hotspot onboarding__hotspot--primary" type="button" data-onboarding-next aria-label="Bắt đầu"></button>
+          <img class="onboarding__art" src="/assets/onboarding-reference-1.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
+          <h1 class="onboarding__title" id="onboardingWelcomeTitle">Khoan Đã</h1>
+          <p class="onboarding__lead">Cùng bác an toàn trong thế giới số</p>
+          <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Bắt đầu</button>
+          </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="2" aria-labelledby="onboardingHelloTitle" hidden>
-          <h2 class="visually-hidden" id="onboardingHelloTitle">Chào bác</h2>
-          <img class="onboarding__reference" src="/assets/onboarding-reference-2.webp" width="942" height="1672" alt="" aria-hidden="true">
-          <button class="onboarding__hotspot onboarding__hotspot--skip" type="button" data-onboarding-skip aria-label="Bỏ qua hướng dẫn"></button>
-          <button class="onboarding__hotspot onboarding__hotspot--primary" type="button" data-onboarding-next aria-label="Tiếp tục"></button>
+          <img class="onboarding__art" src="/assets/onboarding-reference-2.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
+          <h2 class="onboarding__title" id="onboardingHelloTitle">Chào bác</h2>
+          <p class="onboarding__lead">Bác kể lại tình huống bằng chữ, bằng giọng nói, hoặc đưa tôi xem ảnh.</p>
+          <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
+          <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
+          </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="3" aria-labelledby="onboardingCheckTitle" hidden>
-          <h2 class="visually-hidden" id="onboardingCheckTitle">Kiểm tra nhanh, phát hiện sớm</h2>
-          <img class="onboarding__reference" src="/assets/onboarding-reference-3.webp" width="942" height="1672" alt="" aria-hidden="true">
-          <button class="onboarding__hotspot onboarding__hotspot--skip" type="button" data-onboarding-skip aria-label="Bỏ qua hướng dẫn"></button>
-          <button class="onboarding__hotspot onboarding__hotspot--primary" type="button" data-onboarding-next aria-label="Tiếp tục"></button>
+          <img class="onboarding__art" src="/assets/onboarding-reference-3.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
+          <h2 class="onboarding__title" id="onboardingCheckTitle">Kiểm tra nhanh, phát hiện sớm</h2>
+          <p class="onboarding__lead">Tin nhắn lạ, cuộc gọi lạ, link hay mã QR — bác đưa vào, tôi xem giúp.</p>
+          <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
+          <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
+          </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="4" aria-labelledby="onboardingProcessTitle" hidden>
-          <h2 class="visually-hidden" id="onboardingProcessTitle">Xử lý đơn giản, hướng dẫn rõ ràng</h2>
-          <img class="onboarding__reference" src="/assets/onboarding-reference-4.webp" width="942" height="1672" alt="" aria-hidden="true">
-          <button class="onboarding__hotspot onboarding__hotspot--skip" type="button" data-onboarding-skip aria-label="Bỏ qua hướng dẫn"></button>
-          <button class="onboarding__hotspot onboarding__hotspot--primary" type="button" data-onboarding-next aria-label="Tiếp tục"></button>
+          <img class="onboarding__art" src="/assets/onboarding-reference-4.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
+          <h2 class="onboarding__title" id="onboardingProcessTitle">Xử lý đơn giản, hướng dẫn rõ ràng</h2>
+          <p class="onboarding__lead">Tôi nói rõ mức rủi ro, vì sao, và việc bác cần làm ngay.</p>
+          <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
+          <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
+          </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="5" aria-labelledby="onboardingFamilyTitle" hidden>
-          <h2 class="visually-hidden" id="onboardingFamilyTitle">Gia đình luôn bên cạnh bác</h2>
-          <img class="onboarding__reference" src="/assets/onboarding-reference-5.webp" width="942" height="1672" alt="" aria-hidden="true">
-          <button class="onboarding__hotspot onboarding__hotspot--primary" type="button" id="finishOnboardingButton" aria-label="Bắt đầu sử dụng"></button>
-          <button class="onboarding__hotspot onboarding__hotspot--login" type="button" id="finishOnboardingLaterButton" aria-label="Đăng nhập hoặc sử dụng sau"></button>
+          <img class="onboarding__art" src="/assets/onboarding-reference-5.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
+          <h2 class="onboarding__title" id="onboardingFamilyTitle">Gia đình luôn bên cạnh bác</h2>
+          <p class="onboarding__lead">Lưu số con cháu để gọi ngay bằng một chạm khi cần.</p>
+          <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--quiet" type="button" id="finishOnboardingLaterButton">Đăng nhập hoặc dùng sau</button>
+          <button class="onboarding__button onboarding__button--primary" type="button" id="finishOnboardingButton">Bắt đầu sử dụng</button>
+          </div>
         </article>
       </div>
     </section>

@@ -209,7 +209,13 @@ test("floating header, local account flow and reference history shell stay conne
 test("onboarding is a functional five-step reference flow and can be reopened", () => {
   for (const step of [1, 2, 3, 4, 5]) assert.match(html, new RegExp(`data-onboarding-step="${step}"`));
   for (const step of [1, 2, 3, 4, 5]) assert.match(html, new RegExp(`onboarding-reference-${step}\\.webp`));
-  assert.match(html, /onboarding__hotspot--primary/);
+  // Trước đây dòng này BẮT BUỘC phải có `onboarding__hotspot--primary` — tức
+  // hợp đồng đang khoá chặt CHÍNH CẤU TRÚC HỎNG: nút rỗng ruột đè lên nút được
+  // vẽ sẵn trong ảnh. Nay khoá điều ngược lại: nhãn nút là CHỮ THẬT trong HTML.
+  assert.match(html, /<button[^>]*data-onboarding-next[^>]*>Bắt đầu<\/button>/);
+  assert.match(html, /<button[^>]*id="finishOnboardingButton"[^>]*>Bắt đầu sử dụng<\/button>/);
+  assert.doesNotMatch(html, /onboarding__hotspot/);
+  assert.doesNotMatch(html, /class="visually-hidden" id="onboardingWelcomeTitle"/);
   assert.match(html, /id="reopenOnboardingButton"/);
   assert.match(app, /onboardingComplete:\s*"khoan-da:onboarding-complete"/);
   assert.match(app, /function renderOnboardingStep\(/);
@@ -220,9 +226,10 @@ test("onboarding is a functional five-step reference flow and can be reopened", 
   assert.match(app, /getStored\(STORAGE_KEYS\.onboardingComplete\) !== "1"/);
   assert.match(styles, /@keyframes onboarding-enter-forward/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?is-entering-forward/);
-  assert.match(refreshStyles, /\.onboarding\.onboarding--reference[\s\S]*?padding:\s*0 !important/);
-  assert.match(refreshStyles, /\.onboarding--reference \.onboarding__shell[\s\S]*?height:\s*100dvh !important/);
-  assert.match(refreshStyles, /\.onboarding--reference \.onboarding__reference[\s\S]*?object-fit:\s*fill !important/);
+  // Ảnh nay chỉ là MINH HOẠ, đo bằng rem nên co giãn theo nút A / A+ / A++.
+  // Không được quay lại dvh/vh/vw: chữ trong ảnh sẽ đứng yên khi phóng chữ.
+  assert.match(refreshStyles, /\.onboarding__art \{[^}]*max-block-size: [\d.]+rem/);
+  assert.doesNotMatch(refreshStyles, /\.onboarding__art \{[^}]*\d(dvh|vh|vw)\b/);
 });
 
 test("home prompt, expanded lessons and family profile match the current reference", () => {
