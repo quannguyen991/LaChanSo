@@ -100,19 +100,50 @@ Lý do: AI chỉ đọc và bật cờ; **luật cứng trong code mới quyết
 
 ## 6. Vấn đề cần thiết kế mới giải quyết
 
-### 🔴 Nặng
-1. **Quá nhiều lối vào cùng một việc.** Trang chủ có ô nhập + chip gợi ý + thẻ hub + lưới thẻ — tất cả để "bắt đầu kiểm tra". Người già bị rối. **Cần gom còn 1–2 lối rõ ràng.**
-2. **Trang chủ vẫn dài** (~2100px trên điện thoại ≈ 2,6 màn vuốt, dù đã cắt bớt).
-3. **Hộp cảnh báo nguy hiểm dài ~1750px** trên màn 812px — người đang hoảng phải cuộn.
+> Cập nhật 26/7/2026 sau đợt sửa lỗi tiếp cận. Các mục ✅ đã xử lý — **đừng
+> thiết kế lại chúng, đừng làm chúng tệ đi**.
 
-### 🟠 Vừa
+### ✅ Đã sửa — giữ nguyên kết quả, không được làm hỏng
+- **Lối vào trùng nhau trên trang chủ.** Từ 11 nút cho 4 đích còn: 1 ô nhập
+  chính (kèm 4 nút chụp/QR/nói/tiếp tục), 2 chip điền sẵn, 4 ô lối tắt, 2 nút
+  khẩn cấp đỏ, 1 nút gọi người thân. Menu hồ sơ: 8 mục → 6 mục, 0 đích trùng.
+- **Hộp cảnh báo "Nguy hiểm cao": 1497px → 757px.** Hai nút gọi từ y=924 (dưới
+  nếp gấp) lên **y=607**; ở cỡ chữ A++ vẫn nằm trên nếp gấp (y=735). Thứ tự bắt
+  buộc: nhãn đỏ → dòng trấn an → **câu để đọc rồi cúp máy** → 3 điều từ chối →
+  đếm ngược 60s → 2 nút gọi → mọi giải thích nằm sau một cú chạm.
+- **Hero không còn nướng chữ vào ảnh.** Là chữ thật, giãn 51→68px theo cỡ chữ.
+- **Sàn cỡ chữ 14px và vùng chạm 52/56px** — đã có test chặn, xem mục 6b.
+
+### 🔴 Còn lại — việc thật của đợt thiết kế lại
+1. **Trang chủ vẫn dài**: 2022px trên điện thoại ≈ **2,49 màn vuốt**. Mục tiêu ≤2 màn.
+2. **Bản máy tính chưa được thiết kế bài bản** — vẫn là bố cục 2 cột mở rộng từ
+   bản điện thoại. Câu hỏi cần trả lời: khoảng trống hai bên dùng làm gì cho có ích?
+3. **Nhân đôi mobile/desktop trong cùng DOM** — còn 2 thanh nav dưới giống hệt
+   nhau (`.bottom-nav` và `.mobile-bottom-nav`). Mobile và desktop phải là **một
+   hệ**, không phải hai sản phẩm. Đây là nguyên tắc cho toàn bộ thiết kế mới.
 4. Nhiều thẻ trông giống nhau → khó biết cái nào quan trọng.
-5. Màn chào 4 bước hơi dài với người già; trên máy Android thấp (360×640) nút "Bắt đầu" chỉ ló một phần.
-6. Bản máy tính hiện là bố cục 2 cột (nội dung + cột phụ) — **chưa được thiết kế bài bản**, chủ yếu là mở rộng từ bản điện thoại.
+5. Màn chào 4 bước hơi dài; trên Android thấp (360×640) nút "Bắt đầu" chỉ ló một phần.
 
-### 🟡 Nợ kỹ thuật (để bên thiết kế biết bối cảnh)
-7. `styles.css` **6.480 dòng, 24 ngưỡng màn hình** đè nhau — từng làm 4 nút biến mất khỏi giao diện mà không ai biết. **Thiết kế lại nên kèm dựng lại CSS sạch, không đè thêm.**
-8. Quy mô hiện tại: `index.html` 1.883 dòng · `app.js` 3.456 dòng.
+### 🟡 Nợ kỹ thuật (bối cảnh cho bên thiết kế)
+6. `styles.css` **6.543 dòng, 52 khối `@media`** đè nhau — từng làm 4 nút biến
+   mất mà không ai biết. **Thiết kế lại nên kèm dựng lại CSS sạch, không đè thêm.**
+   Nêu rõ số ngưỡng màn hình, **càng ít càng tốt** (đề xuất: 3).
+7. Quy mô: `index.html` 1.858 dòng · `app.js` ~3.460 dòng.
+8. Ở cỡ chữ A++ trên iPhone SE đời 1 (320×568) hộp cảnh báo vẫn hụt nếp gấp 12px.
+
+## 6b. Hàng rào tự động — thiết kế nào vi phạm sẽ bị chặn
+
+Repo có **130 test** chạy bằng `npm test`. Bốn trong số đó chặn thẳng vào thiết kế:
+
+| Test | Chặn điều gì |
+|---|---|
+| `font-size-floor.test.js` | mọi `font-size` dưới **14px** ở gốc 17px |
+| `non-text-contrast.test.js` | viền/ranh giới dưới **3:1** (WCAG 1.4.11) |
+| `contrast.test.js` | cặp màu chữ dưới **4.5:1** |
+| `frontend-contract.test.js` | chữ nướng vào ảnh, nhãn rủi ro, các `id` mà JS bám vào |
+
+**Nghĩa là:** bản thiết kế gửi về sẽ được kiểm bằng số đo, không bằng cảm tính.
+Bên thiết kế cứ đề xuất; chỗ nào không dựng được sẽ có bằng chứng cụ thể.
 
 ---
 
