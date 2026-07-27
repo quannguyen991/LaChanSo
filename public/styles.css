@@ -93,6 +93,31 @@ html[data-route-direction="back"]::view-transition-new(main-view) {
   animation-name: view-enter-back;
 }
 
+/* Only the content view (main-view) slides. Everything else — the bottom
+   taskbar and the header — lives in the default "root" snapshot, which the UA
+   cross-fades by default and made the taskbar flicker. Hold root still so the
+   taskbar stays put while the page behind it animates. */
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Pin the taskbars as their own persistent groups so they never fade or shift
+   during a route change — the content behind them animates, they do not. */
+.bottom-nav { view-transition-name: taskbar-desktop; }
+.mobile-bottom-nav { view-transition-name: taskbar-mobile; }
+
+::view-transition-group(taskbar-desktop),
+::view-transition-old(taskbar-desktop),
+::view-transition-new(taskbar-desktop),
+::view-transition-group(taskbar-mobile),
+::view-transition-old(taskbar-mobile),
+::view-transition-new(taskbar-mobile) {
+  animation: none;
+}
+
 body {
   min-height: 100dvh;
   margin: 0;
@@ -183,7 +208,8 @@ a {
 .icon-save { --icon-source: url("/vendor/unicons/save.svg"); }
 .icon-alert { --icon-source: url("/vendor/unicons/exclamation-triangle.svg"); }
 .icon-image { --icon-source: url("/vendor/unicons/image.svg"); }
-.icon-siren { --icon-source: url("/vendor/unicons/exclamation-octagon.svg"); }
+.icon-siren { --icon-source: url("/vendor/unicons/hand-raised.svg"); }
+.icon-paperclip { --icon-source: url("/vendor/unicons/paperclip.svg"); }
 .icon-wallet { --icon-source: url("/vendor/unicons/wallet.svg"); }
 .icon-folder-lock { --icon-source: url("/vendor/unicons/folder-lock.svg"); }
 .icon-chevron-right { --icon-source: url("/vendor/unicons/angle-right-b.svg"); }
@@ -908,6 +934,104 @@ h1 {
   width: 1.25rem;
   height: 1.25rem;
   flex: 0 0 auto;
+}
+
+/* "Báo cho con cháu" — one tap to call or open a pre-filled SMS to the saved
+   family contact. A calm, helpful card (blue, not the red danger tone). */
+.family-alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2) var(--space-3);
+  align-items: center;
+  margin-block-start: var(--space-2);
+  padding: var(--space-3);
+  border: 1px solid var(--color-accent-soft-line);
+  border-radius: var(--radius-xl);
+  background: var(--color-accent-soft);
+}
+
+.family-alert__icon {
+  display: grid;
+  place-items: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.family-alert__icon .icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.family-alert__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.family-alert__title {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.02rem;
+}
+
+.family-alert__lead {
+  color: var(--color-ink-2);
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.family-alert__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.family-alert__btn {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: var(--touch-target);
+  padding-inline: var(--space-2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.92rem;
+  touch-action: manipulation;
+}
+
+.family-alert__btn .icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex: 0 0 auto;
+}
+
+.family-alert__btn--call {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.family-alert__btn--sms {
+  background: var(--color-surface);
+  border-color: var(--color-accent-soft-line);
+  color: var(--color-accent);
+}
+
+.family-alert__btn:active {
+  opacity: 0.8;
+}
+
+.family-alert__btn:focus-visible {
+  outline: 3px solid var(--color-focus-inner);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 6px var(--color-focus-outer);
 }
 
 .secondary-link-card {
@@ -2779,9 +2903,11 @@ body[data-onboarding="true"] > :not(.onboarding) {
 @media (max-width: 40rem) {
   .topbar-ready { display: none; }
   .profile-menu {
-    inset: auto max(0.75rem, env(safe-area-inset-right)) calc(var(--bottom-nav-height) + 1.1rem + env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
-    width: auto;
-    max-height: min(37rem, calc(100dvh - 8rem));
+    /* Drop down from the "Chào bác" chip at the top-right instead of covering
+       the screen from the bottom. */
+    inset: calc(env(safe-area-inset-top, 0px) + 4.75rem) max(0.75rem, env(safe-area-inset-right)) auto auto;
+    width: min(21rem, calc(100vw - 1.5rem));
+    max-height: min(30rem, calc(100dvh - 7rem));
     border-radius: var(--radius-xl);
   }
 
@@ -5134,9 +5260,10 @@ body:has(#homeView:not([hidden])) {
     width: clamp(2.8rem, 10vw, 4.5rem);
     height: clamp(2.8rem, 10vw, 4.5rem);
     border-radius: var(--radius-full);
-    color: var(--color-accent-ink);
-    background: var(--color-accent-bright);
-    box-shadow: var(--shadow-sm);
+    /* Soft tinted circle + coloured glyph (like the hub tiles) reads calmer than
+       a saturated disc, and the per-card warning badge was pure clutter. */
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
   }
 
   #homeView .mobile-action__icon > .icon:first-child {
@@ -5145,27 +5272,22 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .mobile-action__alert {
-    position: absolute;
-    inset: auto calc(var(--space-1) * -1) calc(var(--space-1) * -1) auto;
-    width: 1.2rem;
-    height: 1.2rem;
-    padding: 0.16rem;
-    border: 2px solid var(--color-surface);
-    border-radius: var(--radius-full);
-    background: var(--color-notice);
-    color: var(--color-danger-ink);
+    display: none;
   }
 
   #homeView .mobile-action--message .mobile-action__icon {
-    background: var(--color-success);
+    color: var(--color-success);
+    background: var(--color-success-soft);
   }
 
   #homeView .mobile-action--link .mobile-action__icon {
-    background: var(--color-violet);
+    color: var(--color-violet);
+    background: var(--color-violet-soft);
   }
 
   #homeView .mobile-action--transfer .mobile-action__icon {
-    background: var(--color-notice);
+    color: var(--color-teal);
+    background: var(--color-teal-soft);
   }
 
   #homeView .eyebrow--danger {
@@ -5197,12 +5319,14 @@ body:has(#homeView:not([hidden])) {
   #homeView .emergency-banner--button .emergency-banner__icon {
     width: clamp(2.6rem, 8vw, 4rem);
     height: clamp(2.6rem, 8vw, 4rem);
-    background: var(--color-danger-soft);
-    color: var(--color-danger);
+    /* brighter, cleaner: solid red disc with a white "stop" glyph */
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: 0 6px 16px -8px color-mix(in oklch, var(--color-danger) 60%, transparent);
   }
 
   #homeView .emergency-banner--button .emergency-banner__icon .icon {
-    --icon-source: url("/vendor/unicons/exclamation-octagon.svg");
+    --icon-source: url("/vendor/unicons/hand-raised.svg");
   }
 
   #homeView .emergency-banner--button .emergency-banner__text {
@@ -5324,9 +5448,9 @@ body:has(#homeView:not([hidden])) {
 
   .mobile-bottom-nav__inner {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     width: 100%;
-    min-height: clamp(4rem, 16vw, 6.75rem);
+    min-height: 3.4rem;
   }
 
   .mobile-bottom-nav .mobile-bottom-nav__item {
@@ -5544,10 +5668,15 @@ body:has(#homeView:not([hidden])) {
     position: relative;
     display: block;
     margin-inline: calc(clamp(var(--space-3), 3vw, var(--space-5)) * -1);
+    margin-block-start: calc(var(--space-4) * -1);
     overflow: hidden;
     border-start-start-radius: var(--radius-xl);
     border-start-end-radius: var(--radius-xl);
-    background: var(--color-sky-pale);
+    /* Immersive blue scene behind the real-text hero (couple photo blends in on
+       the right). The heading stays HTML so the font-size control can grow it. */
+    background:
+      radial-gradient(85% 70% at 82% 24%, rgb(255 255 255 / 0.55), transparent 60%),
+      linear-gradient(168deg, #eaf3ff 0%, #dbeafe 52%, #cfe0fb 100%);
   }
 
   #homeView .mobile-reference-top::after {
@@ -5567,6 +5696,8 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .mobile-reference-top__bar {
+    position: relative;
+    z-index: 3;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -5596,8 +5727,22 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .mobile-reference-top__profile {
-    background: var(--color-surface);
+    background: transparent;
     font-weight: 600;
+  }
+
+  #homeView .mobile-reference-top__profile-avatar {
+    width: clamp(2.6rem, 9vw, 3.4rem);
+    height: clamp(2.6rem, 9vw, 3.4rem);
+    border: 3px solid var(--color-surface);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+    object-fit: cover;
+  }
+
+  #homeView .mobile-reference-top__profile > .icon {
+    width: 1rem;
+    height: 1rem;
   }
 
   #homeView .mobile-reference-top__brand img {
@@ -5630,34 +5775,48 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .mobile-reference-top__intro {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    margin-block-start: var(--space-4);
+    position: relative;
+    min-height: clamp(9.5rem, 46vw, 13.5rem);
+    margin-block-start: var(--space-3);
   }
 
   #homeView .mobile-reference-top__copy {
-    flex: 1 1 auto;
-    min-width: 0;
+    position: relative;
+    z-index: 2;
+    max-width: min(60%, 14.5rem);
+    padding-block: var(--space-2) var(--space-5);
   }
 
   #homeView .mobile-reference-top__copy h2 {
     margin: 0;
-    font-size: clamp(1.35rem, 6vw, 1.9rem);
-    line-height: 1.25;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    /* rem so the A / A+ / A++ control enlarges the main question. */
+    font-size: 1.85rem;
+    font-weight: 800;
+    line-height: 1.12;
   }
 
   #homeView .mobile-reference-top__copy p {
-    margin: var(--space-2) 0 0;
-    font-size: clamp(1rem, 3.8vw, 1.15rem);
-    line-height: 1.5;
+    max-width: 13rem;
+    margin: var(--space-3) 0 0;
+    color: var(--color-ink-2);
+    font-size: 1rem;
+    line-height: 1.45;
   }
 
+  /* The couple photo bleeds off the right edge and fades into the blue scene on
+     its left, so it reads as one immersive banner instead of a boxed thumbnail. */
   #homeView .mobile-reference-top__art {
-    flex: 0 0 auto;
-    width: clamp(5rem, 26vw, 7.5rem);
+    position: absolute;
+    right: calc(clamp(var(--space-3), 4vw, var(--space-5)) * -1);
+    bottom: 0;
+    z-index: 1;
+    width: clamp(11rem, 55vw, 17.5rem);
     height: auto;
-    border-radius: var(--radius-lg);
+    border-radius: 0;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 34%);
+    mask-image: linear-gradient(to right, transparent, #000 34%);
   }
 
   @media (max-width: 22rem) {
@@ -6348,18 +6507,19 @@ body:has(#homeView:not([hidden])) {
     padding: 0;
     overflow: clip;
     border: 1px solid var(--color-rule);
-    border-radius: var(--radius-xl);
-    background: color-mix(in oklch, var(--color-surface) 94%, var(--color-sky-soft));
+    /* fully rounded floating pill, tighter than before */
+    border-radius: 2rem;
+    background: color-mix(in oklch, var(--color-surface) 92%, var(--color-sky-soft));
     box-shadow: var(--shadow-lg);
   }
 
   .mobile-bottom-nav__inner {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-1);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
     width: 100%;
-    min-height: 4.25rem;
-    padding: var(--space-1);
+    min-height: 3.4rem;
+    padding: 5px;
   }
 
   .mobile-bottom-nav .mobile-bottom-nav__item {
@@ -6367,22 +6527,22 @@ body:has(#homeView:not([hidden])) {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: var(--space-1);
+    gap: 3px;
     min-width: 0;
-    min-height: 3.75rem;
-    padding: var(--space-1);
+    min-height: 2.9rem;
+    padding: 4px 2px;
     border-radius: var(--radius-lg);
     color: var(--color-muted);
-    font-size: clamp(0.58rem, 2.6vw, 0.7rem);
+    font-size: clamp(0.56rem, 2.5vw, 0.68rem);
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.05;
     text-decoration: none;
     white-space: nowrap;
   }
 
   .mobile-bottom-nav .mobile-bottom-nav__item .icon {
-    width: 1.15rem;
-    height: 1.15rem;
+    width: 1.25rem;
+    height: 1.25rem;
   }
 
   .mobile-bottom-nav .mobile-bottom-nav__item[aria-current="page"] {
@@ -6444,10 +6604,10 @@ body:has(#homeView:not([hidden])) {
   #homeView .home-main > .mobile-situation-form { order: 2; }
   #homeView .home-main > .mobile-quick-result { order: 3; }
   #homeView .home-main > .home-suggestion-chips { order: 4; }
-  #homeView .home-main > .eyebrow--danger { order: 5; }
-  #homeView .home-main > .emergency-zone { order: 6; }
-  #homeView .home-main > .hub-cards { order: 7; }
-  #homeView .home-main > .hub-tile-grid { order: 8; }
+  #homeView .home-main > .hub-cards { order: 5; }
+  #homeView .home-main > .hub-tile-grid { order: 6; }
+  #homeView .home-main > .eyebrow--danger { order: 7; }
+  #homeView .home-main > .emergency-zone { order: 8; }
   #homeView .home-main > .home-quick-links { order: 9; }
   #homeView .home-main > .reassurance-band { order: 10; }
 
@@ -6557,7 +6717,7 @@ body:has(#homeView:not([hidden])) {
         Giữ 2 thẻ dẫn tới nơi KHÔNG có lối nào khác. */
   #homeView .hub-tile-grid > a[href="#kiem-tra"],
   #homeView .hub-tile-grid > a[href="#chuyen-khoan"] {
-    display: none;
+    display: flex;
   }
 
   #homeView .hub-tile-grid {
@@ -6599,4 +6759,544 @@ body:has(#homeView:not([hidden])) {
   color: var(--color-muted);
   font-size: 0.95rem;
   line-height: 1.4;
+}
+
+/* Mobile home reference, 2026-07-26. The hero uses the approved crop; every
+   control below it remains live HTML so the check and emergency flows work. */
+@media (max-width: 40rem) {
+  body:has(#homeView:not([hidden])),
+  #homeView {
+    background:
+      radial-gradient(90% 28% at 50% 35%, rgb(255 255 255 / 0.94), transparent 100%),
+      linear-gradient(180deg, #dcecff 0%, #f8fbff 68%, #eef6ff 100%);
+  }
+
+  #homeView::before,
+  #homeView::after {
+    opacity: 0.14;
+  }
+
+  #homeView .home-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-block-end: calc(6rem + env(safe-area-inset-bottom));
+  }
+
+  #homeView .mobile-reference-top {
+    order: 1;
+    width: calc(100% + (clamp(var(--space-3), 3vw, var(--space-5)) * 2));
+    margin: 0 calc(clamp(var(--space-3), 3vw, var(--space-5)) * -1);
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    background: var(--color-sky-soft);
+  }
+
+  #homeView .mobile-reference-top::after {
+    display: none;
+  }
+
+  #homeView .mobile-reference-top__scene {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 942 / 677;
+    object-fit: cover;
+  }
+
+  /* Invisible semantic hit areas sit over the brand and profile drawn in the
+     approved hero crop. */
+  #homeView .mobile-reference-top__bar {
+    position: absolute;
+    inset: 2% 3% auto;
+    z-index: 3;
+    height: 24%;
+    padding: 0;
+  }
+
+  #homeView .mobile-reference-top__brand,
+  #homeView .mobile-reference-top__profile {
+    align-self: stretch;
+    min-height: 100%;
+    padding: 0;
+    opacity: 0;
+  }
+
+  #homeView .mobile-reference-top__brand {
+    flex: 0 1 59%;
+  }
+
+  #homeView .mobile-reference-top__profile {
+    flex: 0 1 38%;
+  }
+
+  #homeView .mobile-reference-top__brand:focus-visible,
+  #homeView .mobile-reference-top__profile:focus-visible {
+    opacity: 0.12;
+  }
+
+  #homeView .mobile-reference-top__intro {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    min-height: 0;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  #homeView .mobile-reference-top__art {
+    display: none;
+  }
+
+  #homeView .mobile-situation-form {
+    order: 2;
+    z-index: 4;
+    margin: clamp(-0.45rem, -1.2vw, -0.2rem) clamp(0.1rem, 1vw, 0.45rem) clamp(var(--space-3), 3vw, var(--space-5));
+    padding: clamp(0.45rem, 1.5vw, 0.7rem);
+    border: clamp(0.45rem, 1.5vw, 0.7rem) solid color-mix(in srgb, var(--color-surface) 82%, var(--color-accent-soft));
+    border-radius: clamp(1.4rem, 5vw, 2.15rem);
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-accent-soft));
+    box-shadow: 0 0.65rem 1.5rem rgb(31 93 164 / 0.15);
+  }
+
+  #homeView .mobile-situation-form textarea {
+    height: clamp(5.5rem, 23vw, 8.5rem);
+    padding: clamp(var(--space-3), 3vw, var(--space-5)) clamp(var(--space-4), 4vw, var(--space-6)) 3.75rem;
+    border: 0;
+    border-radius: clamp(1.1rem, 4vw, 1.75rem);
+    background: color-mix(in srgb, var(--color-surface) 96%, var(--color-sky-pale));
+    color: var(--color-ink);
+    font-size: clamp(0.9rem, 3.8vw, 1.1rem);
+    line-height: 1.45;
+    resize: none;
+  }
+
+  #homeView .mobile-situation-form textarea::placeholder {
+    color: color-mix(in srgb, var(--color-muted) 72%, var(--color-surface));
+    opacity: 1;
+  }
+
+  #homeView .mobile-situation-form__actions {
+    inset: auto clamp(var(--space-3), 3vw, var(--space-5)) clamp(var(--space-3), 3vw, var(--space-5)) auto;
+    flex-wrap: nowrap;
+  }
+
+  #homeView .mobile-situation-attach {
+    width: var(--touch-target);
+    height: var(--touch-target);
+    background: transparent;
+    color: var(--color-accent-bright);
+  }
+
+  #homeView .mobile-situation-attach .icon {
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  #homeView .mobile-situation-link {
+    display: none;
+  }
+
+  /* Voice recording lives in the chat box: a round mic button next to attach. */
+  #homeView .mobile-situation-voice {
+    display: inline-flex;
+    width: var(--touch-target);
+    min-width: var(--touch-target);
+    height: var(--touch-target);
+    padding: 0;
+    background: var(--color-violet-soft);
+    color: var(--color-violet);
+  }
+
+  #homeView .mobile-situation-voice[aria-pressed="true"] {
+    background: var(--color-danger);
+    color: var(--color-danger-ink);
+  }
+
+  #homeView .mobile-situation-voice .icon {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  /* The send button stays visible next to the attach button (Codex hid it until
+     the user typed, so the composer looked like it had no way to submit). */
+  #homeView .mobile-situation-submit {
+    display: inline-flex;
+    width: var(--touch-target);
+    min-width: var(--touch-target);
+    height: var(--touch-target);
+    padding: 0;
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+    box-shadow: 0 6px 16px -8px color-mix(in oklch, var(--color-accent) 70%, transparent);
+  }
+
+  #homeView .mobile-situation-submit > span:not(.icon) {
+    /* icon-only on phones — the accessible name lives on the button's aria-label */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  #homeView .mobile-situation-submit .icon {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  #homeView .mobile-situation-form__hint {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+  }
+
+  #homeView .mobile-situation-form__status,
+  #homeView .mobile-situation-form__error {
+    margin-inline: var(--space-3);
+    font-size: 0.78rem;
+  }
+
+  #homeView .home-suggestion-chips,
+  #homeView .hub-cards,
+  #homeView .hub-tile-grid,
+  #homeView .eyebrow--danger,
+  #homeView .notice-banner,
+  #homeView .reassurance-band,
+  #homeView .home-quick-links,
+  #homeView .home-sidebar {
+    display: none !important;
+  }
+
+  #homeView .mobile-action-grid {
+    order: 4;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(0.45rem, 2vw, 0.8rem);
+    margin: 0 clamp(0.1rem, 1vw, 0.45rem) clamp(0.55rem, 2vw, 0.8rem);
+  }
+
+  #homeView .mobile-action {
+    gap: clamp(0.4rem, 1.5vw, 0.7rem);
+    min-height: clamp(5.8rem, 23vw, 8.5rem);
+    padding: clamp(0.6rem, 2vw, 1rem) 0.25rem;
+    border: 1px solid color-mix(in srgb, var(--color-accent-soft-line) 72%, transparent);
+    border-radius: clamp(1rem, 4vw, 1.65rem);
+    background: color-mix(in srgb, var(--color-surface) 96%, var(--color-sky-pale));
+    box-shadow: 0 0.35rem 1rem rgb(32 76 133 / 0.1);
+    color: var(--color-ink);
+    font-size: clamp(0.64rem, 2.7vw, 0.82rem);
+    line-height: 1.2;
+  }
+
+  #homeView .mobile-action > span:last-child {
+    white-space: normal;
+  }
+
+  #homeView .mobile-action__icon {
+    width: clamp(2.75rem, 10.5vw, 4.2rem);
+    height: clamp(2.75rem, 10.5vw, 4.2rem);
+  }
+
+  #homeView .mobile-action__alert {
+    width: clamp(1rem, 3.6vw, 1.3rem);
+    height: clamp(1rem, 3.6vw, 1.3rem);
+  }
+
+  #homeView .home-main > .emergency-zone {
+    order: 5;
+    display: block;
+    margin: 0 clamp(0.1rem, 1vw, 0.45rem) clamp(0.6rem, 2.2vw, 0.9rem);
+  }
+
+  #homeView .emergency-zone > .emergency-banner:not(.emergency-banner--button) {
+    display: none;
+  }
+
+  #homeView .emergency-banner--button,
+  #homeView .emergency-zone > .emergency-banner.emergency-banner--button {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) clamp(4.9rem, 19vw, 6.6rem);
+    gap: clamp(0.35rem, 1.6vw, 0.8rem);
+    min-height: clamp(3.75rem, 15vw, 6rem);
+    padding: clamp(0.4rem, 1.5vw, 0.8rem);
+    border: 1px solid color-mix(in srgb, var(--color-danger) 18%, var(--color-surface));
+    border-radius: clamp(1.25rem, 4vw, 1.85rem);
+    background: linear-gradient(90deg, var(--color-danger-soft), color-mix(in srgb, var(--color-danger-faint) 68%, var(--color-surface)));
+    color: var(--color-danger-deep);
+  }
+
+  #homeView .emergency-banner--button .emergency-banner__icon {
+    width: clamp(2.75rem, 9vw, 3.8rem);
+    height: clamp(2.75rem, 9vw, 3.8rem);
+    border-radius: var(--radius-full);
+    background: var(--color-danger);
+    color: #fff;
+    box-shadow: 0 6px 16px -8px color-mix(in oklch, var(--color-danger) 55%, transparent);
+  }
+
+  #homeView .emergency-banner--button .emergency-banner__icon .icon {
+    --icon-source: url("/vendor/unicons/hand-raised.svg");
+    width: 1.7rem;
+    height: 1.7rem;
+  }
+
+  #homeView .emergency-banner__title--desktop,
+  #homeView .emergency-banner__lead--desktop {
+    display: none;
+  }
+
+  #homeView .emergency-banner__title--mobile,
+  #homeView .emergency-banner__lead--mobile,
+  #homeView .emergency-banner--button .emergency-banner__cta {
+    display: flex;
+  }
+
+  #homeView .emergency-banner__title--mobile {
+    color: var(--color-danger-deep);
+    font-size: clamp(0.78rem, 3vw, 1rem);
+    text-transform: none;
+    white-space: nowrap;
+  }
+
+  #homeView .emergency-banner__lead--mobile {
+    margin-block-start: var(--space-1);
+    color: var(--color-ink-2);
+    font-size: clamp(0.55rem, 2.2vw, 0.82rem);
+    line-height: 1.3;
+  }
+
+  #homeView .emergency-banner__cta {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding-inline: clamp(0.25rem, 1vw, 0.65rem);
+    border-radius: clamp(0.85rem, 3vw, 1.35rem);
+    font-size: clamp(0.72rem, 2.7vw, 0.9rem);
+  }
+
+  #homeView .mobile-trust-strip {
+    order: 6;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    min-height: clamp(3rem, 11vw, 4.75rem);
+    margin: 0 clamp(0.1rem, 1vw, 0.45rem);
+    padding: var(--space-1);
+    border: 1px solid color-mix(in srgb, var(--color-accent-soft-line) 60%, transparent);
+    border-radius: clamp(1.2rem, 4vw, 1.8rem);
+    background: color-mix(in srgb, var(--color-surface) 96%, var(--color-sky-pale));
+    box-shadow: 0 0.35rem 1rem rgb(32 76 133 / 0.08);
+  }
+
+  #homeView .mobile-trust-strip > span {
+    gap: clamp(0.2rem, 1vw, 0.45rem);
+    font-size: clamp(0.58rem, 2.4vw, 0.76rem);
+  }
+
+  #homeView .mobile-trust-strip .icon {
+    width: clamp(1.2rem, 4.2vw, 1.7rem);
+    height: clamp(1.2rem, 4.2vw, 1.7rem);
+  }
+
+  .mobile-bottom-nav {
+    inset: auto 0 0;
+    padding: var(--space-1) max(var(--space-2), env(safe-area-inset-right)) max(var(--space-1), env(safe-area-inset-bottom)) max(var(--space-2), env(safe-area-inset-left));
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--color-accent-soft-line) 52%, transparent);
+    border-block-end: 0;
+    border-radius: clamp(1.8rem, 7vw, 2.7rem) clamp(1.8rem, 7vw, 2.7rem) 0 0;
+    background: color-mix(in srgb, var(--color-surface) 97%, var(--color-sky-pale));
+    box-shadow: 0 -0.3rem 1.4rem rgb(28 70 125 / 0.09);
+  }
+
+  .mobile-bottom-nav__inner {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    min-height: clamp(3.3rem, 12vw, 4rem);
+    padding: 4px;
+  }
+
+  .mobile-bottom-nav .mobile-bottom-nav__item,
+  html[data-font-size] .mobile-bottom-nav .mobile-bottom-nav__item {
+    gap: 0.2rem;
+    min-height: clamp(3rem, 11vw, 3.6rem);
+    padding: 0.3rem 0.1rem;
+    border-radius: clamp(1rem, 4vw, 1.5rem);
+    font-size: clamp(0.58rem, 2.35vw, 0.72rem);
+    line-height: 1.1;
+    white-space: nowrap;
+  }
+
+  .mobile-bottom-nav .mobile-bottom-nav__item .icon {
+    width: clamp(1.2rem, 4.4vw, 1.55rem);
+    height: clamp(1.2rem, 4.4vw, 1.55rem);
+  }
+}
+
+@media (max-width: 22rem) {
+  #homeView .mobile-action-grid {
+    gap: 0.3rem;
+  }
+
+  #homeView .mobile-action {
+    min-height: 6rem;
+    font-size: 0.6rem;
+  }
+
+  #homeView .emergency-banner__lead--mobile {
+    display: none;
+  }
+}
+
+/* Mobile-only continuation below the trust strip. These are real routes, not
+   promotional placeholders, so the empty lower home area becomes useful. */
+.mobile-home-followup {
+  display: none;
+}
+
+@media (max-width: 40rem) {
+  #homeView .mobile-home-followup {
+    order: 7;
+    display: block;
+    margin: clamp(0.7rem, 3vw, 1.1rem) clamp(0.1rem, 1vw, 0.45rem) 0;
+    padding: clamp(1rem, 4vw, 1.4rem) 0 0;
+    border-block-start: 1px solid color-mix(in srgb, var(--color-accent-soft-line) 58%, transparent);
+  }
+
+  #homeView .mobile-home-followup__head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(0.7rem, 3vw, 1rem);
+    margin-block-end: clamp(0.75rem, 3vw, 1rem);
+    padding-inline: clamp(0.25rem, 1vw, 0.5rem);
+  }
+
+  #homeView .mobile-home-followup__mark,
+  #homeView .mobile-home-followup__icon {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-full);
+  }
+
+  #homeView .mobile-home-followup__mark {
+    width: clamp(2.75rem, 11vw, 3.6rem);
+    height: clamp(2.75rem, 11vw, 3.6rem);
+    background: var(--color-accent);
+    color: var(--color-accent-ink);
+    box-shadow: 0 0.45rem 1rem color-mix(in oklch, var(--color-accent) 20%, transparent);
+  }
+
+  #homeView .mobile-home-followup__mark .icon {
+    width: clamp(1.3rem, 5vw, 1.7rem);
+    height: clamp(1.3rem, 5vw, 1.7rem);
+  }
+
+  #homeView .mobile-home-followup__head h2 {
+    margin: 0;
+    color: var(--color-ink);
+    font-size: clamp(1.05rem, 4.4vw, 1.35rem);
+    line-height: 1.2;
+  }
+
+  #homeView .mobile-home-followup__head p {
+    margin: var(--space-1) 0 0;
+    color: var(--color-muted);
+    font-size: clamp(0.78rem, 3vw, 0.92rem);
+    line-height: 1.4;
+  }
+
+  #homeView .mobile-home-followup__actions {
+    display: grid;
+    gap: clamp(0.55rem, 2.4vw, 0.8rem);
+  }
+
+  #homeView .mobile-home-followup__actions a {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(0.65rem, 2.8vw, 0.95rem);
+    min-height: max(4.25rem, var(--touch-target-primary));
+    padding: clamp(0.65rem, 2.6vw, 0.9rem) clamp(0.75rem, 3vw, 1rem);
+    border: 1px solid color-mix(in srgb, var(--color-accent-soft-line) 70%, transparent);
+    border-radius: clamp(1rem, 4vw, 1.35rem);
+    background: color-mix(in srgb, var(--color-surface) 95%, var(--color-sky-pale));
+    box-shadow: 0 0.3rem 0.9rem color-mix(in oklch, var(--color-accent) 9%, transparent);
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: border-color var(--duration-fast) ease, background-color var(--duration-fast) ease, box-shadow var(--duration-fast) ease;
+    touch-action: manipulation;
+  }
+
+  #homeView .mobile-home-followup__actions a:hover {
+    border-color: var(--color-border-interactive);
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-accent-soft));
+    box-shadow: var(--shadow-md);
+  }
+
+  #homeView .mobile-home-followup__actions a:active {
+    background: var(--color-accent-soft);
+    box-shadow: var(--shadow-sm);
+  }
+
+  #homeView .mobile-home-followup__icon {
+    width: clamp(2.65rem, 10vw, 3.25rem);
+    height: clamp(2.65rem, 10vw, 3.25rem);
+  }
+
+  #homeView .mobile-home-followup__icon .icon {
+    width: clamp(1.25rem, 4.7vw, 1.55rem);
+    height: clamp(1.25rem, 4.7vw, 1.55rem);
+  }
+
+  #homeView .mobile-home-followup__icon--learn {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+  }
+
+  #homeView .mobile-home-followup__icon--family {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+  }
+
+  #homeView .mobile-home-followup__icon--alert {
+    background: var(--color-violet-soft);
+    color: var(--color-violet);
+  }
+
+  #homeView .mobile-home-followup__text {
+    display: grid;
+    min-width: 0;
+    gap: var(--space-1);
+  }
+
+  #homeView .mobile-home-followup__text strong {
+    font-size: clamp(0.86rem, 3.4vw, 1rem);
+    line-height: 1.25;
+  }
+
+  #homeView .mobile-home-followup__text > span {
+    color: var(--color-muted);
+    font-size: clamp(0.72rem, 2.8vw, 0.86rem);
+    line-height: 1.35;
+  }
+
+  #homeView .mobile-home-followup__actions a > .icon:last-child {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--color-muted);
+  }
 }

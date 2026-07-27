@@ -1,14 +1,16 @@
-const CACHE_NAME = "khoan-da-shell-v3";
+const CACHE_NAME = "khoan-da-shell-v5";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/tokens.css",
-  "/styles.css",
+  "/styles.css?v=20260727-home-followup-1",
   "/services.js",
   "/app.js",
   "/manifest.webmanifest",
   "/assets/brand-shield-reference.png",
   "/assets/avatar-reference.webp",
+  "/assets/mobile-home-top-reference.webp",
+  "/vendor/unicons/paperclip.svg",
   "/assets/home-couple-reference.webp"
 ];
 

@@ -91,11 +91,11 @@ test("mobile home exposes the reference workflow without replacing desktop route
   assert.match(styles, /@media \(max-width: 40rem\)[\s\S]*?\.mobile-bottom-nav/);
   assert.match(styles, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
   assert.match(html, /class="mobile-reference-top"/);
-  // The mobile header must be REAL TEXT, not a bitmap with baked-in wording:
-  // the font-size control and the screen reader cannot enlarge or read a picture,
-  // and enlarging text is the whole reason this audience uses the app.
+  assert.match(html, /id="mobileProfileMenuButton"[\s\S]*?avatar-reference\.webp[\s\S]*?icon-chevron-down/);
+  // The approved crop supplies pixel-accurate mobile artwork while the same
+  // heading remains in the DOM for screen readers and semantic navigation.
   assert.match(html, /<h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì\?<\/h2>/);
-  assert.doesNotMatch(html, /mobile-home-top-reference\.webp/);
+  assert.match(html, /class="mobile-reference-top__scene"[^>]*mobile-home-top-reference\.webp/);
   assert.match(html, /id="mobileSituationForm"[\s\S]*?id="mobileSituationInput"[\s\S]*?id="mobileSituationFile"/);
   assert.match(html, /id="mobileSituationVoiceButton"[^>]*aria-label="Ghi âm tình huống"/);
   assert.match(html, /class="mobile-situation-submit"[^>]*type="submit"[\s\S]*?<span>Tiếp tục<\/span>[\s\S]*?icon-chevron-right/);
@@ -104,7 +104,8 @@ test("mobile home exposes the reference workflow without replacing desktop route
     assert.match(styles, new RegExp(`#homeView \\.${className.replaceAll("-", "\\-")}`));
   }
   assert.match(html, /hub-tile__title--desktop[\s\S]*?hub-tile__title--mobile/);
-  assert.match(styles, /#homeView \.mobile-action-grid,[\s\S]*?#homeView \.mobile-trust-strip,[\s\S]*?display:\s*none/);
+  assert.match(styles, /Mobile home reference, 2026-07-26[\s\S]*?#homeView \.mobile-action-grid \{[\s\S]*?display:\s*grid/);
+  assert.match(styles, /Mobile home reference, 2026-07-26[\s\S]*?#homeView \.mobile-trust-strip \{[\s\S]*?display:\s*grid/);
   assert.match(styles, /#homeView \.hub-tile__arrow\s*\{\s*display:\s*none;/);
   assert.match(app, /function submitMobileSituation\(event\)/);
   assert.match(app, /function startMobileSituationRecording\(\)/);
@@ -119,6 +120,13 @@ test("mobile home exposes the reference workflow without replacing desktop route
   // cannot silently re-send the previous photo.
   assert.match(app, /elements\.mobileSituationFile\.value = ""/);
   assert.match(styles, /#homeView \.hub-tile \{[\s\S]*?justify-content:\s*center/);
+  assert.match(styles, /#homeView \.mobile-action-grid \{[\s\S]*?order:\s*4;/);
+  assert.match(styles, /#homeView \.home-main > \.emergency-zone \{[\s\S]*?order:\s*5;/);
+  assert.match(styles, /#homeView \.mobile-trust-strip \{[\s\S]*?order:\s*6;/);
+  assert.match(html, /class="mobile-home-followup"[\s\S]*?href="#huong-dan"[\s\S]*?href="#gia-dinh"[\s\S]*?href="#canh-bao"/);
+  assert.match(styles, /#homeView \.mobile-home-followup \{[\s\S]*?order:\s*7;[\s\S]*?display:\s*block/);
+  assert.match(styles, /mobile-home-followup__actions a \{[\s\S]*?min-height:\s*max\(4\.25rem, var\(--touch-target-primary\)\)/);
+  assert.match(styles, /#homeView \.home-suggestion-chips,[\s\S]*?#homeView \.hub-tile-grid,[\s\S]*?display:\s*none !important/);
 });
 
 test("home voice analysis stays inline and trusted support actions are functional", () => {
@@ -128,6 +136,8 @@ test("home voice analysis stays inline and trusted support actions are functiona
   assert.match(app, /function analyzeMobileSituationInline\(\)/);
   assert.match(app, /elements\.homeChatUserText\.textContent/);
   assert.match(app, /scamAnalysisService\.link/);
+  assert.match(app, /duong_dan:\s*standaloneUrl,[\s\S]*?thuong_hieu_tu_xung:\s*""/);
+  assert.doesNotMatch(app, /thuong_hieu:\s*""/);
   assert.match(html, /id="mobileQuickResultActions"/);
   assert.match(html, /data-mobile-result-branch="transferred"/);
   assert.match(app, /function saveMobileResultToCase\(\)/);
@@ -143,8 +153,9 @@ test("desktop and mobile taskbars share routes and render cross-browser icons", 
   for (const [hash, label, icon] of [
     ["#trang-chu", "Trang chủ", "icon-home"],
     ["#kiem-tra", "Kiểm tra", "icon-search"],
-    ["#hanh-trinh", "Vụ việc", "icon-route"],
-    ["#gia-dinh", "Gia đình", "icon-users"]
+    ["#hanh-trinh", "Vụ việc", "icon-receipt"],
+    ["#gia-dinh", "Hồ sơ", "icon-user"],
+    ["#quyen-rieng-tu", "Cài đặt", "icon-settings"]
   ]) {
     assert.match(mobileNav, new RegExp(`href="${hash}"[\\s\\S]*?${icon}[\\s\\S]*?${label}`));
   }

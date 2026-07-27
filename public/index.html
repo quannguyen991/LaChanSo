@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/600.css">
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/700.css">
     <link rel="stylesheet" href="/tokens.css">
-    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css?v=20260727-home-followup-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/app.js" defer></script>
@@ -148,7 +148,6 @@
         </span>
       </a>
       <div class="topbar__actions">
-        <span class="system-status topbar-ready"><span class="system-status__dot" aria-hidden="true"></span><span>Khoan Đã đang sẵn sàng hỗ trợ</span></span>
         <button class="greeting-chip" type="button" id="profileMenuButton" aria-label="Mở menu hồ sơ" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
           <span class="greeting-chip__avatar" aria-hidden="true">
             <img src="/assets/avatar-reference.webp" width="58" height="58" alt="">
@@ -198,6 +197,7 @@
         </div>
 
         <section class="mobile-reference-top" aria-labelledby="mobileReferenceTitle">
+          <img class="mobile-reference-top__scene" src="/assets/mobile-home-top-reference.webp" width="942" height="677" alt="" aria-hidden="true" decoding="async">
           <div class="mobile-reference-top__bar">
             <a class="mobile-reference-top__brand" href="#trang-chu" aria-label="Khoan Đã, về trang chủ">
               <img src="/assets/brand-shield-reference.png" width="66" height="74" alt="" decoding="async">
@@ -207,14 +207,15 @@
               </span>
             </a>
             <button class="mobile-reference-top__profile" type="button" id="mobileProfileMenuButton" aria-label="Mở menu hồ sơ" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
-              <span class="icon icon-user" aria-hidden="true"></span>
+              <img class="mobile-reference-top__profile-avatar" src="/assets/avatar-reference.webp" width="72" height="72" alt="" aria-hidden="true" decoding="async">
               <span>Chào bác</span>
+              <span class="icon icon-chevron-down" aria-hidden="true"></span>
             </button>
           </div>
           <div class="mobile-reference-top__intro">
             <div class="mobile-reference-top__copy">
               <h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì?</h2>
-              <p>Kể lại hoặc gửi nội dung, Khoan Đã kiểm tra giúp bác.</p>
+              <p>Ứng dụng Khoan Đã sẽ hỗ trợ bác kiểm tra và xử lý an toàn.</p>
             </div>
             <img class="mobile-reference-top__art" src="/assets/home-couple-reference.webp" width="334" height="339" alt="" aria-hidden="true" decoding="async">
           </div>
@@ -232,7 +233,7 @@
           <input class="visually-hidden" type="file" id="mobileSituationFile" accept="image/png,image/jpeg,image/webp,application/pdf" aria-label="Chọn ảnh hoặc PDF tình huống">
           <div class="mobile-situation-form__actions">
             <button class="mobile-situation-attach" type="button" id="mobileSituationFileButton" aria-label="Đính kèm ảnh hoặc PDF">
-              <span class="icon icon-camera" aria-hidden="true"></span>
+              <span class="icon icon-paperclip" aria-hidden="true"></span>
             </button>
             <a class="mobile-situation-link" href="#kiem-tra-lien-ket" aria-label="Kiểm tra link hoặc mã QR">
               <span class="icon icon-qr-code" aria-hidden="true"></span>
@@ -240,7 +241,7 @@
             <button class="mobile-situation-voice" type="button" id="mobileSituationVoiceButton" aria-label="Ghi âm tình huống" aria-pressed="false">
               <span class="icon icon-mic" aria-hidden="true"></span>
             </button>
-            <button class="mobile-situation-submit" type="submit" id="mobileSituationSubmit">
+            <button class="mobile-situation-submit" type="submit" id="mobileSituationSubmit" aria-label="Gửi nội dung để kiểm tra">
               <span>Tiếp tục</span>
               <span class="icon icon-chevron-right" aria-hidden="true"></span>
             </button>
@@ -299,19 +300,19 @@
         <nav class="mobile-action-grid" aria-label="Kiểm tra nhanh theo tình huống">
           <a class="mobile-action mobile-action--phone" href="#xac-minh" aria-label="Kiểm tra cuộc gọi đáng ngờ">
             <span class="mobile-action__icon"><span class="icon icon-phone" aria-hidden="true"></span><span class="icon icon-alert mobile-action__alert" aria-hidden="true"></span></span>
-            <span>Cuộc gọi</span>
+            <span>Bị gọi<br>nghi ngờ</span>
           </a>
           <a class="mobile-action mobile-action--message" href="#kiem-tra" aria-label="Kiểm tra tin nhắn đáng ngờ">
             <span class="mobile-action__icon"><span class="icon icon-messages" aria-hidden="true"></span><span class="icon icon-alert mobile-action__alert" aria-hidden="true"></span></span>
-            <span>Tin nhắn</span>
+            <span>Tin nhắn<br>đáng ngờ</span>
           </a>
           <a class="mobile-action mobile-action--link" href="#kiem-tra-lien-ket" aria-label="Kiểm tra Link hoặc QR lạ">
             <span class="mobile-action__icon"><span class="icon icon-qr-code" aria-hidden="true"></span><span class="icon icon-alert mobile-action__alert" aria-hidden="true"></span></span>
-            <span>Link / QR</span>
+            <span>Link / QR<br>lạ</span>
           </a>
           <a class="mobile-action mobile-action--transfer" href="#chuyen-khoan" aria-label="Kiểm tra trước khi chuyển tiền">
             <span class="mobile-action__icon"><span class="icon icon-credit-card" aria-hidden="true"></span><span class="icon icon-alert mobile-action__alert" aria-hidden="true"></span></span>
-            <span>Chuyển tiền</span>
+            <span>Trước khi<br>chuyển tiền</span>
           </a>
         </nav>
 
@@ -364,7 +365,7 @@
         <p class="eyebrow eyebrow--danger">Khẩn cấp</p>
         <div class="emergency-zone">
           <button class="emergency-banner emergency-banner--button" type="button" data-open-pressure-mode>
-            <span class="emergency-banner__icon"><span class="icon icon-hand" aria-hidden="true"></span></span>
+              <span class="emergency-banner__icon"><span class="icon icon-siren" aria-hidden="true"></span></span>
             <span class="emergency-banner__text">
               <span class="emergency-banner__title emergency-banner__title--desktop">TÔI ĐANG BỊ THÚC ÉP</span>
               <span class="emergency-banner__title emergency-banner__title--mobile">Bác đang bị thúc ép?</span>
@@ -381,6 +382,22 @@
             </span>
             <span class="icon icon-chevron-right" aria-hidden="true"></span>
           </a>
+
+          <div class="family-alert">
+            <span class="family-alert__icon"><span class="icon icon-heart" aria-hidden="true"></span></span>
+            <span class="family-alert__text">
+              <span class="family-alert__title">Bác đang gặp chuyện?</span>
+              <span class="family-alert__lead">Báo ngay cho con cháu đã lưu trong Hồ sơ.</span>
+            </span>
+            <span class="family-alert__actions">
+              <button class="family-alert__btn family-alert__btn--call" type="button" id="homeAlertFamilyCall">
+                <span class="icon icon-phone" aria-hidden="true"></span><span>Gọi con cháu</span>
+              </button>
+              <button class="family-alert__btn family-alert__btn--sms" type="button" id="homeAlertFamilySms">
+                <span class="icon icon-messages" aria-hidden="true"></span><span>Nhắn tin báo</span>
+              </button>
+            </span>
+          </div>
         </div>
 
         <div class="mobile-trust-strip" aria-label="Cam kết của Khoan Đã">
@@ -389,6 +406,42 @@
           <span><span class="icon icon-users" aria-hidden="true"></span><strong>Riêng tư</strong></span>
           <span><span class="icon icon-heart" aria-hidden="true"></span><strong>Tin cậy</strong></span>
         </div>
+
+        <section class="mobile-home-followup" aria-labelledby="mobileHomeFollowupTitle">
+          <div class="mobile-home-followup__head">
+            <span class="mobile-home-followup__mark"><span class="icon icon-shield-check" aria-hidden="true"></span></span>
+            <div>
+              <h2 id="mobileHomeFollowupTitle">Chủ động bảo vệ mỗi ngày</h2>
+              <p>Ba việc ngắn giúp bác và gia đình an tâm hơn.</p>
+            </div>
+          </div>
+          <nav class="mobile-home-followup__actions" aria-label="Việc bác có thể làm tiếp">
+            <a href="#huong-dan">
+              <span class="mobile-home-followup__icon mobile-home-followup__icon--learn"><span class="icon icon-zap" aria-hidden="true"></span></span>
+              <span class="mobile-home-followup__text">
+                <strong>Luyện cách nhận biết lừa đảo</strong>
+                <span>Bài học ngắn, có tình huống thực tế</span>
+              </span>
+              <span class="icon icon-chevron-right" aria-hidden="true"></span>
+            </a>
+            <a href="#gia-dinh">
+              <span class="mobile-home-followup__icon mobile-home-followup__icon--family"><span class="icon icon-users" aria-hidden="true"></span></span>
+              <span class="mobile-home-followup__text">
+                <strong>Thêm người thân tin cậy</strong>
+                <span>Sẵn sàng gọi nhờ xác minh khi cần</span>
+              </span>
+              <span class="icon icon-chevron-right" aria-hidden="true"></span>
+            </a>
+            <a href="#canh-bao">
+              <span class="mobile-home-followup__icon mobile-home-followup__icon--alert"><span class="icon icon-bell" aria-hidden="true"></span></span>
+              <span class="mobile-home-followup__text">
+                <strong>Xem cảnh báo cần chú ý</strong>
+                <span>Nhận biết các chiêu trò thường gặp</span>
+              </span>
+              <span class="icon icon-chevron-right" aria-hidden="true"></span>
+            </a>
+          </nav>
+        </section>
 
         <a class="notice-banner notice-banner--scam-types" href="#canh-bao">
           <span class="notice-banner__icon"><span class="icon icon-bell" aria-hidden="true"></span></span>
@@ -1489,14 +1542,14 @@
 
       <section class="view" id="familyView" aria-labelledby="familyTitle" hidden>
         <div class="workspace-head">
-          <p class="eyebrow">Lưu trên máy này</p>
-          <h1 id="familyTitle" tabindex="-1">Gia đình &amp; liên hệ an toàn</h1>
-          <p class="calm-line">Toàn bộ thông tin chỉ lưu trong trình duyệt này, không gửi lên máy chủ nào.</p>
+          <p class="eyebrow">Hồ sơ · Lưu trên máy này</p>
+          <h1 id="familyTitle" tabindex="-1">Hồ sơ của bác</h1>
+          <p class="calm-line">Lưu con cháu, người thân tin cậy để gọi nhanh khi cần. Toàn bộ chỉ nằm trong trình duyệt này, không gửi lên máy chủ nào.</p>
         </div>
 
         <div class="workspace-card">
-          <h2 class="card-heading">Sổ liên hệ an toàn</h2>
-          <p class="field-hint">Thêm tối đa 5 người thân. Mỗi người có nút gọi nhanh riêng.</p>
+          <h2 class="card-heading">Con cháu &amp; người thân tin cậy</h2>
+          <p class="field-hint">Thêm tối đa 5 người (con, cháu, người thân). Mỗi người có nút gọi nhanh riêng.</p>
           <div class="contact-list" id="contactList"></div>
           <div class="empty-state" id="contactEmpty">
             <span class="icon icon-users" aria-hidden="true"></span>
@@ -1771,8 +1824,8 @@
           <span>Vụ việc</span>
         </a>
         <a class="bottom-nav__item" href="#gia-dinh" data-route="#gia-dinh">
-          <span class="icon icon-users" aria-hidden="true"></span>
-          <span>Gia đình</span>
+          <span class="icon icon-user" aria-hidden="true"></span>
+          <span>Hồ sơ</span>
         </a>
       </div>
     </nav>
@@ -1788,12 +1841,16 @@
           <span>Kiểm tra</span>
         </a>
         <a class="bottom-nav__item mobile-bottom-nav__item" href="#hanh-trinh" data-route="#hanh-trinh">
-          <span class="icon icon-route" aria-hidden="true"></span>
+          <span class="icon icon-receipt" aria-hidden="true"></span>
           <span>Vụ việc</span>
         </a>
         <a class="bottom-nav__item mobile-bottom-nav__item" href="#gia-dinh" data-route="#gia-dinh">
-          <span class="icon icon-users" aria-hidden="true"></span>
-          <span>Gia đình</span>
+          <span class="icon icon-user" aria-hidden="true"></span>
+          <span>Hồ sơ</span>
+        </a>
+        <a class="bottom-nav__item mobile-bottom-nav__item" href="#quyen-rieng-tu" data-route="#quyen-rieng-tu">
+          <span class="icon icon-settings" aria-hidden="true"></span>
+          <span>Cài đặt</span>
         </a>
       </div>
     </nav>

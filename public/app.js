@@ -171,6 +171,8 @@ const EDUCATION_LESSONS = [
 const elements = {
   homeView: document.querySelector("#homeView"),
   homeSupportButton: document.querySelector("#homeSupportButton"),
+  homeAlertFamilyCall: document.querySelector("#homeAlertFamilyCall"),
+  homeAlertFamilySms: document.querySelector("#homeAlertFamilySms"),
   mobileSituationForm: document.querySelector("#mobileSituationForm"),
   mobileSituationInput: document.querySelector("#mobileSituationInput"),
   mobileSituationFile: document.querySelector("#mobileSituationFile"),
@@ -970,6 +972,21 @@ function callFamily() {
     return;
   }
   window.location.href = `tel:${phone}`;
+}
+
+// Parent taps "Nhắn tin báo" → opens the SMS app pre-filled to the saved
+// contact. The browser cannot send it silently, so the parent still taps send;
+// nothing leaves the device automatically.
+function alertFamilyBySms() {
+  const phone = primaryContactPhone();
+  if (!phone) {
+    showToast("Hãy lưu số con cháu trong Hồ sơ trước.");
+    window.location.hash = "#gia-dinh";
+    return;
+  }
+  const message = "Bố/mẹ đang gặp một tình huống đáng ngờ, con gọi lại cho bố/mẹ ngay nhé. Đừng gửi OTP, mật khẩu hay chuyển tiền qua tin nhắn này.";
+  appendPrivacyAudit("family_alert_prepared", "Mở tin nhắn báo cho con cháu", false);
+  window.location.href = `sms:${phone}?body=${encodeURIComponent(message)}`;
 }
 
 function callBank() {
@@ -3072,7 +3089,7 @@ async function analyzeMobileSituationInline() {
     if (standaloneUrl && !file) {
       result = await window.KhoanDaServices.scamAnalysisService.link({
         duong_dan: standaloneUrl,
-        thuong_hieu: ""
+        thuong_hieu_tu_xung: ""
       }, { signal: mobileAnalysisController.signal });
     } else {
       let media;
@@ -3207,6 +3224,8 @@ elements.homeSuggestionButtons.forEach((button) => button.addEventListener("clic
   elements.mobileSituationInput.focus({ preventScroll: true });
 }));
 elements.homeSupportButton.addEventListener("click", callFamily);
+elements.homeAlertFamilyCall?.addEventListener("click", callFamily);
+elements.homeAlertFamilySms?.addEventListener("click", alertFamilyBySms);
 elements.situation.addEventListener("input", () => {
   updateCharacterCount();
   if (elements.situation.value.trim()) setInputError();
