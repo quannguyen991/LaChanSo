@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { SIGNAL_KEYS } = require("../src/rule-engine");
-const { extractSignals } = require("../src/gemini");
+const { extractSignals, extractTransferSignals, extractChatResponse } = require("../src/gemini");
 
 test("sends one structured-output request and normalizes the response", async () => {
   let calls = 0;
@@ -339,4 +339,36 @@ test("openai-compat repairs a prefilled reply that is missing its opening brace"
   };
   const result = await extractSignals("Tình huống", openaiOpts(fetchImpl));
   assert.equal(result.signals.gia_danh_co_quan_nha_nuoc, true);
+});
+
+test("extractChatResponse sends the system instruction and returns assistant reply", async () => {
+  let capturedRequest;
+  const fetchImpl = async (_url, request) => {
+    capturedRequest = request;
+    return {
+      ok: true,
+      json: async () => ({
+        candidates: [{
+          content: {
+            parts: [{
+              text: JSON.stringify({
+                tra_loi: "Cháu chào bác, cháu có thể giúp gì cho bác ạ?"
+              })
+            }]
+          }
+        }]
+      })
+    };
+  };
+
+  const result = await extractChatResponse("Chào cháu", {
+    apiKey: "fake-test-key",
+    fetchImpl
+  });
+
+  assert.equal(result.tra_loi, "Cháu chào bác, cháu có thể giúp gì cho bác ạ?");
+
+  const body = JSON.parse(capturedRequest.body);
+  assert.equal(body.generationConfig.responseMimeType, "application/json");
+  assert.equal(body.contents[0].parts[0].text, "Chào cháu");
 });

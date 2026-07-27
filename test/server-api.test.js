@@ -49,3 +49,62 @@ test("analysis API rejects spoofed file MIME before calling AI", async () => {
   assert.equal(response.status, 400);
   assert.match(payload.error, /không khớp/);
 });
+
+test("chat API returns 400 when message is empty", async () => {
+  const response = await fetch(`${baseUrl}/api/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tin_nhan: "" })
+  });
+  const payload = await response.json();
+  assert.equal(response.status, 400);
+  assert.match(payload.error, /nhập tin nhắn/);
+});
+
+test("chat API returns 400 when message is too long", async () => {
+  const response = await fetch(`${baseUrl}/api/chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tin_nhan: "a".repeat(1001) })
+  });
+  const payload = await response.json();
+  assert.equal(response.status, 400);
+  assert.match(payload.error, /quá dài/);
+});
+
+test("chat API returns assistant reply successfully", async () => {
+  const originalFetch = global.fetch;
+  global.fetch = async (url, options) => {
+    if (url.includes("generateContent") || url.includes("chat/completions")) {
+      return {
+        ok: true,
+        json: async () => ({
+          candidates: [{
+            content: {
+              parts: [{
+                text: JSON.stringify({
+                  tra_loi: "Chào bác, cháu là trợ lý Khoan Đã!"
+                })
+              }]
+            }
+          }]
+        })
+      };
+    }
+    return originalFetch(url, options);
+  };
+
+  try {
+    const response = await fetch(`${baseUrl}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tin_nhan: "Chào cháu" })
+    });
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.tra_loi, "Chào bác, cháu là trợ lý Khoan Đã!");
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+

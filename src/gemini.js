@@ -366,11 +366,56 @@ async function extractTransferSignals(text, options = {}) {
   return { signals: normalizeTransferSignals(parsed) };
 }
 
+const CHAT_RESPONSE_SCHEMA = {
+  type: "object",
+  properties: {
+    tra_loi: { type: "string" }
+  },
+  required: ["tra_loi"],
+  additionalProperties: false
+};
+
+const CHAT_SYSTEM_INSTRUCTION = `Bạn là Trợ lý an toàn Khoan Đã, một người bạn đồng hành ấm áp, kiên nhẫn và chu đáo của người cao tuổi Việt Nam.
+Nhiệm vụ của bạn là giải đáp các thắc mắc của người dùng về an toàn số, các chiêu trò lừa đảo (giả danh công an, người thân, bưu tá, trúng thưởng, đầu tư lợi nhuận cao...), hoặc hướng dẫn cách sử dụng ứng dụng Khoan Đã.
+
+Quy tắc trả lời:
+1. Xưng hô ấm áp: gọi người dùng là "bác", xưng là "cháu".
+2. Câu trả lời ngắn gọn, dễ hiểu: viết câu ngắn, không dùng từ ngữ kỹ thuật phức tạp (như "phần mềm độc hại", "SSRF", "JSON", "tải payload"). Sử dụng ngôn từ thuần Việt, mộc mạc và chân thành.
+3. Nội dung rõ ràng, trực quan: đưa ra các gạch đầu dòng rõ ràng nếu có các bước thực hiện.
+4. Trấn an và không phán xét: Người cao tuổi rất dễ hoảng loạn và sợ bị chê trách. Hãy luôn dùng giọng văn đồng cảm, trấn an và khích lệ bác.
+5. Giới hạn độ dài: Câu trả lời không dài quá 300 ký tự.
+
+BẮT BUỘC: luôn trả về đúng đối tượng JSON theo schema đã cho: { "tra_loi": "nội dung câu trả lời của cháu ở đây" }. Tuyệt đối không viết thêm bất kỳ từ ngữ nào ngoài đối tượng JSON này.`;
+
+async function extractChatResponse(text, options = {}) {
+  const { provider, apiKey, baseUrl, model, fetchImpl } = resolveLlmConfig(options);
+
+  const parts = text ? [{ text }] : [];
+
+  const parsed = await callLLM({
+    provider,
+    apiKey,
+    baseUrl,
+    model,
+    fetchImpl,
+    systemInstruction: CHAT_SYSTEM_INSTRUCTION,
+    parts,
+    responseSchema: CHAT_RESPONSE_SCHEMA,
+    schemaName: "tra_loi_tro_ly"
+  });
+
+  return {
+    tra_loi: typeof parsed.tra_loi === "string" ? parsed.tra_loi.slice(0, 300) : ""
+  };
+}
+
 module.exports = {
   DEFAULT_MODEL,
   GeminiError,
   RESPONSE_SCHEMA,
   TRANSFER_RESPONSE_SCHEMA,
+  CHAT_RESPONSE_SCHEMA,
   extractSignals,
-  extractTransferSignals
+  extractTransferSignals,
+  extractChatResponse
 };

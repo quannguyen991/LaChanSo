@@ -25,7 +25,8 @@ test("critical senior and emergency controls are present", () => {
   for (const id of [
     "voiceGuideToggle", "analysisDropzone", "cancelAnalysisButton",
     "pressureGuide", "postTransferView", "familyView", "privacyView",
-    "supportView", "educationView"
+    "supportView", "educationView", "chatWidgetButton", "chatWidgetWindow",
+    "chatWidgetMessages", "chatWidgetForm", "chatWidgetInput"
   ]) {
     assert.match(html, new RegExp(`id="${id}"`));
   }

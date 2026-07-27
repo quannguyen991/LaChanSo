@@ -1946,6 +1946,39 @@
       </div>
     </dialog>
 
+    <!-- Chatbox Widget for Elderly Users -->
+    <div class="chat-widget" id="chatWidget">
+      <button class="chat-widget__button" type="button" id="chatWidgetButton" aria-label="Mở trợ lý Khoan Đã" aria-expanded="false" aria-controls="chatWidgetWindow">
+        <span class="icon icon-messages" aria-hidden="true"></span>
+        <span class="chat-widget__badge" id="chatWidgetBadge" hidden>1</span>
+      </button>
+      <div class="chat-widget__window" id="chatWidgetWindow" hidden role="dialog" aria-label="Hộp thoại Trợ lý Khoan Đã">
+        <div class="chat-widget__header">
+          <div class="chat-widget__title-group">
+            <span class="chat-widget__avatar-icon"><span class="icon icon-shield-check" aria-hidden="true"></span></span>
+            <div class="chat-widget__title-text">
+              <h2 class="chat-widget__title">Trợ lý Khoan Đã</h2>
+              <span class="chat-widget__subtitle">Cháu luôn sẵn sàng giúp bác</span>
+            </div>
+          </div>
+          <button class="chat-widget__close" type="button" id="chatWidgetClose" aria-label="Đóng trợ lý">
+            <span class="icon icon-close" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="chat-widget__messages" id="chatWidgetMessages" role="log" aria-live="polite">
+          <div class="chat-widget__msg chat-widget__msg--assistant">
+            <p>Chào bác, cháu là trợ lý Khoan Đã. Hôm nay bác đang có thắc mắc gì cần cháu giải đáp hoặc tư vấn không ạ?</p>
+          </div>
+        </div>
+        <form class="chat-widget__form" id="chatWidgetForm">
+          <input type="text" class="chat-widget__input" id="chatWidgetInput" placeholder="Nhập câu hỏi của bác..." required aria-label="Nhập tin nhắn thắc mắc">
+          <button type="submit" class="chat-widget__send" id="chatWidgetSend" aria-label="Gửi tin nhắn">
+            <span class="icon icon-chevron-right" aria-hidden="true"></span>
+          </button>
+        </form>
+      </div>
+    </div>
+
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   </body>
 </html>

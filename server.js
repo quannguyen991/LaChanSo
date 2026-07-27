@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const path = require("node:path");
 const express = require("express");
-const { GeminiError, extractSignals, extractTransferSignals } = require("./src/gemini");
+const { GeminiError, extractSignals, extractTransferSignals, extractChatResponse } = require("./src/gemini");
 const { evaluateRisk, evaluateTransferRisk, SIGNAL_KEYS, applyRecoveryBoost } = require("./src/rule-engine");
 const { classifyJourney, EVENT_TYPES } = require("./src/journey-engine");
 const { LinkCheckError, evaluateLinkRisk, resolveRedirectChain } = require("./src/link-shield");
@@ -93,6 +93,27 @@ app.use("/vendor", express.static(path.join(__dirname, "node_modules", "jsqr", "
 
 app.get("/api/health", (_request, response) => {
   response.json({ ok: true });
+});
+
+app.post("/api/chat", async (request, response, next) => {
+  const text = typeof request.body?.tin_nhan === "string"
+    ? request.body.tin_nhan.trim()
+    : "";
+
+  if (!text) {
+    return response.status(400).json({ error: "Hãy nhập tin nhắn thắc mắc của bác." });
+  }
+
+  if (text.length > 1000) {
+    return response.status(400).json({ error: "Tin nhắn quá dài. Hãy rút gọn còn dưới 1.000 ký tự." });
+  }
+
+  try {
+    const result = await extractChatResponse(text);
+    return response.json(result);
+  } catch (error) {
+    return next(error);
+  }
 });
 
 app.post("/api/phan-tich", async (request, response, next) => {

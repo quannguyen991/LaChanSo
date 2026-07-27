@@ -479,7 +479,16 @@ const elements = {
   profileMenuClose: document.querySelector("#profileMenuClose"),
   reopenOnboardingButton: document.querySelector("#reopenOnboardingButton"),
   bottomNavItems: document.querySelectorAll(".bottom-nav__item"),
-  toast: document.querySelector("#toast")
+  toast: document.querySelector("#toast"),
+  chatWidget: document.querySelector("#chatWidget"),
+  chatWidgetButton: document.querySelector("#chatWidgetButton"),
+  chatWidgetBadge: document.querySelector("#chatWidgetBadge"),
+  chatWidgetWindow: document.querySelector("#chatWidgetWindow"),
+  chatWidgetClose: document.querySelector("#chatWidgetClose"),
+  chatWidgetMessages: document.querySelector("#chatWidgetMessages"),
+  chatWidgetForm: document.querySelector("#chatWidgetForm"),
+  chatWidgetInput: document.querySelector("#chatWidgetInput"),
+  chatWidgetSend: document.querySelector("#chatWidgetSend")
 };
 
 let currentResult = null;
@@ -3481,3 +3490,81 @@ if (getStored(STORAGE_KEYS.onboardingComplete) !== "1") openOnboarding();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
 }
+
+// ==========================================================================
+// CHAT WIDGET ASSISTANT LOGIC
+// ==========================================================================
+let chatWidgetOpen = false;
+let chatWidgetHistory = [];
+
+function toggleChatWidget() {
+  chatWidgetOpen = !chatWidgetOpen;
+  elements.chatWidgetWindow.hidden = !chatWidgetOpen;
+  elements.chatWidgetButton.setAttribute("aria-expanded", String(chatWidgetOpen));
+  elements.chatWidgetBadge.hidden = true;
+
+  if (chatWidgetOpen) {
+    elements.chatWidgetInput.focus();
+    elements.chatWidgetMessages.scrollTop = elements.chatWidgetMessages.scrollHeight;
+  }
+}
+
+async function handleChatSubmit(event) {
+  event.preventDefault();
+  const text = elements.chatWidgetInput.value.trim();
+  if (!text) return;
+
+  elements.chatWidgetInput.value = "";
+  addChatMessage("user", text);
+  chatWidgetHistory.push({ role: "user", text });
+
+  const loadingEl = showChatLoading();
+
+  try {
+    const payload = await window.KhoanDaServices.scamAnalysisService.chat({ tin_nhan: text });
+    loadingEl.remove();
+
+    if (payload.tra_loi) {
+      addChatMessage("assistant", payload.tra_loi);
+      chatWidgetHistory.push({ role: "assistant", text: payload.tra_loi });
+
+      const voiceGuideActive = elements.voiceGuideToggle.getAttribute("aria-pressed") === "true";
+      if (voiceGuideActive) {
+        window.KhoanDaServices.textToSpeechService.speak(payload.tra_loi);
+      }
+    } else {
+      throw new Error("Không nhận được câu trả lời.");
+    }
+  } catch (error) {
+    loadingEl.remove();
+    addChatMessage("assistant", "Cháu chưa kết nối được với tổng đài hỗ trợ, bác có thể thử lại sau một lát ạ.");
+  }
+}
+
+function addChatMessage(sender, text) {
+  const msgEl = document.createElement("div");
+  msgEl.className = `chat-widget__msg chat-widget__msg--${sender}`;
+  const pEl = document.createElement("p");
+  pEl.textContent = text;
+  msgEl.appendChild(pEl);
+  elements.chatWidgetMessages.appendChild(msgEl);
+  elements.chatWidgetMessages.scrollTop = elements.chatWidgetMessages.scrollHeight;
+}
+
+function showChatLoading() {
+  const loadingEl = document.createElement("div");
+  loadingEl.className = "chat-widget__msg chat-widget__msg--loading";
+  for (let i = 0; i < 3; i++) {
+    const dot = document.createElement("div");
+    dot.className = "chat-widget__dot";
+    loadingEl.appendChild(dot);
+  }
+  elements.chatWidgetMessages.appendChild(loadingEl);
+  elements.chatWidgetMessages.scrollTop = elements.chatWidgetMessages.scrollHeight;
+  return loadingEl;
+}
+
+elements.chatWidgetButton.addEventListener("click", toggleChatWidget);
+elements.chatWidgetClose.addEventListener("click", toggleChatWidget);
+elements.chatWidgetForm.addEventListener("click", (e) => e.stopPropagation());
+elements.chatWidgetForm.addEventListener("submit", handleChatSubmit);

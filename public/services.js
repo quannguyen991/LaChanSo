@@ -46,7 +46,8 @@
       analyze(body, options) { return request("/api/phan-tich", body, options); },
       transfer(body, options) { return request("/api/kiem-tra-chuyen-khoan", body, options); },
       journey(body, options) { return request("/api/phan-tich-hanh-trinh", body, options); },
-      link(body, options) { return request("/api/kiem-tra-lien-ket", body, options); }
+      link(body, options) { return request("/api/kiem-tra-lien-ket", body, options); },
+      chat(body, options) { return request("/api/chat", body, options); }
     },
     ocrService: {
       mode: "ai-inline",
