@@ -1,10 +1,10 @@
-const CACHE_NAME = "khoan-da-shell-v18";
+const CACHE_NAME = "khoan-da-shell-v20";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/tokens.css",
-  "/styles.css",
-  "/khoan-da-2026.css?v=20260727-onboarding-desktop-11",
+  "/styles.css?v=20260727-pressure-red-2",
+  "/khoan-da-2026.css?v=20260727-intro-aspect-lock-15",
   "/services.js",
   "/app.js",
   "/manifest.webmanifest",
@@ -21,6 +21,8 @@ const APP_SHELL = [
   ,"/assets/mascot-history.webp"
   ,"/assets/mascot-learn.webp"
   ,"/assets/mascot-assistant.webp"
+  ,"/assets/mascot-emergency.webp"
+  ,"/config/support-directory.json"
   ,"/assets/onboarding-reference-1.webp"
   ,"/assets/onboarding-reference-2.webp"
   ,"/assets/onboarding-reference-3.webp"

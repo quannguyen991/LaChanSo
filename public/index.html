@@ -17,8 +17,8 @@
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/600.css">
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/700.css">
     <link rel="stylesheet" href="/tokens.css">
-    <link rel="stylesheet" href="/styles.css?v=20260727-home-followup-1">
-    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260727-onboarding-desktop-11">
+    <link rel="stylesheet" href="/styles.css?v=20260727-pressure-red-2">
+    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260727-intro-aspect-lock-15">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/app.js" defer></script>
@@ -1781,7 +1781,7 @@
           <h1 id="supportTitle" tabindex="-1">Tôi cần người thật hỗ trợ</h1>
           <p class="calm-line">Khoan Đã không thay bác gọi thay. Hãy tự bấm số chính thức được lưu hoặc kiểm tra từ website của đơn vị.</p>
         </div>
-        <div class="support-callout"><span class="icon icon-alert" aria-hidden="true"></span><p>Không gọi số do người lạ cung cấp trong cuộc gọi hoặc tin nhắn. Dữ liệu dưới đây là danh bạ cấu hình/đường dẫn tham khảo, không phải lời hứa đã xác minh mọi số.</p></div>
+        <div class="support-callout"><span class="icon icon-alert" aria-hidden="true"></span><p>Không gọi số do người lạ cung cấp trong cuộc gọi hoặc tin nhắn. Các số dưới đây được đối chiếu từ trang liên hệ chính thức; bác vẫn nên so sánh với số trên thẻ hoặc trong ứng dụng ngân hàng.</p></div>
         <div class="support-directory" id="supportDirectory"></div>
         <div class="workspace-card">
           <h2 class="card-heading">Số của gia đình và ngân hàng</h2>
@@ -1914,17 +1914,18 @@
           <span class="icon icon-alert danger-dialog__badge-icon" aria-hidden="true"></span>
           <h2 id="dangerTitle">Nguy hiểm cao</h2>
         </div>
-        <section class="pressure-guide" id="pressureGuide" aria-live="polite" hidden>
-          <p class="pressure-guide__count" id="pressureStepCount">Bước 1/6</p>
-          <h3 id="pressureStepTitle">Đặt điện thoại xuống hoặc bật loa ngoài</h3>
-          <p id="pressureStepText">Bác không cần trả lời ngay. Hãy để điện thoại cách xa tay và hít thở chậm.</p>
-          <div class="pressure-guide__actions">
-            <button class="button button-secondary" type="button" id="pressureStepPrevious">Bước trước</button>
-            <button class="button button-secondary" type="button" id="pressureStepSpeak">
-              <span class="icon icon-volume" aria-hidden="true"></span>
-              <span>Nghe bước này</span>
-            </button>
-            <button class="button button-primary" type="button" id="pressureStepNext">Bước tiếp</button>
+        <section class="pressure-hero" aria-label="Dừng lại 60 giây">
+          <div class="pressure-hero__copy">
+            <p class="pressure-hero__eyebrow">Khoan đã, bác chưa cần làm theo</p>
+            <p class="pressure-hero__title">Dừng lại<br>60 giây</p>
+            <p class="pressure-hero__lead">Hãy dành thời gian bình tĩnh để bảo vệ bác và tài sản.</p>
+          </div>
+          <div class="pressure-hero__visual" aria-hidden="true">
+            <img src="/assets/mascot-emergency.webp" width="450" height="450" alt="">
+            <div class="pressure-hero__timer">
+              <strong id="pressureCountdown">60</strong>
+              <span>giây</span>
+            </div>
           </div>
         </section>
         <p class="danger-dialog__reassure">Hàng nghìn người cũng bị gọi y hệt. Bác không hề ngốc.</p>
@@ -1956,18 +1957,53 @@
         </div>
 
         <div class="danger-dialog__actions" id="dangerMainActions">
+          <a class="button danger-dialog__call pressure-action-card pressure-only" href="#thoat-cuoc-goi">
+            <span class="pressure-action-card__icon pressure-action-card__icon--danger" aria-hidden="true">
+              <span class="icon icon-phone-slash"></span>
+            </span>
+            <span class="pressure-action-card__copy">
+              <strong>Dừng cuộc gọi</strong>
+              <small>Kết thúc ngay cuộc gọi đáng ngờ.</small>
+            </span>
+            <span class="icon icon-chevron-right pressure-action-card__arrow" aria-hidden="true"></span>
+          </a>
           <button class="button danger-dialog__call" type="button" id="dangerCallButton">
-            <span class="icon icon-phone" aria-hidden="true"></span>
-            <span>Gọi người thân</span>
+            <span class="pressure-action-card__icon pressure-action-card__icon--family" aria-hidden="true">
+              <span class="icon icon-users"></span>
+            </span>
+            <span class="pressure-action-card__copy">
+              <strong>Gọi người thân</strong>
+              <small>Nhờ người thân hỗ trợ và xác minh.</small>
+            </span>
+            <span class="icon icon-chevron-right pressure-action-card__arrow" aria-hidden="true"></span>
           </button>
           <button class="button danger-dialog__call danger-dialog__call--secondary" type="button" id="dangerBankCallButton">
-            <span class="icon icon-phone" aria-hidden="true"></span>
-            <span>Gọi ngân hàng</span>
+            <span class="pressure-action-card__icon pressure-action-card__icon--bank" aria-hidden="true">
+              <span class="icon icon-credit-card"></span>
+            </span>
+            <span class="pressure-action-card__copy">
+              <strong>Gọi ngân hàng</strong>
+              <small>Liên hệ tổng đài chính thức của ngân hàng.</small>
+            </span>
+            <span class="icon icon-chevron-right pressure-action-card__arrow" aria-hidden="true"></span>
           </button>
         </div>
         <details class="danger-why" id="dangerWhy">
           <summary class="danger-why__summary">Vì sao nguy hiểm? Việc cần làm thêm</summary>
           <div class="danger-why__body">
+            <section class="pressure-guide" id="pressureGuide" aria-live="polite" hidden>
+              <p class="pressure-guide__count" id="pressureStepCount">Bước 1/6</p>
+              <h3 id="pressureStepTitle">Đặt điện thoại xuống hoặc bật loa ngoài</h3>
+              <p id="pressureStepText">Bác không cần trả lời ngay. Hãy để điện thoại cách xa tay và hít thở chậm.</p>
+              <div class="pressure-guide__actions">
+                <button class="button button-secondary" type="button" id="pressureStepPrevious">Bước trước</button>
+                <button class="button button-secondary" type="button" id="pressureStepSpeak">
+                  <span class="icon icon-volume" aria-hidden="true"></span>
+                  <span>Nghe bước này</span>
+                </button>
+                <button class="button button-primary" type="button" id="pressureStepNext">Bước tiếp</button>
+              </div>
+            </section>
             <ul class="danger-dialog__rules">
               <li>Không chuyển tiền</li>
               <li>Không cung cấp mã OTP</li>
@@ -2005,6 +2041,7 @@
             </div>
           </div>
         </details>
+        <button class="button pressure-calm-button pressure-only" type="button" id="pressureCalmButton">Tôi đã bình tĩnh lại</button>
         <button class="danger-dialog__close" type="button" id="closeDangerButton">Xem kết quả chi tiết</button>
       </div>
     </dialog>

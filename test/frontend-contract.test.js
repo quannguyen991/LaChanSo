@@ -11,6 +11,7 @@ const styles = fs.readFileSync(path.join(root, "public", "styles.css"), "utf8");
 const refreshStyles = fs.readFileSync(path.join(root, "public", "khoan-da-2026.css"), "utf8");
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "public", "manifest.webmanifest"), "utf8"));
 const serviceWorker = fs.readFileSync(path.join(root, "public", "sw.js"), "utf8");
+const supportDirectory = JSON.parse(fs.readFileSync(path.join(root, "public", "config", "support-directory.json"), "utf8"));
 
 test("primary product surfaces use the Khoan Đã brand", () => {
   // "Khoan Đã" is the product name that leads the logo and page title; the
@@ -236,10 +237,34 @@ test("onboarding is a functional five-step reference flow and can be reopened", 
   assert.match(app, /getStored\(STORAGE_KEYS\.onboardingComplete\) !== "1"/);
   assert.match(styles, /@keyframes onboarding-enter-forward/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?is-entering-forward/);
-  // Ảnh nay chỉ là MINH HOẠ, đo bằng rem nên co giãn theo nút A / A+ / A++.
-  // Không được quay lại dvh/vh/vw: chữ trong ảnh sẽ đứng yên khi phóng chữ.
-  assert.match(refreshStyles, /\.onboarding__art \{[^}]*max-block-size: [\d.]+rem/);
-  assert.doesNotMatch(refreshStyles, /\.onboarding__art \{[^}]*\d(dvh|vh|vw)\b/);
+  // The approved onboarding references once again fill the app viewport. The
+  // controls remain real HTML buttons layered in safe, clickable regions.
+  assert.match(refreshStyles, /Restore the original full-screen onboarding artwork/);
+  assert.match(refreshStyles, /body\[data-onboarding="true"\] \.onboarding__art \{[\s\S]*?inset:\s*0;[\s\S]*?height:\s*100%/);
+  assert.match(refreshStyles, /\[data-onboarding-step="2"\] \.onboarding__button--quiet[\s\S]*?right:\s*max\(0\.75rem, env\(safe-area-inset-right\)\)/);
+  assert.match(refreshStyles, /body\[data-onboarding="true"\] \.onboarding__button--primary[\s\S]*?min-height:\s*4\.7rem/);
+});
+
+test("pressure mode matches the red 60-second safety reference", () => {
+  assert.match(html, /class="pressure-hero"[\s\S]*?mascot-emergency\.webp[\s\S]*?id="pressureCountdown"/);
+  assert.match(html, /class="button danger-dialog__call pressure-action-card pressure-only" href="#thoat-cuoc-goi"/);
+  assert.match(html, /id="pressureCalmButton">Tôi đã bình tĩnh lại/);
+  assert.match(refreshStyles, /Pressure mode: a focused red safety screen/);
+  assert.match(refreshStyles, /danger-dialog\[data-mode="pressure"\][\s\S]*?#dc2626/);
+  assert.match(app, /pressureCalmButton\.addEventListener\("click"[\s\S]*?stopDangerCountdown\(\)[\s\S]*?dangerDialog\.close\(\)/);
+  assert.match(app, /window\.location\.hash = "#ho-tro"/);
+});
+
+test("official bank support directory contains verified call actions", () => {
+  const banks = supportDirectory.filter((item) => item.kind === "official-bank");
+  assert.equal(banks.length, 10);
+  for (const bank of banks) {
+    assert.match(bank.phone, /^1(?:800|900)\d{4,6}$/);
+    assert.match(bank.website, /^https:\/\//);
+    assert.equal(bank.updatedAt, "2026-07-27");
+  }
+  assert.match(app, /item\.displayPhone \|\| item\.phone/);
+  assert.match(html, /Các số dưới đây được đối chiếu từ trang liên hệ chính thức/);
 });
 
 test("home prompt, expanded lessons and family profile match the current reference", () => {

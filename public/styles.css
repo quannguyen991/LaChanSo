@@ -200,6 +200,7 @@ a {
 .icon-mic { --icon-source: url("/vendor/unicons/microphone.svg"); }
 .icon-scan { --icon-source: url("/vendor/unicons/qrcode-scan.svg"); }
 .icon-phone { --icon-source: url("/vendor/unicons/phone.svg"); }
+.icon-phone-slash { --icon-source: url("/vendor/unicons/phone-slash.svg"); }
 .icon-volume { --icon-source: url("/vendor/unicons/volume-up.svg"); }
 .icon-key { --icon-source: url("/vendor/unicons/key-skeleton.svg"); }
 .icon-back { --icon-source: url("/vendor/unicons/angle-left.svg"); }

@@ -26,5 +26,115 @@
     "purpose": "Gọi bằng số trên mặt sau thẻ hoặc số bác đã tự lưu",
     "source": "Số do người dùng tự lưu trong mục Gia đình",
     "updatedAt": "2026-07-23"
+  },
+  {
+    "id": "vietcombank",
+    "kind": "official-bank",
+    "name": "Vietcombank",
+    "phone": "1900545413",
+    "displayPhone": "1900 54 54 13",
+    "website": "https://www.vietcombank.com.vn/vi-VN/Contact",
+    "purpose": "Tổng đài hỗ trợ khách hàng Vietcombank",
+    "source": "Trang Liên hệ Vietcombank (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "bidv",
+    "kind": "official-bank",
+    "name": "BIDV",
+    "phone": "19009247",
+    "displayPhone": "1900 9247",
+    "website": "https://bidv.com.vn/vn/ca-nhan/lien-he",
+    "purpose": "Tổng đài dành cho khách hàng cá nhân BIDV",
+    "source": "Trang Liên hệ BIDV (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "vietinbank",
+    "kind": "official-bank",
+    "name": "VietinBank",
+    "phone": "1900558868",
+    "displayPhone": "1900 558 868",
+    "website": "https://contact.vietinbank.vn/",
+    "purpose": "Tổng đài hỗ trợ khách hàng VietinBank trong nước",
+    "source": "Cổng hỗ trợ VietinBank (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "agribank",
+    "kind": "official-bank",
+    "name": "Agribank",
+    "phone": "1900558818",
+    "displayPhone": "1900 558 818",
+    "website": "https://www.agribank.com.vn/vn/lien-he",
+    "purpose": "Tổng đài hỗ trợ khách hàng Agribank",
+    "source": "Trang Liên hệ Agribank (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "techcombank",
+    "kind": "official-bank",
+    "name": "Techcombank",
+    "phone": "1800588822",
+    "displayPhone": "1800 588 822",
+    "website": "https://techcombank.com/thong-tin/lien-he",
+    "purpose": "Tổng đài hỗ trợ khách hàng cá nhân Techcombank",
+    "source": "Trang Liên hệ Techcombank (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "mb-bank",
+    "kind": "official-bank",
+    "name": "MB Bank",
+    "phone": "1900545426",
+    "displayPhone": "1900 545 426",
+    "website": "https://www.mbbank.com.vn/contact",
+    "purpose": "Tổng đài chăm sóc khách hàng MB Bank",
+    "source": "Trang Liên hệ MB Bank (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "acb",
+    "kind": "official-bank",
+    "name": "ACB",
+    "phone": "1900545486",
+    "displayPhone": "1900 54 54 86",
+    "website": "https://acb.com.vn/lien-he",
+    "purpose": "Tổng đài hỗ trợ khách hàng ACB 24/7",
+    "source": "Trang Liên hệ ACB (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "vpbank",
+    "kind": "official-bank",
+    "name": "VPBank",
+    "phone": "1900545415",
+    "displayPhone": "1900 545 415",
+    "website": "https://www.vpbank.com.vn/lien-he",
+    "purpose": "Tổng đài hỗ trợ khách hàng VPBank",
+    "source": "Trang Liên hệ VPBank (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "sacombank",
+    "kind": "official-bank",
+    "name": "Sacombank",
+    "phone": "1800585888",
+    "displayPhone": "1800 5858 88",
+    "website": "https://www.sacombank.com.vn/trang-chu/lien-he.html",
+    "purpose": "Tổng đài hỗ trợ khách hàng cá nhân Sacombank",
+    "source": "Trang Liên hệ Sacombank (website chính thức)",
+    "updatedAt": "2026-07-27"
+  },
+  {
+    "id": "tpbank",
+    "kind": "official-bank",
+    "name": "TPBank",
+    "phone": "1900585885",
+    "displayPhone": "1900 58 58 85",
+    "website": "https://tpb.vn/lien-he",
+    "purpose": "Tổng đài dịch vụ khách hàng TPBank",
+    "source": "Trang Liên hệ TPBank (website chính thức)",
+    "updatedAt": "2026-07-27"
   }
 ]

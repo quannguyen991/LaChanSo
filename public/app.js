@@ -462,6 +462,8 @@ const elements = {
   dangerReadButton: document.querySelector("#dangerReadButton"),
   dangerExitCallButton: document.querySelector("#dangerExitCallButton"),
   dangerCountdown: document.querySelector("#dangerCountdown"),
+  pressureCountdown: document.querySelector("#pressureCountdown"),
+  pressureCalmButton: document.querySelector("#pressureCalmButton"),
   dangerFollowup: document.querySelector("#dangerFollowup"),
   dangerMainActions: document.querySelector("#dangerMainActions"),
   dangerStillPressuredButton: document.querySelector("#dangerStillPressuredButton"),
@@ -1038,8 +1040,8 @@ function callBank() {
   const phone = bankPhoneForCall();
   if (!phone) {
     if (elements.dangerDialog.open) elements.dangerDialog.close();
-    showToast("Hãy lưu số tổng đài ngân hàng trước.");
-    window.location.hash = "#gia-dinh";
+    showToast("Hãy chọn đúng tổng đài chính thức của ngân hàng.");
+    window.location.hash = "#ho-tro";
     return;
   }
   window.location.href = `tel:${phone}`;
@@ -1108,10 +1110,12 @@ function startDangerCountdown() {
   stopDangerCountdown();
   let remaining = 60;
   elements.dangerCountdown.textContent = String(remaining);
+  elements.pressureCountdown.textContent = String(remaining);
   countdownTimer = setInterval(() => {
     remaining -= 1;
     if (remaining <= 0) {
       elements.dangerCountdown.textContent = "0";
+      elements.pressureCountdown.textContent = "0";
       clearInterval(countdownTimer);
       countdownTimer = null;
       elements.dangerMainActions.hidden = true;
@@ -1120,6 +1124,7 @@ function startDangerCountdown() {
       return;
     }
     elements.dangerCountdown.textContent = String(remaining);
+    elements.pressureCountdown.textContent = String(remaining);
   }, 1000);
 }
 
@@ -1142,7 +1147,7 @@ function openDangerDialog(mode) {
   // Mở lại hộp thoại phải luôn thu gọn phần giải thích, nếu không lần cảnh báo
   // sau sẽ đẩy 6 mục cứu người xuống dưới nếp gấp. Chế độ thúc ép thì mở sẵn
   // vì nút chụp bằng chứng nằm trong đó.
-  elements.dangerWhy.open = isPressureMode;
+  elements.dangerWhy.open = false;
   pressureStepIndex = 0;
   renderPressureStep();
   startDangerCountdown();
@@ -2815,7 +2820,7 @@ async function renderSupportDirectory() {
       const call = document.createElement("a");
       call.className = "button button-call";
       call.href = `tel:${item.phone}`;
-      call.textContent = `Gọi ${item.phone}`;
+      call.textContent = `Gọi ${item.displayPhone || item.phone}`;
       actions.append(call);
       const copy = document.createElement("button");
       copy.className = "button button-secondary";
@@ -3538,6 +3543,10 @@ elements.pressurePhraseGrid.querySelectorAll(".phrase-chip").forEach((chip) => {
   chip.addEventListener("click", () => togglePressurePhrase(chip.dataset.phrase));
 });
 elements.closeDangerButton.addEventListener("click", () => elements.dangerDialog.close());
+elements.pressureCalmButton.addEventListener("click", () => {
+  stopDangerCountdown();
+  elements.dangerDialog.close();
+});
 elements.dangerStillPressuredButton.addEventListener("click", callFamily);
 elements.dangerOkNowButton.addEventListener("click", () => elements.dangerDialog.close());
 elements.dangerUploadEvidenceButton.addEventListener("click", () => elements.dangerEvidenceInput.click());
