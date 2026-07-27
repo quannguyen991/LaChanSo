@@ -1390,22 +1390,6 @@ html[data-route="tin-nhan-la"] #analysisView .check-detail-back {
     width: 1.35rem;
     height: 1.35rem;
   }
-}
-
-/* 2026-07-27: intro fills the viewport and the family profile follows the reference layout. */
-.onboarding--reference .onboarding__shell {
-  width: min(100vw, calc(100dvh * 942 / 1672)) !important;
-  height: 100dvh !important;
-  max-height: none !important;
-  aspect-ratio: auto !important;
-  margin: 0 !important;
-}
-
-.onboarding--reference .onboarding__reference {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
 
 #familyView {
   position: relative;
@@ -2772,82 +2756,6 @@ html[data-route="kiem-tra"] #analysisView > .analysis-mascot {
   background: var(--color-surface) url("/assets/mascot-assistant.webp") center / cover no-repeat;
 }
 
-.onboarding--reference {
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: #f5efff;
-}
-
-.onboarding--reference .onboarding__shell {
-  width: min(100vw, calc(100svh * 0.5634), 35.25rem);
-  height: min(100svh, calc(100vw * 1.775));
-  min-height: 0;
-  aspect-ratio: 942 / 1672;
-  margin: 0;
-  overflow: hidden;
-  background: #f5efff;
-  box-shadow: 0 0 3rem rgba(93, 58, 190, 0.12);
-}
-
-.onboarding--reference .onboarding__screen {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-.onboarding--reference .onboarding__screen::before {
-  content: none;
-}
-
-.onboarding--reference .onboarding__reference {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.onboarding--reference .onboarding__hotspot {
-  position: absolute;
-  z-index: 2;
-  border: 0;
-  border-radius: 2.5rem;
-  background: transparent;
-  color: transparent;
-  cursor: pointer;
-}
-
-.onboarding--reference .onboarding__hotspot--skip {
-  top: 2.4%;
-  right: 3.4%;
-  width: 24%;
-  height: 7%;
-}
-
-.onboarding--reference .onboarding__hotspot--primary {
-  right: 12%;
-  bottom: 4.4%;
-  left: 12%;
-  height: 8.4%;
-}
-
-.onboarding--reference .onboarding__hotspot--login {
-  right: 20%;
-  bottom: 0.5%;
-  left: 20%;
-  height: 4.2%;
-}
-
-.onboarding--reference .onboarding__hotspot:focus-visible {
-  outline: 4px solid var(--color-focus-inner);
-  outline-offset: -6px;
-  box-shadow: inset 0 0 0 8px var(--color-focus-outer);
-}
-
 @media (max-width: 51.99rem) {
   #homeView .mobile-situation-form textarea {
     padding-right: 9.45rem;
@@ -3600,19 +3508,91 @@ body:has(#educationView:not([hidden])) .topbar {
 }
 
 /* Final viewport correction: no outer gutter around any onboarding step. */
-.onboarding.onboarding--reference {
-  box-sizing: border-box !important;
-  padding: 0 !important;
+
+/* ================================================================
+   LUỒNG CHÀO — CHỮ THẬT (27/7/2026)
+   Bản trước là 5 ẢNH phủ toàn màn, chữ và nút đều vẽ sẵn thành pixel,
+   bên trên là <button> rỗng ruột đặt đè lên. Nút A / A+ / A++ vô tác
+   dụng trên cả 5 màn. Nay ảnh chỉ còn là MINH HOẠ, chữ và nút là HTML.
+   Kích thước ảnh tính bằng rem nên nó co giãn cùng chữ.
+   ================================================================ */
+.onboarding__screen {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-4) max(var(--space-5), env(safe-area-inset-bottom));
+  text-align: center;
 }
 
-.onboarding--reference .onboarding__shell {
-  width: min(100vw, calc(100dvh * 942 / 1672)) !important;
-  height: 100dvh !important;
-  max-height: none !important;
-  aspect-ratio: auto !important;
-  margin: 0 !important;
+.onboarding__art {
+  /* Ảnh gốc là ảnh chụp màn hình DỌC 942x1672. Kẹp theo chiều RỘNG thì ở bậc
+     chữ A++ nó vẫn cao 355px trên màn 640px — ăn hơn nửa màn và đẩy nút ra
+     ngoài 60px. Phải kẹp theo CHIỀU CAO rồi để chiều rộng chạy theo.
+     Đo bằng rem (không phải vh) nên ảnh vẫn co giãn cùng nút A / A+ / A++. */
+  block-size: auto;
+  max-block-size: 9rem;
+  inline-size: auto;
+  max-inline-size: 100%;
+  margin: 0 auto;
 }
 
-.onboarding--reference .onboarding__reference {
-  object-fit: fill !important;
+.onboarding__title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
 }
+
+.onboarding__lead {
+  max-width: 26ch;
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--color-ink-2);
+  text-wrap: balance;
+}
+
+.onboarding__actions {
+  display: grid;
+  gap: var(--space-2);
+  width: min(100%, 22rem);
+  margin-block-start: var(--space-2);
+}
+
+.onboarding__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target-primary);
+  padding: var(--space-3) var(--space-5);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: var(--text-md);
+  font-weight: 700;
+  line-height: var(--leading-snug);
+  white-space: normal;
+  cursor: pointer;
+}
+
+.onboarding__button--primary {
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}
+
+.onboarding__button--quiet {
+  background: transparent;
+  border-color: var(--color-rule-strong);
+  color: var(--color-ink-2);
+}
+
+/* Màn thấp (Android 360x640): thu ảnh lại để nút luôn nằm trọn trong màn. */
+/* Màn thấp (Android 360x640): thu ảnh và bó khoảng cách để nút luôn trong màn. */
+@media (max-height: 44rem) {
+  .onboarding__art { max-block-size: 7rem; }
+  .onboarding__screen { gap: var(--space-3); padding-block: var(--space-4); }
+}
+
+/* Lưới an toàn: nếu chữ dài bất thường vẫn vượt, cho cuộn chứ KHÔNG cắt nút. */
+.onboarding__screen { overflow-y: auto; }
