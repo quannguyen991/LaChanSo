@@ -73,6 +73,13 @@ test("chat API returns 400 when message is too long", async () => {
 });
 
 test("chat API returns assistant reply successfully", async () => {
+  // callGemini() ném GeminiError(..., 503) NGAY khi thiếu khoá, tức trước cả
+  // lần gọi fetch đầu tiên — nên mock fetch bên dưới không bao giờ được chạm
+  // tới và test trả 503. CI cũng không có khoá, nên test này đỏ ở mọi nơi.
+  // Đặt khoá giả để đi hết đường dẫn tới fetch, rồi mock chặn ở đó.
+  const originalKey = process.env.GEMINI_API_KEY;
+  process.env.GEMINI_API_KEY = "test-key-not-a-real-secret";
+
   const originalFetch = global.fetch;
   global.fetch = async (url, options) => {
     if (url.includes("generateContent") || url.includes("chat/completions")) {
@@ -105,6 +112,8 @@ test("chat API returns assistant reply successfully", async () => {
     assert.equal(payload.tra_loi, "Chào bác, cháu là trợ lý Khoan Đã!");
   } finally {
     global.fetch = originalFetch;
+    if (originalKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = originalKey;
   }
 });
 
