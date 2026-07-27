@@ -75,7 +75,7 @@ Mọi thứ thông minh thêm vào **chỉ được làm tăng cảnh giác, kh�
 ```bash
 npm install
 npm start          # cổng 8089 (đã đăng ký trong port-registry)
-npm test           # node --test — 130 test
+npm test           # node --test — 142 test
 npm run check      # kiểm cú pháp server.js, app.js, services.js, sw.js
 npm run build      # xuất ra dist/
 ```
@@ -127,7 +127,7 @@ test-utils/             # tiện ích dùng chung (KHÔNG đặt trong test/ vì
 ## Quy trình sửa giao diện
 
 1. Sửa code.
-2. `npm test` — 130 test phải xanh.
+2. `npm test` — 142 test phải xanh.
 3. Mở `localhost:8089`, quét bằng số đo: tràn ngang, chồng lấn, vùng chạm < 52px,
    cỡ chữ < 14px — ở **cả 3 bậc chữ**.
 4. Chỉ báo "xong" khi có **bằng chứng đo được**, không phải "trông có vẻ ổn".
