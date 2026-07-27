@@ -162,27 +162,36 @@ Hai bẫy kế hoạch nav đã chỉ ra, đừng bỏ qua:
 - Bậc chữ "small" là 15px, dưới sàn 17px của brief. Đã đo: nâng thang lên
   17/20/24 thì 13 màn vẫn sạch **nhưng hộp cảnh báo vượt nếp gấp**. Cần quyết định.
 
-## ⚠️ Hai lỗ hổng hàng rào CHƯA vá (biết rồi, chưa làm)
+## ⚠️ Lỗ hổng hàng rào
 
-### 1. Không có test chặn ảnh chữ-nướng
+### 1. Ảnh chữ-nướng — ĐÃ VÁ 27/7/2026
 
-Đây là lỗi **đã quay lại 2 lần**: sửa 26/7 sáng → quay lại 27/7 trưa, CI vẫn xanh
-cả hai lần. Hiện chỉ có một dòng *ghi chú* trong `frontend-contract.test.js`, ghi
-chú thì không chặn được ai.
+Lỗi này quay lại **ba lần** (26/7 sáng, 27/7 trưa, 27/7 chiều) và CI xanh cả ba
+lần. Hai lần đầu hàng rào là **danh sách đen tên file**, nên lần thứ ba chỉ cần
+đặt tên khác (`onboarding-reference-*.webp`) là lọt: 139/139 test xanh trong khi
+**5 màn chào ship dưới dạng bitmap** — tiêu đề, nội dung, nhãn nút đều là pixel,
+chữ thật đẩy sang `visually-hidden`, bên trên là 9 `<button>` rỗng ruột đè lên.
 
-**Trạng thái hiện tại — LỖI ĐANG CHẠY:** `mobile-home-top-reference.webp`
-(375×270) nằm ở đầu trang chủ điện thoại. Đã đo: ảnh **không đổi kích thước ở cả
-3 bậc chữ**; chữ thật "Khoan Đã" có `visible: false`, chữ thật "Bác đang gặp tình
-huống gì?" rộng **1px ở toạ độ x = −1**. Tức chữ bác nhìn thấy là pixel, nút
-A/A+/A++ vô tác dụng đúng chỗ chữ to nhất.
+**Bài học: danh sách đen chỉ chặn được cái đã biết.** Hàng rào phải mô tả
+**cấu trúc sai**, không phải liệt kê thủ phạm cũ.
 
-Đã thống nhất **để bản thiết kế mới xử lý**, không vá tay.
+`test/no-baked-text-screens.test.js` nay bắt ba dấu hiệu, không quan tâm tên file:
 
-**Test cần viết (khi có thiết kế mới):** danh sách chặn các asset ĐÃ XÁC MINH có
-chữ nướng — `mobile-home-top-reference`, `mobile-home-screen-reference`,
-`home-hero-reference*`, `mobile-home-hero-reference` — cộng thêm khẳng định
-tiêu đề thật tồn tại VÀ không bị `visually-hidden`/1px. Không đủ nếu chỉ kiểm
-tên file: phải kiểm chữ thật có hiện không.
+1. `<button>` không chữ, không icon — cái người dùng thấy nằm trong ảnh
+2. Tiêu đề `visually-hidden` đứng cạnh `<img>` trong cùng một khối
+3. CSS đo ảnh bằng đơn vị khung nhìn (`dvh`/`vh`/`vw`) — kích thước không liên
+   quan gì tới cỡ chữ, nên nút A / A+ / A++ vô tác dụng
+
+`frontend-contract.test.js` từng **khoá chặt chính cấu trúc hỏng** (bắt buộc
+phải có `onboarding__hotspot--primary`). Nay khoá cấu trúc đúng: nhãn nút phải
+là chữ thật trong HTML.
+
+**Khi thêm hàng rào mới: chạy nó trên bản HỎNG trước để chứng minh nó bắt được.**
+Hàng rào chưa từng đỏ là hàng rào chưa biết có hoạt động không.
+
+Ảnh minh hoạ phải kẹp bằng `rem`. Lưu ý ảnh trong `assets/onboarding-*` là ảnh
+chụp màn hình **dọc 942×1672** — kẹp theo chiều rộng thì ở bậc A++ vẫn cao 355px
+trên màn 640px và đẩy nút ra ngoài 60px. Kẹp `max-block-size`, không kẹp rộng.
 
 ### 2. Sàn vùng chạm mới vá 1 chỗ, còn 34
 

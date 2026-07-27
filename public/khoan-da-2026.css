@@ -1391,12 +1391,6 @@ html[data-route="tin-nhan-la"] #analysisView .check-detail-back {
     height: 1.35rem;
   }
 
-.onboarding--reference .onboarding__reference {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover !important;
-}
-
 #familyView {
   position: relative;
 }
@@ -2762,71 +2756,6 @@ html[data-route="kiem-tra"] #analysisView > .analysis-mascot {
   background: var(--color-surface) url("/assets/mascot-assistant.webp") center / cover no-repeat;
 }
 
-.onboarding--reference {
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  background: #f5efff;
-}
-
-.onboarding--reference .onboarding__screen {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-.onboarding--reference .onboarding__screen::before {
-  content: none;
-}
-
-.onboarding--reference .onboarding__reference {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.onboarding--reference .onboarding__hotspot {
-  position: absolute;
-  z-index: 2;
-  border: 0;
-  border-radius: 2.5rem;
-  background: transparent;
-  color: transparent;
-  cursor: pointer;
-}
-
-.onboarding--reference .onboarding__hotspot--skip {
-  top: 2.4%;
-  right: 3.4%;
-  width: 24%;
-  height: 7%;
-}
-
-.onboarding--reference .onboarding__hotspot--primary {
-  right: 12%;
-  bottom: 4.4%;
-  left: 12%;
-  height: 8.4%;
-}
-
-.onboarding--reference .onboarding__hotspot--login {
-  right: 20%;
-  bottom: 0.5%;
-  left: 20%;
-  height: 4.2%;
-}
-
-.onboarding--reference .onboarding__hotspot:focus-visible {
-  outline: 4px solid var(--color-focus-inner);
-  outline-offset: -6px;
-  box-shadow: inset 0 0 0 8px var(--color-focus-outer);
-}
-
 @media (max-width: 51.99rem) {
   #homeView .mobile-situation-form textarea {
     padding-right: 9.45rem;
@@ -3579,15 +3508,6 @@ body:has(#educationView:not([hidden])) .topbar {
 }
 
 /* Final viewport correction: no outer gutter around any onboarding step. */
-.onboarding.onboarding--reference {
-  box-sizing: border-box !important;
-  padding: 0 !important;
-}
-
-.onboarding--reference .onboarding__reference {
-  object-fit: fill !important;
-}
-
 
 /* ================================================================
    LUỒNG CHÀO — CHỮ THẬT (27/7/2026)
