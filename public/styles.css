@@ -6870,56 +6870,23 @@ body:has(#homeView:not([hidden])) {
     display: none;
   }
 
-  #homeView .mobile-reference-top__scene {
-    display: block;
-    width: 100%;
-    height: auto;
-    aspect-ratio: 942 / 677;
-    object-fit: cover;
-  }
-
-  /* Invisible semantic hit areas sit over the brand and profile drawn in the
-     approved hero crop. */
+  /* Trước đây thanh đầu trang là một LỚP BẤM VÔ HÌNH (opacity: 0) đè lên ảnh
+     mobile-home-top-reference.webp, vốn vẽ sẵn logo và nút hồ sơ thành pixel.
+     Ảnh đã gỡ vì nút A / A+ / A++ không phóng to được chữ trong ảnh. Vì vậy
+     logo và nút phải hiện lại bằng chữ thật, và :focus-visible phải LÀM RÕ
+     chứ không làm mờ. */
   #homeView .mobile-reference-top__bar {
-    position: absolute;
-    inset: 2% 3% auto;
-    z-index: 3;
-    height: 24%;
-    padding: 0;
+    position: relative;
+    padding-block: var(--space-3);
   }
 
-  #homeView .mobile-reference-top__brand,
-  #homeView .mobile-reference-top__profile {
-    align-self: stretch;
-    min-height: 100%;
-    padding: 0;
-    opacity: 0;
-  }
-
-  #homeView .mobile-reference-top__brand {
-    flex: 0 1 59%;
-  }
-
-  #homeView .mobile-reference-top__profile {
-    flex: 0 1 38%;
-  }
-
-  #homeView .mobile-reference-top__brand:focus-visible,
-  #homeView .mobile-reference-top__profile:focus-visible {
-    opacity: 0.12;
-  }
-
+  /* Khối này TỪNG bị ẩn (width/height 1px + clip) để nhường chỗ cho ảnh
+     mobile-home-top-reference.webp, vốn nướng sẵn tiêu đề thành pixel. Ảnh
+     đã bị gỡ: nút A / A+ / A++ không phóng to được chữ trong ảnh, mà đó lại
+     là dòng chữ to nhất trang. Chữ thật phải hiện. */
   #homeView .mobile-reference-top__intro {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    min-height: 0;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
+    position: relative;
+    padding-block: var(--space-4);
   }
 
   #homeView .mobile-reference-top__art {

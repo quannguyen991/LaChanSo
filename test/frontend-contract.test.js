@@ -101,7 +101,22 @@ test("mobile home exposes the reference workflow without replacing desktop route
   // The approved crop supplies pixel-accurate mobile artwork while the same
   // heading remains in the DOM for screen readers and semantic navigation.
   assert.match(html, /<h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì\?<\/h2>/);
-  assert.match(html, /class="mobile-reference-top__scene"[^>]*mobile-home-top-reference\.webp/);
+  // KHÔNG được nướng chữ vào ảnh. Lỗi này đã ship HAI lần (26/7 và 27/7) và CI
+  // xanh cả hai lần vì chỉ có ghi chú chứ không có assertion.
+  // mobile-home-top-reference.webp vẽ sẵn "Khoan Đã", dòng tagline và cả câu
+  // "Bác đang gặp tình huống gì?" thành pixel: đã đo, ảnh giữ nguyên 375x270 ở
+  // cả ba bậc cỡ chữ, nên nút A / A+ / A++ vô tác dụng đúng ở dòng to nhất trang.
+  for (const asset of [
+    "mobile-home-top-reference", "mobile-home-screen-reference",
+    "home-hero-reference", "mobile-home-hero-reference"
+  ]) {
+    assert.doesNotMatch(html, new RegExp(asset), `${asset} chứa chữ nướng sẵn — không được đưa lại vào index.html`);
+  }
+  // Chỉ vắng mặt ảnh là chưa đủ: chữ thật phải THỰC SỰ HIỆN. Lần trước khối chữ
+  // vẫn nằm trong DOM nhưng bị ép width/height 1px + clip để nhường chỗ cho ảnh,
+  // còn logo và nút hồ sơ bị đặt opacity: 0 làm lớp bấm vô hình.
+  assert.doesNotMatch(styles, /mobile-reference-top__intro\s*\{[^}]*clip:\s*rect\(0 0 0 0\)/);
+  assert.doesNotMatch(styles, /mobile-reference-top__(brand|profile)[^{]*\{[^}]*opacity:\s*0;/);
   assert.match(html, /id="mobileSituationForm"[\s\S]*?id="mobileSituationInput"[\s\S]*?id="mobileSituationFile"/);
   assert.match(html, /id="mobileSituationVoiceButton"[^>]*aria-label="Ghi âm tình huống"/);
   assert.match(html, /class="mobile-situation-submit"[^>]*type="submit"[\s\S]*?<span>Tiếp tục<\/span>[\s\S]*?icon-chevron-right/);
