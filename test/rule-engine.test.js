@@ -6,7 +6,8 @@ const {
   evaluateRisk,
   normalizeSignals,
   detectManipulationTactics,
-  applyRecoveryBoost
+  applyRecoveryBoost,
+  inferSignalsFromText
 } = require("../src/rule-engine");
 
 test("normalizes every signal to a strict boolean", () => {
@@ -20,6 +21,14 @@ test("normalizes every signal to a strict boolean", () => {
   assert.equal(signals.gia_danh_co_quan_nha_nuoc, true);
   assert.equal(signals.ep_thoi_gian_khan_cap, false);
   assert.equal(Object.hasOwn(signals, "ignored"), false);
+});
+
+test("infers a suspicious family transfer request without an AI provider", () => {
+  const signals = inferSignalsFromText("Con gái tôi bên nước ngoài bảo chuyển khoản ngay cho một tài khoản lạ.");
+  assert.equal(signals.tu_xung_nguoi_than_nhung_dang_ngo, true);
+  assert.equal(signals.doi_chuyen_tien_tai_khoan_ca_nhan, true);
+  assert.equal(signals.ep_thoi_gian_khan_cap, true);
+  assert.notEqual(evaluateRisk(signals).muc_rui_ro, "Chưa thấy dấu hiệu rủi ro");
 });
 
 test("maps signals to plain-language manipulation tactics", () => {

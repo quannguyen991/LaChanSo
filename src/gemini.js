@@ -154,7 +154,7 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
 
   if (!response.ok) {
     throw retryableIf(
-      new GeminiError("Gemini chưa thể phân tích tình huống. Vui lòng thử lại."),
+      new GeminiError("Dịch vụ phân tích đang bận. Vui lòng thử lại."),
       response.status >= 500
     );
   }
@@ -163,7 +163,7 @@ async function callGemini({ apiKey, model, fetchImpl, systemInstruction, parts, 
   const outputText = payload.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!outputText) {
-    throw retryableIf(new GeminiError("Gemini không trả về dữ liệu có thể sử dụng."), true);
+    throw retryableIf(new GeminiError("Dịch vụ phân tích chưa trả về dữ liệu có thể sử dụng."), true);
   }
 
   try {

@@ -424,6 +424,54 @@ const TRANSFER_SIGNAL_KEYS = transferEvaluator.keys;
 const normalizeTransferSignals = transferEvaluator.normalize;
 const evaluateTransferRisk = transferEvaluator.evaluate;
 
+function normalizeVietnameseText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\u0111/g, "d")
+    .replace(/\u0110/g, "D")
+    .toLowerCase();
+}
+
+function hasAny(text, patterns) {
+  return patterns.some((pattern) => text.includes(pattern));
+}
+
+// Deterministic fallback used when the configured LLM is unavailable. It is
+// deliberately conservative: it only raises signals backed by words present
+// in the user's text, while the regular rule engine still decides the risk.
+function inferSignalsFromText(rawText) {
+  const text = normalizeVietnameseText(rawText);
+  const moneyRequest = hasAny(text, ["chuyen tien", "chuyen khoan", "nop tien", "gui tien", "tai khoan ca nhan"]);
+  const familyMention = hasAny(text, ["con gai", "con trai", "con chau", "chau toi", "nguoi than", "bo me", "anh chi em"]);
+
+  return normalizeSignals({
+    gia_danh_co_quan_nha_nuoc: hasAny(text, ["cong an", "vien kiem sat", "toa an", "co quan dieu tra", "bao hiem xa hoi", "bhxh"]),
+    doi_chuyen_tien_tai_khoan_ca_nhan: moneyRequest,
+    ep_thoi_gian_khan_cap: hasAny(text, ["ngay lap tuc", "lam ngay", "chuyen ngay", "chuyen khoan ngay", "gap", "khan cap", "hom nay", "het han"]),
+    doa_bat_giu_hoac_cat_tro_cap: hasAny(text, ["bat giam", "bat giu", "khoi to", "cat tro cap", "phong toa tai khoan", "khoa tai khoan"]),
+    yeu_cau_giu_bi_mat: hasAny(text, ["giu bi mat", "khong duoc ke", "khong noi voi", "khong bao nguoi than"]),
+    doi_otp_hoac_cai_app_la: hasAny(text, ["otp", "ma xac nhan", "ma smart otp", "cai app", "cai ung dung", "file apk"]),
+    tu_xung_nguoi_than_nhung_dang_ngo: familyMention && hasAny(text, ["so la", "bao chuyen", "bao gui", "muon tien", "vay tien", "xin tien", "can tien"]),
+    moi_hoi_thao_qua_tang_mien_phi: hasAny(text, ["hoi thao", "qua mien phi", "voucher", "ky nghi mien phi"]),
+    ep_ky_hop_dong_ngay_tai_cho_giam_gia_soc: hasAny(text, ["ky ngay", "ky tai cho", "giam gia soc", "chi hom nay"]),
+    hop_dong_gia_tri_lon_nhieu_nam: hasAny(text, ["hop dong tram trieu", "hop dong nhieu nam", "so huu ky nghi"]),
+    ep_mua_them_hop_dong_de_thoat_hop_dong_cu: hasAny(text, ["mua them hop dong", "thoat hop dong cu", "chuyen nhuong hop dong"]),
+    goi_dien_lien_tuc_gay_ap_luc: hasAny(text, ["goi lien tuc", "goi nhieu lan", "thuc ep", "gay ap luc"]),
+    yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa: hasAny(text, ["chia se man hinh", "dieu khien tu xa", "anydesk", "teamviewer"]),
+    mao_danh_dich_vu_thiet_yeu_hoac_thue: hasAny(text, ["dien luc", "tien dien", "tien nuoc", "co quan thue", "buu dien", "phuong bao"]),
+    dau_tu_loi_nhuan_cao_dam_bao: hasAny(text, ["loi nhuan cao", "khong lo", "lai deu", "dau tu tien ao", "san dau tu"]),
+    nguoi_quen_qua_mang_chua_gap_mat_xin_tien: hasAny(text, ["quen qua mang", "chua gap mat", "ban trai online", "ban gai online"]) && moneyRequest,
+    bao_tin_nguoi_than_gap_nan_qua_ben_thu_ba: hasAny(text, ["giao vien bao", "benh vien bao", "tai nan", "cap cuu", "nguoi than gap nan"]),
+    de_doa_bang_hinh_anh_video_rieng_tu: hasAny(text, ["anh rieng tu", "video rieng tu", "phat tan anh", "phat tan video", "tong tien"]),
+    tai_khoan_nguoi_than_bi_hack_muon_tien: familyMention && hasAny(text, ["zalo", "facebook", "messenger", "tai khoan bi hack"]) && moneyRequest,
+    gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc: hasAny(text, ["sinh trac hoc", "nhan vien ngan hang", "mo khoa ngan hang"]),
+    cai_app_dich_vu_cong_gia: hasAny(text, ["vneid", "dich vu cong", "ung dung thue"]) && hasAny(text, ["link", "cai", "apk"]),
+    de_doa_khoa_sim_thue_bao: hasAny(text, ["khoa sim", "khoa thue bao", "chuan hoa thue bao"]),
+    lam_nhiem_vu_chot_don_hoa_hong: hasAny(text, ["lam nhiem vu", "chot don", "tha tim", "nhan hoa hong", "nap tien de rut"])
+  });
+}
+
 module.exports = {
   SIGNAL_KEYS,
   SIGNAL_RULES,
@@ -436,6 +484,7 @@ module.exports = {
   TRANSFER_MANIPULATION_TACTIC_RULES,
   evaluateTransferRisk,
   normalizeTransferSignals,
+  inferSignalsFromText,
   classifyScore,
   applyRecoveryBoost
 };

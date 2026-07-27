@@ -3,7 +3,13 @@ require("dotenv").config();
 const path = require("node:path");
 const express = require("express");
 const { GeminiError, extractSignals, extractTransferSignals, extractChatResponse } = require("./src/gemini");
-const { evaluateRisk, evaluateTransferRisk, SIGNAL_KEYS, applyRecoveryBoost } = require("./src/rule-engine");
+const {
+  evaluateRisk,
+  evaluateTransferRisk,
+  SIGNAL_KEYS,
+  applyRecoveryBoost,
+  inferSignalsFromText
+} = require("./src/rule-engine");
 const { classifyJourney, EVENT_TYPES } = require("./src/journey-engine");
 const { LinkCheckError, evaluateLinkRisk, resolveRedirectChain } = require("./src/link-shield");
 const { lookupReputation } = require("./src/reputation-engine");
@@ -95,6 +101,55 @@ app.get("/api/health", (_request, response) => {
   response.json({ ok: true });
 });
 
+function buildFallbackAnalysis(text, { hasMedia = false, recoveryModeActive = false } = {}) {
+  const signals = inferSignalsFromText(text);
+  let result = evaluateRisk(signals);
+
+  if (hasMedia && !text) {
+    result = {
+      ...result,
+      muc_rui_ro: "Nghi ngờ",
+      diem: Math.max(2, result.diem || 0),
+      ly_do: [
+        "Chưa đọc được đầy đủ nội dung trong tệp nên chưa thể loại trừ rủi ro.",
+        "Tệp có thể chứa đường link hoặc yêu cầu cần xác minh qua kênh chính thức.",
+        "Không nên chuyển tiền hoặc cung cấp mã xác nhận khi thông tin còn chưa rõ."
+      ],
+      hanh_dong: [
+        "Không bấm đường link hoặc cài ứng dụng từ tệp vừa nhận.",
+        "Không đọc OTP, mật khẩu hoặc thông tin tài khoản cho người khác.",
+        "Nhờ người thân xem cùng và tự gọi đơn vị liên quan qua số chính thức."
+      ]
+    };
+  }
+
+  if (recoveryModeActive) result = applyRecoveryBoost(result, text);
+
+  return {
+    ...result,
+    tin_hieu: signals,
+    noi_dung_da_doc: text || undefined,
+    loi_dong_cam: "Bác đã làm đúng khi dừng lại để kiểm tra trước khi hành động.",
+    che_do_du_phong: true
+  };
+}
+
+function buildFallbackChatResponse(text) {
+  const result = buildFallbackAnalysis(text);
+  const isLowRisk = result.muc_rui_ro === "Chưa thấy dấu hiệu rủi ro";
+  const opening = isLowRisk
+    ? "Cháu chưa thấy dấu hiệu lừa đảo rõ trong thông tin bác vừa kể, nhưng mình vẫn nên kiểm tra thêm trước khi làm theo."
+    : "Tình huống bác kể có dấu hiệu cần thận trọng. Bác nên dừng lại và chưa làm theo yêu cầu của người liên hệ.";
+  const actions = (result.hanh_dong || []).slice(0, 3);
+  const numberedActions = actions.map((action, index) => `${index + 1}. ${action}`).join(" ");
+
+  return {
+    tra_loi: `${opening} ${numberedActions}`.trim(),
+    muc_rui_ro: result.muc_rui_ro,
+    che_do_du_phong: true
+  };
+}
+
 app.post("/api/chat", async (request, response, next) => {
   const text = typeof request.body?.tin_nhan === "string"
     ? request.body.tin_nhan.trim()
@@ -112,7 +167,8 @@ app.post("/api/chat", async (request, response, next) => {
     const result = await extractChatResponse(text);
     return response.json(result);
   } catch (error) {
-    return next(error);
+    console.warn("Dịch vụ AI tạm thời không phản hồi; đang dùng hướng dẫn dự phòng.", error?.name || "Error");
+    return response.json(buildFallbackChatResponse(text));
   }
 });
 
@@ -156,7 +212,11 @@ app.post("/api/phan-tich", async (request, response, next) => {
       loi_dong_cam: extraction.loi_dong_cam || undefined
     });
   } catch (error) {
-    return next(error);
+    console.warn("Dịch vụ AI tạm thời không phản hồi; đang dùng phân tích dự phòng.", error?.name || "Error");
+    return response.json(buildFallbackAnalysis(text, {
+      hasMedia: Boolean(image),
+      recoveryModeActive
+    }));
   }
 });
 

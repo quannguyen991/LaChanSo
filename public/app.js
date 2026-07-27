@@ -3264,6 +3264,62 @@ function renderMobileQuickResult(result) {
   elements.mobileQuickResult.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
 }
 
+function normalizeSituationText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\u0111/g, "d")
+    .replace(/\u0110/g, "D")
+    .toLowerCase();
+}
+
+function buildLocalGuidanceFallback(text, { hasFile = false } = {}) {
+  const normalized = normalizeSituationText(text);
+  const hasMoneyRequest = /(chuyen tien|chuyen khoan|gui tien|nop tien|muon tien|vay tien)/.test(normalized);
+  const hasCriticalSignal = /(otp|ma xac nhan|cai app|cai ung dung|apk|chia se man hinh|anydesk|teamviewer|cong an|toa an|vien kiem sat)/.test(normalized);
+  const hasPressure = /(gap|ngay lap tuc|lam ngay|chuyen ngay|giu bi mat|khong noi voi|khoa tai khoan|bat giu)/.test(normalized);
+  const suspicious = hasFile || hasMoneyRequest || hasCriticalSignal || hasPressure || /^https?:\/\//i.test(text);
+  const highRisk = hasCriticalSignal || (hasMoneyRequest && hasPressure);
+
+  return {
+    muc_rui_ro: highRisk ? "Nguy hiểm cao" : suspicious ? "Nghi ngờ" : "Chưa thấy dấu hiệu rủi ro",
+    ly_do: highRisk
+      ? [
+          "Nội dung có yêu cầu nhạy cảm hoặc dấu hiệu gây áp lực cần dừng lại ngay.",
+          "Người liên hệ có thể đang cố khiến bác hành động trước khi kịp xác minh.",
+          "Không thể xem một yêu cầu chuyển tiền, mã xác nhận hoặc cài ứng dụng là an toàn khi chưa kiểm tra độc lập."
+        ]
+      : suspicious
+        ? [
+            "Tình huống có chi tiết cần xác minh lại qua một kênh độc lập.",
+            "Chưa đủ căn cứ để tin người gửi, đường link hoặc tệp đính kèm là an toàn.",
+            "Dừng lại kiểm tra sẽ giúp tránh quyết định vội vàng."
+          ]
+        : [
+            "Chưa thấy dấu hiệu lừa đảo rõ trong nội dung bác vừa cung cấp.",
+            "Thông tin hiện tại vẫn chưa đủ để khẳng định người liên hệ hoàn toàn đáng tin.",
+            "Bác nên xác minh thêm nếu có yêu cầu tiền, mã xác nhận hoặc thông tin cá nhân."
+          ],
+    hanh_dong: [
+      "Tạm dừng và không chuyển tiền, không cung cấp OTP hay mật khẩu.",
+      "Tự gọi lại người thân hoặc đơn vị liên quan bằng số điện thoại chính thức đã lưu.",
+      "Nhờ một người thân đáng tin xem lại tình huống trước khi quyết định."
+    ],
+    trich_dan: [],
+    tin_hieu: {},
+    noi_dung_da_doc: text || undefined,
+    che_do_du_phong: true
+  };
+}
+
+function formatLocalGuidanceReply(result) {
+  const opening = result.muc_rui_ro === "Chưa thấy dấu hiệu rủi ro"
+    ? "Cháu chưa thấy dấu hiệu lừa đảo rõ, nhưng mình vẫn nên xác minh thêm trước khi làm theo."
+    : "Tình huống này có điểm cần thận trọng. Bác nên dừng lại và chưa làm theo yêu cầu của người liên hệ.";
+  const steps = (result.hanh_dong || []).slice(0, 3).map((action, index) => `${index + 1}. ${action}`).join(" ");
+  return `${opening} ${steps}`.trim();
+}
+
 async function analyzeMobileSituationInline() {
   const text = elements.mobileSituationInput.value.trim();
   const file = elements.mobileSituationFile.files?.[0];
@@ -3312,7 +3368,10 @@ async function analyzeMobileSituationInline() {
     if (riskKey(result.muc_rui_ro) === "high") openDangerDialog("analysis");
   } catch (error) {
     if (error?.name !== "AbortError") {
-      setMobileSituationError(error.message || "Chưa kiểm tra được nội dung. Bác hãy thử lại.");
+      const fallback = buildLocalGuidanceFallback(text, { hasFile: Boolean(file) });
+      addHistory(text || file?.name || "Tình huống đã gửi", fallback);
+      renderMobileQuickResult(fallback);
+      elements.mobileSituationFile.value = "";
     }
   } finally {
     elements.mobileSituationVoiceButton.disabled = false;
@@ -3744,7 +3803,10 @@ async function handleChatSubmit(event) {
     }
   } catch (error) {
     loadingEl.remove();
-    addChatMessage("assistant", "Cháu chưa kết nối được với tổng đài hỗ trợ, bác có thể thử lại sau một lát ạ.");
+    const fallback = buildLocalGuidanceFallback(text);
+    const reply = formatLocalGuidanceReply(fallback);
+    addChatMessage("assistant", reply);
+    chatWidgetHistory.push({ role: "assistant", text: reply });
   }
 }
 

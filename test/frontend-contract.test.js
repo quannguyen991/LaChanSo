@@ -168,6 +168,16 @@ test("home voice analysis stays inline and trusted support actions are functiona
   assert.match(app, /navigator\.share/);
   assert.match(app, /navigator\.clipboard\?\.writeText/);
   assert.match(html, /href="#ho-tro"[\s\S]*?Mở danh bạ chính thức/);
+  assert.match(app, /function buildLocalGuidanceFallback\(text/);
+  assert.match(app, /renderMobileQuickResult\(fallback\)/);
+  assert.doesNotMatch(app, /Gemini chưa thể phân tích/);
+});
+
+test("desktop reassurance content uses a readable two-column layout", () => {
+  assert.match(refreshStyles, /Desktop reassurance panel/);
+  assert.match(refreshStyles, /#homeView \.reassurance-band\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) minmax\(15rem, 19rem\)/);
+  assert.match(refreshStyles, /#homeView \.reassurance-band__body\s*\{[\s\S]*?grid-column:\s*1/);
+  assert.match(refreshStyles, /#homeView \.reassurance-band__art\s*\{[\s\S]*?grid-column:\s*2/);
 });
 
 test("desktop and mobile taskbars share routes and render cross-browser icons", () => {

@@ -72,6 +72,67 @@ test("chat API returns 400 when message is too long", async () => {
   assert.match(payload.error, /quá dài/);
 });
 
+test("analysis API returns deterministic guidance when the AI provider is unavailable", async () => {
+  const originalProvider = process.env.LLM_PROVIDER;
+  const originalLlmKey = process.env.LLM_API_KEY;
+  const originalGeminiKey = process.env.GEMINI_API_KEY;
+  process.env.LLM_PROVIDER = "gemini";
+  delete process.env.LLM_API_KEY;
+  delete process.env.GEMINI_API_KEY;
+
+  try {
+    const response = await fetch(`${baseUrl}/api/phan-tich`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        van_ban: "Con gái tôi bên nước ngoài bảo chuyển khoản ngay cho tài khoản lạ."
+      })
+    });
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.che_do_du_phong, true);
+    assert.ok(payload.hanh_dong.length >= 1);
+    assert.notEqual(payload.muc_rui_ro, "Chưa thấy dấu hiệu rủi ro");
+    assert.doesNotMatch(JSON.stringify(payload), /Gemini/i);
+  } finally {
+    if (originalProvider === undefined) delete process.env.LLM_PROVIDER;
+    else process.env.LLM_PROVIDER = originalProvider;
+    if (originalLlmKey === undefined) delete process.env.LLM_API_KEY;
+    else process.env.LLM_API_KEY = originalLlmKey;
+    if (originalGeminiKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = originalGeminiKey;
+  }
+});
+
+test("chat API always returns useful guidance when the AI provider is unavailable", async () => {
+  const originalProvider = process.env.LLM_PROVIDER;
+  const originalLlmKey = process.env.LLM_API_KEY;
+  const originalGeminiKey = process.env.GEMINI_API_KEY;
+  process.env.LLM_PROVIDER = "gemini";
+  delete process.env.LLM_API_KEY;
+  delete process.env.GEMINI_API_KEY;
+
+  try {
+    const response = await fetch(`${baseUrl}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tin_nhan: "Có người hỏi mã OTP của tôi." })
+    });
+    const payload = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(payload.che_do_du_phong, true);
+    assert.match(payload.tra_loi, /dừng lại|không cung cấp/i);
+    assert.doesNotMatch(payload.tra_loi, /Gemini/i);
+  } finally {
+    if (originalProvider === undefined) delete process.env.LLM_PROVIDER;
+    else process.env.LLM_PROVIDER = originalProvider;
+    if (originalLlmKey === undefined) delete process.env.LLM_API_KEY;
+    else process.env.LLM_API_KEY = originalLlmKey;
+    if (originalGeminiKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = originalGeminiKey;
+  }
+});
+
 test("chat API returns assistant reply successfully", async () => {
   // callGemini() ném GeminiError(..., 503) NGAY khi thiếu khoá, tức trước cả
   // lần gọi fetch đầu tiên — nên mock fetch bên dưới không bao giờ được chạm
