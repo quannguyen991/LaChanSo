@@ -159,3 +159,39 @@ Hai bẫy kế hoạch nav đã chỉ ra, đừng bỏ qua:
   đúng chỗ, nhưng đổi chiều cao mọi khối nên phải đo lại 16 màn × 3 cỡ chữ.
 - Bậc chữ "small" là 15px, dưới sàn 17px của brief. Đã đo: nâng thang lên
   17/20/24 thì 13 màn vẫn sạch **nhưng hộp cảnh báo vượt nếp gấp**. Cần quyết định.
+
+## ⚠️ Hai lỗ hổng hàng rào CHƯA vá (biết rồi, chưa làm)
+
+### 1. Không có test chặn ảnh chữ-nướng
+
+Đây là lỗi **đã quay lại 2 lần**: sửa 26/7 sáng → quay lại 27/7 trưa, CI vẫn xanh
+cả hai lần. Hiện chỉ có một dòng *ghi chú* trong `frontend-contract.test.js`, ghi
+chú thì không chặn được ai.
+
+**Trạng thái hiện tại — LỖI ĐANG CHẠY:** `mobile-home-top-reference.webp`
+(375×270) nằm ở đầu trang chủ điện thoại. Đã đo: ảnh **không đổi kích thước ở cả
+3 bậc chữ**; chữ thật "Khoan Đã" có `visible: false`, chữ thật "Bác đang gặp tình
+huống gì?" rộng **1px ở toạ độ x = −1**. Tức chữ bác nhìn thấy là pixel, nút
+A/A+/A++ vô tác dụng đúng chỗ chữ to nhất.
+
+Đã thống nhất **để bản thiết kế mới xử lý**, không vá tay.
+
+**Test cần viết (khi có thiết kế mới):** danh sách chặn các asset ĐÃ XÁC MINH có
+chữ nướng — `mobile-home-top-reference`, `mobile-home-screen-reference`,
+`home-hero-reference*`, `mobile-home-hero-reference` — cộng thêm khẳng định
+tiêu đề thật tồn tại VÀ không bị `visually-hidden`/1px. Không đủ nếu chỉ kiểm
+tên file: phải kiểm chữ thật có hiện không.
+
+### 2. Sàn vùng chạm mới vá 1 chỗ, còn 34
+
+`min-height` dưới 52px ở bậc chữ A (gốc 15px) còn **34 khai báo**: `2.75rem`
+=41,3px · `3rem`=45px · `3.25rem`=48,8px. Mới vá đúng `.mobile-bottom-nav__item`
+vì đó là chỗ đo được trên trang chủ.
+
+**Không vá mù được** — trong 34 chỗ có cả icon và nhãn (`1.2rem`, `1.5rem`)
+không phải vùng chạm. Cần đo trên trình duyệt qua **cả 16 màn × 3 bậc chữ**, rồi
+chỉ kẹp `max(var(--touch-target), …)` cho phần tử thật sự bấm được.
+
+Bài học chung: `test/font-size-floor.test.js` quét tĩnh được vì cỡ chữ suy ra
+thẳng từ `rem`. Vùng chạm thì không — nó phụ thuộc padding, line-height và phần
+tử có hiện hay không. **Muốn chặn thật thì cần test chạy trình duyệt**, chưa có.
