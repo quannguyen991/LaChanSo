@@ -3,38 +3,38 @@
   --font-display: "Manrope Variable", "Be Vietnam Pro", system-ui, sans-serif;
   --font-body: "Manrope Variable", "Be Vietnam Pro", system-ui, sans-serif;
 
-  --color-paper: oklch(97% 0.018 245);
-  --color-surface: oklch(99.4% 0.004 245);
-  --color-surface-2: oklch(95% 0.025 245);
-  --color-ink: oklch(20% 0.055 255);
-  --color-ink-2: oklch(37% 0.05 255);
-  --color-muted: oklch(50% 0.035 255);
+  --color-paper: oklch(98% 0.012 298);
+  --color-surface: oklch(99.4% 0.004 298);
+  --color-surface-2: oklch(96.2% 0.022 298);
+  --color-ink: oklch(20% 0.065 285);
+  --color-ink-2: oklch(39% 0.06 285);
+  --color-muted: oklch(51% 0.04 285);
   /* Viền/đường kẻ — đã tối lại để đạt WCAG 1.4.11 (>= 3:1).
      Giá trị cũ oklch(90%) chỉ đạt 1,32:1 trên nền surface: với mắt người
      cao tuổi (đục thủy tinh thể) coi như không nhìn thấy đường viền.
      Hai token này KHÔNG dùng làm chữ hay nền ở bất kỳ đâu, nên đổi an toàn. */
-  --color-rule: oklch(62% 0.03 248);        /* 3,57:1 surface · 3,14:1 surface-2 · 3,33:1 paper */
-  --color-rule-strong: oklch(52% 0.045 248); /* 5,39:1 surface · 4,75:1 surface-2 — ô nhập, nút phụ */
+  --color-rule: oklch(62% 0.035 298);        /* contrast-safe tinted boundary */
+  --color-rule-strong: oklch(53% 0.06 285);
 
-  --color-accent: oklch(43% 0.18 255);
-  --color-accent-bright: oklch(49% 0.19 250);
-  --color-accent-hover: oklch(36% 0.17 255);
-  --color-accent-deep: oklch(29% 0.13 255);
-  --color-accent-soft: oklch(93% 0.04 245);
-  --color-accent-soft-line: oklch(80% 0.075 245);
-  --color-accent-ink: oklch(99% 0.003 245);
-  --color-sky-soft: oklch(94% 0.045 240);
-  --color-sky-pale: oklch(97% 0.022 240);
-  --color-sky-line: oklch(85% 0.052 240);
-  --color-onboarding-canvas-top: oklch(96% 0.019 250);
-  --color-onboarding-canvas-mid: oklch(94% 0.032 248);
-  --color-onboarding-canvas-bottom: oklch(91% 0.043 249);
+  --color-accent: oklch(52% 0.22 292);
+  --color-accent-bright: oklch(55% 0.21 292);
+  --color-accent-hover: oklch(45% 0.23 292);
+  --color-accent-deep: oklch(31% 0.16 285);
+  --color-accent-soft: oklch(93% 0.055 298);
+  --color-accent-soft-line: oklch(78% 0.12 298);
+  --color-accent-ink: oklch(99% 0.003 298);
+  --color-sky-soft: oklch(96% 0.025 298);
+  --color-sky-pale: oklch(98% 0.012 298);
+  --color-sky-line: oklch(86% 0.05 298);
+  --color-onboarding-canvas-top: oklch(98% 0.012 298);
+  --color-onboarding-canvas-mid: oklch(96% 0.03 298);
+  --color-onboarding-canvas-bottom: oklch(93% 0.045 298);
 
   --color-leaf: oklch(58% 0.15 150);
   --color-teal-soft: oklch(90% 0.05 165);
   --color-teal: oklch(43% 0.1 165);
-  --color-violet-soft: oklch(91% 0.05 300);
-  --color-violet: oklch(45% 0.13 300);
+  --color-violet-soft: oklch(91% 0.07 298);
+  --color-violet: oklch(51% 0.19 298);
   --color-rose-soft: oklch(93% 0.05 10);
   --color-rose: oklch(50% 0.15 10);
 
@@ -44,8 +44,8 @@
   --color-avatar-soft: oklch(88% 0.05 55);
   --color-avatar-ink: oklch(45% 0.09 45);
 
-  --color-focus-inner: oklch(99% 0.003 245);
-  --color-focus-outer: oklch(30% 0.12 255);
+  --color-focus-inner: oklch(99% 0.003 298);
+  --color-focus-outer: oklch(30% 0.15 292);
 
   --color-success: oklch(42% 0.11 155);
   --color-success-soft: oklch(94% 0.04 155);
@@ -76,6 +76,22 @@
   --radius-lg: 24px;
   --radius-xl: 32px;
   --radius-full: 999px;
+
+  --space-3xs: 0.125rem;
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
 
   --shadow-sm: 0 1px 2px var(--color-shadow), 0 2px 8px var(--color-shadow);
   --shadow-md: 0 4px 10px var(--color-shadow), 0 16px 40px var(--color-shadow);

@@ -1,9 +1,10 @@
-const CACHE_NAME = "khoan-da-shell-v6";
+const CACHE_NAME = "khoan-da-shell-v16";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/tokens.css",
   "/styles.css",
+  "/khoan-da-2026.css?v=20260727-intro-skip-9",
   "/services.js",
   "/app.js",
   "/manifest.webmanifest",
@@ -11,6 +12,20 @@ const APP_SHELL = [
   "/assets/avatar-reference.webp",
   "/vendor/unicons/paperclip.svg",
   "/assets/home-couple-reference.webp"
+  ,"/assets/brand-shield-purple.webp"
+  ,"/assets/mascot-home.webp"
+  ,"/assets/home-family-action.webp"
+  ,"/assets/home-alert-action.webp"
+  ,"/assets/home-siren-action.webp"
+  ,"/assets/mascot-check.webp"
+  ,"/assets/mascot-history.webp"
+  ,"/assets/mascot-learn.webp"
+  ,"/assets/mascot-assistant.webp"
+  ,"/assets/onboarding-reference-1.webp"
+  ,"/assets/onboarding-reference-2.webp"
+  ,"/assets/onboarding-reference-3.webp"
+  ,"/assets/onboarding-reference-4.webp"
+  ,"/assets/onboarding-reference-5.webp"
 ];
 
 self.addEventListener("install", (event) => {

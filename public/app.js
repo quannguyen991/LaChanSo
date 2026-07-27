@@ -18,7 +18,9 @@ const STORAGE_KEYS = {
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
   reportQueue: "khoan-da:report-queue",
-  onboardingComplete: "khoan-da:onboarding-complete"
+  onboardingComplete: "khoan-da:onboarding-complete",
+  account: "khoan-da:account",
+  accountSession: "khoan-da:account-session"
 };
 
 const ALL_STORAGE_KEYS = Object.values({
@@ -41,7 +43,9 @@ const ALL_STORAGE_KEYS = Object.values({
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
   reportQueue: "khoan-da:report-queue",
-  onboardingComplete: "khoan-da:onboarding-complete"
+  onboardingComplete: "khoan-da:onboarding-complete",
+  account: "khoan-da:account",
+  accountSession: "khoan-da:account-session"
 });
 
 const MAX_CONTACTS = 5;
@@ -118,6 +122,7 @@ const ROUTES = {
   "#trang-chu": "homeView",
   "#canh-bao": "canhBaoView",
   "#kiem-tra": "analysisView",
+  "#tin-nhan-la": "analysisView",
   "#chuyen-khoan": "transferView",
   "#kiem-tra-lien-ket": "kiemTraLienKetView",
   "#vua-chuyen-tien": "postTransferView",
@@ -165,7 +170,13 @@ const EDUCATION_LESSONS = [
   { id: "investment", title: "Đầu tư lợi nhuận cao", topic: "Tiền và lời hứa", scenario: "Một nhóm chat hứa lợi nhuận đều đặn, chắc chắn không lỗ nếu nộp phí hôm nay.", choices: ["Nộp thử một khoản", "Không chuyển; xin ý kiến người thân và nguồn chính thức"], correct: 1, explanation: "Lợi nhuận cao chắc chắn và yêu cầu nộp thêm phí là dấu hiệu đáng ngờ." },
   { id: "job", title: "Cộng tác viên làm nhiệm vụ", topic: "Việc làm online", scenario: "Bạn được yêu cầu chuyển tiền đặt cọc để hoàn thành nhiệm vụ và nhận hoa hồng.", choices: ["Chuyển cọc để mở nhiệm vụ", "Không chuyển phí trước khi có hợp đồng rõ ràng"], correct: 1, explanation: "Việc làm hợp pháp không bắt nộp tiền để được nhận việc." },
   { id: "deepfake", title: "Deepfake giọng nói", topic: "Giọng nói không đủ để xác minh", scenario: "Bác nghe giọng giống người thân nhưng số gọi đến là số lạ.", choices: ["Tin ngay vì giọng rất giống", "Gọi lại số đã lưu hoặc hỏi câu mật khẩu gia đình"], correct: 1, explanation: "Giọng nói có thể bị giả. Kênh liên lạc đã lưu đáng tin hơn." },
-  { id: "recovery-scam", title: "Lừa đảo lấy lại tiền", topic: "Cảnh giác lần hai", scenario: "Một người hứa lấy lại tiền đã mất nếu bác đóng phí hồ sơ trước.", choices: ["Đóng phí để lấy lại tiền", "Không đóng phí; gọi ngân hàng/cơ quan chính thức"], correct: 1, explanation: "Kẻ gian có thể quay lại bằng lời hứa thu hồi tiền. Không có gì đảm bảo họ lấy lại được tiền." }
+  { id: "recovery-scam", title: "Lừa đảo lấy lại tiền", topic: "Cảnh giác lần hai", scenario: "Một người hứa lấy lại tiền đã mất nếu bác đóng phí hồ sơ trước.", choices: ["Đóng phí để lấy lại tiền", "Không đóng phí; gọi ngân hàng/cơ quan chính thức"], correct: 1, explanation: "Kẻ gian có thể quay lại bằng lời hứa thu hồi tiền. Không có gì đảm bảo họ lấy lại được tiền." },
+  { id: "fake-electricity", title: "Giả danh điện lực", topic: "Dọa cắt điện", scenario: "Một người gọi báo bác sắp bị cắt điện và yêu cầu chuyển tiền ngay vào tài khoản cá nhân.", choices: ["Chuyển ngay để không bị cắt điện", "Tự gọi số tổng đài chính thức để kiểm tra"], correct: 1, explanation: "Không chuyển tiền theo số điện thoại lạ. Hãy tự tìm và gọi kênh chính thức của đơn vị điện lực." },
+  { id: "fake-vneid", title: "Giả mạo cập nhật VNeID", topic: "Ứng dụng giả", scenario: "Người lạ gửi đường link và yêu cầu cài ứng dụng để cập nhật định danh điện tử.", choices: ["Cài ứng dụng từ đường link", "Không bấm link; chỉ dùng kho ứng dụng chính thức"], correct: 1, explanation: "Ứng dụng giả có thể chiếm quyền điện thoại và tài khoản ngân hàng. Chỉ cài từ kho ứng dụng chính thức." },
+  { id: "fake-biometric", title: "Giả mạo xác thực sinh trắc học", topic: "Chiếm tài khoản", scenario: "Người tự xưng nhân viên ngân hàng đề nghị gọi video để quét khuôn mặt và đọc mã OTP.", choices: ["Làm theo để khỏi khóa tài khoản", "Dừng cuộc gọi và liên hệ ngân hàng chính thức"], correct: 1, explanation: "Ngân hàng không yêu cầu đọc OTP hoặc quét khuôn mặt qua cuộc gọi lạ." },
+  { id: "fake-sim", title: "Dọa khóa SIM", topic: "Cập nhật thuê bao", scenario: "Một cuộc gọi báo SIM của bác sắp bị khóa và yêu cầu cung cấp mã xác minh vừa gửi đến máy.", choices: ["Đọc mã để giữ SIM", "Không đọc mã; gọi nhà mạng bằng số chính thức"], correct: 1, explanation: "Mã xác minh có thể được dùng để chiếm tài khoản. Tuyệt đối không đọc mã cho người khác." },
+  { id: "fake-teacher", title: "Giả danh giáo viên", topic: "Con cháu gặp nạn", scenario: "Người lạ tự xưng giáo viên báo cháu bị tai nạn, yêu cầu chuyển viện phí gấp.", choices: ["Chuyển tiền ngay", "Gọi trực tiếp cho gia đình và nhà trường để xác minh"], correct: 1, explanation: "Kẻ gian thường tạo tình huống khẩn cấp để bác không kịp kiểm tra. Luôn xác minh qua số đã lưu." },
+  { id: "romance-investment", title: "Kết bạn rồi rủ đầu tư", topic: "Tình cảm và đầu tư", scenario: "Người quen trên mạng trò chuyện thân thiết rồi hướng dẫn bác nạp tiền vào một sàn đầu tư lạ.", choices: ["Nạp thử số tiền nhỏ", "Không chuyển tiền và nhờ người thân kiểm tra"], correct: 1, explanation: "Lợi dụng tình cảm để dẫn dụ đầu tư là thủ đoạn phổ biến. Sàn lạ có thể hiển thị lợi nhuận giả và chặn rút tiền." }
 ];
 
 const elements = {
@@ -478,6 +489,26 @@ const elements = {
   mobileProfileMenuButton: document.querySelector("#mobileProfileMenuButton"),
   profileMenuClose: document.querySelector("#profileMenuClose"),
   reopenOnboardingButton: document.querySelector("#reopenOnboardingButton"),
+  logoutButton: document.querySelector("#logoutButton"),
+  deleteAccountButton: document.querySelector("#deleteAccountButton"),
+  profileIdentityName: document.querySelector("#profileIdentityName"),
+  profileIdentityEmail: document.querySelector("#profileIdentityEmail"),
+  authLabels: document.querySelectorAll("[data-auth-label]"),
+  authDialog: document.querySelector("#authDialog"),
+  authDialogClose: document.querySelector("#authDialogClose"),
+  authDialogTitle: document.querySelector("#authDialogTitle"),
+  authLoginTab: document.querySelector("#authLoginTab"),
+  authRegisterTab: document.querySelector("#authRegisterTab"),
+  authForm: document.querySelector("#authForm"),
+  authNameField: document.querySelector("#authNameField"),
+  authName: document.querySelector("#authName"),
+  authEmail: document.querySelector("#authEmail"),
+  authPassword: document.querySelector("#authPassword"),
+  authConfirmField: document.querySelector("#authConfirmField"),
+  authPasswordConfirm: document.querySelector("#authPasswordConfirm"),
+  authError: document.querySelector("#authError"),
+  authSubmitButton: document.querySelector("#authSubmitButton"),
+  caseFilterButtons: document.querySelectorAll("[data-case-filter]"),
   bottomNavItems: document.querySelectorAll(".bottom-nav__item"),
   toast: document.querySelector("#toast"),
   chatWidget: document.querySelector("#chatWidget"),
@@ -502,6 +533,8 @@ let toastTimer = null;
 let selectedImage = null;
 let selectedFile = null;
 let currentAnalysisController = null;
+let activeCaseFilter = "all";
+let authMode = "login";
 let countdownTimer = null;
 let currentCaseId = null;
 let selectedCaseEventImage = null;
@@ -2373,38 +2406,60 @@ function renderHistory() {
 }
 
 function renderCaseList() {
-  const cases = getCases();
+  const allCases = getCases();
+  const cases = allCases.filter((item) => {
+    if (activeCaseFilter === "checked") return item.events.length > 0;
+    if (activeCaseFilter === "saved") return true;
+    return true;
+  });
   elements.caseList.replaceChildren();
   elements.caseListEmpty.hidden = cases.length > 0;
 
-  for (const item of cases) {
+  cases.forEach((item, index) => {
     const row = document.createElement("article");
-    row.className = "history-row";
+    const tone = ["high", "medium", "low", "safe"][index % 4];
+    row.className = `history-row case-history-row case-history-row--${tone}`;
+
+    const icon = document.createElement("span");
+    icon.className = "case-history-row__icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.innerHTML = `<span class="icon ${tone === "high" ? "icon-alert" : tone === "medium" ? "icon-messages" : tone === "low" ? "icon-qr-code" : "icon-user"}"></span>`;
 
     const meta = document.createElement("div");
     meta.className = "history-row__meta";
+    const tag = document.createElement("span");
+    tag.className = "case-history-row__tag";
+    tag.textContent = item.events.length ? "Đã kiểm tra" : "Đã lưu";
     const time = document.createElement("time");
     time.dateTime = item.updatedAt;
-    time.textContent = `${item.events.length} diễn biến · cập nhật ${new Intl.DateTimeFormat("vi-VN", {
-      dateStyle: "short",
-      timeStyle: "short"
-    }).format(new Date(item.updatedAt))}`;
-    meta.append(time);
+    time.textContent = new Intl.RelativeTimeFormat("vi", { numeric: "auto" }).format(
+      Math.round((new Date(item.updatedAt).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 86400000),
+      "day"
+    );
+    meta.append(tag, time);
 
     const title = document.createElement("p");
-    title.style.fontWeight = "700";
+    title.className = "case-history-row__title";
     title.textContent = item.label;
 
+    const description = document.createElement("small");
+    description.className = "case-history-row__description";
+    description.textContent = item.events.length
+      ? `${item.events.length} diễn biến đã được ghi lại trong vụ việc này.`
+      : "Vụ việc đã lưu, chưa có diễn biến mới.";
+
     const openButton = document.createElement("button");
-    openButton.className = "button button-secondary";
+    openButton.className = "case-history-row__open";
     openButton.type = "button";
-    openButton.textContent = "Xem vụ việc";
+    openButton.setAttribute("aria-label", `Xem ${item.label}`);
+    openButton.innerHTML = '<span class="icon icon-chevron-right" aria-hidden="true"></span>';
     openButton.addEventListener("click", () => showCaseDetail(item.id));
 
     const deleteButton = document.createElement("button");
-    deleteButton.className = "button button-danger-quiet";
+    deleteButton.className = "case-history-row__delete";
     deleteButton.type = "button";
-    deleteButton.textContent = "Xóa";
+    deleteButton.setAttribute("aria-label", `Xóa ${item.label}`);
+    deleteButton.innerHTML = '<span class="icon icon-trash" aria-hidden="true"></span>';
     deleteButton.addEventListener("click", () => {
       deleteCase(item.id);
       renderCaseList();
@@ -2414,9 +2469,9 @@ function renderCaseList() {
     actions.className = "history-row__actions";
     actions.append(openButton, deleteButton);
 
-    row.append(meta, title, actions);
+    row.append(icon, meta, title, description, actions);
     elements.caseList.append(row);
-  }
+  });
 }
 
 function renderCaseEventTypePicker() {
@@ -2651,8 +2706,17 @@ async function analyzeJourney() {
 }
 
 function updateBottomNav(hash) {
+  const parentRoute = hash === "#tin-nhan-la" || hash === "#kiem-tra-lien-ket" || hash === "#chuyen-khoan" || hash === "#xac-minh" || hash === "#thoat-cuoc-goi"
+    ? "#kiem-tra"
+    : hash === "#lich-su" || hash === "#bang-chung" || hash === "#vua-chuyen-tien"
+      ? "#hanh-trinh"
+      : hash === "#canh-bao"
+        ? "#huong-dan"
+        : hash === "#quyen-rieng-tu" || hash === "#ho-tro"
+          ? "#gia-dinh"
+          : hash;
   elements.bottomNavItems.forEach((item) => {
-    if (item.dataset.route === hash) {
+    if (item.dataset.route === parentRoute) {
       item.setAttribute("aria-current", "page");
     } else {
       item.removeAttribute("aria-current");
@@ -2781,6 +2845,124 @@ function applyFontSize(size) {
   elements.fontSizeButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.fontSize === safe)));
 }
 
+function getAccount() {
+  try {
+    const account = JSON.parse(getStored(STORAGE_KEYS.account, "null"));
+    return account && account.email && account.passwordHash ? account : null;
+  } catch {
+    return null;
+  }
+}
+
+function isAuthenticated() {
+  return getStored(STORAGE_KEYS.accountSession) === "1" && Boolean(getAccount());
+}
+
+async function hashPassword(password) {
+  const bytes = new TextEncoder().encode(password);
+  if (window.crypto?.subtle) {
+    const digest = await window.crypto.subtle.digest("SHA-256", bytes);
+    return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  }
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function renderAuthState() {
+  const account = getAccount();
+  const authenticated = isAuthenticated();
+  document.documentElement.dataset.authenticated = String(authenticated);
+  elements.authLabels.forEach((label) => { label.textContent = authenticated ? "" : "Đăng nhập"; });
+  elements.profileMenuButton.setAttribute("aria-label", authenticated ? "Mở hồ sơ" : "Đăng nhập");
+  elements.mobileProfileMenuButton.setAttribute("aria-label", authenticated ? "Mở hồ sơ" : "Đăng nhập");
+  elements.profileIdentityName.textContent = account?.name || "Tài khoản của bác";
+  elements.profileIdentityEmail.textContent = account?.email || "";
+}
+
+function setAuthMode(mode) {
+  authMode = mode === "register" ? "register" : "login";
+  const registering = authMode === "register";
+  elements.authDialogTitle.textContent = registering ? "Tạo tài khoản Khoan Đã" : "Đăng nhập Khoan Đã";
+  elements.authNameField.hidden = !registering;
+  elements.authConfirmField.hidden = !registering;
+  elements.authName.required = registering;
+  elements.authPasswordConfirm.required = registering;
+  elements.authPassword.autocomplete = registering ? "new-password" : "current-password";
+  elements.authSubmitButton.textContent = registering ? "Tạo tài khoản" : "Đăng nhập";
+  elements.authLoginTab.setAttribute("aria-selected", String(!registering));
+  elements.authRegisterTab.setAttribute("aria-selected", String(registering));
+  elements.authError.hidden = true;
+}
+
+function openAuthDialog(mode = getAccount() ? "login" : "register") {
+  setProfileMenu(false);
+  setAuthMode(mode);
+  elements.authForm.reset();
+  const account = getAccount();
+  if (account && mode === "login") elements.authEmail.value = account.email;
+  if (!elements.authDialog.open) elements.authDialog.showModal();
+  requestAnimationFrame(() => (mode === "register" ? elements.authName : elements.authEmail).focus({ preventScroll: true }));
+}
+
+function closeAuthDialog() {
+  if (elements.authDialog.open) elements.authDialog.close();
+}
+
+async function submitAuth(event) {
+  event.preventDefault();
+  elements.authError.hidden = true;
+  const name = elements.authName.value.trim();
+  const email = elements.authEmail.value.trim().toLowerCase();
+  const password = elements.authPassword.value;
+
+  if (!email || !email.includes("@") || password.length < 6) {
+    elements.authError.textContent = "Hãy nhập email hợp lệ và mật khẩu có ít nhất 6 ký tự.";
+    elements.authError.hidden = false;
+    return;
+  }
+
+  const passwordHash = await hashPassword(password);
+  if (authMode === "register") {
+    if (!name || password !== elements.authPasswordConfirm.value) {
+      elements.authError.textContent = !name ? "Hãy nhập họ và tên." : "Hai mật khẩu chưa khớp nhau.";
+      elements.authError.hidden = false;
+      return;
+    }
+    setStored(STORAGE_KEYS.account, JSON.stringify({ name, email, passwordHash, createdAt: new Date().toISOString() }));
+  } else {
+    const account = getAccount();
+    if (!account || account.email !== email || account.passwordHash !== passwordHash) {
+      elements.authError.textContent = account ? "Email hoặc mật khẩu chưa đúng." : "Thiết bị này chưa có tài khoản. Hãy chọn Tạo tài khoản.";
+      elements.authError.hidden = false;
+      return;
+    }
+  }
+
+  setStored(STORAGE_KEYS.accountSession, "1");
+  renderAuthState();
+  closeAuthDialog();
+  showToast(authMode === "register" ? "Đã tạo tài khoản và đăng nhập." : "Đăng nhập thành công.");
+}
+
+function handleProfileTrigger() {
+  if (isAuthenticated()) setProfileMenu(elements.profileMenu.hidden);
+  else openAuthDialog();
+}
+
+function logout() {
+  removeStored(STORAGE_KEYS.accountSession);
+  setProfileMenu(false);
+  renderAuthState();
+  showToast("Đã đăng xuất.");
+}
+
+function deleteAccount() {
+  removeStored(STORAGE_KEYS.account);
+  removeStored(STORAGE_KEYS.accountSession);
+  setProfileMenu(false);
+  renderAuthState();
+  showToast("Đã xóa tài khoản khỏi thiết bị này.");
+}
+
 function setProfileMenu(open, { restoreFocus = false } = {}) {
   const shouldOpen = Boolean(open);
   elements.profileMenu.hidden = !shouldOpen;
@@ -2799,7 +2981,7 @@ function setProfileMenu(open, { restoreFocus = false } = {}) {
 let onboardingTransitionToken = 0;
 
 function renderOnboardingStep(step, { focus = true } = {}) {
-  const nextStep = Math.min(4, Math.max(1, Number(step) || 1));
+  const nextStep = Math.min(5, Math.max(1, Number(step) || 1));
   const previousStep = onboardingStep;
   const activeScreen = elements.onboarding.querySelector(`[data-onboarding-step="${previousStep}"]:not([hidden])`);
   const nextScreen = elements.onboarding.querySelector(`[data-onboarding-step="${nextStep}"]`);
@@ -2954,6 +3136,7 @@ function route() {
 function applyRoute(hash) {
   setProfileMenu(false);
   const activeKey = ROUTES[hash];
+  document.documentElement.dataset.route = hash.slice(1);
 
   for (const [key, el] of Object.entries(elements)) {
     if (key.endsWith("View") && el) {
@@ -3007,7 +3190,7 @@ function applyRoute(hash) {
     document.querySelector("#verifyTitle").focus?.({ preventScroll: true });
   } else if (hash === "#thoat-cuoc-goi") {
     document.querySelector("#exitCallTitle").focus?.({ preventScroll: true });
-  } else if (hash === "#kiem-tra") {
+  } else if (hash === "#kiem-tra" || hash === "#tin-nhan-la") {
     document.querySelector("#pageTitle").focus?.({ preventScroll: true });
   } else if (hash === "#trang-chu") {
     renderRecoveryBanner();
@@ -3212,6 +3395,7 @@ function startMobileSituationRecording() {
 
 elements.analysisForm.addEventListener("submit", analyze);
 elements.checkHubVoiceButton.addEventListener("click", () => {
+  if (elements.checkHubVoiceButton.tagName !== "BUTTON") return;
   elements.analysisForm.scrollIntoView({ behavior: "smooth", block: "start" });
   window.setTimeout(() => elements.speechButton.click(), 280);
 });
@@ -3401,18 +3585,39 @@ elements.recoveryActive.querySelectorAll("[data-recovery-step]").forEach((checkb
 });
 
 elements.fontSizeButtons.forEach((button) => button.addEventListener("click", () => applyFontSize(button.dataset.fontSize)));
-elements.profileMenuButton.addEventListener("click", () => setProfileMenu(elements.profileMenu.hidden));
-elements.mobileProfileMenuButton.addEventListener("click", () => setProfileMenu(elements.profileMenu.hidden));
+elements.profileMenuButton.addEventListener("click", handleProfileTrigger);
+elements.mobileProfileMenuButton.addEventListener("click", handleProfileTrigger);
 elements.profileMenuClose.addEventListener("click", () => setProfileMenu(false, { restoreFocus: true }));
 elements.profileMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setProfileMenu(false)));
 elements.reopenOnboardingButton.addEventListener("click", openOnboarding);
+elements.logoutButton.addEventListener("click", logout);
+elements.deleteAccountButton.addEventListener("click", deleteAccount);
+elements.authDialogClose.addEventListener("click", closeAuthDialog);
+elements.authLoginTab.addEventListener("click", () => setAuthMode("login"));
+elements.authRegisterTab.addEventListener("click", () => setAuthMode("register"));
+elements.authForm.addEventListener("submit", submitAuth);
+elements.authDialog.addEventListener("click", (event) => {
+  if (event.target === elements.authDialog) closeAuthDialog();
+});
+elements.caseFilterButtons.forEach((button) => button.addEventListener("click", () => {
+  activeCaseFilter = button.dataset.caseFilter;
+  elements.caseFilterButtons.forEach((item) => {
+    const active = item === button;
+    item.classList.toggle("is-active", active);
+    item.setAttribute("aria-pressed", String(active));
+  });
+  renderCaseList();
+}));
 elements.onboardingNextButtons.forEach((button) => button.addEventListener("click", () => renderOnboardingStep(onboardingStep + 1)));
 elements.onboardingBackButtons.forEach((button) => button.addEventListener("click", () => renderOnboardingStep(onboardingStep - 1)));
 elements.onboardingSkipButtons.forEach((button) => button.addEventListener("click", completeOnboarding));
 elements.onboardingMethodButtons.forEach((button) => button.addEventListener("click", () => chooseOnboardingMethod(button)));
 elements.onboardingBranchButtons.forEach((button) => button.addEventListener("click", () => chooseOnboardingBranch(button)));
 elements.finishOnboardingButton.addEventListener("click", completeOnboarding);
-elements.finishOnboardingLaterButton.addEventListener("click", completeOnboarding);
+elements.finishOnboardingLaterButton.addEventListener("click", () => {
+  completeOnboarding();
+  openAuthDialog();
+});
 document.addEventListener("click", (event) => {
   if (elements.profileMenu.hidden) return;
   if (elements.profileMenu.contains(event.target) || elements.profileMenuButton.contains(event.target) || elements.mobileProfileMenuButton.contains(event.target)) return;
@@ -3483,10 +3688,12 @@ window.addEventListener("hashchange", route);
 setupSpeechRecognition();
 updateCharacterCount();
 loadAccessibilityPreferences();
+renderAuthState();
 applyRetentionPolicy();
 renderPrivacyAuditLists();
 route();
-if (getStored(STORAGE_KEYS.onboardingComplete) !== "1") openOnboarding();
+const isFreshAppEntry = window.location.hash === "" || new URLSearchParams(window.location.search).has("intro");
+if (isFreshAppEntry || getStored(STORAGE_KEYS.onboardingComplete) !== "1") openOnboarding();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
 }

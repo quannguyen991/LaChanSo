@@ -8,17 +8,18 @@ const html = fs.readFileSync(path.join(root, "public", "index.html"), "utf8");
 const app = fs.readFileSync(path.join(root, "public", "app.js"), "utf8");
 const services = fs.readFileSync(path.join(root, "public", "services.js"), "utf8");
 const styles = fs.readFileSync(path.join(root, "public", "styles.css"), "utf8");
+const refreshStyles = fs.readFileSync(path.join(root, "public", "khoan-da-2026.css"), "utf8");
 const manifest = JSON.parse(fs.readFileSync(path.join(root, "public", "manifest.webmanifest"), "utf8"));
 const serviceWorker = fs.readFileSync(path.join(root, "public", "sw.js"), "utf8");
 
 test("primary product surfaces use the Khoan Đã brand", () => {
   // "Khoan Đã" is the product name that leads the logo and page title; the
-  // tagline under the logo is the reassurance line "Cùng bạn an toàn...".
+  // tagline under the logo follows the 2026 mobile home refresh.
   assert.match(html, /class="brand__title">Khoan Đã</);
   assert.equal(manifest.name, "Khoan Đã");
   assert.match(html, /name="description" content="Khoan Đã/);
   assert.match(html, /<title>Khoan đã/);
-  assert.match(html, /class="brand__tagline">Cùng bạn an toàn/);
+  assert.match(html, /class="brand__tagline">Bảo vệ bác, mỗi ngày/);
 });
 
 test("critical senior and emergency controls are present", () => {
@@ -173,10 +174,10 @@ test("desktop and mobile taskbars share routes and render cross-browser icons", 
   const mobileNav = html.match(/<nav class="mobile-bottom-nav"[\s\S]*?<\/nav>/)?.[0] || "";
   for (const [hash, label, icon] of [
     ["#trang-chu", "Trang chủ", "icon-home"],
-    ["#kiem-tra", "Kiểm tra", "icon-search"],
+    ["#kiem-tra", "Kiểm tra", "icon-shield-check"],
     ["#hanh-trinh", "Vụ việc", "icon-receipt"],
-    ["#gia-dinh", "Hồ sơ", "icon-user"],
-    ["#quyen-rieng-tu", "Cài đặt", "icon-settings"]
+    ["#huong-dan", "Học hỏi", "icon-education"],
+    ["#gia-dinh", "Gia đình", "icon-users"]
   ]) {
     assert.match(mobileNav, new RegExp(`href="${hash}"[\\s\\S]*?${icon}[\\s\\S]*?${label}`));
   }
@@ -187,24 +188,59 @@ test("desktop and mobile taskbars share routes and render cross-browser icons", 
   assert.match(styles, /\.mobile-bottom-nav[\s\S]*?border-radius:\s*var\(--radius-xl\)/);
 });
 
-test("onboarding is a functional four-step flow and can be reopened", () => {
-  for (const step of [1, 2, 3, 4]) assert.match(html, new RegExp(`data-onboarding-step="${step}"`));
-  assert.match(html, /data-onboarding-method="Cuộc gọi đáng ngờ"/);
-  assert.match(html, /data-onboarding-branch="transferred"/);
-  assert.match(html, /onboarding-welcome-scene.webp/);
+test("floating header, local account flow and reference history shell stay connected", () => {
+  assert.match(html, /id="profileMenuButton"[\s\S]*?data-auth-label>Đăng nhập/);
+  for (const id of ["authDialog", "authLoginTab", "authRegisterTab", "authForm", "logoutButton", "deleteAccountButton"]) {
+    assert.match(html, new RegExp(`id="${id}"`));
+  }
+  assert.match(app, /account:\s*"khoan-da:account"/);
+  assert.match(app, /crypto\.subtle\.digest\("SHA-256"/);
+  assert.match(app, /function renderAuthState\(\)/);
+  assert.match(app, /function submitAuth\(event\)/);
+  assert.match(refreshStyles, /Unified floating shell and final mobile references/);
+  assert.match(refreshStyles, /html\[data-authenticated="true"\][\s\S]*?\.greeting-chip/);
+  assert.match(html, /class="case-history-hero"[\s\S]*?mascot-history\.webp/);
+  for (const filter of ["all", "checked", "saved"]) assert.match(html, new RegExp(`data-case-filter="${filter}"`));
+  assert.match(app, /function renderCaseList\(\)[\s\S]*?activeCaseFilter/);
+  assert.match(html, /class="analysis-mascot"[^>]*mascot-check\.webp/);
+  assert.match(refreshStyles, /html\[data-route="kiem-tra"\] #analysisView > \.analysis-mascot[\s\S]*?display:\s*block !important/);
+});
+
+test("onboarding is a functional five-step reference flow and can be reopened", () => {
+  for (const step of [1, 2, 3, 4, 5]) assert.match(html, new RegExp(`data-onboarding-step="${step}"`));
+  for (const step of [1, 2, 3, 4, 5]) assert.match(html, new RegExp(`onboarding-reference-${step}\\.webp`));
+  assert.match(html, /onboarding__hotspot--primary/);
   assert.match(html, /id="reopenOnboardingButton"/);
   assert.match(app, /onboardingComplete:\s*"khoan-da:onboarding-complete"/);
   assert.match(app, /function renderOnboardingStep\(/);
   assert.match(app, /function completeOnboarding\(/);
   assert.match(app, /is-entering-\$\{direction\}/);
+  assert.match(app, /const isFreshAppEntry = window\.location\.hash === ""/);
+  assert.match(app, /isFreshAppEntry \|\| getStored\(STORAGE_KEYS\.onboardingComplete\) !== "1"/);
   assert.match(app, /getStored\(STORAGE_KEYS\.onboardingComplete\) !== "1"/);
   assert.match(styles, /@keyframes onboarding-enter-forward/);
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?is-entering-forward/);
+  assert.match(refreshStyles, /\.onboarding\.onboarding--reference[\s\S]*?padding:\s*0 !important/);
+  assert.match(refreshStyles, /\.onboarding--reference \.onboarding__shell[\s\S]*?height:\s*100dvh !important/);
+  assert.match(refreshStyles, /\.onboarding--reference \.onboarding__reference[\s\S]*?object-fit:\s*fill !important/);
+});
+
+test("home prompt, expanded lessons and family profile match the current reference", () => {
+  assert.match(html, /id="mobileSituationInput"[^>]*placeholder="Nhập tại đây\.\.\."/);
+  for (const lessonId of ["fake-electricity", "fake-vneid", "fake-biometric", "fake-sim", "fake-teacher", "romance-investment"]) {
+    assert.match(app, new RegExp(`id: "${lessonId}"`));
+  }
+  assert.match(html, /id="familyView"[\s\S]*?class="workspace-head family-profile-head"/);
+  assert.match(html, /class="workspace-card family-contact-card"/);
+  assert.match(html, /id="contactSubmitButton"[\s\S]*?Thêm người thân/);
+  assert.match(html, /class="family-contact-mascot"[^>]*mascot-assistant\.webp/);
+  assert.match(refreshStyles, /#familyView \.family-contact-card/);
+  assert.match(refreshStyles, /#familyView \.family-contact-advanced[\s\S]*?display:\s*none !important/);
 });
 
 test("check hub exposes four real workflows without duplicating forms", () => {
   const hub = html.match(/<nav class="check-hub"[\s\S]*?<\/nav>/)?.[0] || "";
-  for (const label of ["Tin nhắn hoặc hình ảnh", "Kể lại bằng giọng nói", "Link hoặc mã QR", "Trước khi chuyển tiền"]) {
+  for (const label of ["Cuộc gọi lạ", "Tin nhắn đáng ngờ", "Link hoặc mã QR", "Trước khi chuyển tiền"]) {
     assert.match(hub, new RegExp(label));
   }
   assert.match(app, /checkHubVoiceButton[\s\S]*?speechButton\.click\(\)/);
