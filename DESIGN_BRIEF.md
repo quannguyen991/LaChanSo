@@ -1,4 +1,4 @@
-# Lá Chắn Số — Yêu cầu thiết kế lại toàn bộ giao diện
+# Khoan Đã — Yêu cầu thiết kế lại toàn bộ giao diện
 
 > **Gửi cho bên thiết kế.** Tài liệu mô tả đúng sản phẩm đang chạy tại
 > https://khoan-da-553138370139.asia-southeast1.run.app
@@ -8,11 +8,13 @@
 
 ## 1. Sản phẩm
 
-**Lá Chắn Số** — ứng dụng web giúp **người cao tuổi Việt Nam** nhận ra lừa đảo và **dừng lại** trước khi chuyển tiền.
+**Khoan Đã** — ứng dụng web giúp **người cao tuổi Việt Nam** nhận ra lừa đảo và **dừng lại** trước khi chuyển tiền.
 
-- **Tên thương hiệu:** Lá Chắn Số
-- **Câu cửa miệng:** "Khoan đã" — dùng ở tiêu đề trang và dòng dưới logo. **Không phải tên sản phẩm.**
-- **Định vị:** *Khoan đã — Dừng lại trước khi chuyển tiền*
+- **Tên thương hiệu: Khoan Đã** (chốt 27/7/2026). Viết hoa chữ Đ ở logo và
+  `manifest.name`; thẻ `<title>` dùng dạng thường *"Khoan đã – Dừng lại trước
+  khi chuyển tiền"*.
+- **Dòng dưới logo:** *"Cùng bạn an toàn trong thế giới số"*
+- Tài liệu cũ có chỗ còn ghi "Lá Chắn Số" — **đó là tên đã bỏ**, đừng dùng lại.
 
 **Cách hoạt động (1 câu):** người dùng kể tình huống (gõ / nói / chụp ảnh tin nhắn / quét QR) → nhận **1 trong 3 mức rủi ro** kèm lý do, việc cần làm và nguồn cảnh báo.
 
@@ -62,14 +64,14 @@ Lý do: AI chỉ đọc và bật cờ; **luật cứng trong code mới quyết
 
 ## 4. Bản đồ màn hình (16 màn + 4 bước chào)
 
-**Màn chào (chỉ lần đầu):** Lá Chắn Số → "Có điều đáng ngờ," → "Lá Chắn Số hướng dẫn bác" → "An toàn hơn"
+**Màn chào (chỉ lần đầu):** Khoan Đã → "Có điều đáng ngờ," → "Khoan Đã hướng dẫn bác" → "An toàn hơn"
 
 **Thanh tab dưới (điện thoại):** Trang chủ · Kiểm tra · Vụ việc · Gia đình
 
 ### Nhóm A — Kiểm tra (lõi)
 | Đường dẫn | Tiêu đề hiện tại | Việc |
 |---|---|---|
-| `#trang-chu` | *Lá Chắn Số, bác cần kiểm tra điều gì?* | Ô nhập chính + lối tắt + khẩn cấp |
+| `#trang-chu` | *Khoan Đã, bác cần kiểm tra điều gì?* | Ô nhập chính + lối tắt + khẩn cấp |
 | `#kiem-tra` | *Có đáng tin không?* | Kiểm tra tình huống (chữ/giọng nói/ảnh/PDF) |
 | `#chuyen-khoan` | *Chuyển khoản này có ổn không?* | Soi giao dịch trước khi bấm xác nhận |
 | `#kiem-tra-lien-ket` | *Kiểm tra link & QR* | Dán link hoặc quét QR |
@@ -100,8 +102,9 @@ Lý do: AI chỉ đọc và bật cờ; **luật cứng trong code mới quyết
 
 ## 6. Vấn đề cần thiết kế mới giải quyết
 
-> Cập nhật 26/7/2026 sau đợt sửa lỗi tiếp cận. Các mục ✅ đã xử lý — **đừng
-> thiết kế lại chúng, đừng làm chúng tệ đi**.
+> Cập nhật **27/7/2026, sau khi đã deploy lên bản thật** (revision
+> `khoan-da-00014-b2w`). Các mục ✅ đã xử lý và **đang chạy** — đừng thiết kế
+> lại chúng, đừng làm chúng tệ đi.
 
 ### ✅ Đã sửa — giữ nguyên kết quả, không được làm hỏng
 - **Lối vào trùng nhau trên trang chủ.** Từ 11 nút cho 4 đích còn: 1 ô nhập
@@ -112,10 +115,20 @@ Lý do: AI chỉ đọc và bật cờ; **luật cứng trong code mới quyết
   buộc: nhãn đỏ → dòng trấn an → **câu để đọc rồi cúp máy** → 3 điều từ chối →
   đếm ngược 60s → 2 nút gọi → mọi giải thích nằm sau một cú chạm.
 - **Hero không còn nướng chữ vào ảnh.** Là chữ thật, giãn 51→68px theo cỡ chữ.
-- **Sàn cỡ chữ 14px và vùng chạm 52/56px** — đã có test chặn, xem mục 6b.
+- **Đầu trang điện thoại cũng đã hết nướng chữ.** Trước đây nó là một **lớp bấm
+  vô hình** (`opacity: 0`) đè lên ảnh vẽ sẵn logo + tiêu đề thành pixel; khối
+  chữ thật bị ép `1×1px` + `clip`, và `:focus-visible` chỉ nâng lên `0.12` nên
+  lấy nét bàn phím làm phần tử gần như tàng hình. Nay là chữ thật, giãn
+  **27,75 → 31,45 → 37px** theo cỡ chữ.
+- **Sàn cỡ chữ 14px và vùng chạm 52/56px** — đã có test chặn ở **cả 3 bậc**, xem mục 6b.
+- **Chạy ngoại tuyến đã sống lại.** Service worker từng chết lặng vì một mục
+  404 trong `APP_SHELL` (`cache.addAll` là được-ăn-cả-ngã-về-không). Đã có test chặn.
 
 ### 🔴 Còn lại — việc thật của đợt thiết kế lại
-1. **Trang chủ vẫn dài**: 2022px trên điện thoại ≈ **2,49 màn vuốt**. Mục tiêu ≤2 màn.
+1. **Trang chủ vẫn dài**: **2,03 màn vuốt** ở cỡ chữ mặc định (1,76 ở bậc A ·
+   2,66 ở A++). Mục tiêu ≤ 2 màn ở mọi bậc. Lưu ý: con số nhích lên từ 1,89 khi
+   thay ảnh bằng chữ thật — **đó là đánh đổi đúng, đừng lấy lại bằng cách nhét
+   chữ vào ảnh**.
 2. **Bản máy tính chưa được thiết kế bài bản** — vẫn là bố cục 2 cột mở rộng từ
    bản điện thoại. Câu hỏi cần trả lời: khoảng trống hai bên dùng làm gì cho có ích?
 3. **Nhân đôi mobile/desktop trong cùng DOM** — còn 2 thanh nav dưới giống hệt
@@ -123,6 +136,11 @@ Lý do: AI chỉ đọc và bật cờ; **luật cứng trong code mới quyết
    hệ**, không phải hai sản phẩm. Đây là nguyên tắc cho toàn bộ thiết kế mới.
 4. Nhiều thẻ trông giống nhau → khó biết cái nào quan trọng.
 5. Màn chào 4 bước hơi dài; trên Android thấp (360×640) nút "Bắt đầu" chỉ ló một phần.
+6. **Widget chat nổi (MỚI, 27/7)** — trợ lý hội thoại có nhập bằng giọng nói,
+   vừa thêm vào và **chưa từng được thiết kế**. Cần trả lời: nó nằm đâu trên
+   điện thoại mà không che 2 nút khẩn cấp đỏ và không đè thanh tab dưới? Với bác
+   70 tuổi, một bong bóng chat nổi có phải cách đúng không, hay nên là một lối
+   vào rõ ràng trong luồng chính?
 
 ### 🟡 Nợ kỹ thuật (bối cảnh cho bên thiết kế)
 6. `styles.css` **6.543 dòng, 52 khối `@media`** đè nhau — từng làm 4 nút biến
@@ -133,13 +151,14 @@ Lý do: AI chỉ đọc và bật cờ; **luật cứng trong code mới quyết
 
 ## 6b. Hàng rào tự động — thiết kế nào vi phạm sẽ bị chặn
 
-Repo có **130 test** chạy bằng `npm test`. Bốn trong số đó chặn thẳng vào thiết kế:
+Repo có **137 test** chạy bằng `npm test`. Năm trong số đó chặn thẳng vào thiết kế:
 
 | Test | Chặn điều gì |
 |---|---|
-| `font-size-floor.test.js` | mọi `font-size` dưới **14px** ở gốc 17px |
+| `font-size-floor.test.js` | mọi `font-size` dưới **14px**, ở **cả 3 bậc** A/A+/A++ |
 | `non-text-contrast.test.js` | viền/ranh giới dưới **3:1** (WCAG 1.4.11) |
 | `contrast.test.js` | cặp màu chữ dưới **4.5:1** |
+| `service-worker-shell.test.js` | file trong `APP_SHELL` không tồn tại → mất ngoại tuyến |
 | `frontend-contract.test.js` | chữ nướng vào ảnh, nhãn rủi ro, các `id` mà JS bám vào |
 
 **Nghĩa là:** bản thiết kế gửi về sẽ được kiểm bằng số đo, không bằng cảm tính.

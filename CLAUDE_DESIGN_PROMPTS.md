@@ -1,4 +1,4 @@
-# Thiết kế lại Lá Chắn Số bằng Claude Design — hướng dẫn
+# Thiết kế lại Khoan Đã bằng Claude Design — hướng dẫn
 
 > Cập nhật 26/7/2026. Bản trước đã lỗi thời: hộp cảnh báo và hero đã sửa xong,
 > nên thứ tự ưu tiên trong tài liệu này khác hẳn.
@@ -16,7 +16,7 @@
 ### Vì sao chọn "None" chứ không phải "Create using Claude Code"
 
 Nút đó chạy `/design-sync`, một công cụ **đồng bộ thư viện component đã biên
-dịch**. Lá Chắn Số là HTML + CSS + JS thuần, không có component nào để đồng bộ.
+dịch**. Khoan Đã là HTML + CSS + JS thuần, không có component nào để đồng bộ.
 Và toàn bộ hệ màu của ta chỉ **106 token trong 1 file** — dán tay là xong.
 
 ⚠️ Tài khoản đang có sẵn 2 design system (**HapuHR**, **Haplo**). **Đừng chọn
@@ -106,7 +106,7 @@ Nên: cứ để Claude Design đề xuất thoải mái. Chỗ nào không dự
 *Template: Mobile app design · 375×812*
 
 ```
-Thiết kế lại màn hình chính (điện thoại 375×812) cho "Lá Chắn Số".
+Thiết kế lại màn hình chính (điện thoại 375×812) cho "Khoan Đã".
 
 NGƯỜI DÙNG: bác 70 tuổi, mắt kém, tay run, ĐANG HOẢNG vì kẻ lừa đảo vẫn đang
 nói ở đầu dây bên kia. Không phải người rảnh rỗi ngắm giao diện.
@@ -117,7 +117,7 @@ VẤN ĐỀ CẦN GIẢI: trang hiện dài 2022px = 2,49 màn vuốt. Mục ti�
 mà KHÔNG bỏ mất chức năng nào dưới đây.
 
 NỘI DUNG PHẢI CÓ, theo đúng thứ tự ưu tiên này:
-1. Đầu trang gọn: logo lá chắn + "Lá Chắn Số", dòng nhỏ "Khoan đã · Dừng lại
+1. Đầu trang gọn: logo lá chắn + "Khoan Đã", dòng nhỏ "Khoan đã · Dừng lại
    trước khi chuyển tiền", nút hồ sơ
 2. Câu hỏi lớn: "Bác đang gặp tình huống gì?"
 3. Ô NHẬP CHÍNH (to, rõ) + 4 nút: chụp ảnh, quét QR, nói bằng giọng, "Tiếp tục"
@@ -160,7 +160,7 @@ nói rõ mỗi hướng hy sinh cái gì. Tôi chọn xong bạn mới dựng.
 *Template: None · 1280×860*
 
 ```
-Thiết kế màn hình chính bản MÁY TÍNH (1280×860) cho "Lá Chắn Số", mở rộng từ
+Thiết kế màn hình chính bản MÁY TÍNH (1280×860) cho "Khoan Đã", mở rộng từ
 bản điện thoại vừa chốt. Giữ nguyên nội dung và thứ tự ưu tiên.
 
 CÂU HỎI CHÍNH CẦN TRẢ LỜI: khoảng trống hai bên dùng làm gì cho CÓ ÍCH?
@@ -184,10 +184,10 @@ BẮT BUỘC:
 ## Prompt 3 — Màn chào 4 bước
 
 ```
-Thiết kế lại luồng chào (onboarding) 4 bước cho "Lá Chắn Số", khổ 360×640 —
+Thiết kế lại luồng chào (onboarding) 4 bước cho "Khoan Đã", khổ 360×640 —
 đây là máy Android phổ thông thấp, và hiện nút "Bắt đầu" đang bị hụt khỏi màn.
 
-4 bước hiện tại: Lá Chắn Số → "Có điều đáng ngờ," → "Lá Chắn Số hướng dẫn bác"
+4 bước hiện tại: Khoan Đã → "Có điều đáng ngờ," → "Khoan Đã hướng dẫn bác"
 → "An toàn hơn"
 
 CÂU HỎI: 4 bước có quá dài với bác 70 tuổi không? Nếu rút còn 2 mà vẫn đủ ý thì

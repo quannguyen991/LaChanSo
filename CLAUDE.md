@@ -1,4 +1,4 @@
-# Lá Chắn Số — hướng dẫn cho Claude
+# Khoan Đã — hướng dẫn cho Claude
 
 > Đọc hết file này trước khi sửa bất cứ thứ gì. Phần "Ràng buộc bất biến" là
 > cam kết đạo đức của sản phẩm, không phải sở thích thẩm mỹ.
@@ -8,8 +8,10 @@
 Ứng dụng web (PWA) giúp **người cao tuổi Việt Nam** nhận ra lừa đảo và **dừng
 lại trước khi chuyển tiền**.
 
-- **Tên thương hiệu: "Lá Chắn Số"**. "Khoan đã" chỉ là **câu cửa miệng**, dùng
-  ở thẻ `<title>` và dòng phụ dưới logo — **không phải tên sản phẩm**.
+- **Tên thương hiệu: "Khoan Đã"** (chốt 27/7/2026). Viết hoa chữ Đ ở logo và
+  `manifest.name`; thẻ `<title>` dùng dạng thường "Khoan đã – Dừng lại trước khi
+  chuyển tiền". Dòng dưới logo: "Cùng bạn an toàn trong thế giới số".
+  Tên cũ "Khoan Đã" ĐÃ BỎ — gặp ở đâu thì sửa, đừng dùng lại.
 - Người dùng mẫu: bác 70 tuổi, mắt kém, tay run, **đang hoảng**, kẻ lừa đảo vẫn
   đang nói ở đầu dây bên kia. Không phải người rảnh rỗi ngắm giao diện.
 - Tiêu chí đánh giá mọi thay đổi giao diện, một câu:
