@@ -100,9 +100,14 @@
      14/17 = 0,8235rem, nên bậc nhỏ nhất đặt ở 0.875rem (14,88px).
      Tất cả ghi bằng rem để nút A / A+ / A++ phóng được HẾT chữ.
      ================================================================ */
-  --text-xs: 0.875rem;     /* 14,88px — SÀN. Chỉ cho nhãn phụ, không cho câu văn */
-  --text-sm: 0.9375rem;    /* 15,94px — chú thích, nhãn trong thẻ */
-  --text-base: 1rem;       /* 17,00px — nhỏ nhất cho một câu hoàn chỉnh */
+  /* SÀN CỨNG: max() để KHÔNG BAO GIỜ tụt dưới 14px, kể cả ở bậc chữ A (gốc
+     15px), mà vẫn phóng to theo A+ / A++.
+     Bản trước ghi 0.875rem trần (= 14/17) và ở gốc 15px chỉ ra 13,13px —
+     tức chính token sàn lại vi phạm sàn. Bài học: mọi giá trị sát sàn phải
+     kẹp bằng px tuyệt đối, y như --touch-target-primary. */
+  --text-xs: max(14px, 0.875rem);   /* 14 / 14,88 / 17,50px theo 3 bậc */
+  --text-sm: max(14px, 0.9375rem);  /* 14 / 15,94 / 18,75px */
+  --text-base: max(15px, 1rem);     /* 15 / 17,00 / 20,00px — nhỏ nhất cho một câu */
   --text-md: 1.125rem;     /* 19,13px — chữ thân bài cho người cao tuổi */
   --text-lg: 1.25rem;      /* 21,25px — styles.css GỌI token này nhưng trước nay CHƯA hề có */
   --text-xl: 1.5rem;       /* 25,50px — tiêu đề thẻ */
