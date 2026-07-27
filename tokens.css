@@ -9,8 +9,12 @@
   --color-ink: oklch(20% 0.055 255);
   --color-ink-2: oklch(37% 0.05 255);
   --color-muted: oklch(50% 0.035 255);
-  --color-rule: oklch(90% 0.025 245);
-  --color-rule-strong: oklch(76% 0.05 245);
+  /* Viền/đường kẻ — đã tối lại để đạt WCAG 1.4.11 (>= 3:1).
+     Giá trị cũ oklch(90%) chỉ đạt 1,32:1 trên nền surface: với mắt người
+     cao tuổi (đục thủy tinh thể) coi như không nhìn thấy đường viền.
+     Hai token này KHÔNG dùng làm chữ hay nền ở bất kỳ đâu, nên đổi an toàn. */
+  --color-rule: oklch(62% 0.03 248);        /* 3,57:1 surface · 3,14:1 surface-2 · 3,33:1 paper */
+  --color-rule-strong: oklch(52% 0.045 248); /* 5,39:1 surface · 4,75:1 surface-2 — ô nhập, nút phụ */
 
   --color-accent: oklch(43% 0.18 255);
   --color-accent-bright: oklch(49% 0.19 250);
@@ -36,7 +40,7 @@
 
   --color-notice: oklch(52% 0.15 55);
   --color-notice-soft: oklch(94% 0.05 65);
-  --color-notice-line: oklch(78% 0.09 60);
+  --color-notice-line: oklch(60% 0.1 60);   /* 3,34:1 notice-soft · 3,48:1 warning-soft (cũ: 1,68:1) */
   --color-avatar-soft: oklch(88% 0.05 55);
   --color-avatar-ink: oklch(45% 0.09 45);
 
@@ -88,4 +92,83 @@
   --ease-route-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-route-exit: cubic-bezier(0.4, 0, 1, 1);
   --bottom-nav-height: 5.5rem;
+
+  /* ================================================================
+     THANG CHỮ
+     Gốc = 17px (html[data-font-size="medium"], styles.css).
+     Quy tắc bất di bất dịch: KHÔNG bậc nào rơi xuống dưới 14px.
+     14/17 = 0,8235rem, nên bậc nhỏ nhất đặt ở 0.875rem (14,88px).
+     Tất cả ghi bằng rem để nút A / A+ / A++ phóng được HẾT chữ.
+     ================================================================ */
+  --text-xs: 0.875rem;     /* 14,88px — SÀN. Chỉ cho nhãn phụ, không cho câu văn */
+  --text-sm: 0.9375rem;    /* 15,94px — chú thích, nhãn trong thẻ */
+  --text-base: 1rem;       /* 17,00px — nhỏ nhất cho một câu hoàn chỉnh */
+  --text-md: 1.125rem;     /* 19,13px — chữ thân bài cho người cao tuổi */
+  --text-lg: 1.25rem;      /* 21,25px — styles.css GỌI token này nhưng trước nay CHƯA hề có */
+  --text-xl: 1.5rem;       /* 25,50px — tiêu đề thẻ */
+  --text-2xl: 1.875rem;    /* 31,88px — tiêu đề màn hình */
+  --text-3xl: 2.25rem;     /* 38,25px — số/kết quả lớn */
+  --text-display: clamp(2rem, 5.6vw, 3.4rem);
+
+  /* ================================================================
+     ĐỘ CAO DÒNG
+     Tiếng Việt xếp dấu CẢ TRÊN LẪN DƯỚI (ế, ộ, ữ, ị, ặ). Dưới 1.25 là
+     dấu bị cắt hoặc dính vào dòng trên. Câu tiếng Việt cũng dài hơn
+     tiếng Anh khoảng 30%, nên chừa dòng rộng hơn thói quen thường thấy.
+     ================================================================ */
+  --leading-display: 1.2;  /* CHỈ cho chữ >= 2rem; dưới cỡ đó sẽ cắt dấu */
+  --leading-tight: 1.3;    /* tiêu đề 1.25rem – 2rem */
+  --leading-snug: 1.45;    /* nhãn nút, chip, thanh điều hướng */
+  --leading-normal: 1.6;   /* mặc định */
+  --leading-relaxed: 1.75; /* đoạn dài, hướng dẫn từng bước */
+
+  /* ================================================================
+     VÙNG CHẠM
+     --touch-target: 52px ở trên = sàn chung.
+     Nút chính phải >= 56px ở MỌI bậc cỡ chữ. Cảnh báo: 3.5rem đang
+     hard-code trong styles.css KHÔNG bằng 56px — ở bậc "small" (15px)
+     nó chỉ ra 52,5px, tức đang vi phạm. max() vừa chặn sàn 56px vừa
+     không thu nhỏ nút ở bậc chữ lớn.
+     ================================================================ */
+  --touch-target-primary: max(56px, 3.5rem);
+
+  /* ================================================================
+     BẬC CỠ CHỮ GỐC (A / A+ / A++)
+     >>> BẬC "small" ĐANG LÀ 15px, THẤP HƠN MỨC NỀN 17px CỦA BRIEF <<<
+     Giữ nguyên 15px ở đây để KHÔNG âm thầm đổi hành vi người dùng cũ.
+     Cần Victor quyết định trước khi nâng.
+     ================================================================ */
+  --root-font-small: 15px;
+  --root-font-medium: 17px;
+  --root-font-large: 20px;
+
+  /* ================================================================
+     VIỀN ĐẠT TƯƠNG PHẢN PHI VĂN BẢN (WCAG 2.2 – 1.4.11, >= 3:1)
+     Dùng cho viền LÀ RANH GIỚI THẬT của một thành phần.
+     --color-sky-line và --color-accent-soft-line giữ nguyên giá trị,
+     từ nay CHỈ dùng cho hoa văn trang trí — làm tối chúng sẽ phá
+     tương phản chữ --color-accent trên nền hover.
+     ================================================================ */
+  --color-border-tinted: oklch(60% 0.055 240);     /* 3,28:1 sky-soft · 3,84:1 surface */
+  --color-border-interactive: oklch(58% 0.09 250); /* 4,19:1 surface · 3,48:1 accent-soft */
+
+  /* ================================================================
+     BÍ DANH MÀU THEO MỨC RỦI RO
+     Nhãn tiếng Việt là BẤT BIẾN. Nguồn sự thật:
+     src/rule-engine.js và public/app.js.
+     KHÔNG đổi chữ, KHÔNG dịch, KHÔNG rút gọn:
+       data-risk="high"   -> "Nguy hiểm cao"
+       data-risk="medium" -> "Nghi ngờ"
+       data-risk="low"    -> "Chưa thấy dấu hiệu rủi ro"
+                             TUYỆT ĐỐI KHÔNG đổi thành "An toàn"
+     Màu chỉ là lớp thông tin PHỤ — mọi chỗ hiện mức rủi ro phải luôn
+     có CHỮ + BIỂU TƯỢNG đi kèm.
+     ================================================================ */
+  --color-risk-high: var(--color-danger);
+  --color-risk-high-soft: var(--color-danger-soft);
+  --color-risk-high-ink: var(--color-danger-ink);
+  --color-risk-medium: var(--color-warning);
+  --color-risk-medium-soft: var(--color-warning-soft);
+  --color-risk-low: var(--color-success);
+  --color-risk-low-soft: var(--color-success-soft);
 }

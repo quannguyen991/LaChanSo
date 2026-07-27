@@ -161,13 +161,11 @@
     <aside class="profile-menu" id="profileMenu" aria-label="Menu hồ sơ và tiện ích" hidden>
       <div class="profile-menu__head"><strong>Tiện ích của bác</strong><button type="button" id="profileMenuClose" aria-label="Đóng menu"><span class="icon icon-close" aria-hidden="true"></span></button></div>
       <nav class="profile-menu__links" aria-label="Tiện ích phụ">
-        <a href="#huong-dan"><span class="icon icon-receipt" aria-hidden="true"></span><span>Học hỏi</span></a>
-        <a href="#huong-dan"><span class="icon icon-shield-check" aria-hidden="true"></span><span>Bài luyện</span></a>
+        <a href="#huong-dan"><span class="icon icon-shield-check" aria-hidden="true"></span><span>Luyện để không bị lừa</span></a>
+        <a href="#canh-bao"><span class="icon icon-alert" aria-hidden="true"></span><span>Các hình thức lừa đảo</span></a>
         <a href="#lich-su"><span class="icon icon-history" aria-hidden="true"></span><span>Lịch sử kiểm tra</span></a>
-        <a href="#ho-tro"><span class="icon icon-phone" aria-hidden="true"></span><span>Danh bạ hotline</span></a>
-        <a href="#quyen-rieng-tu"><span class="icon icon-lock" aria-hidden="true"></span><span>Quyền riêng tư</span></a>
-        <a href="#quyen-rieng-tu"><span class="icon icon-settings" aria-hidden="true"></span><span>Cài đặt</span></a>
-        <a href="#ho-tro"><span class="icon icon-messages" aria-hidden="true"></span><span>Trợ giúp</span></a>
+        <a href="#ho-tro"><span class="icon icon-phone" aria-hidden="true"></span><span>Danh bạ hotline &amp; trợ giúp</span></a>
+        <a href="#quyen-rieng-tu"><span class="icon icon-lock" aria-hidden="true"></span><span>Quyền riêng tư &amp; cài đặt</span></a>
         <button type="button" id="reopenOnboardingButton"><span class="icon icon-shield-check" aria-hidden="true"></span><span>Xem lại hướng dẫn</span></button>
       </nav>
       <div class="header-tools" aria-label="Cài đặt hỗ trợ đọc">
@@ -191,7 +189,7 @@
         <div class="hero-band">
           <img class="hero-band__reference" src="/assets/home-couple-reference.webp" width="334" height="339" alt="" loading="lazy" decoding="async">
           <div class="hero-accessible-copy">
-            <h1 id="homeTitle"><span>Khoan Đã,</span> bác cần kiểm tra điều gì?</h1>
+            <h1 id="homeTitle" tabindex="-1"><span>Khoan Đã,</span> bác cần kiểm tra điều gì?</h1>
             <p class="calm-line">Khoan Đã luôn đồng hành, giúp bác tránh lừa đảo và an toàn trên không gian mạng.</p>
           </div>
         </div>
@@ -255,8 +253,6 @@
         <div class="home-suggestion-chips" aria-label="Tình huống thường gặp">
           <button type="button" data-home-suggestion="call">Có người gọi cho tôi</button>
           <button type="button" data-home-suggestion="message">Tôi nhận tin nhắn lạ</button>
-          <a href="#chuyen-khoan">Tôi sắp chuyển tiền</a>
-          <a href="#vua-chuyen-tien">Tôi đã chuyển tiền</a>
         </div>
 
         <section class="mobile-quick-result" id="mobileQuickResult" aria-live="polite" tabindex="-1" hidden>
@@ -315,7 +311,6 @@
             <span>Trước khi<br>chuyển tiền</span>
           </a>
         </nav>
-
         <a class="notice-banner" href="#quyen-rieng-tu" id="recoveryBanner" hidden>
           <span class="notice-banner__icon"><span class="icon icon-hourglass" aria-hidden="true"></span></span>
           <span class="notice-banner__body">
@@ -482,11 +477,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="home-quick-links" aria-label="Lối tắt hỗ trợ">
-          <a href="#ho-tro"><span class="icon icon-phone" aria-hidden="true"></span><span>Gặp người thật hỗ trợ</span></a>
-          <a href="#huong-dan"><span class="icon icon-folder-lock" aria-hidden="true"></span><span>Luyện để không bị lừa</span></a>
-          <a href="#hanh-trinh"><span class="icon icon-route" aria-hidden="true"></span><span>Vụ việc đang theo dõi</span></a>
         </div>
         </div>
 
@@ -1857,9 +1847,10 @@
 
     <dialog class="danger-dialog" id="dangerDialog" aria-labelledby="dangerTitle">
       <div class="danger-dialog__content">
-        <span class="icon icon-alert danger-dialog__icon" aria-hidden="true"></span>
-        <p class="danger-dialog__eyebrow">Dừng lại</p>
-        <h2 id="dangerTitle">Nguy hiểm cao</h2>
+        <div class="danger-dialog__badge">
+          <span class="icon icon-alert danger-dialog__badge-icon" aria-hidden="true"></span>
+          <h2 id="dangerTitle">Nguy hiểm cao</h2>
+        </div>
         <section class="pressure-guide" id="pressureGuide" aria-live="polite" hidden>
           <p class="pressure-guide__count" id="pressureStepCount">Bước 1/6</p>
           <h3 id="pressureStepTitle">Đặt điện thoại xuống hoặc bật loa ngoài</h3>
@@ -1873,22 +1864,16 @@
             <button class="button button-primary" type="button" id="pressureStepNext">Bước tiếp</button>
           </div>
         </section>
-        <ul class="danger-dialog__rules">
-          <li>Không chuyển tiền</li>
-          <li>Không cung cấp mã OTP</li>
-          <li>Không cài ứng dụng lạ</li>
-          <li>Không làm theo hướng dẫn chia sẻ màn hình</li>
-          <li>Gọi người thân để kiểm tra</li>
-        </ul>
-        <div class="danger-dialog__smart-pause" id="dangerSmartPause">
-          <p class="danger-dialog__smart-pause-question">Người gọi/nhắn vừa nói câu nào trong số này?</p>
-          <div class="phrase-chip-grid" id="pressurePhraseGrid">
-            <button type="button" class="phrase-chip" data-phrase="chuyen_ngay">"Chuyển ngay trong vài phút"</button>
-            <button type="button" class="phrase-chip" data-phrase="giu_bi_mat">"Không được kể cho ai"</button>
-            <button type="button" class="phrase-chip" data-phrase="doc_otp">"Đọc mã OTP để xác minh"</button>
-            <button type="button" class="phrase-chip" data-phrase="khong_co">Không câu nào giống vậy</button>
-          </div>
-        </div>
+        <p class="danger-dialog__reassure">Hàng nghìn người cũng bị gọi y hệt. Bác không hề ngốc.</p>
+        <section class="danger-script" aria-labelledby="dangerScriptLabel">
+          <p class="danger-script__label" id="dangerScriptLabel">Bác đọc đúng câu này rồi tắt máy:</p>
+          <p class="danger-script__line" id="dangerScriptLine">“Tôi không chuyển tiền. Tôi sẽ tự gọi lại bằng số chính thức. Xin phép dừng cuộc gọi.”</p>
+          <button class="danger-script__speak" type="button" id="dangerScriptSpeakButton">
+            <span class="icon icon-volume" aria-hidden="true"></span>
+            <span>Nghe đọc câu này</span>
+          </button>
+        </section>
+        <p class="danger-dialog__refuse">Không chuyển tiền, không đọc mã, không bấm link.</p>
         <div class="danger-dialog__countdown">
           <span class="icon icon-alert" aria-hidden="true"></span>
           <span>Dừng lại <span class="danger-dialog__countdown-number" id="dangerCountdown">60</span> giây</span>
@@ -1916,24 +1901,47 @@
             <span class="icon icon-phone" aria-hidden="true"></span>
             <span>Gọi ngân hàng</span>
           </button>
-          <button class="button danger-dialog__call danger-dialog__call--secondary" type="button" id="dangerReadButton">
-            <span class="icon icon-volume" aria-hidden="true"></span>
-            <span>Nghe đọc hướng dẫn</span>
-          </button>
-          <button class="button danger-dialog__call danger-dialog__call--secondary" type="button" id="dangerExitCallButton">
-            <span class="icon icon-phone" aria-hidden="true"></span>
-            <span>Giúp tôi kết thúc cuộc gọi</span>
-          </button>
-          <button class="button danger-dialog__call danger-dialog__call--secondary" type="button" id="dangerUploadEvidenceButton" hidden>
-            <span class="icon icon-camera" aria-hidden="true"></span>
-            <span>Chụp/tải ảnh bằng chứng</span>
-          </button>
-          <a class="button danger-dialog__call danger-dialog__call--secondary" href="#ho-tro">
-            <span class="icon icon-shield-check" aria-hidden="true"></span>
-            <span>Mở danh bạ chính thức</span>
-          </a>
-          <input class="visually-hidden" type="file" id="dangerEvidenceInput" accept="image/png,image/jpeg,image/webp" capture="environment">
         </div>
+        <details class="danger-why" id="dangerWhy">
+          <summary class="danger-why__summary">Vì sao nguy hiểm? Việc cần làm thêm</summary>
+          <div class="danger-why__body">
+            <ul class="danger-dialog__rules">
+              <li>Không chuyển tiền</li>
+              <li>Không cung cấp mã OTP</li>
+              <li>Không cài ứng dụng lạ</li>
+              <li>Không làm theo hướng dẫn chia sẻ màn hình</li>
+              <li>Gọi người thân để kiểm tra</li>
+            </ul>
+            <div class="danger-dialog__smart-pause" id="dangerSmartPause">
+              <p class="danger-dialog__smart-pause-question">Người gọi/nhắn vừa nói câu nào trong số này?</p>
+              <div class="phrase-chip-grid" id="pressurePhraseGrid">
+                <button type="button" class="phrase-chip" data-phrase="chuyen_ngay">"Chuyển ngay trong vài phút"</button>
+                <button type="button" class="phrase-chip" data-phrase="giu_bi_mat">"Không được kể cho ai"</button>
+                <button type="button" class="phrase-chip" data-phrase="doc_otp">"Đọc mã OTP để xác minh"</button>
+                <button type="button" class="phrase-chip" data-phrase="khong_co">Không câu nào giống vậy</button>
+              </div>
+            </div>
+            <div class="danger-dialog__actions" id="dangerSecondaryActions">
+              <button class="button danger-dialog__call danger-dialog__call--secondary" type="button" id="dangerReadButton">
+                <span class="icon icon-volume" aria-hidden="true"></span>
+                <span>Nghe đọc hướng dẫn</span>
+              </button>
+              <button class="button danger-dialog__call danger-dialog__call--secondary" type="button" id="dangerExitCallButton">
+                <span class="icon icon-phone" aria-hidden="true"></span>
+                <span>Giúp tôi kết thúc cuộc gọi</span>
+              </button>
+              <button class="button danger-dialog__call danger-dialog__call--secondary" type="button" id="dangerUploadEvidenceButton" hidden>
+                <span class="icon icon-camera" aria-hidden="true"></span>
+                <span>Chụp/tải ảnh bằng chứng</span>
+              </button>
+              <a class="button danger-dialog__call danger-dialog__call--secondary" href="#ho-tro">
+                <span class="icon icon-shield-check" aria-hidden="true"></span>
+                <span>Mở danh bạ chính thức</span>
+              </a>
+              <input class="visually-hidden" type="file" id="dangerEvidenceInput" accept="image/png,image/jpeg,image/webp" capture="environment">
+            </div>
+          </div>
+        </details>
         <button class="danger-dialog__close" type="button" id="closeDangerButton">Xem kết quả chi tiết</button>
       </div>
     </dialog>

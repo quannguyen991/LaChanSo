@@ -295,7 +295,7 @@ a {
 
 .brand__tagline {
   display: none;
-  font-size: 0.72rem;
+  font-size: var(--text-xs);
   font-weight: 500;
   color: var(--color-muted);
   white-space: nowrap;
@@ -364,14 +364,6 @@ main {
   background: linear-gradient(160deg, var(--color-accent-soft), var(--color-surface) 78%);
 }
 
-@media (min-width: 40rem) {
-  .hero-band {
-    display: flex;
-    align-items: center;
-    gap: var(--space-6);
-  }
-}
-
 .workspace-head {
   max-width: var(--reading-width);
   margin-block-end: var(--space-5);
@@ -387,7 +379,7 @@ main {
   border-radius: var(--radius-full);
   background: var(--color-accent-soft);
   color: var(--color-accent);
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   line-height: 1.4;
   text-transform: uppercase;
@@ -701,7 +693,7 @@ h1 {
   border-radius: var(--radius-full);
   background: var(--color-notice);
   color: var(--color-accent-ink);
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   text-decoration: none;
 }
@@ -755,7 +747,7 @@ h1 {
 
 .hub-tile__lead {
   color: var(--color-muted);
-  font-size: 0.78rem;
+  font-size: var(--text-xs);
   line-height: 1.35;
 }
 
@@ -898,7 +890,7 @@ h1 {
 
 .reassurance-chip__lead {
   color: var(--color-muted);
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
 }
 
 @media (min-width: 40rem) {
@@ -1125,7 +1117,7 @@ h1 {
 #characterCount {
   flex: 0 0 auto;
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1149,13 +1141,13 @@ textarea {
 }
 
 input {
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: var(--space-3) var(--space-4);
   font-size: 1rem;
 }
 
 select {
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: var(--space-3) 3rem var(--space-3) var(--space-4);
   appearance: none;
   background-color: var(--color-surface);
@@ -1285,7 +1277,7 @@ select[aria-invalid="true"] {
 .recognized-text__label {
   margin: 0 0 var(--space-1);
   color: var(--color-muted);
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0;
@@ -1307,7 +1299,7 @@ select[aria-invalid="true"] {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
   border: 2px solid transparent;
@@ -1316,7 +1308,11 @@ select[aria-invalid="true"] {
   line-height: 1.2;
   text-align: center;
   text-decoration: none;
-  white-space: nowrap;
+  /* KHÔNG dùng nowrap: ở bậc chữ A++ nhãn tiếng Việt dài hơn bề ngang nút và
+     bị cắt hẳn (không khối cha nào cuộn để lấy lại). Đã đo: "Chụp hoặc chọn
+     ảnh/PDF" vượt mép phải 59px ở gốc 20px. Cho xuống dòng thì nút cao thêm,
+     nhưng chữ còn đủ — với người cao tuổi, đọc được quan trọng hơn gọn. */
+  white-space: normal;
   transition: background-color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
 }
 
@@ -1568,7 +1564,7 @@ select[aria-invalid="true"] {
   padding-inline: var(--space-3);
   border-radius: var(--radius-full);
   background: color-mix(in oklch, currentColor 14%, var(--color-surface));
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   font-weight: 700;
 }
 
@@ -1578,7 +1574,7 @@ select[aria-invalid="true"] {
 
 .history-row time {
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
 }
 
 .history-row p {
@@ -1620,7 +1616,7 @@ select[aria-invalid="true"] {
   margin-inline: auto;
   padding: var(--space-5) max(var(--space-4), env(safe-area-inset-left)) var(--space-6);
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
   text-align: center;
 }
 
@@ -1768,7 +1764,7 @@ dialog::backdrop {
 
 .contact-entry__meta {
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
 }
 
 .contact-entry__actions {
@@ -1806,46 +1802,122 @@ dialog::backdrop {
 
 .danger-dialog__content {
   display: grid;
-  align-content: center;
-  justify-items: center;
+  align-content: start;
+  justify-items: stretch;
+  gap: var(--space-3);
   width: min(100%, 48rem);
   min-height: calc(100dvh - var(--space-7));
   margin-inline: auto;
-  padding-block: var(--space-4);
+  padding-block: 0;
   text-align: center;
 }
 
-.danger-dialog__icon {
-  width: 4rem;
-  height: 4rem;
-  margin-block-end: var(--space-4);
+.danger-dialog__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-self: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  margin: 0;
+  padding: var(--space-2) var(--space-5);
+  border: 2px solid var(--color-danger-ink);
+  border-radius: var(--radius-full);
+  background: var(--color-danger);
 }
 
-.danger-dialog__eyebrow {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 800;
-  text-transform: uppercase;
+.danger-dialog__badge-icon {
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .danger-dialog h2 {
-  margin-block-start: var(--space-2);
-  font-size: clamp(3rem, 12vw, 7rem);
-  line-height: 1;
+  margin: 0;
+  font-size: clamp(1.35rem, 5.5vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  text-wrap: balance;
 }
 
-.danger-dialog p:not(.danger-dialog__eyebrow) {
-  max-width: 34ch;
-  margin: var(--space-5) 0;
-  font-size: clamp(1.1rem, 4vw, 1.5rem);
+.danger-dialog p {
+  max-width: none;
+  margin: 0;
+  font-size: 1rem;
   font-weight: 600;
+}
+
+/* Mục 2 — dòng gỡ xấu hổ */
+.danger-dialog__reassure {
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+/* Mục 3 — CÂU CÚP MÁY: khối trắng duy nhất trên nền đỏ */
+.danger-script {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border: 3px solid var(--color-danger-ink);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-ink);
+  color: var(--color-danger-deep);
+}
+
+.danger-dialog .danger-script__label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.danger-dialog .danger-script__line {
+  font-size: clamp(1.25rem, 5.4vw, 1.5rem);
+  font-weight: 800;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.danger-script__speak {
+  display: inline-flex;
+  align-items: center;
+  justify-self: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--color-danger-deep);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-danger-deep);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Mục 4 — ba điều từ chối */
+.danger-dialog__refuse {
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+/* Chế độ thúc ép dùng chung vỏ; bước 3 của hướng dẫn đã là câu cúp máy */
+.danger-dialog[data-mode="pressure"] .danger-dialog__reassure,
+.danger-dialog[data-mode="pressure"] .danger-script {
+  display: none;
+}
+
+.danger-dialog .pressure-guide p {
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.danger-dialog .pressure-guide h3 {
+  font-size: 1.15rem;
 }
 
 .danger-dialog__rules {
   display: grid;
   gap: var(--space-2);
   max-width: 30ch;
-  margin: var(--space-4) 0;
+  margin: 0;
   padding: 0;
   list-style: none;
   font-size: clamp(1rem, 3.5vw, 1.2rem);
@@ -1871,8 +1943,8 @@ dialog::backdrop {
 }
 
 .danger-dialog__smart-pause {
-  width: min(100%, 30rem);
-  margin-block-end: var(--space-2);
+  width: 100%;
+  margin-block-end: 0;
 }
 
 .phrase-chip-grid {
@@ -1881,7 +1953,7 @@ dialog::backdrop {
 }
 
 .phrase-chip {
-  min-height: 3rem;
+  min-height: var(--touch-target);
   padding: var(--space-2) var(--space-4);
   border: 2px solid color-mix(in oklch, white 45%, transparent);
   border-radius: var(--radius-md);
@@ -1903,6 +1975,7 @@ dialog::backdrop {
 
 .danger-dialog__followup {
   width: min(100%, 28rem);
+  justify-self: center;
   padding: var(--space-5);
   margin-block-end: var(--space-4);
   border-radius: var(--radius-md);
@@ -1917,9 +1990,10 @@ dialog::backdrop {
 .danger-dialog__countdown {
   display: flex;
   align-items: center;
+  justify-self: center;
   gap: var(--space-3);
-  margin-block-end: var(--space-2);
-  padding: var(--space-3) var(--space-5);
+  margin: 0;
+  padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-full);
   background: color-mix(in oklch, white 12%, var(--color-danger-deep));
   font-weight: 700;
@@ -1932,16 +2006,17 @@ dialog::backdrop {
 
 .danger-dialog__actions {
   display: grid;
-  gap: var(--space-3);
-  width: min(100%, 28rem);
+  gap: var(--space-2);
+  width: 100%;
 }
 
 .danger-dialog__call {
-  min-height: 4.25rem;
+  min-height: var(--touch-target-primary);
   border-radius: var(--radius-md);
   background: var(--color-danger-ink);
   color: var(--color-danger-deep);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
+  white-space: normal;
   box-shadow: var(--shadow-lg);
 }
 
@@ -1953,8 +2028,8 @@ dialog::backdrop {
 }
 
 .danger-dialog__close {
-  min-height: 3rem;
-  margin-block-start: var(--space-4);
+  min-height: var(--touch-target);
+  margin-block-start: var(--space-2);
   padding: var(--space-2) var(--space-3);
   border: 0;
   background: transparent;
@@ -1963,6 +2038,81 @@ dialog::backdrop {
   text-decoration: underline;
   text-underline-offset: 0.25em;
   white-space: nowrap;
+}
+
+/* Mục 7 — mọi thứ giải thích nằm dưới nếp gấp, sau một cú chạm */
+.danger-why {
+  width: 100%;
+  margin-block-start: var(--space-2);
+  text-align: start;
+}
+
+.danger-why__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid color-mix(in oklch, white 45%, transparent);
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.danger-why__summary::-webkit-details-marker {
+  display: none;
+}
+
+.danger-why__summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-inline-start: auto;
+  background: currentColor;
+  -webkit-mask: url("/vendor/unicons/angle-down.svg") center / contain no-repeat;
+  mask: url("/vendor/unicons/angle-down.svg") center / contain no-repeat;
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.danger-why[open] .danger-why__summary::after {
+  transform: rotate(180deg);
+}
+
+.danger-why__body {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: center;
+  padding-block-start: var(--space-3);
+}
+
+/* Màn hình thấp (SE đời cũ, ngang màn hình): siết khoảng cách để 6 mục cứu
+   người bám sát nếp gấp. Chỉ cắt đệm — không cắt cỡ chữ, không cắt vùng chạm. */
+@media (max-height: 44rem) {
+  .danger-dialog__content {
+    gap: var(--space-2);
+  }
+
+  .danger-dialog__badge {
+    padding-block: var(--space-1);
+  }
+
+  .danger-script {
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .danger-dialog__countdown {
+    padding-block: var(--space-1);
+  }
+
+  .danger-dialog__call {
+    /* Màn hình thấp: hạ khỏi sàn 56px của nút chính để thu hồi chỗ,
+       nhưng KHÔNG bao giờ xuống dưới sàn chung 52px (bậc chữ A là 48,75px
+       nếu để rem trần). */
+    min-height: max(52px, 3.25rem);
+  }
 }
 
 .toast {
@@ -2125,7 +2275,7 @@ dialog::backdrop {
 .evidence-entry__meta {
   margin: 0 0 var(--space-3);
   color: var(--color-muted);
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
 }
 
 .evidence-entry dl {
@@ -2136,7 +2286,7 @@ dialog::backdrop {
 
 .evidence-entry dt {
   color: var(--color-muted);
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -2180,12 +2330,12 @@ dialog::backdrop {
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: 0.4rem 0.1rem;
   border-radius: var(--radius-full);
   color: var(--color-muted);
   text-decoration: none;
-  font-size: 0.66rem;
+  font-size: var(--text-xs);
   font-weight: 700;
   white-space: nowrap;
   transition:
@@ -2534,7 +2684,7 @@ body[data-onboarding="true"] > :not(.onboarding) {
 .onboarding__primary {
   display: flex;
   width: 100%;
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
@@ -2619,7 +2769,7 @@ body[data-onboarding="true"] > :not(.onboarding) {
 
 .onboarding__method > span:last-child {
   color: #53658a;
-  font-size: 0.84rem;
+  font-size: var(--text-xs);
   line-height: 1.35;
 }
 
@@ -2652,7 +2802,7 @@ body[data-onboarding="true"] > :not(.onboarding) {
   min-height: 1.5rem;
   margin: 0;
   color: #36527f;
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
   text-align: center;
 }
 
@@ -2713,7 +2863,7 @@ body[data-onboarding="true"] > :not(.onboarding) {
 }
 
 .onboarding__branch-actions button {
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   border: 1px solid #0768ef;
   border-radius: 0.8rem;
   background: #fff;
@@ -3207,19 +3357,6 @@ body {
   object-position: left center;
 }
 
-.hero-band__reference {
-  display: none;
-}
-
-#homeView .hero-band {
-  padding-block-start: min(64vw, 16rem);
-  background-color: var(--color-sky-soft);
-  background-image: url("/assets/home-couple-reference.webp");
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-size: 100% auto;
-}
-
 #homeView .hub-card {
   width: 100%;
   font-family: var(--font-body);
@@ -3235,10 +3372,6 @@ body {
   width: min(100%, 20rem);
   height: auto;
   border-radius: var(--radius-lg);
-}
-
-.notice-banner--scam-types {
-  display: none;
 }
 
 @media (min-width: 56rem) {
@@ -3332,26 +3465,6 @@ body {
     display: contents;
   }
 
-  #homeView .hero-band {
-    grid-area: hero;
-    display: block;
-    width: 100%;
-    min-height: 0;
-    margin: 0;
-    padding: 0;
-    aspect-ratio: 901 / 388;
-    border-radius: var(--radius-xl);
-    background: var(--color-sky-soft);
-  }
-
-  #homeView .hero-band__reference {
-    display: block;
-    width: 100%;
-    height: 100%;
-    border-radius: inherit;
-    object-fit: cover;
-  }
-
   #homeView .hub-cards {
     grid-area: voice;
     max-width: none;
@@ -3431,7 +3544,7 @@ body {
   }
 
   #homeView .hub-tile__lead {
-    font-size: 0.87rem;
+    font-size: var(--text-xs);
     line-height: 1.4;
   }
 
@@ -3583,11 +3696,11 @@ body {
   }
 
   #homeView .reassurance-chip__title {
-    font-size: 0.83rem;
+    font-size: var(--text-xs);
   }
 
   #homeView .reassurance-chip__lead {
-    font-size: 0.72rem;
+    font-size: var(--text-xs);
     line-height: 1.35;
   }
 
@@ -3685,16 +3798,17 @@ body {
     flex: 0 0 auto;
     width: 100%;
     min-height: 4.25rem;
-    font-size: 0.72rem;
+    font-size: var(--text-xs);
   }
 }
 
 /* Khoan Đã · decision-support workspace · calm utility · green/orange */
 .icon-stop-circle { --icon-source: url("/vendor/unicons/stop-circle.svg"); }
 
-html[data-font-size="small"] { font-size: 15px; }
-html[data-font-size="medium"] { font-size: 17px; }
-html[data-font-size="large"] { font-size: 20px; }
+/* Bậc cỡ chữ lấy từ token — sửa một chỗ duy nhất trong tokens.css. */
+html[data-font-size="small"] { font-size: var(--root-font-small); }
+html[data-font-size="medium"] { font-size: var(--root-font-medium); }
+html[data-font-size="large"] { font-size: var(--root-font-large); }
 
 .brand__title { color: var(--color-accent-deep); }
 .brand__tagline { color: var(--color-ink-2); }
@@ -3759,7 +3873,7 @@ html[data-font-size="large"] { font-size: 20px; }
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  min-height: 3.5rem;
+  min-height: var(--touch-target-primary);
   padding: var(--space-3);
   border-block: 1px solid var(--color-rule);
   color: var(--color-accent-deep);
@@ -3796,14 +3910,14 @@ html[data-font-size="large"] { font-size: 20px; }
   margin-block: var(--space-4);
   padding: var(--space-4);
   border: 2px solid var(--color-warning);
-  border-radius: var(--radius-card);
+  border-radius: var(--radius-md);
   background: var(--color-warning-soft);
   color: var(--color-ink);
 }
 .pressure-guide__count { margin: 0 0 var(--space-2); color: var(--color-warning); font-weight: 800; }
 .pressure-guide h3 { margin: 0 0 var(--space-2); font-size: var(--text-lg); }
 .pressure-guide__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
-.pressure-guide__actions .button { min-height: 48px; }
+.pressure-guide__actions .button { min-height: var(--touch-target); }
 
 .support-callout { display: flex; gap: var(--space-3); align-items: flex-start; padding: var(--space-4); border: 1px solid var(--color-notice-line); background: var(--color-notice-soft); color: var(--color-ink); }
 .support-directory { display: grid; gap: var(--space-4); margin-block: var(--space-5); }
@@ -3822,19 +3936,6 @@ html[data-font-size="large"] { font-size: 20px; }
 
 @media (min-width: 56rem) {
   .topbar { gap: var(--space-4); }
-  #homeView .hero-band__reference { display: none; }
-  #homeView .hero-band {
-    display: grid;
-    grid-template-columns: minmax(17rem, 0.9fr) minmax(0, 1.1fr);
-    align-items: center;
-    min-height: 24rem;
-    padding: var(--space-6);
-    background-color: var(--color-sky-soft);
-    background-image: url("/assets/home-couple-reference.webp");
-    background-position: left bottom;
-    background-repeat: no-repeat;
-    background-size: 48% auto;
-  }
 }
 
 @media (max-width: 55.99rem) {
@@ -3850,7 +3951,7 @@ html[data-font-size="large"] { font-size: 20px; }
 
 @media (max-width: 28rem) {
   .voice-guide-toggle span:last-child,
-  .system-status { font-size: 0.78rem; }
+  .system-status { font-size: var(--text-xs); }
   .home-quick-links a { white-space: normal; }
 }
 
@@ -4146,7 +4247,7 @@ html[data-font-size="large"] { font-size: 20px; }
 
 .onboarding__bubble {
   padding: 0.58rem 0.7rem;
-  font-size: 0.84rem;
+  font-size: var(--text-xs);
 }
 
 .onboarding__bubble--bot {
@@ -4189,14 +4290,14 @@ html[data-font-size="large"] { font-size: 20px; }
 
 .onboarding__bubble--user {
   max-width: 78%;
-  font-size: 0.82rem;
+  font-size: var(--text-xs);
 }
 
 .onboarding__alert-card,
 .onboarding__safe-card {
   padding: 0.62rem 0.75rem;
   border-radius: 1rem;
-  font-size: 0.78rem;
+  font-size: var(--text-xs);
   box-shadow: 0 0.35rem 0.85rem rgb(30 91 177 / 0.08);
 }
 
@@ -4219,7 +4320,7 @@ html[data-font-size="large"] { font-size: 20px; }
 .onboarding__branch-actions button {
   min-height: 3rem;
   border-radius: 0.75rem;
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
   line-height: 1.15;
 }
 
@@ -4266,7 +4367,7 @@ html[data-font-size="large"] { font-size: 20px; }
   .onboarding__brand h1 { font-size: 2.2rem; }
   .onboarding__brand p { font-size: 0.98rem; }
   .onboarding__welcome-art { height: 16rem; }
-  .onboarding__welcome-panel > p { font-size: 0.82rem; }
+  .onboarding__welcome-panel > p { font-size: var(--text-xs); }
 }
 
 @media (max-width: 30rem) {
@@ -4346,12 +4447,8 @@ body:has(#homeView:not([hidden])) {
 
 #homeView .hero-band {
   display: block;
-  aspect-ratio: auto;
-  gap: 0;
-  min-height: 0;
   margin: 0 0 var(--space-5);
-  padding: 0;
-  overflow: hidden;
+  padding: var(--space-5);
   border: 1px solid var(--color-sky-line);
   border-radius: var(--radius-lg);
   background-color: var(--color-sky-soft);
@@ -4359,12 +4456,13 @@ body:has(#homeView:not([hidden])) {
   box-shadow: var(--shadow-sm);
 }
 
-#homeView .hero-band__reference {
+#homeView .hero-band__copy {
+  max-width: var(--reading-width);
+}
+
+#homeView .hero-band__copy h1 span {
   display: block;
-  width: 100%;
-  height: auto;
-  border-radius: inherit;
-  object-fit: contain;
+  color: var(--color-accent-deep);
 }
 
 /* Base styling for the real-text hero copy so it also reads well at tablet
@@ -4459,7 +4557,7 @@ body:has(#homeView:not([hidden])) {
 #homeView .hub-tile__lead {
   min-height: 2.7em;
   color: var(--color-ink-2);
-  font-size: 0.82rem;
+  font-size: var(--text-xs);
 }
 
 #homeView .hub-tile__arrow {
@@ -4560,7 +4658,7 @@ body:has(#homeView:not([hidden])) {
   width: auto;
   min-width: 0;
   min-height: 4rem;
-  font-size: 0.62rem;
+  font-size: var(--text-xs);
   white-space: nowrap;
 }
 
@@ -4594,7 +4692,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   .bottom-nav__item {
-    font-size: 0.78rem;
+    font-size: var(--text-xs);
   }
 }
 
@@ -4605,16 +4703,11 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .hub-card__lead {
-    font-size: 0.76rem;
+    font-size: var(--text-xs);
   }
 }
 
 @media (min-width: 48rem) and (max-width: 55.999rem) {
-  #homeView .hero-band {
-    display: block;
-    min-height: 0;
-  }
-
   #homeView .hub-card__icon {
     width: 4.25rem;
     height: 4.25rem;
@@ -4760,10 +4853,6 @@ body:has(#homeView:not([hidden])) {
     line-height: 1.5;
   }
 
-  #homeView .hero-band::after {
-    display: none;
-  }
-
   #homeView #recoveryBanner { grid-area: recovery; margin: 0; }
   #homeView .hub-cards { grid-area: voice; min-width: 0; align-self: start; }
 
@@ -4808,7 +4897,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .hub-tile__lead {
-    font-size: 0.84rem;
+    font-size: var(--text-xs);
   }
 
   #homeView .home-sidebar {
@@ -4851,7 +4940,7 @@ body:has(#homeView:not([hidden])) {
 
   .bottom-nav__item {
     min-height: 4.5rem;
-    font-size: 0.86rem;
+    font-size: var(--text-xs);
   }
 }
 
@@ -4958,7 +5047,7 @@ body:has(#homeView:not([hidden])) {
 
   .system-status {
     padding-inline: var(--space-1);
-    font-size: 0.86rem;
+    font-size: var(--text-xs);
   }
 
   .font-size-control button,
@@ -4970,23 +5059,12 @@ body:has(#homeView:not([hidden])) {
   .voice-guide-toggle {
     justify-content: center;
     padding-inline: 0;
-    font-size: 0.86rem;
+    font-size: var(--text-xs);
   }
 
   .system-status__prefix,
   .voice-guide-toggle__label {
     display: none;
-  }
-
-  #homeView .hero-band {
-    aspect-ratio: 1.72;
-  }
-
-  #homeView .hero-band__reference {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center center;
   }
 
   #homeView .hub-card--primary {
@@ -5050,7 +5128,7 @@ body:has(#homeView:not([hidden])) {
 
   .bottom-nav__item {
     min-height: 3.85rem;
-    font-size: 0.72rem;
+    font-size: var(--text-xs);
   }
 }
 
@@ -5061,7 +5139,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .hub-card__lead {
-    font-size: 0.84rem;
+    font-size: var(--text-xs);
   }
 
   #homeView .hub-tile__title {
@@ -5069,7 +5147,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .hub-tile__lead {
-    font-size: 0.82rem;
+    font-size: var(--text-xs);
   }
 }
 
@@ -5097,7 +5175,7 @@ body:has(#homeView:not([hidden])) {
 
   html[data-font-size="large"] .bottom-nav__item {
     min-height: 4.35rem;
-    font-size: 0.62rem;
+    font-size: var(--text-xs);
     line-height: 1.05;
     white-space: normal;
     text-align: center;
@@ -5158,7 +5236,7 @@ body:has(#homeView:not([hidden])) {
     max-width: min(42vw, 15rem);
     margin-block-start: var(--space-1);
     color: var(--color-ink-2);
-    font-size: 0.84rem;
+    font-size: var(--text-xs);
     line-height: 1.35;
     white-space: normal;
   }
@@ -5179,7 +5257,7 @@ body:has(#homeView:not([hidden])) {
     background: transparent;
     box-shadow: none;
     color: var(--color-ink);
-    font-size: 0.86rem;
+    font-size: var(--text-xs);
     white-space: nowrap;
   }
 
@@ -5242,7 +5320,7 @@ body:has(#homeView:not([hidden])) {
     box-shadow: var(--shadow-sm);
     color: var(--color-ink);
     font-family: var(--font-display);
-    font-size: 0.76rem;
+    font-size: var(--text-xs);
     font-weight: 700;
     line-height: 1.25;
     text-align: center;
@@ -5355,7 +5433,7 @@ body:has(#homeView:not([hidden])) {
   #homeView .emergency-banner__lead--mobile {
     margin-block-start: var(--space-1);
     color: var(--color-ink-2);
-    font-size: 0.72rem;
+    font-size: var(--text-xs);
     line-height: 1.35;
   }
 
@@ -5370,7 +5448,7 @@ body:has(#homeView:not([hidden])) {
     background: var(--color-danger);
     color: var(--color-danger-ink);
     font-family: var(--font-display);
-    font-size: 0.82rem;
+    font-size: var(--text-xs);
     font-weight: 700;
     white-space: nowrap;
   }
@@ -5401,7 +5479,7 @@ body:has(#homeView:not([hidden])) {
     min-width: 0;
     border-inline-end: 1px solid var(--color-rule);
     color: var(--color-ink);
-    font-size: 0.68rem;
+    font-size: var(--text-xs);
     white-space: nowrap;
   }
 
@@ -5463,7 +5541,7 @@ body:has(#homeView:not([hidden])) {
     padding: var(--space-2) var(--space-1);
     border-radius: var(--radius-lg);
     color: var(--color-muted);
-    font-size: 0.66rem;
+    font-size: var(--text-xs);
     line-height: 1;
     white-space: nowrap;
   }
@@ -5564,11 +5642,11 @@ body:has(#homeView:not([hidden])) {
 
   body:has(#homeView:not([hidden])) .topbar .brand__tagline {
     max-width: 8.4rem;
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
 
   body:has(#homeView:not([hidden])) .topbar .greeting-chip {
-    font-size: 0.8rem;
+    font-size: var(--text-xs);
   }
 
   body:has(#homeView:not([hidden])) .topbar .greeting-chip__avatar {
@@ -5581,7 +5659,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .mobile-action {
-    font-size: 0.64rem;
+    font-size: var(--text-xs);
   }
 
   #homeView .mobile-action__icon {
@@ -5593,10 +5671,10 @@ body:has(#homeView:not([hidden])) {
     display: none;
   }
 
-  #homeView .mobile-trust-strip > span { font-size: 0.62rem; }
+  #homeView .mobile-trust-strip > span { font-size: var(--text-xs); }
 
   .mobile-bottom-nav .mobile-bottom-nav__item {
-    font-size: 0.61rem;
+    font-size: var(--text-xs);
   }
 }
 
@@ -5758,7 +5836,7 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .mobile-reference-top__brand-tagline {
     color: var(--color-ink-2);
-    font-size: 0.72rem;
+    font-size: var(--text-xs);
     font-weight: 500;
     line-height: 1.2;
   }
@@ -5929,7 +6007,7 @@ body:has(#homeView:not([hidden])) {
     padding-inline: var(--space-2);
     background: var(--color-accent);
     color: var(--color-accent-ink);
-    font-size: clamp(0.82rem, 3.1vw, 0.94rem);
+    font-size: clamp(0.875rem, 3.1vw, 0.94rem);
     line-height: 1;
     white-space: nowrap;
   }
@@ -5977,7 +6055,7 @@ body:has(#homeView:not([hidden])) {
     margin: 0;
     overflow: hidden;
     color: var(--color-muted);
-    font-size: 0.72rem;
+    font-size: var(--text-xs);
     line-height: 1.25;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -6040,12 +6118,6 @@ body:has(#homeView:not([hidden])) {
     z-index: 1;
   }
 
-  #homeView .mobile-action-grid,
-  #homeView .mobile-trust-strip,
-  #homeView .notice-banner--scam-types {
-    display: none;
-  }
-
   #homeView .hub-cards,
   #homeView .hub-tile-grid,
   #homeView .reassurance-band,
@@ -6089,7 +6161,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .hub-card__lead {
-    font-size: clamp(0.72rem, 2.7vw, 0.9rem);
+    font-size: clamp(0.875rem, 2.7vw, 0.9rem);
     line-height: 1.35;
   }
 
@@ -6120,7 +6192,7 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .hub-tile__title {
-    font-size: clamp(0.8rem, 3vw, 1rem);
+    font-size: clamp(0.875rem, 3vw, 1rem);
     white-space: nowrap;
   }
 
@@ -6134,7 +6206,7 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .hub-tile__lead {
     min-height: 2.7em;
-    font-size: clamp(0.68rem, 2.6vw, 0.86rem);
+    font-size: clamp(0.875rem, 2.6vw, 0.875rem);
   }
 
   #homeView .hub-tile__arrow {
@@ -6150,7 +6222,7 @@ body:has(#homeView:not([hidden])) {
     border-radius: var(--radius-full);
     background: var(--color-danger-soft);
     color: var(--color-danger-deep);
-    font-size: 0.78rem;
+    font-size: var(--text-xs);
   }
 
   #homeView .eyebrow--danger::before {
@@ -6203,12 +6275,12 @@ body:has(#homeView:not([hidden])) {
   }
 
   #homeView .emergency-banner__title {
-    font-size: clamp(0.86rem, 3vw, 1.05rem);
+    font-size: clamp(0.875rem, 3vw, 1.05rem);
     white-space: nowrap;
   }
 
   #homeView .emergency-banner__lead {
-    font-size: clamp(0.72rem, 2.6vw, 0.9rem);
+    font-size: clamp(0.875rem, 2.6vw, 0.9rem);
   }
 
   #homeView .reassurance-band {
@@ -6393,7 +6465,7 @@ body:has(#homeView:not([hidden])) {
     padding: var(--space-1) var(--space-2);
     border-radius: var(--radius-lg);
     color: var(--color-muted);
-    font-size: 0.76rem;
+    font-size: var(--text-xs);
     font-weight: 700;
     line-height: 1;
     text-decoration: none;
@@ -6491,7 +6563,7 @@ body:has(#homeView:not([hidden])) {
     min-width: 0;
     min-height: var(--touch-target);
     padding-inline: var(--space-2);
-    font-size: clamp(0.72rem, 2.8vw, 0.9rem);
+    font-size: clamp(0.875rem, 2.8vw, 0.9rem);
     white-space: nowrap;
   }
 
@@ -6533,7 +6605,7 @@ body:has(#homeView:not([hidden])) {
     padding: 4px 2px;
     border-radius: var(--radius-lg);
     color: var(--color-muted);
-    font-size: clamp(0.56rem, 2.5vw, 0.68rem);
+    font-size: clamp(0.875rem, 2.6vw, 0.875rem);
     font-weight: 700;
     line-height: 1.05;
     text-decoration: none;
@@ -6568,7 +6640,7 @@ body:has(#homeView:not([hidden])) {
 
   .danger-dialog__content {
     min-height: 100%;
-    padding-block-end: calc(var(--space-8) + env(safe-area-inset-bottom));
+    padding-block: 0;
     overflow-y: auto;
   }
 }
@@ -6616,7 +6688,7 @@ body:has(#homeView:not([hidden])) {
         thắng luật html[data-font-size="large"] .bottom-nav__item. */
   .mobile-bottom-nav .mobile-bottom-nav__item,
   html[data-font-size] .mobile-bottom-nav .mobile-bottom-nav__item {
-    font-size: clamp(0.85rem, 3.4vw, 1rem);
+    font-size: clamp(0.875rem, 3.4vw, 1rem);
     line-height: 1.15;
     white-space: normal;
   }
@@ -6719,7 +6791,6 @@ body:has(#homeView:not([hidden])) {
   #homeView .hub-tile-grid > a[href="#chuyen-khoan"] {
     display: flex;
   }
-
   #homeView .hub-tile-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -6966,7 +7037,7 @@ body:has(#homeView:not([hidden])) {
   #homeView .mobile-situation-form__status,
   #homeView .mobile-situation-form__error {
     margin-inline: var(--space-3);
-    font-size: 0.78rem;
+    font-size: var(--text-xs);
   }
 
   #homeView .home-suggestion-chips,
@@ -6997,7 +7068,7 @@ body:has(#homeView:not([hidden])) {
     background: color-mix(in srgb, var(--color-surface) 96%, var(--color-sky-pale));
     box-shadow: 0 0.35rem 1rem rgb(32 76 133 / 0.1);
     color: var(--color-ink);
-    font-size: clamp(0.64rem, 2.7vw, 0.82rem);
+    font-size: clamp(var(--text-xs), 2.7vw, var(--text-xs));
     line-height: 1.2;
   }
 
@@ -7066,7 +7137,7 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .emergency-banner__title--mobile {
     color: var(--color-danger-deep);
-    font-size: clamp(0.78rem, 3vw, 1rem);
+    font-size: clamp(var(--text-xs), 3vw, 1rem);
     text-transform: none;
     white-space: nowrap;
   }
@@ -7074,7 +7145,7 @@ body:has(#homeView:not([hidden])) {
   #homeView .emergency-banner__lead--mobile {
     margin-block-start: var(--space-1);
     color: var(--color-ink-2);
-    font-size: clamp(0.55rem, 2.2vw, 0.82rem);
+    font-size: var(--text-xs);
     line-height: 1.3;
   }
 
@@ -7084,7 +7155,7 @@ body:has(#homeView:not([hidden])) {
     min-height: 44px;
     padding-inline: clamp(0.25rem, 1vw, 0.65rem);
     border-radius: clamp(0.85rem, 3vw, 1.35rem);
-    font-size: clamp(0.72rem, 2.7vw, 0.9rem);
+    font-size: clamp(var(--text-xs), 2.7vw, 0.9rem);
   }
 
   #homeView .mobile-trust-strip {
@@ -7102,7 +7173,7 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .mobile-trust-strip > span {
     gap: clamp(0.2rem, 1vw, 0.45rem);
-    font-size: clamp(0.58rem, 2.4vw, 0.76rem);
+    font-size: var(--text-xs);
   }
 
   #homeView .mobile-trust-strip .icon {
@@ -7133,7 +7204,7 @@ body:has(#homeView:not([hidden])) {
     min-height: clamp(3rem, 11vw, 3.6rem);
     padding: 0.3rem 0.1rem;
     border-radius: clamp(1rem, 4vw, 1.5rem);
-    font-size: clamp(0.58rem, 2.35vw, 0.72rem);
+    font-size: var(--text-xs);
     line-height: 1.1;
     white-space: nowrap;
   }
@@ -7151,7 +7222,7 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .mobile-action {
     min-height: 6rem;
-    font-size: 0.6rem;
+    font-size: var(--text-xs);
   }
 
   #homeView .emergency-banner__lead--mobile {
@@ -7215,7 +7286,7 @@ body:has(#homeView:not([hidden])) {
   #homeView .mobile-home-followup__head p {
     margin: var(--space-1) 0 0;
     color: var(--color-muted);
-    font-size: clamp(0.78rem, 3vw, 0.92rem);
+    font-size: clamp(var(--text-xs), 3vw, 0.92rem);
     line-height: 1.4;
   }
 
@@ -7290,7 +7361,7 @@ body:has(#homeView:not([hidden])) {
 
   #homeView .mobile-home-followup__text > span {
     color: var(--color-muted);
-    font-size: clamp(0.72rem, 2.8vw, 0.86rem);
+    font-size: var(--text-xs);
     line-height: 1.35;
   }
 

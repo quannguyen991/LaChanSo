@@ -458,6 +458,9 @@ const elements = {
   dangerUploadEvidenceButton: document.querySelector("#dangerUploadEvidenceButton"),
   dangerEvidenceInput: document.querySelector("#dangerEvidenceInput"),
   closeDangerButton: document.querySelector("#closeDangerButton"),
+  dangerWhy: document.querySelector("#dangerWhy"),
+  dangerScriptLine: document.querySelector("#dangerScriptLine"),
+  dangerScriptSpeakButton: document.querySelector("#dangerScriptSpeakButton"),
 
   onboarding: document.querySelector("#onboarding"),
   onboardingScreens: document.querySelectorAll("[data-onboarding-step]"),
@@ -1094,6 +1097,10 @@ function openDangerDialog(mode) {
   elements.closeDangerButton.hidden = isPressureMode;
   elements.dangerUploadEvidenceButton.hidden = !isPressureMode;
   elements.dangerDialog.dataset.mode = mode;
+  // Mở lại hộp thoại phải luôn thu gọn phần giải thích, nếu không lần cảnh báo
+  // sau sẽ đẩy 6 mục cứu người xuống dưới nếp gấp. Chế độ thúc ép thì mở sẵn
+  // vì nút chụp bằng chứng nằm trong đó.
+  elements.dangerWhy.open = isPressureMode;
   pressureStepIndex = 0;
   renderPressureStep();
   startDangerCountdown();
@@ -3237,6 +3244,7 @@ elements.callFamilyButton.addEventListener("click", callFamily);
 elements.dangerCallButton.addEventListener("click", callFamily);
 elements.dangerBankCallButton.addEventListener("click", callBank);
 elements.dangerReadButton.addEventListener("click", speakResult);
+elements.dangerScriptSpeakButton.addEventListener("click", () => speakExitScript(elements.dangerScriptLine.textContent));
 elements.dangerExitCallButton.addEventListener("click", openExitCallView);
 elements.readResultButton.addEventListener("click", speakResult);
 elements.familyForm.addEventListener("submit", saveSettings);

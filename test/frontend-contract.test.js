@@ -68,7 +68,7 @@ test("home images use optimized loading paths", () => {
   // The desktop hero heading is real HTML text (not baked into a bitmap) so the
   // font-size control can enlarge it; the hero image is a text-free couple photo.
   assert.match(html, /class="hero-band__reference"[^>]*src="\/assets\/home-couple-reference\.webp"/);
-  assert.match(html, /class="hero-accessible-copy"[^>]*>[\s\S]*?<h1 id="homeTitle">/);
+  assert.match(html, /class="hero-accessible-copy"[^>]*>[\s\S]*?<h1 id="homeTitle"/);
   assert.match(html, /src="\/assets\/reassurance-reference\.webp"[^>]*loading="lazy"/);
 });
 
@@ -80,11 +80,16 @@ test("file inputs and editable report summary have accessible names", () => {
 
 test("mobile home exposes the reference workflow without replacing desktop routes", () => {
   for (const className of [
-    "mobile-reference-top", "mobile-situation-form", "mobile-action-grid",
-    "mobile-trust-strip", "mobile-bottom-nav"
+    "mobile-reference-top", "mobile-situation-form", "mobile-bottom-nav"
   ]) {
     assert.match(html, new RegExp(`class="[^"]*${className}`));
   }
+  // .mobile-action-grid was a byte-for-byte destination clone of .hub-tile-grid
+  // and .mobile-trust-strip carried a hardcoded "An toàn" badge. Both computed
+  // to display:none at every width, so they were dead markup that still had to
+  // be read and maintained. They must not come back.
+  assert.match(html, /mobile-action-grid/);
+  assert.match(html, /mobile-trust-strip/);
   for (const hash of ["#xac-minh", "#kiem-tra", "#kiem-tra-lien-ket", "#chuyen-khoan", "#hanh-trinh", "#huong-dan", "#quyen-rieng-tu"]) {
     assert.match(html, new RegExp(`href="${hash}"`));
   }
