@@ -6851,7 +6851,8 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
 /* Desktop-only balance pass. Mobile keeps the existing app layout unchanged. */
 .onboarding-web,
 .case-empty-desktop,
-.onboarding__button--back {
+.onboarding__button--back,
+.desktop-home-redesign {
   display: none;
 }
 
@@ -8081,4 +8082,39 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     font-size: clamp(2.8rem, 4vw, 4.5rem) !important;
     line-height: 1.05 !important;
   }
+
+  html[data-route="trang-chu"] body #homeView > .home-layout { display: none !important; }
+  html[data-route="trang-chu"] body #homeView > .desktop-home-redesign { display: block !important; width: min(100%, 80rem) !important; margin: 0 auto !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__hero { display: grid !important; grid-template-columns: 31% 69% !important; align-items: center !important; min-height: 23rem !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__mascot { display: grid !important; place-items: end center !important; height: 100% !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__mascot img { width: min(100%, 24rem) !important; height: auto !important; filter: drop-shadow(0 1rem 1.2rem rgb(84 53 168 / .14)) !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__hero-copy { min-width: 0 !important; padding: 1rem 0 0 1rem !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__hero-copy h1 { margin: 0 !important; color: #4a32c9 !important; font-family: var(--font-display) !important; font-size: clamp(2.5rem, 4vw, 4rem) !important; line-height: 1.08 !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__hero-copy p { margin: .7rem 0 1.3rem !important; color: #687098 !important; font-size: 1.12rem !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__composer { display: grid !important; grid-template-columns: auto minmax(0, 1fr) auto auto auto !important; align-items: center !important; gap: .55rem !important; min-height: 4.5rem !important; padding: .55rem .7rem .55rem 1.1rem !important; border: 1px solid #e7e1fa !important; border-radius: 1.35rem !important; background: #fff !important; box-shadow: 0 .7rem 1.5rem rgb(74 50 150 / .1) !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__composer input { min-width: 0 !important; border: 0 !important; outline: 0 !important; background: transparent !important; color: #15125a !important; font: inherit !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__composer > .icon { width: 1.4rem !important; height: 1.4rem !important; color: #687098 !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__ai { display: inline-flex !important; align-items: center !important; gap: .35rem !important; min-height: 2.8rem !important; padding: 0 .85rem !important; border: 1px solid #ded5ff !important; border-radius: 999px !important; background: #faf8ff !important; color: #6845df !important; font-weight: 800 !important; white-space: nowrap !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__voice { display: grid !important; place-items: center !important; width: 2.8rem !important; height: 2.8rem !important; border: 1px solid #e7e1fa !important; border-radius: 50% !important; background: #fff !important; color: #15125a !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__submit { min-height: 2.95rem !important; padding: 0 1.25rem !important; border: 0 !important; border-radius: .85rem !important; background: linear-gradient(135deg,#8a70ff,#6646e8) !important; color: #fff !important; font-weight: 850 !important; white-space: nowrap !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__quick { margin-top: 1.15rem !important; padding: .85rem 1rem 1rem !important; border: 1px solid #e7e1fa !important; border-radius: 1.2rem !important; background: rgb(255 255 255 / .72) !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__quick-head { display: flex !important; justify-content: space-between !important; color: #687098 !important; font-size: .85rem !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__quick-head strong { color: #6845df !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__quick-list { display: flex !important; flex-wrap: wrap !important; gap: .55rem !important; margin-top: .65rem !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__quick-list > * { display: inline-flex !important; align-items: center !important; gap: .35rem !important; min-height: 2.5rem !important; padding: 0 .85rem !important; border: 1px solid #e7e1fa !important; border-radius: 999px !important; background: #fff !important; color: #15125a !important; font-size: .88rem !important; text-decoration: none !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__heading { margin: 1.6rem 0 .9rem !important; text-align: center !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__heading h2 { margin: 0 !important; color: #15125a !important; font-size: 1.65rem !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__heading p { margin: .3rem 0 0 !important; color: #687098 !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__cards { display: grid !important; grid-template-columns: repeat(3,minmax(0,1fr)) !important; gap: 1rem !important; }
+  html[data-route="trang-chu"] body .desktop-support-card { display: grid !important; grid-template-columns: auto 1fr !important; gap: .45rem .7rem !important; padding: 1.15rem !important; border: 1px solid #e7e1fa !important; border-radius: 1.15rem !important; background: #fff !important; box-shadow: 0 .45rem 1.2rem rgb(74 50 150 / .07) !important; }
+  html[data-route="trang-chu"] body .desktop-support-card__icon { display: grid !important; place-items: center !important; grid-row: 1 / 3 !important; width: 3.2rem !important; height: 3.2rem !important; border-radius: 50% !important; background: #eeeafe !important; color: #7257f6 !important; }
+  html[data-route="trang-chu"] body .desktop-support-card--alert .desktop-support-card__icon { background: #fff0f1 !important; color: #f04452 !important; }
+  html[data-route="trang-chu"] body .desktop-support-card h3 { margin: .2rem 0 0 !important; color: #15125a !important; font-size: 1.05rem !important; }
+  html[data-route="trang-chu"] body .desktop-support-card p { grid-column: 2 !important; margin: 0 !important; color: #687098 !important; font-size: .86rem !important; line-height: 1.4 !important; }
+  html[data-route="trang-chu"] body .desktop-support-card a { grid-column: 1 / -1 !important; display: flex !important; justify-content: space-between !important; align-items: center !important; min-height: 2.45rem !important; padding: 0 .7rem !important; border: 1px solid #e7e1fa !important; border-radius: .75rem !important; color: #15125a !important; font-size: .82rem !important; text-decoration: none !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards { display: grid !important; grid-template-columns: repeat(2,minmax(0,24rem)) !important; justify-content: center !important; gap: 1rem !important; margin-top: 1rem !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards > a { display: grid !important; grid-template-columns: auto 1fr auto !important; align-items: center !important; gap: .75rem !important; min-height: 5rem !important; padding: .8rem 1rem !important; border: 1px solid #e7e1fa !important; border-radius: 1rem !important; background: #fff !important; color: #15125a !important; text-decoration: none !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards strong,
+  html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards small { display: block !important; }
+  html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards small { margin-top: .25rem !important; color: #687098 !important; }
 }

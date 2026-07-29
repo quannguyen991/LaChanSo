@@ -3812,6 +3812,21 @@ elements.homeSuggestionButtons.forEach((button) => button.addEventListener("clic
   elements.mobileSituationInput.dispatchEvent(new Event("input", { bubbles: true }));
   elements.mobileSituationInput.focus({ preventScroll: true });
 }));
+
+const desktopHomeComposer = document.querySelector("#desktopHomeComposer");
+const desktopHomeInput = document.querySelector("#desktopHomeInput");
+desktopHomeComposer?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const value = desktopHomeInput?.value.trim();
+  if (!value) {
+    desktopHomeInput?.focus();
+    return;
+  }
+  elements.mobileSituationInput.value = value;
+  elements.mobileSituationInput.dispatchEvent(new Event("input", { bubbles: true }));
+  elements.mobileSituationForm.requestSubmit();
+});
+
 elements.homeSupportButton.addEventListener("click", callFamily);
 elements.homeAlertFamilyCall?.addEventListener("click", callFamily);
 elements.homeAlertFamilySms?.addEventListener("click", alertFamilyBySms);
