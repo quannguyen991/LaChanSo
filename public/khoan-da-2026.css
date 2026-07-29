@@ -8027,4 +8027,23 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
 
   .desktop-search { justify-self: start !important; width: min(22rem, 100%) !important; }
   .topbar__actions { justify-self: end !important; }
+
+  html[data-route="trang-chu"] body #homeView .mobile-reference-top__intro { display: contents !important; }
+  html[data-route="trang-chu"] body #homeView .mobile-reference-top__art {
+    position: static !important;
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    justify-self: center !important;
+    align-self: end !important;
+    right: auto !important;
+    left: auto !important;
+    width: min(100%, 25rem) !important;
+  }
+  html[data-route="trang-chu"] body #homeView .mobile-reference-top__copy {
+    position: static !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    width: auto !important;
+  }
+  html[data-route="trang-chu"] body #homeView .mobile-situation-form__actions { position: static !important; }
 }
