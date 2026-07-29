@@ -6562,6 +6562,70 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   }
 }
 
+/* One centered desktop rail: search/actions share the bar with nav icons. */
+@media (min-width: 64rem) {
+  body { padding-top: 5.2rem !important; }
+
+  .desktop-sidebar-brand {
+    inset: 1.25rem auto auto 2rem !important;
+    z-index: 101 !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    inset: 1rem auto auto 50% !important;
+    z-index: 103 !important;
+    width: 24rem !important;
+    height: 3.9rem !important;
+    padding: 0 !important;
+    transform: translateX(-50%) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner {
+    justify-content: center !important;
+    gap: 0.18rem !important;
+    padding: 0 !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item {
+    flex-basis: 2.65rem !important;
+    width: 2.65rem !important;
+    min-height: 2.65rem !important;
+    padding: 0.18rem !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+    padding: 0.36rem !important;
+  }
+
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    inset: 1rem 1rem auto 1rem !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 3.9rem !important;
+    height: 3.9rem !important;
+    grid-template-columns: minmax(14rem, 1fr) auto minmax(14rem, 1fr) !important;
+    transform: none !important;
+  }
+
+  .desktop-search {
+    justify-self: start !important;
+    width: min(22rem, 100%) !important;
+  }
+
+  .topbar__actions { justify-self: end !important; }
+  #noi-dung { margin-top: 5rem !important; }
+}
+
 /* Hallmark · pre-emit critique: P4 H5 E4 S5 R4 V4 */
 /* Desktop-only balance pass. Mobile keeps the existing app layout unchanged. */
 .onboarding-web,
@@ -7379,6 +7443,39 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   }
 }
 
+/* Final override: keep navigation and search in one compact top rail. */
+@media (min-width: 64rem) {
+  body { padding-top: 5.2rem !important; }
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    inset: 1rem auto auto 50% !important;
+    width: 24rem !important;
+    height: 3.9rem !important;
+    padding: 0 !important;
+    transform: translateX(-50%) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner { gap: 0.18rem !important; padding: 0 !important; }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item { flex-basis: 2.65rem !important; width: 2.65rem !important; min-height: 2.65rem !important; padding: 0.18rem !important; }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon { width: 1.8rem !important; height: 1.8rem !important; padding: 0.36rem !important; }
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    inset: 1rem 1rem auto 1rem !important;
+    min-height: 3.9rem !important;
+    height: 3.9rem !important;
+    grid-template-columns: minmax(14rem, 1fr) auto minmax(14rem, 1fr) !important;
+    transform: none !important;
+  }
+  .desktop-search { justify-self: start !important; width: min(22rem, 100%) !important; }
+  .topbar__actions { justify-self: end !important; }
+  #noi-dung { margin-top: 5rem !important; }
+}
+
 @media (min-width: 64rem) {
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
     background: currentColor !important;
@@ -7537,6 +7634,42 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     width: min(25rem, 100%) !important;
     grid-template-columns: auto minmax(0, 1fr) !important;
   }
+}
+
+@media (min-width: 64rem) {
+  body { padding-top: 5.2rem !important; }
+  .desktop-sidebar-brand { inset: 1.25rem auto auto 2rem !important; z-index: 101 !important; }
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    inset: 1rem auto auto 50% !important;
+    z-index: 103 !important;
+    width: 24rem !important;
+    height: 3.9rem !important;
+    padding: 0 !important;
+    transform: translateX(-50%) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner { justify-content: center !important; gap: 0.18rem !important; padding: 0 !important; }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item { flex-basis: 2.65rem !important; width: 2.65rem !important; min-height: 2.65rem !important; padding: 0.18rem !important; }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon { width: 1.8rem !important; height: 1.8rem !important; padding: 0.36rem !important; }
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    inset: 1rem 1rem auto 1rem !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 3.9rem !important;
+    height: 3.9rem !important;
+    grid-template-columns: minmax(14rem, 1fr) auto minmax(14rem, 1fr) !important;
+    transform: none !important;
+  }
+  .desktop-search { justify-self: start !important; width: min(22rem, 100%) !important; }
+  .topbar__actions { justify-self: end !important; }
+  #noi-dung { margin-top: 5rem !important; }
 }
 
 /* Final desktop taskbar position: one compact horizontal rail at the top. */
