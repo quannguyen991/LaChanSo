@@ -8044,6 +8044,13 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     grid-column: 2 !important;
     grid-row: 1 !important;
     width: auto !important;
+    max-width: none !important;
+    justify-self: stretch !important;
+  }
+  html[data-route="trang-chu"] body #homeView .mobile-situation-form {
+    height: auto !important;
+    min-height: 0 !important;
   }
   html[data-route="trang-chu"] body #homeView .mobile-situation-form__actions { position: static !important; }
+  html[data-route="trang-chu"] body #homeView .mobile-situation-form__box { min-height: 3.5rem !important; }
 }
