@@ -8120,4 +8120,125 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
 
   .topbar > .desktop-search { grid-column: 1 !important; justify-self: start !important; }
   .topbar > .topbar__actions { grid-column: 3 !important; justify-self: end !important; position: static !important; z-index: 104 !important; }
+
+  /* Unified desktop rail: logo / icon navigation / account actions. */
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    inset: 0.85rem 2.5rem auto 2.5rem !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 4.5rem !important;
+    height: 4.5rem !important;
+    grid-template-columns: 17rem 1fr auto !important;
+    padding: 0.4rem 0.85rem 0.4rem 5.8rem !important;
+    border: 1px solid var(--desktop-line) !important;
+    border-radius: 2.4rem !important;
+    background: var(--color-surface) !important;
+    box-shadow: 0 0.55rem 1.5rem rgb(54 42 110 / 0.08) !important;
+  }
+
+  .desktop-sidebar-brand {
+    inset: 1.18rem auto auto 3.35rem !important;
+    z-index: 110 !important;
+    display: grid !important;
+    grid-template-columns: 3rem minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 0.55rem !important;
+    width: 14rem !important;
+    min-height: 3.8rem !important;
+  }
+
+  .desktop-sidebar-brand > span:last-child {
+    display: grid !important;
+    gap: 0.08rem !important;
+  }
+
+  .desktop-sidebar-brand__mark,
+  .desktop-sidebar-brand__mark img {
+    width: 3rem !important;
+    height: 3.35rem !important;
+  }
+
+  .desktop-sidebar-brand__title { color: var(--color-accent-deep) !important; font-size: 1.35rem !important; line-height: 1 !important; }
+  .desktop-sidebar-brand__tagline { color: var(--color-ink-2) !important; font-size: 0.72rem !important; }
+
+  .topbar > .desktop-search { display: none !important; }
+  .topbar > .topbar__actions { grid-column: 3 !important; }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    inset: 1.15rem auto auto 50% !important;
+    z-index: 108 !important;
+    width: auto !important;
+    height: 3.9rem !important;
+    transform: translateX(-50%) !important;
+    overflow: visible !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner {
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: center !important;
+    gap: 0.25rem !important;
+    width: max-content !important;
+    height: 100% !important;
+    padding: 0 !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item {
+    display: inline-flex !important;
+    flex: 0 0 3.55rem !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.12rem !important;
+    width: 3.55rem !important;
+    min-height: 3.55rem !important;
+    padding: 0.2rem 0.35rem !important;
+    border-radius: 1rem !important;
+    color: var(--color-ink-2) !important;
+    transition: flex-basis 180ms ease, width 180ms ease, color 180ms ease, background-color 180ms ease !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
+    width: 1.55rem !important;
+    height: 1.55rem !important;
+    padding: 0 !important;
+    background: currentColor !important;
+    color: currentColor !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > span:last-child {
+    display: block !important;
+    max-width: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    white-space: nowrap !important;
+    font-size: 0.78rem !important;
+    font-weight: 800 !important;
+    transition: max-width 180ms ease, opacity 180ms ease !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav):hover .bottom-nav__item,
+  body > .bottom-nav:not(.mobile-bottom-nav):focus-within .bottom-nav__item {
+    flex-basis: 5.7rem !important;
+    width: 5.7rem !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav):hover .bottom-nav__item > span:last-child,
+  body > .bottom-nav:not(.mobile-bottom-nav):focus-within .bottom-nav__item > span:last-child {
+    max-width: 5rem !important;
+    opacity: 1 !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"] {
+    color: var(--color-accent) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
 }
