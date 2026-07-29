@@ -7712,8 +7712,8 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     transform: none !important;
   }
 
-  .desktop-search { justify-self: start !important; width: min(22rem, 100%) !important; }
-  .topbar__actions { justify-self: end !important; }
+  .desktop-search { grid-column: 1 !important; justify-self: start !important; width: min(22rem, 100%) !important; }
+  .topbar__actions { grid-column: 3 !important; justify-self: end !important; position: static !important; z-index: 104 !important; }
   #noi-dung { margin-top: 5rem !important; }
 }
 
@@ -8117,4 +8117,7 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards strong,
   html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards small { display: block !important; }
   html[data-route="trang-chu"] body .desktop-home-redesign__footer-cards small { margin-top: .25rem !important; color: #687098 !important; }
+
+  .topbar > .desktop-search { grid-column: 1 !important; justify-self: start !important; }
+  .topbar > .topbar__actions { grid-column: 3 !important; justify-self: end !important; position: static !important; z-index: 104 !important; }
 }
