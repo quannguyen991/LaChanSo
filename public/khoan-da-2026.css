@@ -8053,4 +8053,32 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   }
   html[data-route="trang-chu"] body #homeView .mobile-situation-form__actions { position: static !important; }
   html[data-route="trang-chu"] body #homeView .mobile-situation-form__box { min-height: 3.5rem !important; }
+
+  html[data-route="trang-chu"] body #homeView .mobile-reference-top {
+    display: grid !important;
+    grid-template-columns: minmax(20rem, 0.78fr) minmax(0, 1.52fr) !important;
+    min-height: 23rem !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 1rem 1rem 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  html[data-route="trang-chu"] body #homeView .mobile-reference-top__copy h2 {
+    max-width: none !important;
+    color: transparent !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+  }
+
+  html[data-route="trang-chu"] body #homeView .mobile-reference-top__copy h2::after {
+    content: "Bác đang cần kiểm tra điều gì?" !important;
+    display: block !important;
+    color: var(--color-accent-deep) !important;
+    font-size: clamp(2.8rem, 4vw, 4.5rem) !important;
+    line-height: 1.05 !important;
+  }
 }
