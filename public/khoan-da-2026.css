@@ -6555,6 +6555,227 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   }
 }
 
+/* Homepage desktop composition inspired by the supplied reference. */
+@media (min-width: 64rem) {
+  html[data-route="trang-chu"],
+  html[data-route="trang-chu"] body {
+    background:
+      radial-gradient(circle at 10% 30%, rgb(238 230 255 / 0.78), transparent 28rem),
+      radial-gradient(circle at 92% 72%, rgb(242 236 255 / 0.84), transparent 32rem),
+      #fbfaff !important;
+  }
+
+  html[data-route="trang-chu"] #noi-dung {
+    width: min(calc(100% - 2rem), 86rem) !important;
+    max-width: 86rem !important;
+    margin: 5.4rem auto 0 !important;
+  }
+
+  html[data-route="trang-chu"] #homeView.view {
+    width: 100% !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .home-layout,
+  html[data-route="trang-chu"] #homeView .home-main {
+    display: block !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .hero-band { display: none !important; }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top {
+    display: grid !important;
+    grid-template-columns: minmax(20rem, 0.78fr) minmax(0, 1.52fr) !important;
+    min-height: 23rem !important;
+    margin: 0 !important;
+    padding: 1rem 1rem 0 !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__bar { display: none !important; }
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__intro { display: contents !important; }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__art {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    align-self: end !important;
+    justify-self: center !important;
+    width: min(100%, 25rem) !important;
+    max-width: none !important;
+    height: auto !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    filter: drop-shadow(0 1.2rem 1.4rem rgb(92 64 180 / 0.16)) !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__copy {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    align-self: center !important;
+    width: auto !important;
+    max-width: 52rem !important;
+    padding: 0 1rem 2rem 0 !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__copy h2 {
+    max-width: 18ch !important;
+    margin: 0 !important;
+    color: var(--color-accent-deep) !important;
+    font-family: var(--font-display) !important;
+    font-size: clamp(2.8rem, 4vw, 4.5rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: 0 !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__copy h2 {
+    font-size: 0 !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__copy h2::after {
+    content: "Bác đang cần kiểm tra điều gì?";
+    display: block;
+    font-size: clamp(2.8rem, 4vw, 4.5rem);
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-reference-top__copy p {
+    max-width: 42rem !important;
+    margin: 1rem 0 0 !important;
+    color: var(--color-ink-2) !important;
+    font-size: clamp(1rem, 1.35vw, 1.25rem) !important;
+    line-height: 1.5 !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-situation-form {
+    position: relative !important;
+    z-index: 4 !important;
+    width: min(100%, 57rem) !important;
+    margin: -2.4rem 0 1.1rem auto !important;
+    padding: 0.65rem 0.8rem !important;
+    border: 1px solid var(--desktop-line) !important;
+    border-radius: 1.35rem !important;
+    background: var(--color-surface) !important;
+    box-shadow: 0 0.9rem 2.2rem rgb(74 50 150 / 0.12) !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-situation-form__head,
+  html[data-route="trang-chu"] #homeView .mobile-situation-form__hint,
+  html[data-route="trang-chu"] #homeView .mobile-situation-form__status,
+  html[data-route="trang-chu"] #homeView .mobile-situation-form__error { display: none !important; }
+
+  html[data-route="trang-chu"] #homeView .mobile-situation-form__box {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-situation-form textarea {
+    min-height: 3.5rem !important;
+    height: 3.5rem !important;
+    padding: 0.8rem 1rem !important;
+    border: 0 !important;
+    background: transparent !important;
+    resize: none !important;
+    font-size: 1rem !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-situation-form__actions {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-situation-attach,
+  html[data-route="trang-chu"] #homeView .mobile-situation-link,
+  html[data-route="trang-chu"] #homeView .mobile-situation-voice {
+    display: none !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-situation-submit {
+    min-width: 10.5rem !important;
+    min-height: 3.2rem !important;
+    height: 3.2rem !important;
+    border-radius: 0.9rem !important;
+    background: linear-gradient(135deg, #7541e8, #5f31d4) !important;
+    color: #fff !important;
+    font-size: 1rem !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .home-suggestion-chips {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    gap: 0.55rem !important;
+    width: min(100%, 57rem) !important;
+    margin: 0 0 2rem auto !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .home-suggestion-chips button {
+    min-height: 2.8rem !important;
+    padding: 0 1rem !important;
+    border: 1px solid var(--desktop-line) !important;
+    border-radius: 999px !important;
+    background: var(--color-surface) !important;
+    color: var(--color-accent-deep) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .hub-tile-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+    margin: 0 !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .hub-tile {
+    min-height: 13rem !important;
+    align-items: start !important;
+    justify-content: start !important;
+    padding: 1.25rem !important;
+    border: 1px solid var(--desktop-line) !important;
+    border-radius: 1.1rem !important;
+    background: rgb(255 255 255 / 0.86) !important;
+    box-shadow: 0 0.45rem 1.2rem rgb(74 50 150 / 0.07) !important;
+    text-align: left !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .hub-tile__icon {
+    width: 3.6rem !important;
+    height: 3.6rem !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .hub-tile__title { margin-top: 0.9rem !important; font-size: 1.15rem !important; }
+  html[data-route="trang-chu"] #homeView .hub-tile__lead { margin-top: 0.4rem !important; font-size: 0.95rem !important; line-height: 1.45 !important; }
+  html[data-route="trang-chu"] #homeView .hub-tile__arrow { margin-top: auto !important; }
+
+  html[data-route="trang-chu"] #homeView .mobile-action-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1rem !important;
+    margin: 1rem auto 0 !important;
+    width: min(100%, 54rem) !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-action {
+    min-height: 6.6rem !important;
+    padding: 1rem !important;
+    border: 1px solid var(--desktop-line) !important;
+    border-radius: 1.1rem !important;
+    background: rgb(255 255 255 / 0.88) !important;
+  }
+
+  html[data-route="trang-chu"] #homeView .mobile-action__icon--photo,
+  html[data-route="trang-chu"] #homeView .mobile-action__art { width: 4.8rem !important; height: 4.8rem !important; }
+  html[data-route="trang-chu"] #homeView .emergency-zone,
+  html[data-route="trang-chu"] #homeView .home-main > .mobile-trust-strip,
+  html[data-route="trang-chu"] #homeView .mobile-home-followup { display: none !important; }
+}
+
 @media (min-width: 64rem) {
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
     background: currentColor !important;
