@@ -72,6 +72,70 @@ const CASE_EVENT_TYPES = [
 
 const CASE_EVENT_LABELS = Object.fromEntries(CASE_EVENT_TYPES.map((type) => [type.id, type.label]));
 
+const CASE_DESKTOP_DEMO_CASES = [
+  {
+    id: "demo-police-call",
+    label: "Cuộc gọi mạo danh công an",
+    status: "Đang xử lý",
+    updatedAt: "2025-05-20T14:32:00+07:00",
+    requestedAmount: "120.000.000đ",
+    demoIcon: "icon-phone",
+    demoTone: "high",
+    isDemo: true,
+    events: [
+      { type: "cuoc_goi_dau_tien", text: "Số lạ tự xưng là công an, yêu cầu xác minh thông tin.", createdAt: "2025-05-20T14:32:00+07:00" },
+      { type: "yeu_cau_chuyen_them", text: "Đối tượng gây áp lực, yêu cầu chuyển tiền gấp.", createdAt: "2025-05-20T14:36:00+07:00", risk: "Nguy hiểm cao" },
+      { type: "yeu_cau_chuyen_thu", text: "Chuyển 120.000.000đ vào số tài khoản lạ.", createdAt: "2025-05-20T14:40:00+07:00", risk: "Nguy hiểm cao" },
+      { type: "khac", text: "Đã gọi cho con trai và được hỗ trợ kịp thời.", createdAt: "2025-05-20T15:05:00+07:00" },
+      { type: "khac", text: "Lưu hình ảnh, ghi âm cuộc gọi và tin nhắn.", createdAt: "2025-05-20T15:10:00+07:00" }
+    ]
+  },
+  {
+    id: "demo-prize-message",
+    label: "Tin nhắn trúng thưởng",
+    status: "Đã xử lý",
+    updatedAt: "2025-05-18T09:15:00+07:00",
+    requestedAmount: "-",
+    demoIcon: "icon-messages",
+    demoTone: "safe",
+    isDemo: true,
+    events: []
+  },
+  {
+    id: "demo-bank-staff",
+    label: "Giả mạo nhân viên ngân hàng",
+    status: "Đang xử lý",
+    updatedAt: "2025-05-15T16:45:00+07:00",
+    requestedAmount: "25.000.000đ",
+    demoIcon: "icon-wallet",
+    demoTone: "medium",
+    isDemo: true,
+    events: []
+  },
+  {
+    id: "demo-investment",
+    label: "Ưu đãi đầu tư online",
+    status: "Đã xử lý",
+    updatedAt: "2025-05-10T11:20:00+07:00",
+    requestedAmount: "-",
+    demoIcon: "icon-shield-check",
+    demoTone: "safe",
+    isDemo: true,
+    events: []
+  },
+  {
+    id: "demo-recruitment",
+    label: "Lừa đảo tuyển cộng tác viên",
+    status: "Đã đóng",
+    updatedAt: "2025-05-05T08:30:00+07:00",
+    requestedAmount: "-",
+    demoIcon: "icon-user",
+    demoTone: "low",
+    isDemo: true,
+    events: []
+  }
+];
+
 const SAMPLES = {
   police: "Có người gọi tự xưng là công an phường, nói tôi liên quan vụ rửa tiền, yêu cầu chuyển 80 triệu vào một tài khoản để xác minh trong hôm nay, không được nói với ai.",
   family: "Con tôi gọi điện bảo bị tai nạn, cần 20 triệu gấp để đóng viện phí, giọng hơi lạ, số điện thoại không phải số con hay dùng.",
@@ -378,6 +442,12 @@ const elements = {
   callFamilyButton: document.querySelector("#callFamilyButton"),
   readResultButton: document.querySelector("#readResultButton"),
   resultConfidence: document.querySelector("#resultConfidence"),
+  structuredInsightSection: document.querySelector("#structuredInsightSection"),
+  structuredInsightTitle: document.querySelector("#structuredInsightTitle"),
+  structuredDataStatus: document.querySelector("#structuredDataStatus"),
+  predictedNextStepList: document.querySelector("#predictedNextStepList"),
+  resultLimitationList: document.querySelector("#resultLimitationList"),
+  structuredNextQuestion: document.querySelector("#structuredNextQuestion"),
   signalSummaryList: document.querySelector("#signalSummaryList"),
   reputationType: document.querySelector("#reputationType"),
   reputationValue: document.querySelector("#reputationValue"),
@@ -397,6 +467,7 @@ const elements = {
   createCaseButton: document.querySelector("#createCaseButton"),
   caseList: document.querySelector("#caseList"),
   caseListEmpty: document.querySelector("#caseListEmpty"),
+  caseDesktopPreview: document.querySelector("#caseDesktopPreview"),
   backToCaseListButton: document.querySelector("#backToCaseListButton"),
   caseDetailEyebrow: document.querySelector("#caseDetailEyebrow"),
   caseDetailLabel: document.querySelector("#caseDetailLabel"),
@@ -488,6 +559,8 @@ const elements = {
   finishOnboardingLaterButton: document.querySelector("#finishOnboardingLaterButton"),
   profileMenu: document.querySelector("#profileMenu"),
   profileMenuButton: document.querySelector("#profileMenuButton"),
+  desktopSearchForm: document.querySelector("#desktopSearchForm"),
+  desktopSearchInput: document.querySelector("#desktopSearchInput"),
   mobileProfileMenuButton: document.querySelector("#mobileProfileMenuButton"),
   profileMenuClose: document.querySelector("#profileMenuClose"),
   reopenOnboardingButton: document.querySelector("#reopenOnboardingButton"),
@@ -889,64 +962,96 @@ function renderContactList() {
   elements.contactEmpty.hidden = contacts.length > 0;
   elements.contactForm.hidden = contacts.length >= MAX_CONTACTS;
 
+  // Update contact count
+  const countEl = document.querySelector("#contactCount");
+  if (countEl) countEl.textContent = `(${contacts.length}/5)`;
+
   for (const contact of contacts) {
     const row = document.createElement("article");
     row.className = "contact-entry";
 
+    // Avatar with initials
+    const avatar = document.createElement("div");
+    avatar.className = "contact-entry__avatar";
+    avatar.setAttribute("aria-hidden", "true");
+    const initials = contact.name.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+    avatar.textContent = initials;
+
     const info = document.createElement("div");
     info.className = "contact-entry__info";
+
+    const nameRow = document.createElement("div");
+    nameRow.className = "contact-entry__name-row";
     const name = document.createElement("p");
     name.className = "contact-entry__name";
     name.textContent = contact.name;
-    const meta = document.createElement("p");
-    meta.className = "contact-entry__meta";
-    const expiry = contact.permissionExpiresAt
-      ? ` · hết hạn ${new Intl.DateTimeFormat("vi-VN", { dateStyle: "short" }).format(new Date(contact.permissionExpiresAt))}`
-      : "";
-    meta.textContent = `${contact.role} · ${contact.phone}${contact.email ? ` · ${contact.email}` : ""} · ${CONTACT_PERMISSION_LABELS[contact.permissionLevel] || CONTACT_PERMISSION_LABELS.call_only}${expiry}`;
-    info.append(name, meta);
+
+    const roleChip = document.createElement("span");
+    roleChip.className = "contact-entry__role-chip";
+    roleChip.textContent = contact.role;
+    nameRow.append(name, roleChip);
+
+    const phone = document.createElement("p");
+    phone.className = "contact-entry__phone";
+    phone.innerHTML = `<span class="icon icon-phone" aria-hidden="true"></span>${contact.phone}`;
+
+    info.append(nameRow, phone);
 
     const actions = document.createElement("div");
     actions.className = "contact-entry__actions";
 
     const callButton = document.createElement("button");
-    callButton.className = "button button-call";
+    callButton.className = "button button-primary contact-entry__call";
     callButton.type = "button";
-    callButton.innerHTML = '<span class="icon icon-phone" aria-hidden="true"></span><span>Gọi</span>';
+    callButton.innerHTML = '<span class="icon icon-phone" aria-hidden="true"></span><span>Gọi nhanh</span>';
     callButton.addEventListener("click", () => {
       window.location.href = `tel:${contact.phone.replace(/[^+\d]/g, "")}`;
     });
 
-    const verifyButton = document.createElement("button");
-    verifyButton.className = "button button-secondary";
-    verifyButton.type = "button";
-    verifyButton.textContent = "Gửi nhờ xác minh";
-    verifyButton.addEventListener("click", () => shareTrustedVerificationRequest(contact));
+    const alertButton = document.createElement("button");
+    alertButton.className = "button button-secondary contact-entry__alert";
+    alertButton.type = "button";
+    alertButton.innerHTML = '<span class="icon icon-alert" aria-hidden="true"></span><span>Báo tin</span>';
+    alertButton.addEventListener("click", () => shareTrustedVerificationRequest(contact));
 
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "button button-danger-quiet";
-    deleteButton.type = "button";
-    deleteButton.textContent = "Xóa";
-    deleteButton.addEventListener("click", () => {
-      setContacts(getContacts().filter((item) => item.id !== contact.id));
-      appendPrivacyAudit("contact_deleted", `Đã xóa liên hệ ${contact.name}`);
-      renderContactList();
+    const menuButton = document.createElement("button");
+    menuButton.className = "button button-secondary contact-entry__menu";
+    menuButton.type = "button";
+    menuButton.setAttribute("aria-label", "Thêm tùy chọn");
+    menuButton.textContent = "⋮";
+    menuButton.addEventListener("click", (e) => {
+      // Simple inline menu - in production this would be a proper dropdown
+      const menu = document.createElement("div");
+      menu.className = "contact-entry__menu-popup";
+      menu.innerHTML = `
+        <button type="button" data-action="revoke">Thu hồi quyền</button>
+        <button type="button" data-action="delete">Xóa</button>
+      `;
+      menu.addEventListener("click", (ev) => {
+        const action = ev.target.dataset.action;
+        if (action === "delete") {
+          setContacts(getContacts().filter((item) => item.id !== contact.id));
+          appendPrivacyAudit("contact_deleted", `Đã xóa liên hệ ${contact.name}`);
+          renderContactList();
+        } else if (action === "revoke") {
+          const updated = getContacts().map((item) => item.id === contact.id ? { ...item, permissionLevel: "call_only", permissionExpiresAt: null } : item);
+          setContacts(updated);
+          appendPrivacyAudit("permission_revoked", `Thu hồi quyền của ${contact.name}`);
+          renderContactList();
+          showToast("Đã thu hồi quyền chia sẻ của liên hệ này.");
+        }
+        menu.remove();
+      });
+
+      // Remove any existing menu
+      document.querySelectorAll(".contact-entry__menu-popup").forEach(m => m.remove());
+
+      row.style.position = "relative";
+      row.append(menu);
     });
 
-    const revokeButton = document.createElement("button");
-    revokeButton.className = "button button-secondary";
-    revokeButton.type = "button";
-    revokeButton.textContent = "Thu hồi quyền";
-    revokeButton.addEventListener("click", () => {
-      const updated = getContacts().map((item) => item.id === contact.id ? { ...item, permissionLevel: "call_only", permissionExpiresAt: null } : item);
-      setContacts(updated);
-      appendPrivacyAudit("permission_revoked", `Thu hồi quyền của ${contact.name}`);
-      renderContactList();
-      showToast("Đã thu hồi quyền chia sẻ của liên hệ này.");
-    });
-
-    actions.append(callButton, verifyButton, revokeButton, deleteButton);
-    row.append(info, actions);
+    actions.append(callButton, alertButton, menuButton);
+    row.append(avatar, info, actions);
     elements.contactList.append(row);
   }
 }
@@ -1224,6 +1329,25 @@ function renderSignalSummary(signals = {}) {
   }
 }
 
+function renderStructuredInsights(structuredResult) {
+  if (!structuredResult) {
+    elements.structuredInsightSection.hidden = true;
+    return;
+  }
+
+  elements.structuredInsightTitle.textContent = structuredResult.summary || "Khoan Đã đã tổng hợp dấu hiệu chính.";
+  elements.structuredDataStatus.textContent = structuredResult.dataStatus || "Cần thêm thông tin.";
+  fillList(
+    elements.predictedNextStepList,
+    (structuredResult.predictedNextSteps || []).map((step) => step.label || step).slice(0, 3)
+  );
+  fillList(elements.resultLimitationList, (structuredResult.limitations || []).slice(0, 3));
+  elements.structuredNextQuestion.textContent = structuredResult.nextQuestion?.question
+    ? `Câu hỏi tiếp theo: ${structuredResult.nextQuestion.question}`
+    : "";
+  elements.structuredInsightSection.hidden = false;
+}
+
 function renderResult(result, options = {}) {
   const riskLabel = displayRiskLabel(result.muc_rui_ro);
   const meta = RISK_META[riskLabel] || RISK_META["Nghi ngờ"];
@@ -1239,6 +1363,7 @@ function renderResult(result, options = {}) {
   elements.resultSummary.dataset.risk = meta.key;
   const signalCount = Object.values(result.tin_hieu || {}).filter(Boolean).length;
   elements.resultConfidence.textContent = signalCount >= 3 ? "Cao" : signalCount >= 1 ? "Trung bình" : "Thấp";
+  renderStructuredInsights(result.structuredResult);
   renderSignalSummary(result.tin_hieu || {});
   fillList(elements.reasonList, result.ly_do || []);
   fillList(elements.actionList, result.hanh_dong || []);
@@ -2410,6 +2535,154 @@ function renderHistory() {
   }
 }
 
+
+function isDesktopCaseDashboard() {
+  return typeof window.matchMedia === "function" && window.matchMedia("(min-width: 64rem)").matches;
+}
+
+function formatCaseDate(value) {
+  return new Intl.DateTimeFormat("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  }).format(new Date(value));
+}
+
+function formatCaseTime(value) {
+  return new Intl.DateTimeFormat("vi-VN", {
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+
+function appendCasePreviewEvidence(container, title, count, iconName, bodyText = "") {
+  const card = document.createElement("article");
+  card.className = "case-evidence-card";
+
+  const head = document.createElement("div");
+  head.className = "case-evidence-card__head";
+  const label = document.createElement("strong");
+  label.textContent = title;
+  const badge = document.createElement("span");
+  badge.textContent = count;
+  head.append(label, badge);
+
+  const body = document.createElement("div");
+  body.className = "case-evidence-card__body";
+  const icon = document.createElement("span");
+  icon.className = "case-evidence-card__icon";
+  icon.innerHTML = `<span class="icon ${iconName}" aria-hidden="true"></span>`;
+  const text = document.createElement("p");
+  text.textContent = bodyText || "Đã lưu nội dung minh họa để đối chiếu khi cần.";
+  body.append(icon, text);
+
+  card.append(head, body);
+  container.append(card);
+}
+
+function renderCaseDesktopPreview(caseObj) {
+  if (!elements.caseDesktopPreview) return;
+  if (!caseObj || !isDesktopCaseDashboard()) {
+    elements.caseDesktopPreview.hidden = true;
+    elements.caseDesktopPreview.replaceChildren();
+    return;
+  }
+
+  elements.caseDesktopPreview.hidden = false;
+  elements.caseDesktopPreview.replaceChildren();
+
+  const header = document.createElement("div");
+  header.className = "case-preview-head";
+  const title = document.createElement("h2");
+  title.textContent = "Chi tiết vụ việc";
+  const exportButton = document.createElement("button");
+  exportButton.className = "case-preview-export";
+  exportButton.type = "button";
+  exportButton.innerHTML = '<span class="icon icon-save" aria-hidden="true"></span><span>Xuất hồ sơ</span>';
+  exportButton.addEventListener("click", () => {
+    if (caseObj.isDemo) {
+      showToast("Đây là mẫu minh họa; tạo vụ việc thật để xuất hồ sơ.");
+      return;
+    }
+    showCaseDetail(caseObj.id);
+  });
+  header.append(title, exportButton);
+
+  const summary = document.createElement("article");
+  summary.className = "case-preview-summary";
+  const summaryIcon = document.createElement("span");
+  summaryIcon.className = "case-preview-summary__icon";
+  summaryIcon.innerHTML = `<span class="icon ${caseObj.demoIcon || "icon-route"}" aria-hidden="true"></span>`;
+  const summaryText = document.createElement("div");
+  const summaryTitle = document.createElement("h3");
+  summaryTitle.textContent = caseObj.label;
+  const summaryMeta = document.createElement("p");
+  summaryMeta.textContent = `${formatCaseDate(caseObj.updatedAt)} • ${formatCaseTime(caseObj.updatedAt)}${caseObj.isDemo ? " • Mẫu minh họa" : ""}`;
+  summaryText.append(summaryTitle, summaryMeta);
+  const status = document.createElement("span");
+  status.className = "case-preview-status";
+  status.textContent = caseObj.status || "Đang theo dõi";
+  summary.append(summaryIcon, summaryText, status);
+
+  const body = document.createElement("div");
+  body.className = "case-preview-body";
+
+  const timeline = document.createElement("div");
+  timeline.className = "case-preview-timeline";
+  const events = caseObj.events?.length
+    ? caseObj.events
+    : [{ type: "khac", text: "Chưa có diễn biến mới. Bác có thể thêm cuộc gọi, tin nhắn hoặc bằng chứng vào vụ việc.", createdAt: caseObj.updatedAt }];
+  events.slice(0, 5).forEach((event) => {
+    const item = document.createElement("article");
+    item.className = "case-preview-event";
+    const dot = document.createElement("span");
+    dot.className = "case-preview-event__dot";
+    const icon = document.createElement("span");
+    icon.className = "case-preview-event__icon";
+    icon.innerHTML = `<span class="icon ${event.type === "cuoc_goi_dau_tien" ? "icon-phone" : event.type.includes("chuyen") ? "icon-wallet" : "icon-shield-check"}" aria-hidden="true"></span>`;
+    const copy = document.createElement("div");
+    const eventTitle = document.createElement("strong");
+    eventTitle.textContent = CASE_EVENT_LABELS[event.type] || event.type;
+    const eventText = document.createElement("p");
+    eventText.textContent = event.text || "Đã ghi nhận diễn biến.";
+    copy.append(eventTitle, eventText);
+    const time = document.createElement("time");
+    time.dateTime = event.createdAt;
+    time.textContent = formatCaseTime(event.createdAt);
+    item.append(dot, icon, copy, time);
+    timeline.append(item);
+  });
+
+  const aside = document.createElement("aside");
+  aside.className = "case-preview-aside";
+  const evidenceTitle = document.createElement("h3");
+  evidenceTitle.textContent = caseObj.isDemo ? "Bằng chứng minh họa (5)" : "Bằng chứng đã lưu";
+  const evidenceGrid = document.createElement("div");
+  evidenceGrid.className = "case-evidence-grid";
+  appendCasePreviewEvidence(evidenceGrid, "Tin nhắn", "2", "icon-messages", "Ảnh chụp đoạn tin nhắn đáng ngờ.");
+  appendCasePreviewEvidence(evidenceGrid, "Ảnh chụp", "2", "icon-camera", "Lưu ảnh chuyển khoản hoặc giấy tờ liên quan.");
+  appendCasePreviewEvidence(evidenceGrid, "Cuộc gọi", "1", "icon-phone", "Ghi lại thời điểm và nội dung cuộc gọi.");
+  appendCasePreviewEvidence(evidenceGrid, "Ghi chú", "1", "icon-route", "Tóm tắt yêu cầu của đối tượng.");
+
+  const support = document.createElement("div");
+  support.className = "case-preview-support";
+  const supportCopy = document.createElement("div");
+  const supportTitle = document.createElement("strong");
+  supportTitle.textContent = "Khoan Đã luôn ở đây cùng bác";
+  const supportText = document.createElement("p");
+  supportText.textContent = "Bác đã làm rất đúng khi lưu lại bằng chứng và báo người thân. Đừng lo, chúng ta sẽ cùng xử lý vụ việc này.";
+  supportCopy.append(supportTitle, supportText);
+  const mascot = document.createElement("img");
+  mascot.src = "/assets/mascot-assistant.webp";
+  mascot.alt = "";
+  mascot.setAttribute("aria-hidden", "true");
+  support.append(supportCopy, mascot);
+
+  aside.append(evidenceTitle, evidenceGrid, support);
+  body.append(timeline, aside);
+  elements.caseDesktopPreview.append(header, summary, body);
+}
+
 function renderCaseList() {
   const allCases = getCases();
   const cases = allCases.filter((item) => {
@@ -2417,30 +2690,31 @@ function renderCaseList() {
     if (activeCaseFilter === "saved") return true;
     return true;
   });
+  const displayCases = cases;
   elements.caseList.replaceChildren();
   elements.caseListEmpty.hidden = cases.length > 0;
+  renderCaseDesktopPreview(displayCases[0] || null);
 
-  cases.forEach((item, index) => {
+  displayCases.forEach((item, index) => {
     const row = document.createElement("article");
-    const tone = ["high", "medium", "low", "safe"][index % 4];
+    const tone = item.demoTone || ["high", "medium", "low", "safe"][index % 4];
     row.className = `history-row case-history-row case-history-row--${tone}`;
+    if (item.isDemo) row.classList.add("case-history-row--demo");
+    if (index === 0) row.classList.add("is-selected");
 
     const icon = document.createElement("span");
     icon.className = "case-history-row__icon";
     icon.setAttribute("aria-hidden", "true");
-    icon.innerHTML = `<span class="icon ${tone === "high" ? "icon-alert" : tone === "medium" ? "icon-messages" : tone === "low" ? "icon-qr-code" : "icon-user"}"></span>`;
+    icon.innerHTML = `<span class="icon ${item.demoIcon || (tone === "high" ? "icon-alert" : tone === "medium" ? "icon-messages" : tone === "low" ? "icon-qr-code" : "icon-user")}"></span>`;
 
     const meta = document.createElement("div");
     meta.className = "history-row__meta";
     const tag = document.createElement("span");
     tag.className = "case-history-row__tag";
-    tag.textContent = item.events.length ? "Đã kiểm tra" : "Đã lưu";
+    tag.textContent = item.status || (item.events.length ? "Đã kiểm tra" : "Đã lưu");
     const time = document.createElement("time");
     time.dateTime = item.updatedAt;
-    time.textContent = new Intl.RelativeTimeFormat("vi", { numeric: "auto" }).format(
-      Math.round((new Date(item.updatedAt).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 86400000),
-      "day"
-    );
+    time.textContent = `${formatCaseDate(item.updatedAt)} • ${formatCaseTime(item.updatedAt)}`;
     meta.append(tag, time);
 
     const title = document.createElement("p");
@@ -2450,21 +2724,34 @@ function renderCaseList() {
     const description = document.createElement("small");
     description.className = "case-history-row__description";
     description.textContent = item.events.length
-      ? `${item.events.length} diễn biến đã được ghi lại trong vụ việc này.`
+      ? `${item.events.length} diễn biến đã được ghi lại.`
       : "Vụ việc đã lưu, chưa có diễn biến mới.";
+
+    const amount = document.createElement("strong");
+    amount.className = "case-history-row__amount";
+    amount.textContent = item.requestedAmount || "-";
 
     const openButton = document.createElement("button");
     openButton.className = "case-history-row__open";
     openButton.type = "button";
     openButton.setAttribute("aria-label", `Xem ${item.label}`);
     openButton.innerHTML = '<span class="icon icon-chevron-right" aria-hidden="true"></span>';
-    openButton.addEventListener("click", () => showCaseDetail(item.id));
+    openButton.addEventListener("click", () => {
+      if (item.isDemo) {
+        renderCaseDesktopPreview(item);
+        elements.caseList.querySelectorAll(".case-history-row").forEach((caseRow) => caseRow.classList.remove("is-selected"));
+        row.classList.add("is-selected");
+        return;
+      }
+      showCaseDetail(item.id);
+    });
 
     const deleteButton = document.createElement("button");
     deleteButton.className = "case-history-row__delete";
     deleteButton.type = "button";
     deleteButton.setAttribute("aria-label", `Xóa ${item.label}`);
     deleteButton.innerHTML = '<span class="icon icon-trash" aria-hidden="true"></span>';
+    deleteButton.hidden = Boolean(item.isDemo);
     deleteButton.addEventListener("click", () => {
       deleteCase(item.id);
       renderCaseList();
@@ -2474,7 +2761,7 @@ function renderCaseList() {
     actions.className = "history-row__actions";
     actions.append(openButton, deleteButton);
 
-    row.append(icon, meta, title, description, actions);
+    row.append(icon, meta, title, description, amount, actions);
     elements.caseList.append(row);
   });
 }
@@ -2740,15 +3027,48 @@ function saveEducationProgress(progress) {
 function renderEducationList() {
   const progress = getEducationProgress();
   elements.educationList.replaceChildren();
+
+  // Update lesson count
+  const countEl = document.querySelector("#educationLessonCount");
+  if (countEl) countEl.textContent = EDUCATION_LESSONS.length;
+
+  // Emoji icons for each lesson type
+  const icons = ["👮", "🏦", "👨‍👩‍👧", "📦", "🔢", "📱", "🖥️", "💰", "💼", "🎭", "🔄", "⚡", "🆔", "👤", "📞", "👨‍🏫", "💕"];
+
   EDUCATION_LESSONS.forEach((lesson, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "education-list__item";
-    button.setAttribute("aria-pressed", String(index === currentEducationIndex));
-    const status = progress[lesson.id] ? "Đã học" : "Chưa học";
-    button.innerHTML = `<span class="education-list__number">${index + 1}</span><span><strong>${lesson.title}</strong><small>${lesson.topic} · ${status}</small></span>`;
-    button.addEventListener("click", () => { currentEducationIndex = index; currentEducationChoice = null; renderEducationLesson(); renderEducationList(); });
-    elements.educationList.append(button);
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "education-card";
+    card.setAttribute("aria-pressed", String(index === currentEducationIndex));
+
+    const isCompleted = !!progress[lesson.id];
+    const progressPercent = isCompleted ? 100 : 0;
+    const statusText = isCompleted ? "Đã học ✓" : "Chưa học";
+    const statusClass = isCompleted ? "education-card__status--completed" : "";
+
+    card.innerHTML = `
+      <div class="education-card__icon">${icons[index] || "📚"}</div>
+      <div class="education-card__content">
+        <div class="education-card__number">${index + 1}. ${lesson.title}</div>
+        <div class="education-card__topic">${lesson.topic}</div>
+        <div class="education-card__progress">
+          <div class="education-card__progress-bar">
+            <div class="education-card__progress-fill" style="width: ${progressPercent}%"></div>
+          </div>
+          <div class="education-card__status ${statusClass}">${statusText}</div>
+        </div>
+      </div>
+    `;
+
+    card.addEventListener("click", () => {
+      currentEducationIndex = index;
+      currentEducationChoice = null;
+      renderEducationLesson();
+      renderEducationList();
+      elements.educationLesson.scrollIntoView({ behavior: "smooth" });
+    });
+
+    elements.educationList.append(card);
   });
 }
 
@@ -3464,6 +3784,11 @@ elements.checkHubVoiceButton.addEventListener("click", () => {
   window.setTimeout(() => elements.speechButton.click(), 280);
 });
 elements.mobileSituationForm.addEventListener("submit", submitMobileSituation);
+elements.mobileSituationInput.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+  event.preventDefault();
+  elements.mobileSituationForm.requestSubmit();
+});
 elements.mobileSituationFileButton.addEventListener("click", () => elements.mobileSituationFile.click());
 elements.mobileSituationFile.addEventListener("change", handleMobileSituationFileChange);
 elements.mobileSituationInput.addEventListener("input", () => {
@@ -3654,6 +3979,20 @@ elements.recoveryActive.querySelectorAll("[data-recovery-step]").forEach((checkb
 
 elements.fontSizeButtons.forEach((button) => button.addEventListener("click", () => applyFontSize(button.dataset.fontSize)));
 elements.profileMenuButton.addEventListener("click", handleProfileTrigger);
+elements.desktopSearchForm?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const query = elements.desktopSearchInput.value.trim();
+  if (!query) {
+    window.location.hash = "#kiem-tra";
+    return;
+  }
+  window.location.hash = "#kiem-tra";
+  window.setTimeout(() => {
+    elements.situation.value = query;
+    updateCharacterCount();
+    elements.situation.focus();
+  }, 0);
+});
 elements.mobileProfileMenuButton.addEventListener("click", handleProfileTrigger);
 elements.profileMenuClose.addEventListener("click", () => setProfileMenu(false, { restoreFocus: true }));
 elements.profileMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setProfileMenu(false)));
@@ -3719,6 +4058,47 @@ elements.educationNextButton.addEventListener("click", () => {
   currentEducationChoice = null;
   renderEducation();
 });
+
+// New education buttons
+const educationStartButton = document.querySelector("#educationStartButton");
+if (educationStartButton) {
+  educationStartButton.addEventListener("click", () => {
+    currentEducationIndex = 0;
+    currentEducationChoice = null;
+    renderEducation();
+    elements.educationLesson.hidden = false;
+    elements.educationLesson.scrollIntoView({ behavior: "smooth" });
+  });
+}
+
+const educationNotificationButton = document.querySelector("#educationNotificationButton");
+if (educationNotificationButton) {
+  educationNotificationButton.addEventListener("click", async () => {
+    if (!("Notification" in window)) {
+      showToast("Trình duyệt này không hỗ trợ thông báo.");
+      return;
+    }
+    if (Notification.permission === "granted") {
+      showToast("Thông báo đã được bật từ trước.");
+      return;
+    }
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        showToast("Đã bật thông báo thành công!");
+        new Notification("Khoan Đã", {
+          body: "Bạn sẽ nhận được thông báo khi có bài học mới.",
+          icon: "/assets/brand-shield-purple.webp"
+        });
+      } else {
+        showToast("Bạn đã từ chối quyền thông báo.");
+      }
+    } catch (err) {
+      showToast("Không thể bật thông báo.");
+    }
+  });
+}
+
 elements.toggleFamilySharing.addEventListener("change", () => {
   setStored(STORAGE_KEYS.familySharing, elements.toggleFamilySharing.checked ? "1" : "0");
   appendPrivacyAudit("family_sharing", elements.toggleFamilySharing.checked ? "Bật chia sẻ gia đình có xác nhận" : "Tắt chia sẻ gia đình");

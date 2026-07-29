@@ -228,6 +228,8 @@ a {
 .icon-lock { --icon-source: url("/vendor/unicons/lock-alt.svg"); }
 .icon-messages { --icon-source: url("/vendor/unicons/comment-alt-exclamation.svg"); }
 .icon-receipt { --icon-source: url("/vendor/unicons/receipt.svg"); }
+.icon-education { --icon-source: url("/vendor/unicons/pathfinder.svg"); }
+.icon-link { --icon-source: url("/vendor/unicons/pathfinder.svg"); }
 .icon-route { --icon-source: url("/vendor/unicons/pathfinder.svg"); }
 .icon-qr-code { --icon-source: url("/vendor/unicons/qrcode-scan.svg"); }
 .icon-hourglass { --icon-source: url("/vendor/unicons/hourglass.svg"); }
@@ -1405,6 +1407,66 @@ select[aria-invalid="true"] {
   max-width: 44ch;
   margin: var(--space-3) 0 0;
   font-size: 1.05rem;
+}
+
+.result-insight {
+  display: grid;
+  gap: var(--space-4);
+  margin-block-start: var(--space-4);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border-tinted);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.result-insight__eyebrow {
+  margin: 0 0 var(--space-1);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.result-insight h3,
+.result-insight h4,
+.result-insight p {
+  margin: 0;
+}
+
+.result-insight h3 {
+  font-size: 1.35rem;
+  line-height: var(--leading-tight);
+}
+
+.result-insight h4 {
+  margin-block-end: var(--space-2);
+  font-size: 1rem;
+}
+
+.result-insight__grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.result-insight ul {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding-inline-start: 1.35rem;
+}
+
+.result-insight li {
+  line-height: var(--leading-normal);
+}
+
+.result-insight__question {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+  font-weight: 700;
 }
 
 .family-password {

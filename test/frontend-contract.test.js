@@ -53,6 +53,17 @@ test("demo and unverified reputation states are explicit", () => {
   assert.match(app, /Chưa có dữ liệu xác minh/);
 });
 
+test("analysis result renders structured next-step guidance without replacing legacy fields", () => {
+  assert.match(html, /id="structuredInsightSection"/);
+  assert.match(html, /Bước tiếp theo họ có thể yêu cầu bác/);
+  assert.match(html, /id="predictedNextStepList"/);
+  assert.match(html, /id="resultLimitationList"/);
+  assert.match(app, /function renderStructuredInsights\(structuredResult\)/);
+  assert.match(app, /renderStructuredInsights\(result\.structuredResult\)/);
+  assert.match(app, /fillList\(elements\.reasonList, result\.ly_do \|\| \[\]\)/);
+  assert.match(app, /fillList\(elements\.actionList, result\.hanh_dong \|\| \[\]\)/);
+});
+
 test("senior forms keep selects aligned with inputs and icon buttons labeled", () => {
   assert.match(styles, /textarea,\s*\ninput,\s*\nselect\s*\{/);
   assert.match(styles, /select\s*\{[\s\S]*?appearance:\s*none;/);
@@ -197,6 +208,18 @@ test("desktop and mobile taskbars share routes and render cross-browser icons", 
   assert.match(styles, /-webkit-mask-image:\s*var\(--icon-source\)/);
   assert.match(styles, /@media \(min-width: 40\.0625rem\)[\s\S]*?grid-template-columns:\s*repeat\(4/);
   assert.match(styles, /\.mobile-bottom-nav[\s\S]*?border-radius:\s*var\(--radius-xl\)/);
+});
+
+test("desktop web shell exposes sidebar brand, search and large-screen overrides", () => {
+  assert.match(html, /class="desktop-sidebar-brand"[\s\S]*?Khoan Đã[\s\S]*?Bảo vệ bác, mỗi ngày/);
+  assert.match(html, /id="desktopSearchForm"[\s\S]*?id="desktopSearchInput"[\s\S]*?placeholder="Tìm kiếm hoặc hỗ trợ"/);
+  assert.match(html, /khoan-da-2026\.css\?v=20260729-desktop-balance-1/);
+  assert.match(serviceWorker, /khoan-da-shell-v28/);
+  assert.match(serviceWorker, /khoan-da-2026\.css\?v=20260728-case-dashboard-polish-5/);
+  assert.match(refreshStyles, /Desktop web redesign, 2026-07-28/);
+  assert.match(refreshStyles, /@media \(min-width: 64rem\)[\s\S]*?--desktop-sidebar-w/);
+  assert.match(refreshStyles, /\.desktop-sidebar-brand/);
+  assert.match(refreshStyles, /\.desktop-search/);
 });
 
 test("floating header, local account flow and reference history shell stay connected", () => {

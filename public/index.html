@@ -18,17 +18,32 @@
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/700.css">
     <link rel="stylesheet" href="/tokens.css">
     <link rel="stylesheet" href="/styles.css?v=20260727-pressure-red-2">
-    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260727-intro-aspect-lock-15">
+    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260729-desktop-balance-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/app.js" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#noi-dung">Bỏ qua phần đầu trang</a>
+    <a class="desktop-sidebar-brand" href="#trang-chu" aria-label="Khoan Đã, về trang chủ">
+      <span class="desktop-sidebar-brand__mark" aria-hidden="true">
+        <img src="/assets/brand-shield-purple.webp" width="81" height="98" alt="">
+      </span>
+      <span>
+        <span class="desktop-sidebar-brand__title">Khoan Đã</span>
+        <span class="desktop-sidebar-brand__tagline">Bảo vệ bác, mỗi ngày</span>
+      </span>
+    </a>
 
     <section class="onboarding" id="onboarding" aria-label="Hướng dẫn bắt đầu" hidden>
       <div class="onboarding__shell">
         <article class="onboarding__screen" data-onboarding-step="1" aria-labelledby="onboardingWelcomeTitle">
+          <div class="onboarding-web" aria-hidden="true">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
+            <div class="onboarding-web__copy"><p class="onboarding-web__step">Chào bác</p><h2>Chào mừng đến với <span>Khoan Đã</span></h2><p>Trợ lý an toàn số giúp bác bình tĩnh nhận diện và xử lý những tình huống đáng ngờ.</p></div>
+            <div class="onboarding-web__visual"><img src="/assets/mascot-home.webp" width="466" height="470" alt=""><span class="onboarding-web__halo"></span></div>
+            <div class="onboarding-web__assurance"><strong>An toàn hơn mỗi ngày</strong><span><i class="icon icon-lock" aria-hidden="true"></i>Bảo vệ thông tin</span><span><i class="icon icon-search" aria-hidden="true"></i>Nhận diện rủi ro</span><span><i class="icon icon-users" aria-hidden="true"></i>Đồng hành tận tâm</span></div>
+          </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-1.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h1 class="onboarding__title" id="onboardingWelcomeTitle">Khoan Đã</h1>
           <p class="onboarding__lead">Cùng bác an toàn trong thế giới số</p>
@@ -37,37 +52,61 @@
           </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="2" aria-labelledby="onboardingHelloTitle" hidden>
+          <div class="onboarding-web" aria-hidden="true">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
+            <div class="onboarding-web__copy onboarding-web__copy--wide"><p class="onboarding-web__step">Bác có thể kiểm tra</p><h2>Bác đang gặp tình huống nào?</h2><div class="onboarding-web__choices"><span><i class="icon icon-phone"></i><b>Cuộc gọi lạ</b><small>Kiểm tra cuộc gọi có đáng tin không.</small></span><span><i class="icon icon-messages"></i><b>Tin nhắn đáng ngờ</b><small>Nhận diện nội dung lừa đảo.</small></span><span><i class="icon icon-link"></i><b>Link / QR</b><small>Kiểm tra trước khi mở.</small></span><span><i class="icon icon-wallet"></i><b>Chuyển tiền</b><small>Kiểm tra trước khi quyết định.</small></span></div></div>
+            <div class="onboarding-web__visual"><img src="/assets/mascot-check.webp" width="370" height="370" alt=""><span class="onboarding-web__halo"></span></div>
+          </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-2.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h2 class="onboarding__title" id="onboardingHelloTitle">Chào bác</h2>
           <p class="onboarding__lead">Bác kể lại tình huống bằng chữ, bằng giọng nói, hoặc đưa tôi xem ảnh.</p>
           <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
           <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
           <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
           </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="3" aria-labelledby="onboardingCheckTitle" hidden>
+          <div class="onboarding-web" aria-hidden="true">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
+            <div class="onboarding-web__copy onboarding-web__copy--center"><p class="onboarding-web__step">Hướng dẫn rõ ràng</p><h2>Khoan Đã sẽ hướng dẫn bác từng bước</h2><p>Bác chỉ cần kể lại tình huống. Ứng dụng sẽ giải thích điều gì đáng ngờ và bác nên làm gì tiếp theo.</p><div class="onboarding-web__demo"><span><b>Dấu hiệu đáng ngờ</b><small>Yêu cầu chuyển tiền gấp, dặn không nói với người thân.</small></span><span><b>Bác nên làm ngay</b><small>Dừng cuộc gọi, không chuyển tiền và gọi người thân xác minh.</small></span></div></div>
+            <div class="onboarding-web__visual"><img src="/assets/mascot-assistant.webp" width="370" height="370" alt=""><span class="onboarding-web__halo"></span></div>
+          </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-3.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h2 class="onboarding__title" id="onboardingCheckTitle">Kiểm tra nhanh, phát hiện sớm</h2>
           <p class="onboarding__lead">Tin nhắn lạ, cuộc gọi lạ, link hay mã QR — bác đưa vào, tôi xem giúp.</p>
           <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
           <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
           <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
           </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="4" aria-labelledby="onboardingProcessTitle" hidden>
+          <div class="onboarding-web" aria-hidden="true">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
+            <div class="onboarding-web__copy"><p class="onboarding-web__step">Vòng tin cậy</p><h2>An toàn hơn khi có người thân đồng hành</h2><p>Bác có thể kết nối con cháu và người thân tin cậy để nhận hỗ trợ khi gặp cuộc gọi, tin nhắn hay yêu cầu chuyển tiền đáng ngờ.</p><div class="onboarding-web__demo"><span><b>Gọi nhanh cho con cháu</b><small>Kết nối ngay khi cần hỗ trợ.</small></span><span><b>Bác luôn kiểm soát</b><small>Chủ động lựa chọn quyền chia sẻ.</small></span></div></div>
+            <div class="onboarding-web__visual"><img src="/assets/mascot-home.webp" width="466" height="470" alt=""><span class="onboarding-web__halo"></span></div>
+          </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-4.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h2 class="onboarding__title" id="onboardingProcessTitle">Xử lý đơn giản, hướng dẫn rõ ràng</h2>
           <p class="onboarding__lead">Tôi nói rõ mức rủi ro, vì sao, và việc bác cần làm ngay.</p>
           <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
           <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
           <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
           </div>
         </article>
         <article class="onboarding__screen" data-onboarding-step="5" aria-labelledby="onboardingFamilyTitle" hidden>
+          <div class="onboarding-web" aria-hidden="true">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
+            <div class="onboarding-web__copy"><p class="onboarding-web__step">Sẵn sàng</p><h2>Khoan Đã luôn ở đây cùng bác</h2><p>Bắt đầu kiểm tra tình huống đầu tiên hoặc thêm người thân tin cậy để được hỗ trợ khi cần.</p><div class="onboarding-web__demo"><span><b>Thông tin ở lại trên thiết bị</b><small>Bác quyết định nội dung nào được lưu và chia sẻ.</small></span></div></div>
+            <div class="onboarding-web__visual"><img src="/assets/mascot-history.webp" width="370" height="330" alt=""><span class="onboarding-web__halo"></span></div>
+          </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-5.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h2 class="onboarding__title" id="onboardingFamilyTitle">Gia đình luôn bên cạnh bác</h2>
           <p class="onboarding__lead">Lưu số con cháu để gọi ngay bằng một chạm khi cần.</p>
           <div class="onboarding__actions">
+          <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
           <button class="onboarding__button onboarding__button--quiet" type="button" id="finishOnboardingLaterButton">Đăng nhập hoặc dùng sau</button>
           <button class="onboarding__button onboarding__button--primary" type="button" id="finishOnboardingButton">Bắt đầu sử dụng</button>
           </div>
@@ -85,7 +124,15 @@
           <span class="brand__tagline">Bảo vệ bác, mỗi ngày</span>
         </span>
       </a>
+      <form class="desktop-search" id="desktopSearchForm" role="search" aria-label="Tìm kiếm hoặc nhập tình huống nhanh">
+        <span class="icon icon-search" aria-hidden="true"></span>
+        <label class="visually-hidden" for="desktopSearchInput">Tìm kiếm hoặc hỗ trợ</label>
+        <input id="desktopSearchInput" type="search" autocomplete="off" placeholder="Tìm kiếm hoặc hỗ trợ">
+      </form>
       <div class="topbar__actions">
+        <a class="topbar-help" href="#ho-tro" aria-label="Mở danh bạ hỗ trợ">
+          <span class="topbar-help__mark" aria-hidden="true">?</span>
+        </a>
         <button class="greeting-chip" type="button" id="profileMenuButton" aria-label="Đăng nhập" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu authDialog">
           <span class="greeting-chip__avatar" aria-hidden="true"><span class="icon icon-user"></span></span>
           <span data-auth-label>Đăng nhập</span>
@@ -496,7 +543,7 @@
           <a class="header-action-btn back-btn" href="#trang-chu" aria-label="Quay lại">
             <span class="icon icon-back" aria-hidden="true"></span>
           </a>
-          <h1 id="pageTitle" tabindex="-1" class="page-title-center">Kiểm tra</h1>
+          <h1 id="pageTitle" tabindex="-1" class="page-title-center">Bác muốn kiểm tra điều gì?</h1>
           <a class="header-action-btn search-btn" href="#trang-chu" aria-label="Tìm kiếm">
             <span class="icon icon-search" aria-hidden="true"></span>
           </a>
@@ -662,6 +709,25 @@
             <p><strong>Nguồn:</strong> phân tích AI kết hợp quy tắc an toàn; dữ liệu uy tín được kiểm tra riêng.</p>
           </div>
 
+          <section class="result-insight" id="structuredInsightSection" aria-labelledby="structuredInsightTitle" hidden>
+            <div>
+              <p class="result-insight__eyebrow">Chuyện gì đang xảy ra?</p>
+              <h3 id="structuredInsightTitle">Khoan Đã đang tổng hợp dấu hiệu</h3>
+              <p id="structuredDataStatus"></p>
+            </div>
+            <div class="result-insight__grid">
+              <div>
+                <h4>Bước tiếp theo họ có thể yêu cầu bác...</h4>
+                <ul id="predictedNextStepList"></ul>
+              </div>
+              <div>
+                <h4>Giới hạn của kết quả</h4>
+                <ul id="resultLimitationList"></ul>
+              </div>
+            </div>
+            <p class="result-insight__question" id="structuredNextQuestion"></p>
+          </section>
+
           <section class="result-layer" aria-labelledby="signalLayerTitle">
             <h3 id="signalLayerTitle">Dấu hiệu đã nhận diện</h3>
             <ul class="signal-grid" id="signalSummaryList"></ul>
@@ -761,8 +827,8 @@
         </a>
         <div class="workspace-head">
           <p class="eyebrow">Kiểm tra trước khi bấm hoặc quét</p>
-          <h1 id="linkCheckTitle" tabindex="-1">Kiểm tra link &amp; QR</h1>
-          <p class="calm-line">Dán đường link hoặc chụp ảnh mã QR — Khoan Đã theo dõi chuỗi chuyển hướng và so tên miền cuối cùng với thương hiệu bác cho biết.</p>
+          <h1 id="linkCheckTitle" tabindex="-1">Kiểm tra link / QR lạ</h1>
+          <p class="calm-line">Kiểm tra nhanh link hoặc mã QR để biết có nên bấm vào hay chia sẻ cho người khác không.</p>
         </div>
 
         <div class="workspace-card">
@@ -828,8 +894,8 @@
         </a>
         <div class="workspace-head">
           <p class="eyebrow">Trước khi bấm xác nhận</p>
-          <h1 id="transferTitle" tabindex="-1">Chuyển khoản này có ổn không?</h1>
-          <p class="calm-line">Điền thông tin bạn thấy, AI sẽ chỉ ra điểm bất thường.</p>
+          <h1 id="transferTitle" tabindex="-1">Kiểm tra trước khi chuyển tiền</h1>
+          <p class="calm-line">Nhập thông tin bên nhận và các dấu hiệu đáng ngờ. Khoan Đã sẽ giúp bác nhận diện rủi ro để yên tâm hơn.</p>
         </div>
 
         <div class="workspace-card">
@@ -1431,7 +1497,8 @@
         <div id="caseListPanel">
           <section class="case-history-hero" aria-labelledby="hanhTrinhTitle">
             <div class="case-history-hero__copy">
-              <h1 id="hanhTrinhTitle" tabindex="-1">Lịch sử</h1>
+              <h1 id="hanhTrinhTitle" tabindex="-1">Vụ việc &amp; lịch sử</h1>
+              <p>Theo dõi, quản lý các vụ việc bác đã gặp. Khoan Đã luôn đồng hành và hỗ trợ bác.</p>
               <div class="case-history-filters" role="group" aria-label="Lọc lịch sử vụ việc">
                 <button type="button" class="is-active" data-case-filter="all" aria-pressed="true">Tất cả</button>
                 <button type="button" data-case-filter="checked" aria-pressed="false">Đã kiểm tra</button>
@@ -1441,6 +1508,9 @@
             <img src="/assets/mascot-history.webp" width="370" height="330" alt="" aria-hidden="true" decoding="async">
           </section>
 
+          <div class="case-list-head">
+            <h2>Danh sách vụ việc</h2>
+          </div>
           <button class="case-create-button" type="button" id="createCaseButton">
             <span class="icon icon-route" aria-hidden="true"></span>
             <span>Thêm vụ việc</span>
@@ -1448,9 +1518,20 @@
 
           <div class="history-list" id="caseList"></div>
           <div class="empty-state" id="caseListEmpty">
-            <span class="icon icon-route" aria-hidden="true"></span>
-            <p>Chưa có vụ việc nào được ghi lại.</p>
+            <span class="case-empty-mobile icon icon-route" aria-hidden="true"></span>
+            <p class="case-empty-mobile">Chưa có vụ việc nào được ghi lại.</p>
+            <div class="case-empty-desktop">
+              <img src="/assets/mascot-history.webp" width="370" height="330" alt="" aria-hidden="true" decoding="async">
+              <h2>Chưa có lịch sử nào</h2>
+              <p>Khi bác kiểm tra cuộc gọi, tin nhắn hoặc đường link lạ, kết quả sẽ được lưu tại đây để bác xem lại dễ dàng.</p>
+              <span class="case-empty-desktop__privacy"><i class="icon icon-lock" aria-hidden="true"></i>Dữ liệu chỉ lưu trên thiết bị này</span>
+              <div class="case-empty-desktop__actions">
+                <a class="button button-primary" href="#kiem-tra"><span class="icon icon-shield-check" aria-hidden="true"></span><span>Bắt đầu kiểm tra</span></a>
+                <a class="button button-secondary" href="#huong-dan"><span class="icon icon-education" aria-hidden="true"></span><span>Xem cách sử dụng</span></a>
+              </div>
+            </div>
           </div>
+          <section class="case-desktop-preview" id="caseDesktopPreview" aria-label="Xem nhanh chi tiết vụ việc" hidden></section>
         </div>
 
         <div id="caseDetailPanel" hidden>
@@ -1547,75 +1628,98 @@
           <p class="eyebrow">Hồ sơ · Lưu trên máy này</p>
           <h1 id="familyTitle" tabindex="-1">Hồ sơ của bác</h1>
           <p class="calm-line">Lưu con cháu, người thân tin cậy để gọi nhanh khi cần. Toàn bộ chỉ nằm trong trình duyệt này, không gửi lên máy chủ nào.</p>
+          <img class="family-hero-mascot" src="/assets/mascot-home.webp" width="466" height="470" alt="" aria-hidden="true" decoding="async">
         </div>
 
-        <div class="workspace-card family-contact-card">
-          <div class="family-contact-card__head">
-            <span class="family-contact-card__head-icon" aria-hidden="true"><span class="icon icon-users"></span></span>
-            <span>
-              <h2 class="card-heading">Con cháu &amp; người thân tin cậy</h2>
-              <p class="field-hint">Thêm tối đa 5 người (con, cháu, người thân). Mỗi người có nút gọi nhanh riêng.</p>
-            </span>
-          </div>
-          <div class="contact-list" id="contactList"></div>
-          <div class="empty-state" id="contactEmpty">
-            <span class="family-empty-visual" aria-hidden="true"><span class="icon icon-users"></span><span class="icon icon-shield-check"></span></span>
-            <p>Chưa có liên hệ nào được lưu.</p>
+        <div class="family-two-col">
+          <div class="workspace-card family-contact-card">
+            <div class="family-contact-card__head">
+              <span class="family-contact-card__head-icon" aria-hidden="true"><span class="icon icon-users"></span></span>
+              <span>
+                <h2 class="card-heading">Con cháu &amp; người thân tin cậy</h2>
+                <p class="field-hint">Thêm tối đa 5 người (con, cháu, người thân). Mỗi người có nút gọi nhanh riêng.</p>
+              </span>
+            </div>
+
+            <div class="empty-state" id="contactEmpty">
+              <span class="family-empty-visual" aria-hidden="true"><span class="icon icon-users"></span></span>
+              <p>Chưa có liên hệ nào được lưu.<br>Thêm người thân để gọi nhanh khi cần.</p>
+            </div>
+
+            <form class="dialog-form contact-form" id="contactForm" novalidate>
+              <div class="dialog-field family-contact-field">
+                <label for="contactName">Tên người thân</label>
+                <span class="family-contact-field__icon" aria-hidden="true"><span class="icon icon-user"></span></span>
+                <input id="contactName" type="text" placeholder="Ví dụ: Nam">
+              </div>
+              <div class="dialog-field family-contact-field">
+                <label for="contactRole">Vai trò</label>
+                <span class="family-contact-field__icon" aria-hidden="true"><span class="icon icon-users"></span></span>
+                <select id="contactRole">
+                  <option value="Con">Con</option>
+                  <option value="Cháu">Cháu</option>
+                  <option value="Người chăm sóc">Người chăm sóc</option>
+                  <option value="Người hỗ trợ khác">Người hỗ trợ khác</option>
+                </select>
+              </div>
+              <div class="dialog-field family-contact-field">
+                <label for="contactPhone">Số điện thoại</label>
+                <span class="family-contact-field__icon" aria-hidden="true"><span class="icon icon-phone"></span></span>
+                <input id="contactPhone" type="tel" inputmode="tel" placeholder="Ví dụ: 090 123 4567">
+              </div>
+              <details class="family-contact-advanced-toggle">
+                <summary>Tùy chọn nâng cao</summary>
+                <div class="dialog-field family-contact-advanced">
+                  <label for="contactEmail">Email (không bắt buộc)</label>
+                  <input id="contactEmail" type="email" autocomplete="email" placeholder="Ví dụ: con@example.com">
+                </div>
+                <div class="dialog-field family-contact-advanced">
+                  <label for="contactPermission">Mức quyền ban đầu</label>
+                  <select id="contactPermission">
+                    <option value="call_only">Chỉ nhận yêu cầu gọi hỗ trợ</option>
+                    <option value="high_alert">Nhận cảnh báo nguy hiểm cao</option>
+                    <option value="summary">Xem tóm tắt khi bác đồng ý</option>
+                    <option value="evidence">Xem bằng chứng bác chọn</option>
+                    <option value="recovery">Hỗ trợ checklist hậu sự cố</option>
+                  </select>
+                </div>
+                <div class="dialog-field family-contact-advanced">
+                  <label for="contactExpiry">Quyền tự hết hạn</label>
+                  <select id="contactExpiry">
+                    <option value="never">Không tự hết hạn</option>
+                    <option value="24h">Sau 24 giờ</option>
+                    <option value="7d">Sau 7 ngày</option>
+                  </select>
+                </div>
+              </details>
+              <p class="field-error" id="contactError" role="alert" hidden></p>
+              <button class="button button-primary" type="submit" id="contactSubmitButton">
+                <span class="family-add-plus" aria-hidden="true">+</span>
+                <span>Thêm người thân</span>
+              </button>
+            </form>
           </div>
 
-          <form class="dialog-form contact-form" id="contactForm" novalidate>
-            <div class="dialog-field family-contact-field">
-              <label for="contactName">Tên người thân</label>
-              <span class="family-contact-field__icon" aria-hidden="true"><span class="icon icon-user"></span></span>
-              <input id="contactName" type="text" placeholder="Ví dụ: Nam">
+          <div class="workspace-card family-contact-card family-contact-card--list">
+            <div class="family-contact-card__head">
+              <span>
+                <h2 class="card-heading">Danh sách người thân đã lưu <span id="contactCount">(0/5)</span></h2>
+                <p class="field-hint">Gọi nhanh hoặc gửi báo tin cho 1 chạm.</p>
+              </span>
             </div>
-            <div class="dialog-field family-contact-field">
-              <label for="contactRole">Vai trò</label>
-              <span class="family-contact-field__icon" aria-hidden="true"><span class="icon icon-users"></span></span>
-              <select id="contactRole">
-                <option value="Con">Con</option>
-                <option value="Cháu">Cháu</option>
-                <option value="Người chăm sóc">Người chăm sóc</option>
-                <option value="Người hỗ trợ khác">Người hỗ trợ khác</option>
-              </select>
-            </div>
-            <div class="dialog-field family-contact-field">
-              <label for="contactPhone">Số điện thoại</label>
-              <span class="family-contact-field__icon" aria-hidden="true"><span class="icon icon-phone"></span></span>
-              <input id="contactPhone" type="tel" inputmode="tel" placeholder="Nhập số điện thoại">
-            </div>
-            <div class="dialog-field family-contact-advanced">
-              <label for="contactEmail">Email (không bắt buộc)</label>
-              <input id="contactEmail" type="email" autocomplete="email" placeholder="Ví dụ: con@example.com">
-            </div>
-            <div class="dialog-field family-contact-advanced">
-              <label for="contactPermission">Mức quyền ban đầu</label>
-              <select id="contactPermission">
-                <option value="call_only">Chỉ nhận yêu cầu gọi hỗ trợ</option>
-                <option value="high_alert">Nhận cảnh báo nguy hiểm cao</option>
-                <option value="summary">Xem tóm tắt khi bác đồng ý</option>
-                <option value="evidence">Xem bằng chứng bác chọn</option>
-                <option value="recovery">Hỗ trợ checklist hậu sự cố</option>
-              </select>
-            </div>
-            <div class="dialog-field family-contact-advanced">
-              <label for="contactExpiry">Quyền tự hết hạn</label>
-              <select id="contactExpiry">
-                <option value="never">Không tự hết hạn</option>
-                <option value="24h">Sau 24 giờ</option>
-                <option value="7d">Sau 7 ngày</option>
-              </select>
-            </div>
-            <p class="field-error" id="contactError" role="alert" hidden></p>
-            <button class="button button-primary" type="submit" id="contactSubmitButton">
-              <span class="family-add-plus" aria-hidden="true">+</span>
-              <span>Thêm người thân</span>
-            </button>
-          </form>
+            <div class="contact-list" id="contactList"></div>
+            <p class="family-local-notice">
+              <span class="icon icon-lock" aria-hidden="true"></span>
+              <span>Dữ liệu được lưu cục bộ trên máy này, không gửi lên máy chủ. Khoan Đã không đọng được danh sách này.</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="family-contact-mascot-wrapper">
           <img class="family-contact-mascot" src="/assets/mascot-assistant.webp" width="120" height="120" alt="" aria-hidden="true" decoding="async">
         </div>
 
-        <div class="workspace-card">
+        <div class="workspace-card family-settings-card">
           <h2 class="card-heading">Số hotline &amp; mật khẩu gia đình</h2>
           <form class="dialog-form" id="familyForm" novalidate>
             <div class="dialog-field">
@@ -1791,29 +1895,65 @@
       </section>
 
       <section class="view" id="educationView" aria-labelledby="educationTitle" hidden>
-        <a class="back-link" href="#trang-chu"><span class="icon icon-back" aria-hidden="true"></span><span>Về trang chủ</span></a>
-        <section class="education-reference-hero" aria-labelledby="educationTitle">
-          <div class="education-reference-hero__copy">
-            <p class="eyebrow">2–3 phút mỗi bài</p>
-            <h1 id="educationTitle" tabindex="-1">Luyện để không bị lừa</h1>
-            <p class="calm-line">Học cách dừng lại và kiểm tra, không phải bài thi. Bác có thể nghe lại và học tiếp trên máy này.</p>
+        <section class="education-hero" aria-labelledby="educationTitle">
+          <div class="education-hero__copy">
+            <h1 id="educationTitle" tabindex="-1">Học cách tránh lừa đảo</h1>
+            <p class="calm-line">Kiến thức đơn giản, dễ hiểu giúp bác tự tin<br>nhận diện và phòng tránh lừa đảo.</p>
           </div>
-          <img src="/assets/mascot-learn.webp" width="370" height="330" alt="" aria-hidden="true" decoding="async">
-        </section>
-        <div class="education-layout">
-          <div class="education-list" id="educationList"></div>
-          <article class="workspace-card education-lesson" id="educationLesson" hidden>
-            <p class="eyebrow" id="educationLessonMeta"></p>
-            <h2 id="educationLessonTitle"></h2>
-            <p id="educationScenario"></p>
-            <div class="education-choices" id="educationChoices"></div>
-            <div class="education-feedback" id="educationFeedback" hidden></div>
-            <div class="form-actions">
-              <button class="button button-secondary" type="button" id="educationSpeakButton"><span class="icon icon-volume" aria-hidden="true"></span><span>Nghe bài này</span></button>
-              <button class="button button-secondary" type="button" id="educationRetryButton"><span>Thử lại</span></button>
-              <button class="button button-primary" type="button" id="educationNextButton">Bài tiếp theo</button>
+          <div class="education-hero__quiz-card">
+            <div class="education-quiz-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
             </div>
-          </article>
+            <h2>Câu hỏi xác minh nhanh</h2>
+            <p>Trả lời 3 câu hỏi để kiểm tra<br>mức độ cảnh giác của bác.</p>
+            <a class="button button-primary" href="#kiem-tra">
+              <span>Bắt đầu ngay</span>
+              <span class="icon icon-chevron-right" aria-hidden="true"></span>
+            </a>
+          </div>
+        </section>
+
+        <div class="education-featured-card">
+          <img class="education-featured-mascot" src="/assets/mascot-learn.webp" width="280" height="250" alt="" aria-hidden="true" decoding="async">
+          <div class="education-featured-content">
+            <h2><span id="educationLessonCount">17</span> bài học<br>nhận diện lừa đảo</h2>
+            <p>Học nhanh, nhớ lâu, áp dụng ngay để bảo vệ bản thân và gia đình.</p>
+            <button class="button button-primary" type="button" id="educationStartButton">
+              <span>Bắt đầu học</span>
+              <span class="icon icon-chevron-right" aria-hidden="true"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="education-grid" id="educationList"></div>
+
+        <article class="workspace-card education-lesson" id="educationLesson" hidden>
+          <p class="eyebrow" id="educationLessonMeta"></p>
+          <h2 id="educationLessonTitle"></h2>
+          <p id="educationScenario"></p>
+          <div class="education-choices" id="educationChoices"></div>
+          <div class="education-feedback" id="educationFeedback" hidden></div>
+          <div class="form-actions">
+            <button class="button button-secondary" type="button" id="educationSpeakButton"><span class="icon icon-volume" aria-hidden="true"></span><span>Nghe bài này</span></button>
+            <button class="button button-secondary" type="button" id="educationRetryButton"><span>Thử lại</span></button>
+            <button class="button button-primary" type="button" id="educationNextButton">Bài tiếp theo</button>
+          </div>
+        </article>
+
+        <div class="education-notification-card">
+          <img class="education-notification-mascot" src="/assets/mascot-assistant.webp" width="180" height="180" alt="" aria-hidden="true" decoding="async">
+          <div class="education-notification-content">
+            <h3>Kiến thức mới mỗi tuần</h3>
+            <p>Bật thông báo để không bỏ lỡ bài học hữu ích nhé!</p>
+            <button class="button button-primary" type="button" id="educationNotificationButton">
+              <span class="icon icon-alert" aria-hidden="true"></span>
+              <span>Bật thông báo</span>
+            </button>
+          </div>
         </div>
       </section>
 

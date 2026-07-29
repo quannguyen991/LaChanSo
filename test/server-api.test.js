@@ -93,6 +93,9 @@ test("analysis API returns deterministic guidance when the AI provider is unavai
     assert.equal(payload.che_do_du_phong, true);
     assert.ok(payload.hanh_dong.length >= 1);
     assert.notEqual(payload.muc_rui_ro, "Chưa thấy dấu hiệu rủi ro");
+    assert.equal(payload.structuredResult.requiresEmergencyFlow, true);
+    assert.ok(["medium", "high", "critical"].includes(payload.structuredResult.riskLevel));
+    assert.ok(payload.structuredResult.predictedNextSteps.length <= 3);
     assert.doesNotMatch(JSON.stringify(payload), /Gemini/i);
   } finally {
     if (originalProvider === undefined) delete process.env.LLM_PROVIDER;

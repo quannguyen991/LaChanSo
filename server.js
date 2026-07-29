@@ -14,6 +14,7 @@ const { classifyJourney, EVENT_TYPES } = require("./src/journey-engine");
 const { LinkCheckError, evaluateLinkRisk, resolveRedirectChain } = require("./src/link-shield");
 const { lookupReputation } = require("./src/reputation-engine");
 const { validateBase64Media } = require("./src/media-validation");
+const { buildStructuredAnalysisResult } = require("./src/structured-result");
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -130,7 +131,15 @@ function buildFallbackAnalysis(text, { hasMedia = false, recoveryModeActive = fa
     tin_hieu: signals,
     noi_dung_da_doc: text || undefined,
     loi_dong_cam: "Bác đã làm đúng khi dừng lại để kiểm tra trước khi hành động.",
-    che_do_du_phong: true
+    che_do_du_phong: true,
+    structuredResult: buildStructuredAnalysisResult({
+      result,
+      signals,
+      text,
+      hasMedia,
+      aiUnavailable: true,
+      recoveryModeActive
+    })
   };
 }
 
@@ -205,11 +214,19 @@ app.post("/api/phan-tich", async (request, response, next) => {
     if (recoveryModeActive) {
       result = applyRecoveryBoost(result, text || extraction.noi_dung_da_doc || "");
     }
+    const analyzedText = extraction.noi_dung_da_doc || text;
     return response.json({
       ...result,
       tin_hieu: extraction.signals,
       noi_dung_da_doc: extraction.noi_dung_da_doc || undefined,
-      loi_dong_cam: extraction.loi_dong_cam || undefined
+      loi_dong_cam: extraction.loi_dong_cam || undefined,
+      structuredResult: buildStructuredAnalysisResult({
+        result,
+        signals: extraction.signals,
+        text: analyzedText,
+        hasMedia: Boolean(image),
+        recoveryModeActive
+      })
     });
   } catch (error) {
     console.warn("Dịch vụ AI tạm thời không phản hồi; đang dùng phân tích dự phòng.", error?.name || "Error");
