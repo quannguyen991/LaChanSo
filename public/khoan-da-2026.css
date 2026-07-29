@@ -7441,6 +7441,58 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     max-width: none !important;
     transform: none !important;
   }
+
+  /* Keep the navigation rail compact and centered after all legacy desktop rules. */
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    inset: 1rem auto auto 50% !important;
+    width: 24rem !important;
+    height: 3.9rem !important;
+    padding: 0 !important;
+    transform: translateX(-50%) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.18rem !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item {
+    flex: 0 0 2.65rem !important;
+    width: 2.65rem !important;
+    min-height: 2.65rem !important;
+    padding: 0.18rem !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+    padding: 0.36rem !important;
+  }
+
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    inset: 1rem 1rem auto 1rem !important;
+    min-height: 3.9rem !important;
+    height: 3.9rem !important;
+    grid-template-columns: minmax(14rem, 1fr) auto minmax(14rem, 1fr) !important;
+    transform: none !important;
+  }
+
+  .desktop-search { justify-self: start !important; width: min(22rem, 100%) !important; }
+  .topbar__actions { justify-self: end !important; }
+  #noi-dung { margin-top: 5rem !important; }
 }
 
 /* Final override: keep navigation and search in one compact top rail. */
@@ -7674,7 +7726,7 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
 
 /* Final desktop taskbar position: one compact horizontal rail at the top. */
 @media (min-width: 64rem) {
-  body { padding: 5.6rem 1rem 1rem !important; }
+  body { padding: 5.2rem 1rem 1rem !important; }
   body::before { display: none !important; content: none !important; }
   .desktop-sidebar-brand { inset: 1.35rem auto auto 2rem !important; z-index: 91 !important; width: 3.1rem !important; display: block !important; }
   .desktop-sidebar-brand > span:last-child { display: none !important; }
@@ -7682,17 +7734,18 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   .desktop-sidebar-brand__mark img { width: 2.9rem !important; height: 3.25rem !important; }
 
   body > .bottom-nav:not(.mobile-bottom-nav) {
-    inset: 1rem 1rem auto 1rem !important;
+    inset: 1rem auto auto 50% !important;
     z-index: 90 !important;
     display: block !important;
-    width: auto !important;
+    width: 24rem !important;
     height: 3.9rem !important;
-    padding: 0.35rem 0.65rem !important;
+    padding: 0 !important;
     overflow: hidden !important;
-    border: 1px solid var(--desktop-line) !important;
-    border-radius: 2rem !important;
-    background: var(--color-surface) !important;
-    box-shadow: var(--desktop-shadow-soft) !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    transform: translateX(-50%) !important;
     pointer-events: auto !important;
   }
 
@@ -7700,10 +7753,10 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 0.4rem !important;
+    gap: 0.18rem !important;
     width: 100% !important;
     height: 100% !important;
-    padding: 0 5.5rem !important;
+    padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
@@ -7711,21 +7764,21 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
 
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item {
     display: inline-flex !important;
-    flex: 0 0 3.05rem !important;
+    flex: 0 0 2.65rem !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 3.05rem !important;
-    min-height: 3.05rem !important;
-    padding: 0.3rem !important;
+    width: 2.65rem !important;
+    min-height: 2.65rem !important;
+    padding: 0.18rem !important;
     border-radius: 50% !important;
     background: transparent !important;
     color: #6d3fe8 !important;
   }
 
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
-    width: 2.15rem !important;
-    height: 2.15rem !important;
-    padding: 0.45rem !important;
+    width: 1.8rem !important;
+    height: 1.8rem !important;
+    padding: 0.36rem !important;
     border-radius: 50% !important;
     background: currentColor !important;
     background-color: currentColor !important;
@@ -7735,16 +7788,22 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > span:last-child { display: none !important; }
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"] { background: var(--color-accent-soft) !important; color: var(--color-accent) !important; box-shadow: none !important; }
   body > .bottom-nav:not(.mobile-bottom-nav)::after { display: none !important; content: none !important; }
-  #noi-dung { margin-top: 5.25rem !important; }
+  #noi-dung { margin-top: 5rem !important; }
 
   .topbar,
   body:has(#homeView:not([hidden])) .topbar,
   body:has(#analysisView:not([hidden])) .topbar,
   body:has(#hanhTrinhView:not([hidden])) .topbar,
   body:has(#educationView:not([hidden])) .topbar {
-    inset: 5.55rem 1rem auto 1rem !important;
+    inset: 1rem 1rem auto 1rem !important;
     width: auto !important;
     max-width: none !important;
+    min-height: 3.9rem !important;
+    height: 3.9rem !important;
+    grid-template-columns: minmax(14rem, 1fr) auto minmax(14rem, 1fr) !important;
     transform: none !important;
   }
+
+  .desktop-search { justify-self: start !important; width: min(22rem, 100%) !important; }
+  .topbar__actions { justify-self: end !important; }
 }
