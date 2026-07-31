@@ -6870,6 +6870,27 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   }
 }
 
+/* Keep the desktop taskbar focused on navigation, not a full-width header rail. */
+@media (min-width: 64rem) {
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner {
+    padding: 0.28rem !important;
+    border: 1px solid color-mix(in oklch, var(--color-accent-soft-line) 72%, #ffffff) !important;
+    border-radius: 999px !important;
+    background: color-mix(in oklch, #ffffff 94%, var(--color-accent-soft)) !important;
+    box-shadow: 0 0.45rem 1.25rem rgb(54 42 110 / 0.1) !important;
+  }
+}
+
 @media (min-width: 64rem) {
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
     background: currentColor !important;
@@ -8705,6 +8726,17 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
 @media (min-width: 64rem) {
   body > .mobile-bottom-nav {
     display: none !important;
+  }
+
+  /* Logo and account actions stay independent; only navigation occupies centre stage. */
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   body > .bottom-nav:not(.mobile-bottom-nav) {
