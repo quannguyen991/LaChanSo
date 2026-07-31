@@ -9011,6 +9011,49 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   html[data-route="kiem-tra"] #analysisView .check-hub__arrow { width: 3rem !important; height: 3rem !important; border-radius: 50% !important; background: #f2edff !important; color: var(--color-accent) !important; }
   html[data-route="kiem-tra"] #analysisView .check-hub + .workspace-card { display: none !important; }
 
+  /* Use a single hero mascot. Older rules placed the same image twice. */
+  html[data-route="kiem-tra"] #analysisView > .analysis-mascot { display: none !important; }
+  html[data-route="kiem-tra"] #analysisView::after { display: none !important; content: none !important; }
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head::after {
+    position: absolute !important;
+    top: -1.65rem !important;
+    right: 1.5rem !important;
+    display: block !important;
+    width: 22rem !important;
+    height: 16.5rem !important;
+    background: url("/assets/mascot-check.webp") center / contain no-repeat !important;
+    content: "" !important;
+    pointer-events: none !important;
+  }
+
+  /* Keep the desktop header intact and centre all navigation glyphs on its axis. */
+  body:has(#analysisView:not([hidden])) .topbar {
+    position: fixed !important;
+    inset: 0.85rem 3.2rem auto 3.2rem !important;
+    z-index: 120 !important;
+    display: grid !important;
+    grid-template-columns: 16.5rem minmax(18rem, 1fr) auto !important;
+    align-items: center !important;
+    min-height: 4.35rem !important;
+    height: 4.35rem !important;
+    padding: 0.35rem 0.85rem 0.35rem 5.75rem !important;
+    border: 1px solid color-mix(in oklch, var(--color-accent-soft-line) 78%, #ffffff) !important;
+    border-radius: 2.4rem !important;
+    background: color-mix(in oklch, #ffffff 96%, var(--color-accent-soft)) !important;
+    box-shadow: 0 0.55rem 1.45rem rgb(54 42 110 / 0.08) !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    inset: 0.85rem auto auto 50% !important;
+    height: 4.35rem !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner { align-items: center !important; }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon { transform: translateY(0) !important; }
+
   body > .bottom-nav:not(.mobile-bottom-nav) {
     position: fixed !important;
     inset: 1.05rem auto auto 50% !important;
