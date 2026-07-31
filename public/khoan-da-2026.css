@@ -8888,6 +8888,129 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   .auth-dialog__mode-copy { margin: 0.1rem 0 0 !important; color: var(--khoan-text-soft) !important; text-align: center !important; }
   .auth-dialog__mode-copy button { color: var(--color-accent) !important; font-weight: 800 !important; }
 
+  /* Desktop home command center, based on the supplied reference composition. */
+  html[data-route="trang-chu"] #homeView > .home-layout { display: none !important; }
+  html[data-route="trang-chu"] #homeView > .desktop-home-redesign {
+    position: relative !important;
+    display: block !important;
+    width: min(100%, 80rem) !important;
+    margin: 0 auto !important;
+    padding: 2rem 0 2.5rem !important;
+    isolation: isolate !important;
+  }
+  html[data-route="trang-chu"] #homeView > .desktop-home-redesign::before {
+    position: absolute;
+    z-index: -2;
+    inset: -5rem -12rem -5rem;
+    border: 1px solid rgb(157 130 255 / 0.16);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.6);
+    content: "";
+  }
+  html[data-route="trang-chu"] #homeView > .desktop-home-redesign::after {
+    position: absolute;
+    z-index: -1;
+    right: -13rem;
+    bottom: -2.5rem;
+    width: 19rem;
+    height: 20rem;
+    background: url("/assets/mascot-home.webp") center bottom / contain no-repeat;
+    content: "";
+    pointer-events: none;
+  }
+  html[data-route="trang-chu"] .desktop-home-redesign__hero {
+    grid-template-columns: 30% 70% !important;
+    min-height: 22rem !important;
+  }
+  html[data-route="trang-chu"] .desktop-home-redesign__mascot img { width: min(100%, 22rem) !important; }
+  html[data-route="trang-chu"] .desktop-home-redesign__hero-copy h1 { font-size: clamp(2.5rem, 4vw, 3.85rem) !important; text-align: center !important; }
+  html[data-route="trang-chu"] .desktop-home-redesign__hero-copy > p { text-align: center !important; }
+  html[data-route="trang-chu"] .desktop-home-redesign__composer,
+  html[data-route="trang-chu"] .desktop-home-redesign__quick,
+  html[data-route="trang-chu"] .desktop-support-card,
+  html[data-route="trang-chu"] .desktop-home-redesign__footer-cards > a { box-shadow: 0 0.55rem 1.4rem rgb(74 50 150 / 0.1) !important; }
+
+  /* Check hub: a single calm selection screen with four clear paths. */
+  html[data-route="kiem-tra"] #analysisView {
+    position: relative !important;
+    width: min(100%, 88rem) !important;
+    max-width: none !important;
+    margin: 0 auto !important;
+    padding: 1.25rem 2rem 2rem !important;
+    overflow: hidden !important;
+    border-radius: 2rem !important;
+    background: #f7f3ff !important;
+  }
+  html[data-route="kiem-tra"] #analysisView::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background: transparent;
+    content: "";
+    pointer-events: none;
+  }
+  html[data-route="kiem-tra"] #analysisView > * { position: relative; z-index: 1; }
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head {
+    min-height: 14rem !important;
+    margin: 0 !important;
+    padding: 2rem 26rem 1.25rem 0 !important;
+    align-items: start !important;
+    background: transparent !important;
+  }
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head h1.page-title-center {
+    max-width: 32rem !important;
+    margin: 0 !important;
+    color: #160b6f !important;
+    font-size: clamp(3rem, 5vw, 4.7rem) !important;
+    line-height: 1.02 !important;
+    text-align: left !important;
+  }
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head h1.page-title-center::after {
+    display: block;
+    margin-top: 1rem;
+    color: #65649a;
+    font-size: 1.1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    content: "Khoan Đã sẽ giúp bác kiểm tra nhanh các tình huống thường gặp để bảo vệ bác an toàn hơn mỗi ngày.";
+  }
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head .header-action-btn,
+  html[data-route="kiem-tra"] #analysisView .prompt-bubble-row { display: none !important; }
+  html[data-route="kiem-tra"] #analysisView > .analysis-mascot {
+    display: block !important;
+    position: absolute !important;
+    z-index: 2 !important;
+    top: -0.6rem !important;
+    right: 4rem !important;
+    bottom: auto !important;
+    width: 23rem !important;
+    opacity: 1 !important;
+  }
+  html[data-route="kiem-tra"] #analysisView .check-hub {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.75rem !important;
+    width: min(100%, 78rem) !important;
+    margin: 0 auto !important;
+  }
+  html[data-route="kiem-tra"] #analysisView .check-hub__item {
+    grid-template-columns: 8.4rem minmax(0, 1fr) 3.6rem !important;
+    min-height: 10.2rem !important;
+    padding: 1rem 1.35rem !important;
+    border: 1px solid rgb(125 91 230 / 0.12) !important;
+    border-radius: 1.55rem !important;
+    background: rgb(255 255 255 / 0.94) !important;
+    box-shadow: 0 0.6rem 1.25rem rgb(74 50 150 / 0.1) !important;
+  }
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon { width: 7rem !important; height: 7rem !important; background: transparent !important; }
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon svg { width: 5.8rem !important; height: 5.8rem !important; }
+  html[data-route="kiem-tra"] #analysisView .check-hub__content strong { color: #170d72 !important; font-size: 1.7rem !important; }
+  html[data-route="kiem-tra"] #analysisView .check-hub__item--transfer .check-hub__content strong { font-size: 0 !important; }
+  html[data-route="kiem-tra"] #analysisView .check-hub__item--transfer .check-hub__content strong::before { font-size: 1.7rem; content: "Chuyển tiền"; }
+  html[data-route="kiem-tra"] #analysisView .check-hub__content small { margin-top: 0.4rem !important; color: #68679b !important; font-size: 1rem !important; line-height: 1.45 !important; }
+  html[data-route="kiem-tra"] #analysisView .check-hub__arrow { width: 3rem !important; height: 3rem !important; border-radius: 50% !important; background: #f2edff !important; color: var(--color-accent) !important; }
+  html[data-route="kiem-tra"] #analysisView .check-hub + .workspace-card { display: none !important; }
+
   body > .bottom-nav:not(.mobile-bottom-nav) {
     position: fixed !important;
     inset: 1.05rem auto auto 50% !important;
