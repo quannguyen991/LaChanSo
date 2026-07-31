@@ -7064,8 +7064,26 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
 
 /* Real content blocks for the reference check screen. */
 @media (min-width: 64rem) {
+  html[data-route="kiem-tra"] body #analysisView {
+    width: min(100% - 7.5rem, 100rem) !important;
+    margin: 0 auto !important;
+    padding: 7.75rem 0 3rem !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+  }
   html[data-route="kiem-tra"] body #analysisView::before,
+  html[data-route="kiem-tra"] body #analysisView::after,
+  html[data-route="kiem-tra"] body #analysisView .kiem-tra-head::after,
   html[data-route="kiem-tra"] body #analysisView .check-hub::after { display: none !important; content: none !important; }
+  html[data-route="kiem-tra"] body #analysisView .kiem-tra-head {
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
   html[data-route="kiem-tra"] body #analysisView .check-hub { margin-top: 0 !important; }
   html[data-route="kiem-tra"] #analysisView::before,
   html[data-route="kiem-tra"] #analysisView .check-hub::after { display: none !important; content: none !important; }
@@ -7074,7 +7092,37 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   html[data-route="kiem-tra"] #analysisView .check-benefits > div > .icon { display: grid; flex: 0 0 2.75rem; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: #f0ebff; color: #6d3fe8; } html[data-route="kiem-tra"] #analysisView .check-benefits > div:nth-child(2) > .icon { background: #e4f8ef; color: #07956b; } html[data-route="kiem-tra"] #analysisView .check-benefits > div:nth-child(3) > .icon { background: #fff3df; color: #ed8a09; }
   html[data-route="kiem-tra"] #analysisView .check-benefits p { display: grid; gap: 0.1rem; margin: 0; } html[data-route="kiem-tra"] #analysisView .check-benefits strong { color: #1b1554; font-size: 0.9rem; } html[data-route="kiem-tra"] #analysisView .check-benefits small { color: #69668f; font-size: 0.78rem; white-space: nowrap; }
   html[data-route="kiem-tra"] #analysisView .check-hub { margin-top: 0 !important; } html[data-route="kiem-tra"] #analysisView .check-hub__content::after { content: "✓  Nhận diện dấu hiệu đáng ngờ\A✓  Kiểm tra thông tin an toàn\A✓  Đánh giá mức độ rủi ro"; }
-  html[data-route="kiem-tra"] #analysisView .check-hub__icon { box-shadow: none !important; } html[data-route="kiem-tra"] #analysisView .check-hub__item--message .check-hub__icon svg { filter: drop-shadow(0 0.15rem 0.2rem rgb(5 150 105 / 0.18)); } html[data-route="kiem-tra"] #analysisView .check-hub__item--voice .check-hub__icon svg { filter: drop-shadow(0 0.15rem 0.2rem rgb(109 63 232 / 0.18)); }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item { grid-template-rows: auto 1fr auto !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item > .check-hub__icon { order: 1; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item > .check-hub__content { order: 2; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item::before { order: 3; width: 100%; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--message .check-hub__content strong,
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--voice .check-hub__content strong,
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--link .check-hub__content strong { font-size: 0 !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--message .check-hub__content strong::before { content: "Kiểm tra cuộc gọi"; font-size: 1.18rem; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--voice .check-hub__content strong::before { content: "Phân tích tin nhắn"; font-size: 1.18rem; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--link .check-hub__content strong::before { content: "Kiểm tra link & mã QR"; font-size: 1.18rem; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--message .check-hub__content small,
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--voice .check-hub__content small,
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--link .check-hub__content small,
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--transfer .check-hub__content small { font-size: 0 !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--message .check-hub__content small::before { content: "Kiểm tra số điện thoại lạ trước khi bắt máy để tránh cuộc gọi lừa đảo."; font-size: 0.88rem; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--voice .check-hub__content small::before { content: "Phân tích nội dung tin nhắn để phát hiện chiêu trò lừa đảo và cảnh báo kịp thời."; font-size: 0.88rem; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--link .check-hub__content small::before { content: "Kiểm tra độ an toàn của đường link và mã QR trước khi truy cập."; font-size: 0.88rem; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--transfer .check-hub__content small::before { content: "Kiểm tra tài khoản và nội dung chuyển tiền trước khi thực hiện giao dịch."; font-size: 0.88rem; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--message .check-hub__content::after { content: "✓  Nhận diện số lạ\A✓  Cảnh báo spam\A✓  Tra cứu thông tin số"; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--voice .check-hub__content::after { content: "✓  Phát hiện nội dung lừa đảo\A✓  Phân tích đường link\A✓  Đánh giá mức độ nguy hiểm"; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--link .check-hub__content::after { content: "✓  Kiểm tra link độc hại\A✓  Quét mã QR an toàn\A✓  Xem trước trang web"; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--transfer .check-hub__content::after { content: "✓  Xác minh tài khoản nhận\A✓  Kiểm tra nội dung chuyển tiền\A✓  Đánh giá mức độ rủi ro"; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__icon { position: relative; box-shadow: none !important; color: #059669 !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--voice .check-hub__icon { color: #6d3fe8 !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--link .check-hub__icon { color: #2563eb !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--transfer .check-hub__icon { color: #df7900 !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__icon svg { display: none !important; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__icon::after { width: 2.25rem; height: 2.25rem; background: currentColor; content: ""; -webkit-mask: url("/vendor/unicons/phone.svg") center / contain no-repeat; mask: url("/vendor/unicons/phone.svg") center / contain no-repeat; }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--voice .check-hub__icon::after { -webkit-mask-image: url("/vendor/unicons/comment-alt-exclamation.svg"); mask-image: url("/vendor/unicons/comment-alt-exclamation.svg"); }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--link .check-hub__icon::after { -webkit-mask-image: url("/vendor/unicons/qrcode-scan.svg"); mask-image: url("/vendor/unicons/qrcode-scan.svg"); }
+  html[data-route="kiem-tra"] body #analysisView .check-hub__item--transfer .check-hub__icon::after { -webkit-mask-image: url("/vendor/unicons/wallet.svg"); mask-image: url("/vendor/unicons/wallet.svg"); }
   html[data-route="kiem-tra"] #analysisView .check-advanced { display: block; margin-top: 1.5rem; padding: 1.2rem; border: 1px solid rgb(113 89 211 / 0.15); border-radius: 1.2rem; background: rgb(255 255 255 / 0.56); }
   html[data-route="kiem-tra"] #analysisView .check-advanced__head { display: flex; align-items: center; justify-content: space-between; margin: 0.1rem 0 1rem; padding: 0 0.1rem; } html[data-route="kiem-tra"] #analysisView .check-advanced h2 { margin: 0; color: #1b1554; font-size: 1.1rem; } html[data-route="kiem-tra"] #analysisView .check-advanced__head a, html[data-route="kiem-tra"] #analysisView .check-notice a { display: inline-flex; align-items: center; gap: 0.5rem; color: #6336df; font-size: 0.82rem; font-weight: 800; text-decoration: none; }
   html[data-route="kiem-tra"] #analysisView .check-advanced__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.9rem; } html[data-route="kiem-tra"] #analysisView .check-advanced__grid a { display: grid; grid-template-columns: 3rem minmax(0, 1fr) 1rem; align-items: center; gap: 0.75rem; min-height: 5.75rem; padding: 0.75rem; border-radius: 0.9rem; background: #f7f4ff; color: #1b1554; text-decoration: none; } html[data-route="kiem-tra"] #analysisView .check-advanced__grid a > .icon:first-child { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: #e5dcff; color: #6d3fe8; } html[data-route="kiem-tra"] #analysisView .check-advanced__grid strong, html[data-route="kiem-tra"] #analysisView .check-advanced__grid small { display: block; } html[data-route="kiem-tra"] #analysisView .check-advanced__grid strong { font-size: 0.78rem; } html[data-route="kiem-tra"] #analysisView .check-advanced__grid small { margin-top: 0.25rem; color: #65638a; font-size: 0.7rem; line-height: 1.35; } html[data-route="kiem-tra"] #analysisView .check-advanced__grid i { color: #6d3fe8; font-style: normal; }
