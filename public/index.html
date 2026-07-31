@@ -17,8 +17,8 @@
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/600.css">
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/700.css">
     <link rel="stylesheet" href="/tokens.css">
-    <link rel="stylesheet" href="/styles.css?v=20260727-pressure-red-2">
-    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260729-desktop-balance-1">
+    <link rel="stylesheet" href="/styles.css?v=20260731-nav-transition-fix-1">
+    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260731-taskbar-overlap-fix-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/app.js" defer></script>
@@ -130,13 +130,14 @@
         <input id="desktopSearchInput" type="search" autocomplete="off" placeholder="Tìm kiếm hoặc hỗ trợ">
       </form>
       <div class="topbar__actions">
-        <a class="topbar-help" href="#ho-tro" aria-label="Mở danh bạ hỗ trợ">
-          <span class="topbar-help__mark" aria-hidden="true">?</span>
-        </a>
         <button class="greeting-chip" type="button" id="profileMenuButton" aria-label="Đăng nhập" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu authDialog">
-          <span class="greeting-chip__avatar" aria-hidden="true"><span class="icon icon-user"></span></span>
           <span data-auth-label>Đăng nhập</span>
-          <span class="icon icon-chevron-right" aria-hidden="true"></span>
+        </button>
+        <button class="topbar-icon-btn topbar-bell" type="button" id="notificationButton" aria-label="Thông báo">
+          <span class="icon icon-bell" aria-hidden="true"></span>
+        </button>
+        <button class="topbar-icon-btn topbar-profile-icon" type="button" id="profileIconButton" aria-label="Hồ sơ của bác" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
+          <span class="icon icon-user" aria-hidden="true"></span>
         </button>
       </div>
     </header>

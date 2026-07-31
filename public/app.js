@@ -559,6 +559,8 @@ const elements = {
   finishOnboardingLaterButton: document.querySelector("#finishOnboardingLaterButton"),
   profileMenu: document.querySelector("#profileMenu"),
   profileMenuButton: document.querySelector("#profileMenuButton"),
+  profileIconButton: document.querySelector("#profileIconButton"),
+  notificationButton: document.querySelector("#notificationButton"),
   desktopSearchForm: document.querySelector("#desktopSearchForm"),
   desktopSearchInput: document.querySelector("#desktopSearchInput"),
   mobileProfileMenuButton: document.querySelector("#mobileProfileMenuButton"),
@@ -3293,6 +3295,7 @@ function setProfileMenu(open, { restoreFocus = false } = {}) {
   elements.profileMenu.hidden = !shouldOpen;
   elements.profileMenuButton.setAttribute("aria-expanded", String(shouldOpen));
   elements.mobileProfileMenuButton.setAttribute("aria-expanded", String(shouldOpen));
+  elements.profileIconButton?.setAttribute("aria-expanded", String(shouldOpen));
   if (shouldOpen) {
     elements.profileMenu.querySelector("a, button")?.focus({ preventScroll: true });
   } else if (restoreFocus) {
@@ -3994,6 +3997,10 @@ elements.recoveryActive.querySelectorAll("[data-recovery-step]").forEach((checkb
 
 elements.fontSizeButtons.forEach((button) => button.addEventListener("click", () => applyFontSize(button.dataset.fontSize)));
 elements.profileMenuButton.addEventListener("click", handleProfileTrigger);
+elements.profileIconButton?.addEventListener("click", handleProfileTrigger);
+elements.notificationButton?.addEventListener("click", () => {
+  window.location.hash = "#canh-bao";
+});
 elements.desktopSearchForm?.addEventListener("submit", (event) => {
   event.preventDefault();
   const query = elements.desktopSearchInput.value.trim();
@@ -4042,7 +4049,7 @@ elements.finishOnboardingLaterButton.addEventListener("click", () => {
 });
 document.addEventListener("click", (event) => {
   if (elements.profileMenu.hidden) return;
-  if (elements.profileMenu.contains(event.target) || elements.profileMenuButton.contains(event.target) || elements.mobileProfileMenuButton.contains(event.target)) return;
+  if (elements.profileMenu.contains(event.target) || elements.profileMenuButton.contains(event.target) || elements.mobileProfileMenuButton.contains(event.target) || elements.profileIconButton?.contains(event.target)) return;
   setProfileMenu(false);
 });
 document.addEventListener("keydown", (event) => {

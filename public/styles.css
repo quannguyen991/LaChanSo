@@ -110,12 +110,22 @@ html[data-route-direction="back"]::view-transition-new(main-view) {
 .mobile-bottom-nav { view-transition-name: taskbar-mobile; }
 
 ::view-transition-group(taskbar-desktop),
+::view-transition-group(taskbar-mobile) {
+  animation: none;
+}
+
+/* Ẩn snapshot cũ ngay lập tức — không để icon cũ đè lên icon mới */
 ::view-transition-old(taskbar-desktop),
+::view-transition-old(taskbar-mobile) {
+  animation: none;
+  opacity: 0;
+}
+
+/* Snapshot mới hiện ngay, không fade */
 ::view-transition-new(taskbar-desktop),
-::view-transition-group(taskbar-mobile),
-::view-transition-old(taskbar-mobile),
 ::view-transition-new(taskbar-mobile) {
   animation: none;
+  opacity: 1;
 }
 
 body {
