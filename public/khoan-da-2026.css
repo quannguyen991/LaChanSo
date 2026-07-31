@@ -9206,4 +9206,28 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     max-width: 4.7rem !important;
     opacity: 1 !important;
   }
+
+  /* The selection marker belongs to the icon button, never the nav rail. */
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item {
+    position: relative !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"] {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"]::after {
+    position: absolute !important;
+    right: auto !important;
+    bottom: 0.12rem !important;
+    left: 50% !important;
+    display: block !important;
+    width: 1.2rem !important;
+    height: 0.17rem !important;
+    border-radius: 999px !important;
+    background: currentColor !important;
+    content: "" !important;
+    transform: translateX(-50%) !important;
+  }
 }
