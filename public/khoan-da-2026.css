@@ -6967,6 +6967,74 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
     max-width: 4.7rem !important;
     opacity: 1 !important;
   }
+
+  /* Stable icon rail: no ghost panel, no layout shift, underline stays under its icon. */
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    inset: 0.85rem auto auto 50% !important;
+    height: 4.35rem !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav)::before,
+  body > .bottom-nav:not(.mobile-bottom-nav)::after,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner::before,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner::after {
+    display: none !important;
+    content: none !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner {
+    align-items: center !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item,
+  body > .bottom-nav:not(.mobile-bottom-nav):hover .bottom-nav__item,
+  body > .bottom-nav:not(.mobile-bottom-nav):focus-within .bottom-nav__item,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:hover,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:focus-visible {
+    flex: 0 0 3rem !important;
+    width: 3rem !important;
+    min-width: 3rem !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > span:last-child {
+    position: absolute !important;
+    top: 3.25rem !important;
+    left: 50% !important;
+    z-index: 2 !important;
+    display: block !important;
+    max-width: none !important;
+    padding: 0.3rem 0.5rem !important;
+    border: 1px solid color-mix(in oklch, var(--color-accent-soft-line) 72%, #ffffff) !important;
+    border-radius: 0.5rem !important;
+    background: #fff !important;
+    box-shadow: 0 0.35rem 0.9rem rgb(54 42 110 / 0.12) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translateX(-50%) !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:hover > span:last-child,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:focus-visible > span:last-child {
+    max-width: none !important;
+    opacity: 1 !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"] {
+    color: var(--color-accent) !important;
+    background: transparent !important;
+  }
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"]::after {
+    right: auto !important;
+    bottom: 0.18rem !important;
+    left: 50% !important;
+    width: 1.2rem !important;
+    height: 0.17rem !important;
+    transform: translateX(-50%) !important;
+  }
 }
 
 /* Keep the desktop taskbar focused on navigation, not a full-width header rail. */
