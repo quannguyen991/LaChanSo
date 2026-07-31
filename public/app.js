@@ -584,6 +584,8 @@ const elements = {
   authPasswordToggle: document.querySelector("#authPasswordToggle"),
   authConfirmField: document.querySelector("#authConfirmField"),
   authPasswordConfirm: document.querySelector("#authPasswordConfirm"),
+  authLoginOptions: document.querySelector("#authLoginOptions"),
+  authRemember: document.querySelector("#authRemember"),
   authError: document.querySelector("#authError"),
   authSubmitButton: document.querySelector("#authSubmitButton"),
   authModeCopy: document.querySelector("#authModeCopy"),
@@ -3214,6 +3216,7 @@ function setAuthMode(mode) {
   elements.authDialogTitle.textContent = registering ? "Tạo tài khoản mới" : "Chào mừng quay lại";
   elements.authNameField.hidden = !registering;
   elements.authConfirmField.hidden = !registering;
+  elements.authLoginOptions.hidden = registering;
   elements.authName.required = registering;
   elements.authPasswordConfirm.required = registering;
   elements.authPassword.autocomplete = registering ? "new-password" : "current-password";
@@ -3229,6 +3232,7 @@ function openAuthDialog(mode = getAccount() ? "login" : "register") {
   setProfileMenu(false);
   setAuthMode(mode);
   elements.authForm.reset();
+  elements.authRemember.checked = true;
   elements.authPassword.type = "password";
   elements.authPasswordToggle.classList.remove("is-visible");
   elements.authPasswordToggle.setAttribute("aria-pressed", "false");

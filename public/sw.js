@@ -1,10 +1,10 @@
-const CACHE_NAME = "khoan-da-shell-v33";
+const CACHE_NAME = "khoan-da-shell-v34";
 const APP_SHELL = [
   "/",
   "/index.html",
   "/tokens.css",
   "/styles.css?v=20260731-nav-transition-fix-1",
-  "/khoan-da-2026.css?v=20260731-auth-dialog-refresh-1",
+  "/khoan-da-2026.css?v=20260731-auth-dialog-reference-1",
   "/services.js",
   "/app.js",
   "/manifest.webmanifest",

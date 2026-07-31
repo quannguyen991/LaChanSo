@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/700.css">
     <link rel="stylesheet" href="/tokens.css">
     <link rel="stylesheet" href="/styles.css?v=20260731-nav-transition-fix-1">
-    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260731-auth-dialog-refresh-1">
+    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260731-auth-dialog-reference-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/app.js" defer></script>
@@ -2069,6 +2069,10 @@
             <span>Nhập lại mật khẩu</span>
             <span class="auth-dialog__input"><span class="icon icon-lock" aria-hidden="true"></span><input id="authPasswordConfirm" type="password" autocomplete="new-password" minlength="6" maxlength="120" placeholder="Nhập lại mật khẩu"></span>
           </label>
+          <div class="auth-dialog__options" id="authLoginOptions">
+            <label><input id="authRemember" type="checkbox" checked><span>Ghi nhớ đăng nhập</span></label>
+            <span>Thông tin được lưu trên thiết bị này</span>
+          </div>
           <p class="auth-dialog__error" id="authError" role="alert" hidden></p>
           <button class="button button-primary auth-dialog__submit" type="submit" id="authSubmitButton">Đăng nhập</button>
           <p class="auth-dialog__mode-copy" id="authModeCopy">Chưa có tài khoản? <button type="button" id="authModeSwitch">Tạo tài khoản</button></p>
