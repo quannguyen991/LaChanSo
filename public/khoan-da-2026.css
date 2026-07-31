@@ -2860,6 +2860,105 @@ html[data-authenticated="true"] .greeting-chip [data-auth-label] {
 .auth-dialog__error { margin: 0; color: #c72d36; font-weight: 700; }
 .auth-dialog__submit { width: 100%; }
 
+/* Polished account flow: spacious, readable and deliberately separate from the app shell. */
+.auth-dialog {
+  width: min(calc(100% - 2rem), 42.5rem);
+  border-radius: 1.65rem;
+}
+
+.auth-dialog::backdrop {
+  background: rgb(24 32 63 / 0.67);
+  backdrop-filter: blur(5px);
+}
+
+.auth-dialog__shell {
+  gap: 1.15rem;
+  padding: 1.7rem 2.15rem 1.9rem;
+  border: 1px solid color-mix(in oklch, var(--color-accent-soft-line) 75%, #ffffff);
+  border-radius: 1.65rem;
+  box-shadow: 0 1.25rem 3.5rem rgb(15 23 55 / 0.25);
+}
+
+.auth-dialog__brand {
+  width: 100%;
+  height: 3.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.auth-dialog__logo { width: 3.25rem; height: 3.9rem; }
+.auth-dialog__heading { display: grid; gap: 0.35rem; width: 100%; text-align: center; }
+.auth-dialog h2 { font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.18; }
+.auth-dialog__lead { font-size: 0.98rem; line-height: 1.5; }
+.auth-dialog__close {
+  top: 1.25rem;
+  right: 1.4rem;
+  width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid var(--khoan-line);
+  background: #fff;
+  box-shadow: 0 0.2rem 0.45rem rgb(54 42 110 / 0.09);
+}
+
+.auth-dialog__tabs {
+  padding: 0.2rem;
+  border: 1px solid var(--khoan-line);
+  border-radius: 0.9rem;
+  background: #faf8ff;
+}
+
+.auth-dialog__tabs button { min-height: 3.35rem; border-radius: 0.7rem; }
+.auth-dialog__tabs button[aria-selected="true"] {
+  color: var(--color-accent);
+  background: #fff;
+  box-shadow: inset 0 -0.18rem 0 var(--color-accent), 0 0.25rem 0.75rem rgb(54 42 110 / 0.08);
+}
+
+.auth-dialog__form { gap: 0.8rem; }
+.auth-dialog__field { gap: 0.38rem; font-size: 0.94rem; }
+.auth-dialog__input { position: relative; display: flex; align-items: center; }
+.auth-dialog__input > .icon {
+  position: absolute;
+  left: 1rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-accent);
+  pointer-events: none;
+}
+.auth-dialog__field input {
+  min-height: 3.65rem;
+  padding: 0.8rem 3.25rem 0.8rem 3.05rem;
+  border-radius: 1rem;
+  font-size: 1rem;
+  background: #fff;
+}
+.auth-dialog__field input:focus-visible { border-color: var(--color-accent); outline: 3px solid color-mix(in oklch, var(--color-accent-soft) 80%, transparent); }
+.auth-dialog__password-toggle {
+  position: absolute;
+  right: 0.45rem;
+  display: grid;
+  place-items: center;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 0.75rem;
+  color: var(--color-ink-2);
+  background: transparent;
+}
+.auth-dialog__password-toggle:hover { color: var(--color-accent); background: var(--color-accent-soft); }
+.auth-dialog__password-toggle .icon { display: none; }
+.auth-dialog__password-toggle::after { content: "Hiện"; font-size: 0.84rem; font-weight: 800; }
+.auth-dialog__password-toggle.is-visible::after { content: "Ẩn"; }
+.auth-dialog__submit { min-height: 3.65rem; margin-top: 0.2rem; border-radius: 999px; font-size: 1.05rem; }
+.auth-dialog__mode-copy { margin: 0.1rem 0 0; color: var(--khoan-text-soft); text-align: center; }
+.auth-dialog__mode-copy button { color: var(--color-accent); font-weight: 800; text-decoration: none; }
+.auth-dialog__mode-copy button:hover { text-decoration: underline; }
+
+@media (max-width: 40rem) {
+  .auth-dialog__shell { padding: 1.35rem; }
+  .auth-dialog__brand { height: 3.25rem; }
+  .auth-dialog__logo { width: 2.8rem; height: 3.25rem; }
+}
+
 /* Check hub reference */
 html[data-route="kiem-tra"] #analysisView {
   position: relative;
@@ -6877,9 +6976,9 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   body:has(#analysisView:not([hidden])) .topbar,
   body:has(#hanhTrinhView:not([hidden])) .topbar,
   body:has(#educationView:not([hidden])) .topbar {
-    border: 0 !important;
-    background: transparent !important;
-    box-shadow: none !important;
+    border: 1px solid color-mix(in oklch, var(--color-accent-soft-line) 78%, #ffffff) !important;
+    background: color-mix(in oklch, #ffffff 96%, var(--color-accent-soft)) !important;
+    box-shadow: 0 0.55rem 1.45rem rgb(54 42 110 / 0.08) !important;
   }
 
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner {

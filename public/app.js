@@ -581,10 +581,13 @@ const elements = {
   authName: document.querySelector("#authName"),
   authEmail: document.querySelector("#authEmail"),
   authPassword: document.querySelector("#authPassword"),
+  authPasswordToggle: document.querySelector("#authPasswordToggle"),
   authConfirmField: document.querySelector("#authConfirmField"),
   authPasswordConfirm: document.querySelector("#authPasswordConfirm"),
   authError: document.querySelector("#authError"),
   authSubmitButton: document.querySelector("#authSubmitButton"),
+  authModeCopy: document.querySelector("#authModeCopy"),
+  authModeSwitch: document.querySelector("#authModeSwitch"),
   caseFilterButtons: document.querySelectorAll("[data-case-filter]"),
   bottomNavItems: document.querySelectorAll(".bottom-nav__item"),
   toast: document.querySelector("#toast"),
@@ -3208,13 +3211,15 @@ function renderAuthState() {
 function setAuthMode(mode) {
   authMode = mode === "register" ? "register" : "login";
   const registering = authMode === "register";
-  elements.authDialogTitle.textContent = registering ? "Tạo tài khoản Khoan Đã" : "Đăng nhập Khoan Đã";
+  elements.authDialogTitle.textContent = registering ? "Tạo tài khoản mới" : "Chào mừng quay lại";
   elements.authNameField.hidden = !registering;
   elements.authConfirmField.hidden = !registering;
   elements.authName.required = registering;
   elements.authPasswordConfirm.required = registering;
   elements.authPassword.autocomplete = registering ? "new-password" : "current-password";
   elements.authSubmitButton.textContent = registering ? "Tạo tài khoản" : "Đăng nhập";
+  elements.authModeCopy.firstChild.textContent = registering ? "Đã có tài khoản? " : "Chưa có tài khoản? ";
+  elements.authModeSwitch.textContent = registering ? "Đăng nhập" : "Tạo tài khoản";
   elements.authLoginTab.setAttribute("aria-selected", String(!registering));
   elements.authRegisterTab.setAttribute("aria-selected", String(registering));
   elements.authError.hidden = true;
@@ -3224,6 +3229,10 @@ function openAuthDialog(mode = getAccount() ? "login" : "register") {
   setProfileMenu(false);
   setAuthMode(mode);
   elements.authForm.reset();
+  elements.authPassword.type = "password";
+  elements.authPasswordToggle.classList.remove("is-visible");
+  elements.authPasswordToggle.setAttribute("aria-pressed", "false");
+  elements.authPasswordToggle.setAttribute("aria-label", "Hiện mật khẩu");
   const account = getAccount();
   if (account && mode === "login") elements.authEmail.value = account.email;
   if (!elements.authDialog.open) elements.authDialog.showModal();
@@ -4024,6 +4033,14 @@ elements.deleteAccountButton.addEventListener("click", deleteAccount);
 elements.authDialogClose.addEventListener("click", closeAuthDialog);
 elements.authLoginTab.addEventListener("click", () => setAuthMode("login"));
 elements.authRegisterTab.addEventListener("click", () => setAuthMode("register"));
+elements.authModeSwitch.addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login"));
+elements.authPasswordToggle.addEventListener("click", () => {
+  const reveal = elements.authPassword.type === "password";
+  elements.authPassword.type = reveal ? "text" : "password";
+  elements.authPasswordToggle.classList.toggle("is-visible", reveal);
+  elements.authPasswordToggle.setAttribute("aria-pressed", String(reveal));
+  elements.authPasswordToggle.setAttribute("aria-label", reveal ? "Ẩn mật khẩu" : "Hiện mật khẩu");
+});
 elements.authForm.addEventListener("submit", submitAuth);
 elements.authDialog.addEventListener("click", (event) => {
   if (event.target === elements.authDialog) closeAuthDialog();

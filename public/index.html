@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/700.css">
     <link rel="stylesheet" href="/tokens.css">
     <link rel="stylesheet" href="/styles.css?v=20260731-nav-transition-fix-1">
-    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260731-compact-centered-taskbar-1">
+    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260731-auth-dialog-refresh-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/app.js" defer></script>
@@ -2043,32 +2043,35 @@
         <button class="auth-dialog__close" type="button" id="authDialogClose" aria-label="Đóng">
           <span class="icon icon-close" aria-hidden="true"></span>
         </button>
-        <img class="auth-dialog__logo" src="/assets/brand-shield-purple.webp" width="81" height="98" alt="" aria-hidden="true">
-        <h2 id="authDialogTitle">Đăng nhập Khoan Đã</h2>
-        <p class="auth-dialog__lead">Thông tin của bác được lưu riêng trên thiết bị này.</p>
+        <div class="auth-dialog__brand" aria-hidden="true"><img class="auth-dialog__logo" src="/assets/brand-shield-purple.webp" width="81" height="98" alt=""></div>
         <div class="auth-dialog__tabs" role="tablist" aria-label="Chọn hình thức tài khoản">
           <button type="button" id="authLoginTab" role="tab" aria-selected="true">Đăng nhập</button>
           <button type="button" id="authRegisterTab" role="tab" aria-selected="false">Tạo tài khoản</button>
         </div>
+        <div class="auth-dialog__heading">
+          <h2 id="authDialogTitle">Chào mừng quay lại</h2>
+          <p class="auth-dialog__lead">Đăng nhập để lưu hồ sơ, lịch sử kiểm tra và người thân tin cậy.</p>
+        </div>
         <form class="auth-dialog__form" id="authForm" novalidate>
           <label class="auth-dialog__field" id="authNameField" hidden>
             <span>Họ và tên</span>
-            <input id="authName" type="text" autocomplete="name" maxlength="80" placeholder="Nguyễn Văn An">
+            <span class="auth-dialog__input"><span class="icon icon-user" aria-hidden="true"></span><input id="authName" type="text" autocomplete="name" maxlength="80" placeholder="Nguyễn Văn An"></span>
           </label>
           <label class="auth-dialog__field">
             <span>Email</span>
-            <input id="authEmail" type="email" autocomplete="email" maxlength="120" placeholder="bac@example.com" required>
+            <span class="auth-dialog__input"><span class="icon icon-user" aria-hidden="true"></span><input id="authEmail" type="email" autocomplete="email" maxlength="120" placeholder="Nhập email" required></span>
           </label>
           <label class="auth-dialog__field">
             <span>Mật khẩu</span>
-            <input id="authPassword" type="password" autocomplete="current-password" minlength="6" maxlength="120" placeholder="Tối thiểu 6 ký tự" required>
+            <span class="auth-dialog__input"><span class="icon icon-lock" aria-hidden="true"></span><input id="authPassword" type="password" autocomplete="current-password" minlength="6" maxlength="120" placeholder="Nhập mật khẩu" required><button class="auth-dialog__password-toggle" id="authPasswordToggle" type="button" aria-label="Hiện mật khẩu" aria-pressed="false"><span class="icon icon-search" aria-hidden="true"></span></button></span>
           </label>
           <label class="auth-dialog__field" id="authConfirmField" hidden>
             <span>Nhập lại mật khẩu</span>
-            <input id="authPasswordConfirm" type="password" autocomplete="new-password" minlength="6" maxlength="120">
+            <span class="auth-dialog__input"><span class="icon icon-lock" aria-hidden="true"></span><input id="authPasswordConfirm" type="password" autocomplete="new-password" minlength="6" maxlength="120" placeholder="Nhập lại mật khẩu"></span>
           </label>
           <p class="auth-dialog__error" id="authError" role="alert" hidden></p>
           <button class="button button-primary auth-dialog__submit" type="submit" id="authSubmitButton">Đăng nhập</button>
+          <p class="auth-dialog__mode-copy" id="authModeCopy">Chưa có tài khoản? <button type="button" id="authModeSwitch">Tạo tài khoản</button></p>
         </form>
       </div>
     </dialog>
