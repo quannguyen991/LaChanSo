@@ -9777,3 +9777,76 @@ html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-but
     font-size: 0.86rem !important;
   }
 }
+
+/* Account, history and alert refinements. */
+html:not([data-authenticated="true"]) body .topbar .greeting-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 9.5rem !important;
+  min-height: 2.8rem !important;
+  padding: 0 1.25rem !important;
+  border: 1px solid #d8caff !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: #332280 !important;
+  box-shadow: 0 0.35rem 0.9rem rgb(83 59 180 / 0.08) !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+}
+
+html:not([data-authenticated="true"]) body .topbar__actions {
+  justify-self: end !important;
+  min-width: max-content !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
+  max-width: none !important;
+  font-size: clamp(1.15rem, 5vw, 1.55rem) !important;
+  white-space: nowrap !important;
+}
+
+.auth-dialog__tabs {
+  gap: 0.28rem !important;
+  padding: 0.26rem !important;
+  border-radius: 1.2rem !important;
+  background: #f8f7fb !important;
+}
+
+.auth-dialog__tabs button {
+  min-height: 3.3rem !important;
+  border: 2px solid #242424 !important;
+  border-radius: 1rem !important;
+  background: #f3f3f3 !important;
+}
+
+.auth-dialog__tabs button[aria-selected="true"] {
+  border-color: #242424 !important;
+  background: #fff !important;
+  box-shadow: inset 0 -0.2rem 0 #7040e8, 0 0 0 0.14rem #d9ccff !important;
+}
+
+.scam-news {
+  width: min(100%, 62rem);
+  margin: 2.25rem auto 0;
+  padding: 1.5rem;
+  border: 1px solid rgb(113 89 211 / 0.15);
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 0.82);
+}
+
+.scam-news__head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.scam-news__head .eyebrow { margin: 0 0 0.35rem; }
+.scam-news__head h2 { margin: 0; color: var(--khoan-text); font-size: 1.45rem; }
+.scam-news__head > p { margin: 0; color: var(--khoan-text-soft); font-size: 0.88rem; }
+.scam-news__list { display: grid; gap: 0.7rem; }
+.scam-news__item { display: grid; grid-template-columns: 2.7rem minmax(0, 1fr); gap: 0.8rem; align-items: start; padding: 0.9rem; border-radius: 0.8rem; background: #f8f6ff; }
+.scam-news__item > .icon { display: grid; place-items: center; width: 2.7rem; height: 2.7rem; border-radius: 50%; color: #6d3fe8; background: #ece6ff; }
+.scam-news__item h3 { margin: 0; color: var(--khoan-text); font-size: 1rem; line-height: 1.35; }
+.scam-news__item p { margin: 0.25rem 0 0; color: var(--khoan-text-soft); font-size: 0.92rem; line-height: 1.5; }
+
+@media (max-width: 40rem) {
+  .scam-news { margin-top: 1.5rem; padding: 1rem; border-radius: 0.8rem; }
+  .scam-news__head { display: grid; gap: 0.35rem; }
+  .scam-news__head h2 { font-size: 1.25rem; }
+}
