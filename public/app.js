@@ -579,6 +579,7 @@ const elements = {
   authForm: document.querySelector("#authForm"),
   authNameField: document.querySelector("#authNameField"),
   authName: document.querySelector("#authName"),
+  authAccountLabel: document.querySelector("#authAccountLabel"),
   authEmail: document.querySelector("#authEmail"),
   authPassword: document.querySelector("#authPassword"),
   authPasswordToggle: document.querySelector("#authPasswordToggle"),
@@ -3213,12 +3214,15 @@ function renderAuthState() {
 function setAuthMode(mode) {
   authMode = mode === "register" ? "register" : "login";
   const registering = authMode === "register";
+  elements.authDialog.dataset.mode = authMode;
   elements.authDialogTitle.textContent = registering ? "Tạo tài khoản mới" : "Chào mừng quay lại";
   elements.authNameField.hidden = !registering;
   elements.authConfirmField.hidden = !registering;
   elements.authLoginOptions.hidden = registering;
   elements.authName.required = registering;
   elements.authPasswordConfirm.required = registering;
+  elements.authAccountLabel.textContent = registering ? "Email" : "Tài khoản";
+  elements.authEmail.placeholder = registering ? "Nhập email" : "Email đã đăng ký";
   elements.authPassword.autocomplete = registering ? "new-password" : "current-password";
   elements.authSubmitButton.textContent = registering ? "Tạo tài khoản" : "Đăng nhập";
   elements.authModeCopy.firstChild.textContent = registering ? "Đã có tài khoản? " : "Chưa có tài khoản? ";
