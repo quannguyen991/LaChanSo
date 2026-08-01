@@ -9347,3 +9347,118 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   html[data-route="kiem-tra"] #analysisView .check-hub::after { display: block; grid-column: 1 / -1; margin-top: 0.35rem; padding: 1.15rem 1.35rem; border: 1px solid rgb(113 89 211 / 0.15); border-radius: 1.2rem; background: rgb(255 255 255 / 0.58); color: #1b1554; content: "Tính năng nâng cao\A\A  Tra cứu số điện thoại       Kiểm tra website       Báo cáo lừa đảo       Lịch sử kiểm tra"; white-space: pre-wrap; font-size: 1.05rem; font-weight: 800; line-height: 1.4; }
   html[data-route="kiem-tra"] #analysisView > .analysis-mascot, html[data-route="kiem-tra"] #analysisView .workspace-card { display: none !important; }
 }
+
+/* Mobile repair: keep the app header and the check hub independent from desktop rules. */
+@media (max-width: 63.9375rem) {
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .topbar__actions {
+    display: inline-flex !important;
+    grid-column: 2 !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.45rem !important;
+  }
+
+  html[data-authenticated="false"] .topbar .topbar-bell,
+  html[data-authenticated="false"] .topbar .topbar-profile-icon {
+    display: none !important;
+  }
+
+  html[data-authenticated="false"] .topbar .greeting-chip {
+    display: inline-flex !important;
+    width: auto !important;
+    min-width: 7.15rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView {
+    width: min(100% - 1.25rem, 36rem) !important;
+    margin-inline: auto !important;
+    padding: 6.4rem 0 6.8rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-benefits,
+  html[data-route="kiem-tra"] #analysisView .prompt-bubble-row {
+    display: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    margin: 1rem 0 0 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__item {
+    display: grid !important;
+    grid-template-columns: 3.25rem minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+    min-height: 5.8rem !important;
+    padding: 0.8rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon {
+    width: 3.25rem !important;
+    height: 3.25rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon svg {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content {
+    min-width: 0 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content strong,
+  html[data-route="kiem-tra"] #analysisView .check-hub__content small {
+    overflow-wrap: anywhere !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content strong {
+    font-size: 1rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content small {
+    font-size: 0.84rem !important;
+    line-height: 1.35 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-advanced {
+    display: block !important;
+    margin-top: 1rem !important;
+    padding: 1rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-advanced__grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-advanced__grid a {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto !important;
+    min-height: 4.8rem !important;
+    padding: 0.7rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice {
+    grid-template-columns: 2.5rem minmax(0, 1fr) !important;
+    gap: 0.7rem !important;
+    padding: 0.9rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice a {
+    grid-column: 2 !important;
+  }
+}
