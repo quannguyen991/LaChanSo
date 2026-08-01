@@ -213,9 +213,9 @@ test("desktop and mobile taskbars share routes and render cross-browser icons", 
 test("desktop web shell exposes sidebar brand, search and large-screen overrides", () => {
   assert.match(html, /class="desktop-sidebar-brand"[\s\S]*?Khoan Đã[\s\S]*?Bảo vệ bác, mỗi ngày/);
   assert.match(html, /id="desktopSearchForm"[\s\S]*?id="desktopSearchInput"[\s\S]*?placeholder="Tìm kiếm hoặc hỗ trợ"/);
-  assert.match(html, /khoan-da-2026\.css\?v=20260801-mobile-check-fix-1/);
-  assert.match(serviceWorker, /khoan-da-shell-v43/);
-  assert.match(serviceWorker, /khoan-da-2026\.css\?v=20260801-mobile-check-fix-1/);
+  assert.match(html, /khoan-da-2026\.css\?v=20260801-mobile-check-fix-2/);
+  assert.match(serviceWorker, /khoan-da-shell-v44/);
+  assert.match(serviceWorker, /khoan-da-2026\.css\?v=20260801-mobile-check-fix-2/);
   assert.match(refreshStyles, /Desktop web redesign, 2026-07-28/);
   assert.match(refreshStyles, /@media \(min-width: 64rem\)[\s\S]*?--desktop-sidebar-w/);
   assert.match(refreshStyles, /\.desktop-sidebar-brand/);
