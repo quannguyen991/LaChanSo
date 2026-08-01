@@ -7697,3 +7697,65 @@ body:has(#homeView:not([hidden])) {
   }
 }
 
+
+
+/* Route content enters in layers while the persistent taskbars stay still. */
+@keyframes route-content-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 0.9rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.view.is-route-entering > :not([hidden]) {
+  animation: route-content-settle 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.view.is-route-entering .check-hub__item,
+.view.is-route-entering .check-advanced__grid > a,
+.view.is-route-entering .hub-card,
+.view.is-route-entering .mobile-action,
+.view.is-route-entering .case-card {
+  animation: route-content-settle 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.view.is-route-entering .check-hub__item:nth-child(2),
+.view.is-route-entering .check-advanced__grid > a:nth-child(2),
+.view.is-route-entering .hub-card:nth-child(2),
+.view.is-route-entering .mobile-action:nth-child(2),
+.view.is-route-entering .case-card:nth-child(2) { animation-delay: 45ms; }
+
+.view.is-route-entering .check-hub__item:nth-child(3),
+.view.is-route-entering .check-advanced__grid > a:nth-child(3),
+.view.is-route-entering .hub-card:nth-child(3),
+.view.is-route-entering .mobile-action:nth-child(3),
+.view.is-route-entering .case-card:nth-child(3) { animation-delay: 90ms; }
+
+.view.is-route-entering .check-hub__item:nth-child(4),
+.view.is-route-entering .check-advanced__grid > a:nth-child(4),
+.view.is-route-entering .hub-card:nth-child(4),
+.view.is-route-entering .mobile-action:nth-child(4),
+.view.is-route-entering .case-card:nth-child(4) { animation-delay: 135ms; }
+
+.bottom-nav__item,
+.mobile-bottom-nav__item,
+.check-hub__item,
+.check-advanced__grid > a {
+  transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .view.is-route-entering > :not([hidden]),
+  .view.is-route-entering .check-hub__item,
+  .view.is-route-entering .check-advanced__grid > a,
+  .view.is-route-entering .hub-card,
+  .view.is-route-entering .mobile-action,
+  .view.is-route-entering .case-card {
+    animation: none;
+  }
+}
+

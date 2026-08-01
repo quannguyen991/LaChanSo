@@ -3421,6 +3421,18 @@ function loadAccessibilityPreferences() {
 const ROUTE_SEQUENCE = Object.keys(ROUTES);
 let currentRouteHash = null;
 let activeRouteTransition = null;
+let routeContentAnimationFrame = null;
+
+function animateRouteContent(view) {
+  if (!view || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return;
+  window.cancelAnimationFrame(routeContentAnimationFrame);
+  view.classList.remove("is-route-entering");
+  routeContentAnimationFrame = window.requestAnimationFrame(() => {
+    view.classList.add("is-route-entering");
+    window.setTimeout(() => view.classList.remove("is-route-entering"), 520);
+  });
+}
+
 
 function route() {
   const nextHash = ROUTES[window.location.hash] ? window.location.hash : "#trang-chu";
@@ -3488,6 +3500,8 @@ function applyRoute(hash) {
       el.hidden = key !== activeKey;
     }
   }
+
+  animateRouteContent(elements[activeKey]);
 
   updateBottomNav(hash);
 
