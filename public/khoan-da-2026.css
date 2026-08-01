@@ -9656,3 +9656,124 @@ html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__gr
   line-height: 1.35 !important;
 }
 
+/* Case history refinement: text-led layout without the decorative mascot. */
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel {
+  width: min(100% - 2.5rem, 54rem) !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero {
+  display: block !important;
+  min-height: 0 !important;
+  margin: 0 0 1.75rem !important;
+  padding: 0.5rem 0 !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero > img {
+  display: none !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel .empty-state img {
+  display: none !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy {
+  width: 100% !important;
+  max-width: 42rem !important;
+  padding: 0 !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 {
+  max-width: none !important;
+  margin: 0 !important;
+  color: var(--khoan-text) !important;
+  font-size: clamp(2.25rem, 5vw, 3.5rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
+  display: block !important;
+  max-width: 38rem !important;
+  margin: 0.85rem 0 1.25rem !important;
+  color: var(--khoan-text-soft) !important;
+  font-size: clamp(1rem, 1.6vw, 1.12rem) !important;
+  line-height: 1.55 !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-filters {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.55rem !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-filters button {
+  min-height: 2.8rem !important;
+  padding: 0.55rem 1rem !important;
+  font-size: 0.9rem !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1rem !important;
+  margin: 0 0 0.9rem !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
+  margin: 0 !important;
+  color: var(--khoan-text) !important;
+  font-size: clamp(1.45rem, 3vw, 1.9rem) !important;
+  line-height: 1.2 !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: fit-content !important;
+  min-height: 2.9rem !important;
+  margin: -3.8rem 0 1rem auto !important;
+  padding: 0.55rem 1rem !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 40rem) {
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel {
+    width: min(100% - 2rem, 34rem) !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero {
+    margin-bottom: 1.4rem !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 {
+    font-size: clamp(2rem, 9vw, 2.5rem) !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
+    margin-top: 0.7rem !important;
+    font-size: 1rem !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head {
+    align-items: flex-start !important;
+    min-height: 3rem !important;
+    padding-right: 0 !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
+    max-width: 10rem !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-button {
+    min-height: 2.75rem !important;
+    margin-top: -3.7rem !important;
+    padding-inline: 0.85rem !important;
+    font-size: 0.86rem !important;
+  }
+}
