@@ -1,0 +1,82 @@
+/* Kiểm tra an toàn reference layout */
+html[data-route="kiem-tra"] body { background: #f8f5ff; }
+html[data-route="kiem-tra"] #analysisView { width: min(100% - 2rem, 86rem); padding-block: 1.5rem 7rem; }
+html[data-route="kiem-tra"] #analysisView > .workspace-head.kiem-tra-head { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(24rem, 39rem); align-items: center; min-height: 26rem; margin: 0 0 1.35rem; padding: 3.2rem 3.5rem; overflow: hidden; border: 1px solid #ddd1ff; border-radius: 2rem; background: radial-gradient(circle at 78% 15%, rgb(232 224 255 / 0.85), transparent 23rem), linear-gradient(135deg, #fff 0%, #faf7ff 57%, #eee7ff 100%); box-shadow: 0 1rem 2.8rem rgb(91 62 177 / 0.1); }
+html[data-route="kiem-tra"] #analysisView > .workspace-head.kiem-tra-head::before { content: ""; position: absolute; width: 20rem; height: 20rem; left: -10rem; bottom: -12rem; border-radius: 50%; background: rgb(226 214 255 / 0.55); }
+html[data-route="kiem-tra"] #analysisView > .workspace-head.kiem-tra-head .back-btn,
+html[data-route="kiem-tra"] #analysisView > .workspace-head.kiem-tra-head .search-btn { display: none; }
+html[data-route="kiem-tra"] #analysisView > .workspace-head.kiem-tra-head .page-title-center { position: relative; z-index: 2; grid-column: 1; margin: 0; color: #24165f; font-size: clamp(2.8rem, 5vw, 4.7rem); font-weight: 850; line-height: 1.05; text-align: left; letter-spacing: 0; }
+html[data-route="kiem-tra"] .analysis-hero-copy { position: relative; z-index: 2; grid-column: 1; margin: 1.25rem 0 0; color: #625b91; font-size: clamp(1rem, 1.4vw, 1.2rem); line-height: 1.6; }
+html[data-route="kiem-tra"] .analysis-mode-tabs { position: relative; z-index: 2; display: flex; grid-column: 1; width: fit-content; max-width: 100%; margin-top: 1.6rem; padding: 0.3rem; border: 1px solid #d9ceff; border-radius: 1rem; background: rgb(255 255 255 / 0.78); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.7); }
+html[data-route="kiem-tra"] .analysis-mode-tabs a { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 3rem; padding: 0.55rem 0.9rem; border-radius: 0.75rem; color: #55468e; font: inherit; font-weight: 700; text-decoration: none; white-space: nowrap; }
+html[data-route="kiem-tra"] .analysis-mode-tabs a .icon { width: 1.15rem; height: 1.15rem; }
+html[data-route="kiem-tra"] .analysis-mode-tabs a.is-active { background: #eee8ff; color: #6940df; box-shadow: 0 0.2rem 0.55rem rgb(112 64 232 / 0.12); }
+html[data-route="kiem-tra"] .analysis-hero-actions { position: relative; z-index: 2; display: flex; grid-column: 1; gap: 0.9rem; margin-top: 1.55rem; }
+html[data-route="kiem-tra"] .analysis-hero-actions .button { min-height: 3.55rem; border-radius: 999px; padding-inline: 1.45rem; }
+html[data-route="kiem-tra"] .analysis-hero-visual { position: absolute; z-index: 1; right: 2rem; bottom: 0; display: grid; place-items: center; width: min(43%, 35rem); height: 100%; }
+html[data-route="kiem-tra"] .analysis-hero-visual__ring { position: absolute; display: block; border: 1px solid rgb(180 155 255 / 0.5); border-radius: 50%; transform: rotateX(66deg); }
+html[data-route="kiem-tra"] .analysis-hero-visual__ring--outer { width: 28rem; height: 13rem; bottom: 1.2rem; }
+html[data-route="kiem-tra"] .analysis-hero-visual__ring--inner { width: 19rem; height: 8rem; bottom: 3.2rem; }
+html[data-route="kiem-tra"] .analysis-hero-visual__shield { display: grid; place-items: center; width: 12rem; height: 14rem; border: 0.35rem solid #dcd0ff; border-radius: 45% 45% 52% 52%; background: linear-gradient(145deg, #a88bff, #5a31cf 68%); color: #fff; box-shadow: 0 1.3rem 2.6rem rgb(82 49 191 / 0.28), 0 0 3.5rem rgb(159 132 255 / 0.45); transform: translateY(-1rem); clip-path: polygon(50% 0, 91% 15%, 88% 65%, 72% 84%, 50% 100%, 28% 84%, 12% 65%, 9% 15%); }
+html[data-route="kiem-tra"] .analysis-hero-visual__shield .icon { width: 5.5rem; height: 5.5rem; filter: brightness(0) invert(1); }
+
+html[data-route="kiem-tra"] .check-benefits,
+html[data-route="kiem-tra"] .prompt-bubble-row,
+html[data-route="kiem-tra"] .check-advanced,
+html[data-route="kiem-tra"] .analysis-mascot { display: none !important; }
+html[data-route="kiem-tra"] .check-hub { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)) !important; gap: 1.15rem !important; margin: 0 0 1.15rem !important; }
+html[data-route="kiem-tra"] .check-hub__item { display: grid !important; grid-template-columns: 1fr !important; grid-template-rows: auto 1fr auto !important; min-height: 14rem !important; padding: 1.35rem !important; border: 1px solid #e1d8ff !important; border-radius: 1.5rem !important; background: #fff !important; box-shadow: 0 0.65rem 1.5rem rgb(91 62 177 / 0.08) !important; transition: transform 180ms ease, box-shadow 180ms ease !important; }
+html[data-route="kiem-tra"] .check-hub__item:hover { transform: translateY(-3px); box-shadow: 0 1rem 2rem rgb(91 62 177 / 0.14) !important; }
+html[data-route="kiem-tra"] .check-hub__icon { display: grid !important; place-items: center; width: 4.3rem !important; height: 4.3rem !important; margin-bottom: 1rem; border-radius: 50% !important; }
+html[data-route="kiem-tra"] .check-hub__item--message .check-hub__icon { background: #e5f9ef !important; color: #13a86b !important; }
+html[data-route="kiem-tra"] .check-hub__item--voice .check-hub__icon { background: #eee8ff !important; color: #7440e8 !important; }
+html[data-route="kiem-tra"] .check-hub__item--link .check-hub__icon { background: #e6f1ff !important; color: #2874e8 !important; }
+html[data-route="kiem-tra"] .check-hub__item--transfer .check-hub__icon { background: #fff0df !important; color: #ed8215 !important; }
+html[data-route="kiem-tra"] .check-hub__icon svg { width: 2.45rem !important; height: 2.45rem !important; }
+html[data-route="kiem-tra"] .check-hub__content { display: grid; align-content: start; gap: 0.45rem; text-align: left; }
+html[data-route="kiem-tra"] .check-hub__content strong { color: #24165f !important; font-size: 1.12rem !important; line-height: 1.25; }
+html[data-route="kiem-tra"] .check-hub__content small { color: #6b6592 !important; font-size: 0.92rem !important; line-height: 1.5; }
+html[data-route="kiem-tra"] .check-hub__arrow { display: flex !important; align-items: center; justify-content: space-between; width: 100% !important; min-height: 2.7rem; margin-top: 1rem; padding: 0.35rem 0.8rem 0.35rem 1rem; border: 1px solid currentColor; border-radius: 999px; color: #13a86b; font-size: 0.88rem; font-weight: 750; }
+html[data-route="kiem-tra"] .check-hub__arrow::before { content: "Kiểm tra ngay"; }
+html[data-route="kiem-tra"] .check-hub__item--voice .check-hub__arrow { color: #7440e8; }
+html[data-route="kiem-tra"] .check-hub__item--link .check-hub__arrow { color: #2874e8; }
+html[data-route="kiem-tra"] .check-hub__item--transfer .check-hub__arrow { color: #ed8215; }
+html[data-route="kiem-tra"] .check-hub__arrow .icon { width: 1.15rem; height: 1.15rem; }
+html[data-route="kiem-tra"] .safety-privacy-bar { display: grid !important; grid-template-columns: auto minmax(14rem, 1.1fr) minmax(0, 2.2fr); align-items: center; gap: 1rem; margin: 0 !important; padding: 1.1rem 1.25rem !important; border: 1px solid #e0d5ff !important; border-radius: 1.35rem !important; background: #fff !important; box-shadow: 0 0.6rem 1.3rem rgb(91 62 177 / 0.06) !important; }
+html[data-route="kiem-tra"] .safety-privacy-bar > .icon { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: 50%; background: #eee8ff; color: #7040e8; }
+html[data-route="kiem-tra"] .safety-privacy-bar p { display: grid; gap: 0.25rem; margin: 0; }
+html[data-route="kiem-tra"] .safety-privacy-bar p strong { color: #24165f; font-size: 1.05rem; }
+html[data-route="kiem-tra"] .safety-privacy-bar p small { color: #6b6592; line-height: 1.4; }
+html[data-route="kiem-tra"] .safety-privacy-bar__points { display: flex; flex-wrap: wrap; gap: 0.8rem 1.1rem; }
+html[data-route="kiem-tra"] .safety-privacy-bar__points span { display: inline-flex; align-items: center; gap: 0.35rem; color: #5f568c; font-size: 0.86rem; white-space: nowrap; }
+html[data-route="kiem-tra"] .safety-privacy-bar__points .icon { width: 1.1rem; height: 1.1rem; color: #7040e8; }
+
+@media (max-width: 62rem) {
+  html[data-route="kiem-tra"] .check-hub { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  html[data-route="kiem-tra"] .analysis-hero-visual { width: 38%; opacity: 0.8; }
+  html[data-route="kiem-tra"] .analysis-hero-visual__shield { width: 9rem; height: 11rem; }
+  html[data-route="kiem-tra"] .analysis-hero-visual__ring--outer { width: 20rem; }
+  html[data-route="kiem-tra"] .safety-privacy-bar { grid-template-columns: auto minmax(0, 1fr); }
+  html[data-route="kiem-tra"] .safety-privacy-bar__points { grid-column: 1 / -1; }
+}
+@media (max-width: 40rem) {
+  html[data-route="kiem-tra"] #analysisView { width: min(100% - 1rem, 36rem); padding-top: 0.5rem; }
+  html[data-route="kiem-tra"] #analysisView > .workspace-head.kiem-tra-head { display: block; min-height: 0; padding: 1.5rem !important; }
+  html[data-route="kiem-tra"] #analysisView > .workspace-head.kiem-tra-head .page-title-center { font-size: clamp(2.2rem, 11vw, 3.3rem); }
+  html[data-route="kiem-tra"] .analysis-hero-copy { font-size: 0.98rem; }
+  html[data-route="kiem-tra"] .analysis-hero-copy br { display: none; }
+  html[data-route="kiem-tra"] .analysis-mode-tabs { width: 100%; overflow-x: auto; }
+  html[data-route="kiem-tra"] .analysis-mode-tabs a { flex: 0 0 auto; padding-inline: 0.7rem; font-size: 0.86rem; }
+  html[data-route="kiem-tra"] .analysis-hero-actions { position: relative; width: 100%; }
+  html[data-route="kiem-tra"] .analysis-hero-actions .button { flex: 1 1 0; padding-inline: 0.75rem; font-size: 0.9rem; }
+  html[data-route="kiem-tra"] .analysis-hero-visual { position: relative; right: auto; bottom: auto; width: 100%; height: 11rem; margin-top: 0.4rem; opacity: 1; }
+  html[data-route="kiem-tra"] .analysis-hero-visual__shield { width: 7rem; height: 8rem; }
+  html[data-route="kiem-tra"] .analysis-hero-visual__shield .icon { width: 3.3rem; height: 3.3rem; }
+  html[data-route="kiem-tra"] .analysis-hero-visual__ring--outer { width: 18rem; height: 8rem; }
+  html[data-route="kiem-tra"] .analysis-hero-visual__ring--inner { width: 12rem; height: 5rem; }
+  html[data-route="kiem-tra"] .check-hub { grid-template-columns: 1fr !important; }
+  html[data-route="kiem-tra"] .check-hub__item { min-height: 12rem !important; }
+  html[data-route="kiem-tra"] .safety-privacy-bar { grid-template-columns: auto minmax(0, 1fr); padding: 1rem !important; }
+  html[data-route="kiem-tra"] .safety-privacy-bar__points { display: grid; gap: 0.55rem; }
+  html[data-route="kiem-tra"] .safety-privacy-bar__points span { white-space: normal; }
+}
