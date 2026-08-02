@@ -1,0 +1,27 @@
+@media (max-width: 63.99rem) {
+  .topbar .desktop-search,
+  .topbar .greeting-chip { display: none !important; }
+  .topbar {
+    display: flex !important;
+    width: calc(100% - 1.25rem) !important;
+    min-height: 4.9rem !important;
+    height: 4.9rem !important;
+    margin: 0.65rem auto 0 !important;
+    padding: 0.55rem 0.7rem 0.55rem 0.9rem !important;
+    border: 1px solid var(--color-accent-soft-line) !important;
+    border-radius: 1.35rem !important;
+    background: #fff !important;
+    overflow: hidden !important;
+  }
+  .topbar .brand { min-width: 0 !important; flex: 1 1 auto !important; gap: 0.55rem !important; }
+  .topbar .brand__mark { flex: 0 0 3.05rem !important; width: 3.05rem !important; height: 3.55rem !important; }
+  .topbar .brand__title { color: var(--color-accent-deep) !important; font-size: clamp(1.3rem, 5.2vw, 1.65rem) !important; font-weight: 850 !important; }
+  .topbar .brand__tagline { display: block !important; color: var(--color-ink-2) !important; font-size: clamp(0.68rem, 2.7vw, 0.82rem) !important; font-weight: 600 !important; }
+  .topbar .topbar__actions { display: flex !important; flex: 0 0 auto !important; align-items: center !important; gap: 0.45rem !important; margin: 0 !important; }
+  .topbar .topbar-icon-btn { width: 2.7rem !important; height: 2.7rem !important; padding: 0 !important; border: 1px solid var(--color-accent-soft-line) !important; border-radius: 50% !important; background: #fff !important; color: var(--color-accent-deep) !important; box-shadow: none !important; }
+  .topbar .topbar-icon-btn .icon { transform: translateY(-0.08rem) !important; }
+  .mobile-bottom-nav__inner { align-items: center !important; padding: 0.28rem !important; }
+  .mobile-bottom-nav .mobile-bottom-nav__item { min-height: 3.8rem !important; padding: 0.3rem 0.2rem 0.2rem !important; gap: 0.16rem !important; }
+  .mobile-bottom-nav .mobile-bottom-nav__item .icon { transform: translateY(-0.13rem) !important; }
+  .mobile-bottom-nav .mobile-bottom-nav__item[aria-current="page"]::after { bottom: 0.16rem !important; transform: translateX(-50%) !important; }
+}
