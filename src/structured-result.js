@@ -181,6 +181,29 @@ function buildNextQuestion(result, signals, entities) {
   };
 }
 
+// These are navigation choices, never background network requests. A person
+// must choose whether an extracted value should be checked or called.
+function buildRecommendedActions(signals, entities) {
+  const actions = [];
+  const hasDeviceRisk = signals?.doi_otp_hoac_cai_app_la === true
+    || signals?.yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa === true
+    || signals?.cai_app_dich_vu_cong_gia === true;
+
+  if (entities.some((entity) => entity.type === "url")) {
+    actions.push({ type: "check_link", label: "Kiểm tra đường link được phát hiện", route: "#kiem-tra-lien-ket" });
+  }
+  if (entities.some((entity) => entity.type === "bank_account")) {
+    actions.push({ type: "check_transfer", label: "Kiểm tra trước khi chuyển tiền", route: "#chuyen-khoan" });
+  }
+  if (entities.some((entity) => entity.type === "phone")) {
+    actions.push({ type: "verify_phone", label: "Kiểm tra số điện thoại", route: "#xac-minh" });
+  }
+  if (hasDeviceRisk) {
+    actions.unshift({ type: "protect_device", label: "Bảo vệ điện thoại ngay", route: "#bao-ve-thiet-bi" });
+  }
+  return actions.slice(0, 3);
+}
+
 function dataStatus(text, hasMedia, result) {
   if (!text && hasMedia) return "Ảnh chưa đọc rõ.";
   if (!text) return "Cần thêm thông tin.";
@@ -220,6 +243,7 @@ function buildStructuredAnalysisResult({ result, signals, text = "", hasMedia = 
       .map(([key]) => SIGNAL_SCAM_TYPES[key])).slice(0, 5),
     manipulationSignals,
     extractedEntities: entities,
+    recommendedActions: buildRecommendedActions(signals, entities),
     immediateActions,
     predictedNextSteps: buildPredictedNextSteps(signals, journey, entities),
     nextQuestion: buildNextQuestion(result, signals, entities),
@@ -233,5 +257,6 @@ function buildStructuredAnalysisResult({ result, signals, text = "", hasMedia = 
 module.exports = {
   buildStructuredAnalysisResult,
   extractEntities,
-  mapRiskLevel
+  mapRiskLevel,
+  buildRecommendedActions
 };

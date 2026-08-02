@@ -18,6 +18,7 @@ const STORAGE_KEYS = {
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
   reportQueue: "khoan-da:report-queue",
+  deviceProtection: "khoan-da:device-protection",
   onboardingComplete: "khoan-da:onboarding-complete",
   account: "khoan-da:account",
   accountSession: "khoan-da:account-session"
@@ -43,6 +44,7 @@ const ALL_STORAGE_KEYS = Object.values({
   privacyAudit: "khoan-da:privacy-audit",
   educationProgress: "khoan-da:education-progress",
   reportQueue: "khoan-da:report-queue",
+  deviceProtection: "khoan-da:device-protection",
   onboardingComplete: "khoan-da:onboarding-complete",
   account: "khoan-da:account",
   accountSession: "khoan-da:account-session"
@@ -79,6 +81,8 @@ const CASE_DESKTOP_DEMO_CASES = [
     status: "Đang xử lý",
     updatedAt: "2025-05-20T14:32:00+07:00",
     requestedAmount: "120.000.000đ",
+    impersonatedOrganization: "Công an phường Bến Nghé",
+    supporter: "Bác sĩ Hùng",
     demoIcon: "icon-phone",
     demoTone: "high",
     isDemo: true,
@@ -92,47 +96,83 @@ const CASE_DESKTOP_DEMO_CASES = [
   },
   {
     id: "demo-prize-message",
-    label: "Tin nhắn trúng thưởng",
-    status: "Đã xử lý",
-    updatedAt: "2025-05-18T09:15:00+07:00",
-    requestedAmount: "-",
+    label: "Hoàng Yến nhắn tin vay tiền",
+    status: "Đang xử lý",
+    updatedAt: "2025-05-19T10:05:00+07:00",
+    requestedAmount: "800.000đ",
+    supporter: "Hoàng Yến",
+    impersonatedOrganization: "Hoàng Yến",
     demoIcon: "icon-messages",
-    demoTone: "safe",
+    demoTone: "high",
     isDemo: true,
-    events: []
+    events: [
+      { type: "tin_nhan_dau_tien", text: "Hoàng Yến giả mạo bạn cũ, xin chuyển gấp.", createdAt: "2025-05-19T10:05:00+07:00" },
+      { type: "yeu_cau_chuyen_thu", text: "Yêu cầu chuyển 800.000đ vào tài khoản lạ.", createdAt: "2025-05-19T10:08:00+07:00", risk: "Nguy hiểm cao" }
+    ]
   },
   {
     id: "demo-bank-staff",
-    label: "Giả mạo nhân viên ngân hàng",
+    label: "Hoàng Yến cần gấp 800.000đ",
     status: "Đang xử lý",
     updatedAt: "2025-05-15T16:45:00+07:00",
-    requestedAmount: "25.000.000đ",
+    requestedAmount: "800.000đ",
+    impersonatedOrganization: "Hoàng Yến",
+    supporter: "Hoàng Yến",
     demoIcon: "icon-wallet",
     demoTone: "medium",
     isDemo: true,
-    events: []
+    events: [
+      { type: "tin_nhan_dau_tien", text: "Nhắn tin vay 800.000đ khẩn cấp.", createdAt: "2025-05-15T16:45:00+07:00" },
+      { type: "khac", text: "Đã gọi cho cháu xác minh.", createdAt: "2025-05-15T17:00:00+07:00" }
+    ]
   },
   {
     id: "demo-investment",
-    label: "Ưu đãi đầu tư online",
-    status: "Đã xử lý",
-    updatedAt: "2025-05-10T11:20:00+07:00",
+    label: "App MB Bank",
+    status: "Đang xử lý",
+    updatedAt: "2025-05-12T09:20:00+07:00",
     requestedAmount: "-",
+    impersonatedOrganization: "MB Bank",
+    supporter: "Bác sĩ Hùng",
     demoIcon: "icon-shield-check",
-    demoTone: "safe",
+    demoTone: "low",
     isDemo: true,
-    events: []
+    events: [
+      { type: "khac", text: "Tải app MB Bank theo hướng dẫn.", createdAt: "2025-05-12T09:20:00+07:00" }
+    ]
   },
   {
-    id: "demo-recruitment",
-    label: "Lừa đảo tuyển cộng tác viên",
-    status: "Đã đóng",
-    updatedAt: "2025-05-05T08:30:00+07:00",
+    id: "demo-health-check",
+    label: "Gói khám 0 đồng",
+    status: "Đã xử lý",
+    updatedAt: "2025-05-08T14:10:00+07:00",
     requestedAmount: "-",
+    impersonatedOrganization: "Bệnh viện Chợ Rẫy",
+    supporter: "Bác sĩ Hùng",
     demoIcon: "icon-user",
     demoTone: "low",
     isDemo: true,
-    events: []
+    events: [
+      { type: "tin_nhan_dau_tien", text: "Tin nhắn mời gói khám 0 đồng.", createdAt: "2025-05-08T14:10:00+07:00" }
+    ]
+  },
+  {
+    id: "demo-recruitment",
+    label: "Chuyển nhầm 5.000.000đ",
+    status: "Đang xử lý",
+    updatedAt: "2025-05-05T08:30:00+07:00",
+    requestedAmount: "5.000.000đ",
+    impersonatedOrganization: "Ngân hàng ACB",
+    supporter: "Bác sĩ Hùng",
+    demoIcon: "icon-wallet",
+    demoTone: "medium",
+    isDemo: true,
+    events: [
+      { type: "yeu_cau_chuyen_thu", text: "Chuyển nhầm 5.000.000đ vào tài khoản lạ.", createdAt: "2025-05-05T08:30:00+07:00", risk: "Nghi ngờ" },
+      { type: "khac", text: "Đã liên hệ ngân hàng để đóng băng tài khoản.", createdAt: "2025-05-05T09:00:00+07:00" },
+      { type: "khac", text: "Đã gọi cho con trai xác minh.", createdAt: "2025-05-05T09:15:00+07:00" },
+      { type: "khac", text: "Đã trình báo công an phường.", createdAt: "2025-05-05T10:00:00+07:00" }
+    ]
   }
 ];
 
@@ -200,6 +240,7 @@ const ROUTES = {
   "#bao-cao": "reportView",
   "#ho-tro": "supportView",
   "#huong-dan": "educationView"
+  ,"#bao-ve-thiet-bi": "deviceProtectionView"
 };
 
 const COMMON_VERIFY_QUESTIONS = [
@@ -241,8 +282,8 @@ const EDUCATION_LESSONS = [
   { id: "fake-sim", title: "Dọa khóa SIM", topic: "Cập nhật thuê bao", scenario: "Một cuộc gọi báo SIM của bác sắp bị khóa và yêu cầu cung cấp mã xác minh vừa gửi đến máy.", choices: ["Đọc mã để giữ SIM", "Không đọc mã; gọi nhà mạng bằng số chính thức"], correct: 1, explanation: "Mã xác minh có thể được dùng để chiếm tài khoản. Tuyệt đối không đọc mã cho người khác." },
   { id: "fake-teacher", title: "Giả danh giáo viên", topic: "Con cháu gặp nạn", scenario: "Người lạ tự xưng giáo viên báo cháu bị tai nạn, yêu cầu chuyển viện phí gấp.", choices: ["Chuyển tiền ngay", "Gọi trực tiếp cho gia đình và nhà trường để xác minh"], correct: 1, explanation: "Kẻ gian thường tạo tình huống khẩn cấp để bác không kịp kiểm tra. Luôn xác minh qua số đã lưu." },
   { id: "romance-investment", title: "Kết bạn rồi rủ đầu tư", topic: "Tình cảm và đầu tư", scenario: "Người quen trên mạng trò chuyện thân thiết rồi hướng dẫn bác nạp tiền vào một sàn đầu tư lạ.", choices: ["Nạp thử số tiền nhỏ", "Không chuyển tiền và nhờ người thân kiểm tra"], correct: 1, explanation: "Lợi dụng tình cảm để dẫn dụ đầu tư là thủ đoạn phổ biến. Sàn lạ có thể hiển thị lợi nhuận giả và chặn rút tiền." },
-  { id: "qr-link", title: "Link v? m? QR gi?", topic: "???ng link an to?n", scenario: "Ng??i l? g?i m? QR ?? b?c nh?n qu? ho?c x?c nh?n ??n h?ng v? gi?c b?c qu?t ngay.", choices: ["Qu?t m? r?i ??ng nh?p ng?n h?ng", "Kh?ng qu?t; ki?m tra ??a ch? tr?n ?ng d?ng ho?c website ch?nh th?c"], correct: 1, explanation: "M? QR c?ng l? m?t ???ng link. Kh?ng ??ng nh?p, nh?p CCCD hay OTP qua link do ng??i l? g?i." },
-  { id: "golden-rules", title: "5 nguy?n t?c v?ng", topic: "D?ng l?i ?? an to?n", scenario: "Khi b? th?c gi?c gi? b? m?t ho?c chuy?n ti?n ngay, b?c n?n nh? ?i?u g? ??u ti?n?", choices: ["D?ng l?i, kh?ng chuy?n ti?n v? t? g?i s? ch?nh th?c ?? x?c minh", "L?m theo nhanh ?? tr?nh r?c r?i"], correct: 0, explanation: "Kh?ng chuy?n ti?n khi ho?ng s?, kh?ng ??c OTP, kh?ng gi? b? m?t v?i gia ??nh v? kh?ng c?i ?ng d?ng theo h??ng d?n c?a ng??i l?." }
+  { id: "qr-link", title: "Link và mã QR giả", topic: "Đường link an toàn", scenario: "Người lạ gửi mã QR để bác nhận quà hoặc xác nhận đơn hàng và giục bác quét ngay.", choices: ["Quét mã rồi đăng nhập ngân hàng", "Không quét; kiểm tra địa chỉ trên ứng dụng hoặc website chính thức"], correct: 1, explanation: "Mã QR cũng là một đường link. Không đăng nhập, nhập CCCD hay OTP qua link do người lạ gửi." },
+  { id: "golden-rules", title: "5 nguyên tắc vàng", topic: "Dừng lại để an toàn", scenario: "Khi bị thúc giục giữ bí mật hoặc chuyển tiền ngay, bác nên nhớ điều gì đầu tiên?", choices: ["Dừng lại, không chuyển tiền và tự gọi số chính thức để xác minh", "Làm theo nhanh để tránh rắc rối"], correct: 0, explanation: "Không chuyển tiền khi hoảng sợ, không đọc OTP, không giữ bí mật với gia đình và không cài ứng dụng theo hướng dẫn của người lạ." }
 ];
 
 const elements = {
@@ -275,6 +316,10 @@ const elements = {
   fontSizeButtons: document.querySelectorAll("[data-font-size]"),
   supportView: document.querySelector("#supportView"),
   supportDirectory: document.querySelector("#supportDirectory"),
+  deviceProtectionView: document.querySelector("#deviceProtectionView"),
+  deviceProtectionChecklist: document.querySelector("#deviceProtectionChecklist"),
+  deviceProtectionStatus: document.querySelector("#deviceProtectionStatus"),
+  deviceProtectionBankButton: document.querySelector("#deviceProtectionBankButton"),
   educationView: document.querySelector("#educationView"),
   educationList: document.querySelector("#educationList"),
   educationLesson: document.querySelector("#educationLesson"),
@@ -330,6 +375,7 @@ const elements = {
   oneTimeCheckMode: document.querySelector("#oneTimeCheckMode"),
   privacyAuditList: document.querySelector("#privacyAuditList"),
   exportDataButton: document.querySelector("#exportDataButton"),
+  exportEncryptedBackupButton: document.querySelector("#exportEncryptedBackupButton"),
   deleteAllDataButton: document.querySelector("#deleteAllDataButton"),
   verifyCategories: document.querySelector("#verifyCategories"),
   verifyQuestionsCard: document.querySelector("#verifyQuestionsCard"),
@@ -450,6 +496,8 @@ const elements = {
   predictedNextStepList: document.querySelector("#predictedNextStepList"),
   resultLimitationList: document.querySelector("#resultLimitationList"),
   structuredNextQuestion: document.querySelector("#structuredNextQuestion"),
+  recommendedActionSection: document.querySelector("#recommendedActionSection"),
+  recommendedActionList: document.querySelector("#recommendedActionList"),
   signalSummaryList: document.querySelector("#signalSummaryList"),
   reputationType: document.querySelector("#reputationType"),
   reputationValue: document.querySelector("#reputationValue"),
@@ -596,6 +644,7 @@ const elements = {
   caseFilterButtons: document.querySelectorAll("[data-case-filter]"),
   bottomNavItems: document.querySelectorAll(".bottom-nav__item"),
   toast: document.querySelector("#toast"),
+  networkStatus: document.querySelector("#networkStatus"),
   chatWidget: document.querySelector("#chatWidget"),
   chatWidgetButton: document.querySelector("#chatWidgetButton"),
   chatWidgetBadge: document.querySelector("#chatWidgetBadge"),
@@ -722,6 +771,7 @@ function getStored(key, fallback = "") {
 function setStored(key, value) {
   try {
     localStorage.setItem(key, value);
+    window.KhoanDaLocalVault?.write(key, value).catch(() => {});
     return true;
   } catch {
     return false;
@@ -731,6 +781,7 @@ function setStored(key, value) {
 function removeStored(key) {
   try {
     localStorage.removeItem(key);
+    window.KhoanDaLocalVault?.remove(key).catch(() => {});
     return true;
   } catch {
     return false;
@@ -966,6 +1017,32 @@ async function shareTrustedVerificationRequest(contact) {
   }
 }
 
+function avatarToneClass(contact, index) {
+  // Map role to a stable tone so each contact keeps a consistent colour.
+  const roleTones = {
+    "Con": "contact-entry--tone-warm",
+    "Cháu": "contact-entry--tone-leaf",
+    "Người chăm sóc": "contact-entry--tone-sky",
+    "Người hỗ trợ khác": "contact-entry--tone-rose"
+  };
+  return roleTones[contact.role] || ["contact-entry--tone-warm", "contact-entry--tone-leaf", "contact-entry--tone-sky", "contact-entry--tone-rose"][index % 4];
+}
+
+function formatRelativeTime(value) {
+  const stamp = new Date(value).getTime();
+  if (!Number.isFinite(stamp)) return "";
+  const diffMs = Date.now() - stamp;
+  const diffMin = Math.round(diffMs / 60_000);
+  if (diffMin < 1) return "Vừa thêm";
+  if (diffMin < 60) return `Đã thêm ${diffMin} phút trước`;
+  const diffHour = Math.round(diffMin / 60);
+  if (diffHour < 24) return `Đã thêm ${diffHour} giờ trước`;
+  const diffDay = Math.round(diffHour / 24);
+  if (diffDay === 1) return "Đã thêm hôm qua";
+  if (diffDay < 7) return `Đã thêm ${diffDay} ngày trước`;
+  return new Intl.DateTimeFormat("vi-VN", { day: "2-digit", month: "2-digit" }).format(new Date(stamp));
+}
+
 function renderContactList() {
   const contacts = getContacts();
   elements.contactList.replaceChildren();
@@ -976,9 +1053,9 @@ function renderContactList() {
   const countEl = document.querySelector("#contactCount");
   if (countEl) countEl.textContent = `(${contacts.length}/5)`;
 
-  for (const contact of contacts) {
+  for (const [index, contact] of contacts.entries()) {
     const row = document.createElement("article");
-    row.className = "contact-entry";
+    row.className = `contact-entry ${avatarToneClass(contact, index)}`;
 
     // Avatar with initials
     const avatar = document.createElement("div");
@@ -1003,9 +1080,13 @@ function renderContactList() {
 
     const phone = document.createElement("p");
     phone.className = "contact-entry__phone";
-    phone.innerHTML = `<span class="icon icon-phone" aria-hidden="true"></span>${contact.phone}`;
+    phone.innerHTML = `<span class="icon icon-phone" aria-hidden="true"></span><span>${contact.phone}</span>`;
 
-    info.append(nameRow, phone);
+    const timestamp = document.createElement("p");
+    timestamp.className = "contact-entry__timestamp";
+    timestamp.textContent = formatRelativeTime(contact.createdAt || contact.addedAt || Date.now());
+
+    info.append(nameRow, phone, timestamp);
 
     const actions = document.createElement("div");
     actions.className = "contact-entry__actions";
@@ -1013,7 +1094,8 @@ function renderContactList() {
     const callButton = document.createElement("button");
     callButton.className = "button button-primary contact-entry__call";
     callButton.type = "button";
-    callButton.innerHTML = '<span class="icon icon-phone" aria-hidden="true"></span><span>Gọi nhanh</span>';
+    callButton.setAttribute("aria-label", `Gọi nhanh cho ${contact.name}`);
+    callButton.innerHTML = '<span class="icon icon-phone" aria-hidden="true"></span><span>Gọi</span>';
     callButton.addEventListener("click", () => {
       window.location.href = `tel:${contact.phone.replace(/[^+\d]/g, "")}`;
     });
@@ -1021,6 +1103,7 @@ function renderContactList() {
     const alertButton = document.createElement("button");
     alertButton.className = "button button-secondary contact-entry__alert";
     alertButton.type = "button";
+    alertButton.setAttribute("aria-label", `Báo tin cho ${contact.name}`);
     alertButton.innerHTML = '<span class="icon icon-alert" aria-hidden="true"></span><span>Báo tin</span>';
     alertButton.addEventListener("click", () => shareTrustedVerificationRequest(contact));
 
@@ -1030,7 +1113,6 @@ function renderContactList() {
     menuButton.setAttribute("aria-label", "Thêm tùy chọn");
     menuButton.textContent = "⋮";
     menuButton.addEventListener("click", (e) => {
-      // Simple inline menu - in production this would be a proper dropdown
       const menu = document.createElement("div");
       menu.className = "contact-entry__menu-popup";
       menu.innerHTML = `
@@ -1053,7 +1135,6 @@ function renderContactList() {
         menu.remove();
       });
 
-      // Remove any existing menu
       document.querySelectorAll(".contact-entry__menu-popup").forEach(m => m.remove());
 
       row.style.position = "relative";
@@ -1358,6 +1439,38 @@ function renderStructuredInsights(structuredResult) {
   elements.structuredInsightSection.hidden = false;
 }
 
+function renderNetworkStatus() {
+  const offline = navigator.onLine === false;
+  elements.networkStatus.hidden = !offline;
+  if (offline) {
+    elements.networkStatus.textContent = "Bác đang ngoại tuyến. Vẫn xem được hướng dẫn và dữ liệu đã lưu; kiểm tra AI, link và danh bạ cập nhật cần có mạng.";
+  }
+}
+
+function renderRecommendedActions(structuredResult) {
+  const actions = structuredResult?.recommendedActions || [];
+  elements.recommendedActionList.replaceChildren();
+  elements.recommendedActionSection.hidden = actions.length === 0;
+  for (const action of actions) {
+    const button = document.createElement("button");
+    button.className = action.type === "protect_device" ? "button button-danger-quiet" : "button button-secondary";
+    button.type = "button";
+    button.textContent = action.label;
+    button.addEventListener("click", () => {
+      window.location.hash = action.route;
+      if (action.type === "check_link") {
+        const url = (structuredResult.extractedEntities || []).find((item) => item.type === "url")?.value;
+        if (url) elements.linkCheckUrl.value = url;
+      }
+      if (action.type === "check_transfer") {
+        const account = (structuredResult.extractedEntities || []).find((item) => item.type === "bank_account")?.value;
+        if (account) elements.transferAccountNumber.value = account;
+      }
+    });
+    elements.recommendedActionList.append(button);
+  }
+}
+
 function renderResult(result, options = {}) {
   const riskLabel = displayRiskLabel(result.muc_rui_ro);
   const meta = RISK_META[riskLabel] || RISK_META["Nghi ngờ"];
@@ -1374,6 +1487,7 @@ function renderResult(result, options = {}) {
   const signalCount = Object.values(result.tin_hieu || {}).filter(Boolean).length;
   elements.resultConfidence.textContent = signalCount >= 3 ? "Cao" : signalCount >= 1 ? "Trung bình" : "Thấp";
   renderStructuredInsights(result.structuredResult);
+  renderRecommendedActions(result.structuredResult);
   renderSignalSummary(result.tin_hieu || {});
   fillList(elements.reasonList, result.ly_do || []);
   fillList(elements.actionList, result.hanh_dong || []);
@@ -2066,8 +2180,8 @@ function loadPrivacyToggles() {
   renderPrivacyDataList();
 }
 
-function exportAllData() {
-  const data = {
+function buildExportData() {
+  return {
     xuatLuc: new Date().toISOString(),
     ghiChu: "Không bao gồm mật khẩu gia đình để tránh lộ nếu file bị người khác xem được.",
     lichSu: getHistory(),
@@ -2078,8 +2192,46 @@ function exportAllData() {
     coMatKhauGiaDinh: Boolean(getStored(STORAGE_KEYS.keyword)),
     choPhepCaNhanHoa: getStored(STORAGE_KEYS.consent) === "1"
   };
-  downloadTextFile("du-lieu-khoan-da.json", JSON.stringify(data, null, 2));
+}
+
+function exportAllData() {
+  downloadTextFile("du-lieu-khoan-da.json", JSON.stringify(buildExportData(), null, 2));
   showToast("Đã tải xuống toàn bộ dữ liệu của bạn.");
+}
+
+function bytesToBase64(bytes) {
+  let value = "";
+  for (const byte of bytes) value += String.fromCharCode(byte);
+  return btoa(value);
+}
+
+async function exportEncryptedBackup() {
+  if (!globalThis.crypto?.subtle) {
+    showToast("Trình duyệt này chưa hỗ trợ tạo bản sao lưu có mật khẩu.");
+    return;
+  }
+  const password = window.prompt("Đặt mật khẩu cho bản sao lưu. Khoan Đã không thể khôi phục mật khẩu này nếu bác quên.");
+  if (!password) return;
+  if (password.length < 12) {
+    showToast("Mật khẩu cần ít nhất 12 ký tự để bảo vệ bản sao lưu.");
+    return;
+  }
+  const encoder = new TextEncoder();
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const material = await crypto.subtle.importKey("raw", encoder.encode(password), "PBKDF2", false, ["deriveKey"]);
+  const key = await crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 250000, hash: "SHA-256" }, material, { name: "AES-GCM", length: 256 }, false, ["encrypt"]);
+  const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, encoder.encode(JSON.stringify(buildExportData())));
+  const backup = {
+    format: "khoan-da-encrypted-backup",
+    version: 1,
+    createdAt: new Date().toISOString(),
+    kdf: { name: "PBKDF2", hash: "SHA-256", iterations: 250000, salt: bytesToBase64(salt) },
+    cipher: { name: "AES-GCM", iv: bytesToBase64(iv), data: bytesToBase64(new Uint8Array(encrypted)) }
+  };
+  downloadTextFile("sao-luu-khoan-da-ma-hoa.json", JSON.stringify(backup, null, 2));
+  appendPrivacyAudit("encrypted_backup", "Tạo bản sao lưu có mật khẩu", false);
+  showToast("Đã tạo bản sao lưu có mật khẩu. Hãy cất mật khẩu ở nơi an toàn.");
 }
 
 function deleteAllData() {
@@ -2153,6 +2305,34 @@ function toggleRecoveryChecklistStep(stepId, checked) {
   if (checked) completed.add(stepId); else completed.delete(stepId);
   mode.completedSteps = [...completed];
   setStored(STORAGE_KEYS.recoveryMode, JSON.stringify(mode));
+}
+
+function getDeviceProtection() {
+  try {
+    const parsed = JSON.parse(getStored(STORAGE_KEYS.deviceProtection, "{}"));
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function renderDeviceProtection() {
+  if (!elements.deviceProtectionChecklist) return;
+  const completed = new Set(getDeviceProtection().completedSteps || []);
+  elements.deviceProtectionChecklist.querySelectorAll("[data-device-step]").forEach((checkbox) => {
+    checkbox.checked = completed.has(checkbox.dataset.deviceStep);
+  });
+  elements.deviceProtectionStatus.textContent = completed.size
+    ? `Đã đánh dấu ${completed.size}/5 việc. Bác chỉ đánh dấu khi đã tự làm xong.`
+    : "Bác làm lần lượt từng việc và chỉ đánh dấu khi đã hoàn thành.";
+}
+
+function toggleDeviceProtectionStep(stepId, checked) {
+  const state = getDeviceProtection();
+  const completed = new Set(state.completedSteps || []);
+  if (checked) completed.add(stepId); else completed.delete(stepId);
+  setStored(STORAGE_KEYS.deviceProtection, JSON.stringify({ completedSteps: [...completed], updatedAt: new Date().toISOString() }));
+  renderDeviceProtection();
 }
 
 let reportSelectedCategory = "";
@@ -2565,6 +2745,32 @@ function formatCaseTime(value) {
   }).format(new Date(value));
 }
 
+function formatRelativeCaseTime(value) {
+  const stamp = new Date(value).getTime();
+  if (!Number.isFinite(stamp)) return "";
+  const now = Date.now();
+  const diffMs = now - stamp;
+  // Vụ việc minh hoạ cố định năm 2025 có thể rơi vào tương lai so với giờ hệ thống,
+  // hoặc lệch hơn 1 năm — hiển thị ngày cụ thể thay vì "X năm trước" để dễ hiểu.
+  if (diffMs < 0) return formatCaseTime(stamp);
+  const diffMin = Math.round(diffMs / 60_000);
+  if (diffMin < 1) return "Vừa xong";
+  if (diffMin < 60) return `${diffMin} phút trước`;
+  const diffHour = Math.round(diffMin / 60);
+  if (diffHour < 24 && isSameLocalDay(stamp, now)) return `${diffHour} giờ trước`;
+  if (isSameLocalDay(stamp, now - 86_400_000)) return "Hôm qua";
+  const diffDay = Math.round(diffHour / 24);
+  if (diffDay < 7) return `${diffDay} ngày trước`;
+  if (diffDay < 365) return formatCaseDate(stamp);
+  return formatCaseDate(stamp);
+}
+
+function isSameLocalDay(a, b) {
+  const da = new Date(a);
+  const db = new Date(b);
+  return da.getFullYear() === db.getFullYear() && da.getMonth() === db.getMonth() && da.getDate() === db.getDate();
+}
+
 function appendCasePreviewEvidence(container, title, count, iconName, bodyText = "") {
   const card = document.createElement("article");
   card.className = "case-evidence-card";
@@ -2694,15 +2900,16 @@ function renderCaseDesktopPreview(caseObj) {
 }
 
 function renderCaseList() {
-  const allCases = getCases();
-  const cases = allCases.filter((item) => {
+  const storedCases = getCases();
+  const cases = storedCases.length ? storedCases : CASE_DESKTOP_DEMO_CASES;
+  const visibleCases = cases.filter((item) => {
     if (activeCaseFilter === "checked") return item.events.length > 0;
     if (activeCaseFilter === "saved") return true;
     return true;
   });
-  const displayCases = cases;
+  const displayCases = visibleCases;
   elements.caseList.replaceChildren();
-  elements.caseListEmpty.hidden = cases.length > 0;
+  elements.caseListEmpty.hidden = visibleCases.length > 0;
   renderCaseDesktopPreview(displayCases[0] || null);
 
   displayCases.forEach((item, index) => {
@@ -2712,40 +2919,47 @@ function renderCaseList() {
     if (item.isDemo) row.classList.add("case-history-row--demo");
     if (index === 0) row.classList.add("is-selected");
 
-    const icon = document.createElement("span");
-    icon.className = "case-history-row__icon";
-    icon.setAttribute("aria-hidden", "true");
-    icon.innerHTML = `<span class="icon ${item.demoIcon || (tone === "high" ? "icon-alert" : tone === "medium" ? "icon-messages" : tone === "low" ? "icon-qr-code" : "icon-user")}"></span>`;
+    const avatar = document.createElement("span");
+    avatar.className = "case-history-row__icon";
+    avatar.setAttribute("aria-hidden", "true");
+    avatar.innerHTML = `<span class="icon ${item.demoIcon || "icon-user"}"></span>`;
 
-    const meta = document.createElement("div");
-    meta.className = "history-row__meta";
-    const tag = document.createElement("span");
-    tag.className = "case-history-row__tag";
-    tag.textContent = item.status || (item.events.length ? "Đã kiểm tra" : "Đã lưu");
-    const time = document.createElement("time");
-    time.dateTime = item.updatedAt;
-    time.textContent = `${formatCaseDate(item.updatedAt)} • ${formatCaseTime(item.updatedAt)}`;
-    meta.append(tag, time);
-
+    // Heading row: title + status pill side by side
+    const headingRow = document.createElement("div");
+    headingRow.className = "case-history-row__heading";
     const title = document.createElement("p");
     title.className = "case-history-row__title";
     title.textContent = item.label;
+    const riskText = item.riskLevel || (tone === "high" ? "Nguy hiểm cao" : tone === "medium" ? "Nghi ngờ" : tone === "low" ? "Nghi ngờ" : "Chưa thấy dấu hiệu rủi ro");
+    const riskKeyValue = riskKey(riskText);
+    const statusPill = document.createElement("span");
+    statusPill.className = `case-history-row__chip case-history-row__chip--${riskKeyValue}`;
+    statusPill.dataset.risk = riskKeyValue;
+    statusPill.textContent = riskText;
+    headingRow.append(title, statusPill);
 
-    const description = document.createElement("small");
-    description.className = "case-history-row__description";
-    description.textContent = item.events.length
-      ? `${item.events.length} diễn biến đã được ghi lại.`
-      : "Vụ việc đã lưu, chưa có diễn biến mới.";
+    // Sub-line: tên người liên quan + số diễn biến
+    const subline = document.createElement("p");
+    subline.className = "case-history-row__subline";
+    const eventCount = (item.events && item.events.length) || 0;
+    const relatedName = item.impersonatedOrganization || item.supporter || nameFromLabel(item.label);
+    const eventWord = eventCount === 1 ? "diễn biến" : "diễn biến";
+    subline.textContent = relatedName
+      ? `${relatedName} · ${eventCount} ${eventWord}`
+      : `${eventCount} ${eventWord}`;
 
-    const amount = document.createElement("strong");
-    amount.className = "case-history-row__amount";
-    amount.textContent = item.requestedAmount || "-";
+    const meta = document.createElement("div");
+    meta.className = "history-row__meta case-history-row__meta";
+    const time = document.createElement("time");
+    time.dateTime = item.updatedAt;
+    time.textContent = formatRelativeCaseTime(item.updatedAt);
+    meta.append(time);
 
     const openButton = document.createElement("button");
     openButton.className = "case-history-row__open";
     openButton.type = "button";
     openButton.setAttribute("aria-label", `Xem ${item.label}`);
-    openButton.innerHTML = '<span class="icon icon-chevron-right" aria-hidden="true"></span>';
+    openButton.innerHTML = '<span class="case-history-row__open-icon" aria-hidden="true"><span class="icon icon-eye"></span><span class="icon icon-chevron-right"></span></span>';
     openButton.addEventListener("click", () => {
       if (item.isDemo) {
         renderCaseDesktopPreview(item);
@@ -2768,12 +2982,19 @@ function renderCaseList() {
     });
 
     const actions = document.createElement("div");
-    actions.className = "history-row__actions";
+    actions.className = "history-row__actions case-history-row__actions";
     actions.append(openButton, deleteButton);
 
-    row.append(icon, meta, title, description, amount, actions);
+    row.append(avatar, headingRow, subline, meta, actions);
     elements.caseList.append(row);
   });
+}
+
+// Trích tên người/tổ chức từ tiêu đề vụ việc khi không có sẵn trường hỗ trợ.
+function nameFromLabel(label) {
+  if (!label) return "";
+  const cleaned = String(label).replace(/^(vụ việc\s*)/i, "").trim();
+  return cleaned;
 }
 
 function renderCaseEventTypePicker() {
@@ -3123,14 +3344,23 @@ async function renderSupportDirectory() {
   loading.className = "field-hint";
   loading.textContent = "Đang tải danh bạ hỗ trợ...";
   elements.supportDirectory.append(loading);
-  let directory;
+  let directoryPayload;
   try {
-    directory = await window.KhoanDaServices.supportDirectoryService.getAll();
+    directoryPayload = await window.KhoanDaServices.supportDirectoryService.getAll();
   } catch (error) {
     loading.textContent = `${error.message} Hãy dùng số trên thẻ ngân hàng hoặc gọi người thân đã lưu.`;
     return;
   }
   elements.supportDirectory.replaceChildren();
+  const directory = Array.isArray(directoryPayload) ? directoryPayload : (directoryPayload.items || []);
+  const reviewedAt = directoryPayload.reviewedAt || "";
+  const staleAfterDays = Number(directoryPayload.staleAfterDays || 90);
+  if (reviewedAt && Date.now() - new Date(reviewedAt).getTime() > staleAfterDays * 86_400_000) {
+    const warning = document.createElement("p");
+    warning.className = "field-error";
+    warning.textContent = "Danh bạ này đã quá ngày rà soát. Bác hãy đối chiếu thêm với thẻ hoặc ứng dụng ngân hàng.";
+    elements.supportDirectory.append(warning);
+  }
   for (const configuredItem of directory) {
     const item = configuredItem.kind === "saved-bank"
       ? { ...configuredItem, phone: bankPhoneForCall() }
@@ -3207,7 +3437,7 @@ function renderAuthState() {
   const authenticated = isAuthenticated();
   document.documentElement.dataset.authenticated = String(authenticated);
   elements.authLabels.forEach((label) => { label.textContent = authenticated ? "" : "Đăng nhập"; });
-  elements.profileMenuButton.setAttribute("aria-label", authenticated ? "Mở hồ sơ" : "Đăng nhập");
+  elements.profileMenuButton?.setAttribute("aria-label", authenticated ? "Mở hồ sơ" : "Đăng nhập");
   elements.mobileProfileMenuButton.setAttribute("aria-label", authenticated ? "Mở hồ sơ" : "Đăng nhập");
   elements.profileIdentityName.textContent = account?.name || "Tài khoản của bác";
   elements.profileIdentityEmail.textContent = account?.email || "";
@@ -3312,7 +3542,7 @@ function deleteAccount() {
 function setProfileMenu(open, { restoreFocus = false } = {}) {
   const shouldOpen = Boolean(open);
   elements.profileMenu.hidden = !shouldOpen;
-  elements.profileMenuButton.setAttribute("aria-expanded", String(shouldOpen));
+  elements.profileMenuButton?.setAttribute("aria-expanded", String(shouldOpen));
   elements.mobileProfileMenuButton.setAttribute("aria-expanded", String(shouldOpen));
   elements.profileIconButton?.setAttribute("aria-expanded", String(shouldOpen));
   if (shouldOpen) {
@@ -3320,7 +3550,7 @@ function setProfileMenu(open, { restoreFocus = false } = {}) {
   } else if (restoreFocus) {
     const trigger = window.matchMedia("(max-width: 40rem)").matches
       ? elements.mobileProfileMenuButton
-      : elements.profileMenuButton;
+      : (elements.profileMenuButton || elements.profileIconButton);
     trigger.focus({ preventScroll: true });
   }
 }
@@ -3435,7 +3665,6 @@ function animateRouteContent(view) {
   });
 }
 
-
 function route() {
   const nextHash = ROUTES[window.location.hash] ? window.location.hash : "#trang-chu";
   const previousHash = currentRouteHash;
@@ -3535,6 +3764,9 @@ function applyRoute(hash) {
     loadPrivacyToggles();
     renderRecoveryPanel();
     document.querySelector("#privacyTitle").focus?.({ preventScroll: true });
+  } else if (hash === "#bao-ve-thiet-bi") {
+    renderDeviceProtection();
+    document.querySelector("#deviceProtectionTitle").focus?.({ preventScroll: true });
   } else if (hash === "#bao-cao") {
     resetReportView();
     document.querySelector("#reportTitle").focus?.({ preventScroll: true });
@@ -3889,7 +4121,12 @@ elements.toggleConsentPersonalization.addEventListener("change", () => {
   setStored(STORAGE_KEYS.consent, elements.toggleConsentPersonalization.checked ? "1" : "0");
 });
 elements.exportDataButton.addEventListener("click", exportAllData);
+elements.exportEncryptedBackupButton.addEventListener("click", () => exportEncryptedBackup().catch(() => showToast("Chưa thể tạo bản sao lưu. Hãy thử lại.")));
 elements.deleteAllDataButton.addEventListener("click", deleteAllData);
+elements.deviceProtectionBankButton.addEventListener("click", callBank);
+elements.deviceProtectionChecklist.querySelectorAll("[data-device-step]").forEach((checkbox) => {
+  checkbox.addEventListener("change", () => toggleDeviceProtectionStep(checkbox.dataset.deviceStep, checkbox.checked));
+});
 [elements.reportCallerName, elements.reportPhone, elements.reportAccount, elements.reportAmount].forEach((field) => {
   field.addEventListener("input", updateReportSummary);
 });
@@ -4029,7 +4266,7 @@ elements.recoveryActive.querySelectorAll("[data-recovery-step]").forEach((checkb
 });
 
 elements.fontSizeButtons.forEach((button) => button.addEventListener("click", () => applyFontSize(button.dataset.fontSize)));
-elements.profileMenuButton.addEventListener("click", handleProfileTrigger);
+elements.profileMenuButton?.addEventListener("click", handleProfileTrigger);
 elements.profileIconButton?.addEventListener("click", handleProfileTrigger);
 elements.notificationButton?.addEventListener("click", () => {
   window.location.hash = "#canh-bao";
@@ -4090,7 +4327,7 @@ elements.finishOnboardingLaterButton.addEventListener("click", () => {
 });
 document.addEventListener("click", (event) => {
   if (elements.profileMenu.hidden) return;
-  if (elements.profileMenu.contains(event.target) || elements.profileMenuButton.contains(event.target) || elements.mobileProfileMenuButton.contains(event.target) || elements.profileIconButton?.contains(event.target)) return;
+  if (elements.profileMenu.contains(event.target) || elements.profileMenuButton?.contains(event.target) || elements.mobileProfileMenuButton.contains(event.target) || elements.profileIconButton?.contains(event.target)) return;
   setProfileMenu(false);
 });
 document.addEventListener("keydown", (event) => {
@@ -4195,13 +4432,17 @@ elements.analysisDropzone.addEventListener("drop", (event) => {
 });
 
 window.addEventListener("hashchange", route);
+window.addEventListener("online", renderNetworkStatus);
+window.addEventListener("offline", renderNetworkStatus);
 
 setupSpeechRecognition();
+window.KhoanDaLocalVault?.migrate(ALL_STORAGE_KEYS).catch(() => {});
 updateCharacterCount();
 loadAccessibilityPreferences();
 renderAuthState();
 applyRetentionPolicy();
 renderPrivacyAuditLists();
+renderNetworkStatus();
 route();
 const isFreshAppEntry = window.location.hash === "" || new URLSearchParams(window.location.search).has("intro");
 if (isFreshAppEntry || getStored(STORAGE_KEYS.onboardingComplete) !== "1") openOnboarding();

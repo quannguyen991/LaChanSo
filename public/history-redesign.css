@@ -1,0 +1,89 @@
+/* Vụ việc & lịch sử reference layout */
+html[data-route="hanh-trinh"] body { background: #f6f2ff; }
+html[data-route="hanh-trinh"] #hanhTrinhView { width: min(100% - 2rem, 84rem); padding-block: 1.5rem 7rem; }
+html[data-route="hanh-trinh"] #hanhTrinhView > .back-link { display: none; }
+html[data-route="hanh-trinh"] #caseListPanel { width: 100%; max-width: none; margin: 0 auto; }
+
+html[data-route="hanh-trinh"] .case-history-hero {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 4.5rem minmax(0, 1fr) minmax(22rem, 31rem) !important;
+  align-items: center !important;
+  min-height: 20rem !important;
+  gap: 1.5rem !important;
+  margin: 0 !important;
+  padding: 2.5rem 3.25rem !important;
+  overflow: hidden !important;
+  border: 1px solid #ddd1ff !important;
+  border-radius: 2rem !important;
+  background: radial-gradient(circle at 80% 15%, rgb(224 211 255 / 0.7), transparent 22rem), linear-gradient(125deg, #f6f1ff 0%, #fff 62%, #f3ecff 100%) !important;
+  box-shadow: 0 1rem 2.6rem rgb(91 62 177 / 0.1) !important;
+}
+
+html[data-route="hanh-trinh"] .case-history-hero::before,
+html[data-route="hanh-trinh"] .case-history-hero::after { content: ""; position: absolute; pointer-events: none; border-radius: 50%; background: rgb(255 255 255 / 0.52); }
+html[data-route="hanh-trinh"] .case-history-hero::before { width: 23rem; height: 23rem; right: 15rem; top: -13rem; }
+html[data-route="hanh-trinh"] .case-history-hero::after { width: 11rem; height: 11rem; left: -5rem; bottom: -7rem; }
+
+html[data-route="hanh-trinh"] .case-history-hero__icon-card {
+  position: relative; z-index: 1; display: grid; place-items: center; width: 4.5rem; height: 4.5rem;
+  border: 1px solid #e0d5ff; border-radius: 1.2rem; background: #f1eaff; color: #7040e8; box-shadow: 0 0.55rem 1.2rem rgb(112 64 232 / 0.12);
+}
+html[data-route="hanh-trinh"] .case-history-hero__icon-card .icon { width: 2.25rem; height: 2.25rem; }
+html[data-route="hanh-trinh"] .case-history-hero__copy { position: relative; z-index: 1; align-self: center; padding: 0 !important; }
+html[data-route="hanh-trinh"] .case-history-hero h1 { margin: 0 0 1rem !important; color: #24165f !important; font-size: clamp(2.55rem, 4.5vw, 4.1rem) !important; font-weight: 850 !important; line-height: 1.06 !important; letter-spacing: 0 !important; }
+html[data-route="hanh-trinh"] .case-history-hero__copy > p { margin: 0 !important; max-width: 42rem !important; color: #625b91 !important; font-size: clamp(1rem, 1.5vw, 1.2rem) !important; line-height: 1.55 !important; }
+html[data-route="hanh-trinh"] .case-history-filters--hero { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.7rem; }
+html[data-route="hanh-trinh"] .case-history-filters--hero button { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 3.25rem; padding: 0.65rem 1.25rem; border: 1.5px solid #9e83f7; border-radius: 999px; background: rgb(255 255 255 / 0.6); color: #6741d6; font: inherit; font-weight: 750; white-space: nowrap; cursor: pointer; transition: transform 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease; }
+html[data-route="hanh-trinh"] .case-history-filters--hero button .icon { width: 1.3rem; height: 1.3rem; }
+html[data-route="hanh-trinh"] .case-history-filters--hero button.is-active { border-color: transparent; background: linear-gradient(135deg, #7340e6, #8e56ef); color: #fff; box-shadow: 0 0.55rem 1.1rem rgb(112 64 232 / 0.24); }
+html[data-route="hanh-trinh"] .case-history-filters--hero button:hover { transform: translateY(-1px); }
+
+html[data-route="hanh-trinh"] .case-history-hero__visual { position: relative; z-index: 1; display: grid; place-items: center; min-height: 15rem; }
+html[data-route="hanh-trinh"] .case-history-hero__folder { position: relative; display: grid; place-items: center; width: 15rem; height: 9rem; border-radius: 1.2rem 1.2rem 1.5rem 1.5rem; background: linear-gradient(145deg, #9e7bfa, #6941d3); color: #fff; box-shadow: 0 1rem 1.8rem rgb(85 53 176 / 0.24); transform: rotate(-3deg); }
+html[data-route="hanh-trinh"] .case-history-hero__folder::before { content: ""; position: absolute; left: 1rem; top: -1rem; width: 6rem; height: 1.8rem; border-radius: 0.9rem 0.9rem 0 0; background: #8f6bea; }
+html[data-route="hanh-trinh"] .case-history-hero__folder > .icon { width: 4rem; height: 4rem; opacity: 0.95; }
+html[data-route="hanh-trinh"] .case-history-hero__doc { position: absolute; right: -2rem; top: -4.25rem; display: grid; place-items: center; width: 9rem; height: 7rem; border: 0.45rem solid #eee9ff; border-radius: 0.9rem; background: #fff; color: #9a7be9; box-shadow: 0 0.8rem 1.3rem rgb(85 53 176 / 0.13); transform: rotate(7deg); }
+html[data-route="hanh-trinh"] .case-history-hero__doc .icon { width: 3rem; height: 3rem; }
+html[data-route="hanh-trinh"] .case-history-hero__clock { position: absolute; right: -2.4rem; bottom: -1.2rem; display: grid; place-items: center; width: 4.5rem; height: 4.5rem; border: 0.35rem solid #fff; border-radius: 50%; background: #8b67ea; color: #fff; box-shadow: 0 0.5rem 1rem rgb(85 53 176 / 0.23); }
+html[data-route="hanh-trinh"] .case-history-hero__clock .icon { width: 2.2rem; height: 2.2rem; }
+html[data-route="hanh-trinh"] .case-history-hero__spark { position: absolute; color: #b69af9; font-size: 2rem; }
+html[data-route="hanh-trinh"] .case-history-hero__spark--one { top: 0.5rem; right: 5rem; }
+
+html[data-route="hanh-trinh"] .case-list-head { margin: 1.25rem 0 0.8rem !important; }
+html[data-route="hanh-trinh"] .case-list-head h2,
+html[data-route="hanh-trinh"] .case-list-head .case-history-filters { display: none !important; }
+html[data-route="hanh-trinh"] #caseListPanel:has(#caseListEmpty:not([hidden])) .case-list-head { display: none !important; }
+
+html[data-route="hanh-trinh"] .case-empty-desktop {
+  display: grid !important; grid-template-columns: minmax(17rem, 34%) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 5rem); width: 100%; min-height: 25rem; margin-top: 0.8rem; padding: 2.2rem 3.5rem; border: 1px solid #ded2ff; border-radius: 2rem; background: #fff; box-shadow: 0 1rem 2.6rem rgb(91 62 177 / 0.09); text-align: left;
+}
+html[data-route="hanh-trinh"] .case-empty-desktop > img { width: min(100%, 22rem) !important; height: auto; justify-self: center; }
+html[data-route="hanh-trinh"] .case-empty-desktop__content { display: grid; justify-items: start; min-width: 0; }
+html[data-route="hanh-trinh"] .case-empty-desktop h2 { margin: 0; color: #24165f; font-size: clamp(2rem, 3.4vw, 3rem); font-weight: 850; line-height: 1.1; }
+html[data-route="hanh-trinh"] .case-empty-desktop > .case-empty-desktop__content > p { max-width: 39rem; margin: 1rem 0 0; color: #625b91; font-size: 1.15rem; line-height: 1.55; }
+html[data-route="hanh-trinh"] .case-empty-desktop__privacy { margin-top: 1.25rem; padding: 0.65rem 1rem; border-radius: 999px; background: #eee8ff; color: #7952df; font-size: 1rem; font-weight: 700; }
+html[data-route="hanh-trinh"] .case-empty-desktop__actions { display: flex; flex-wrap: wrap; gap: 0.9rem; width: 100%; margin-top: 1.5rem; }
+html[data-route="hanh-trinh"] .case-empty-desktop__actions .button { min-height: 3.75rem; padding-inline: 1.65rem; border-radius: 999px; white-space: nowrap; }
+
+@media (max-width: 50rem) {
+  html[data-route="hanh-trinh"] #hanhTrinhView { width: min(100% - 1rem, 42rem); padding-top: 0.5rem; }
+  html[data-route="hanh-trinh"] .case-history-hero { grid-template-columns: 3.3rem minmax(0, 1fr) !important; min-height: 0 !important; padding: 1.5rem !important; gap: 0.9rem !important; }
+  html[data-route="hanh-trinh"] .case-history-hero__icon-card { width: 3.3rem; height: 3.3rem; border-radius: 1rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__icon-card .icon { width: 1.7rem; height: 1.7rem; }
+  html[data-route="hanh-trinh"] .case-history-hero h1 { font-size: clamp(2rem, 9vw, 3rem) !important; }
+  html[data-route="hanh-trinh"] .case-history-hero__copy > p { font-size: 0.95rem !important; }
+  html[data-route="hanh-trinh"] .case-history-hero__visual { grid-column: 1 / -1; min-height: 11rem; margin-top: 0.4rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__folder { transform: scale(0.75) rotate(-3deg); }
+  html[data-route="hanh-trinh"] .case-empty-desktop { grid-template-columns: 1fr; gap: 1rem; min-height: 0; padding: 2rem 1.25rem; text-align: center; }
+  html[data-route="hanh-trinh"] .case-empty-desktop > img { width: min(15rem, 72vw) !important; }
+  html[data-route="hanh-trinh"] .case-empty-desktop__content { justify-items: center; }
+  html[data-route="hanh-trinh"] .case-empty-desktop__actions { justify-content: center; }
+}
+
+@media (max-width: 28rem) {
+  html[data-route="hanh-trinh"] .case-history-hero { padding: 1.1rem !important; }
+  html[data-route="hanh-trinh"] .case-history-filters--hero { gap: 0.45rem; }
+  html[data-route="hanh-trinh"] .case-history-filters--hero button { min-height: 2.9rem; padding-inline: 0.8rem; font-size: 0.88rem; }
+  html[data-route="hanh-trinh"] .case-empty-desktop__actions .button { width: 100%; }
+}

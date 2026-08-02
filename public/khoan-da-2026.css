@@ -2543,18 +2543,6 @@ html[data-route="tin-nhan-la"] #analysisView .check-detail-back {
   height: 5rem;
 }
 
-.family-empty-visual > .icon-shield-check {
-  position: absolute;
-  right: 0.45rem;
-  bottom: 0.4rem;
-  width: 2.2rem;
-  height: 2.2rem;
-  padding: 0.3rem;
-  border-radius: 50%;
-  color: #fff;
-  background: #7750e8;
-}
-
 #familyView .contact-form {
   display: grid;
   gap: 0.8rem;
@@ -3031,31 +3019,180 @@ html[data-route="kiem-tra"] #analysisView::after {
 /* Case history */
 html[data-route="hanh-trinh"] #hanhTrinhView > .back-link { display: none; }
 #caseListPanel { position: relative; width: min(100%, 54rem); margin-inline: auto; }
-.case-history-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(16rem, 23rem); align-items: end; min-height: 19rem; margin-bottom: 1rem; overflow: hidden; }
-.case-history-hero__copy { align-self: center; padding-left: 0.5rem; }
-.case-history-hero h1 { margin: 0 0 1.4rem; color: var(--khoan-text); font-size: clamp(3rem, 8vw, 5rem); line-height: 1; }
-.case-history-hero img { align-self: end; width: 100%; max-height: 20rem; object-fit: contain; object-position: bottom; }
+.case-history-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 23rem);
+  align-items: end;
+  min-height: 19rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: 1.6rem;
+  background:
+    radial-gradient(circle at 85% 30%, #c4b5fd 0%, #ddd6fe 38%, transparent 70%),
+    linear-gradient(135deg, #f6f2ff 0%, #ffffff 60%);
+}
+.case-history-hero__copy { align-self: center; padding-left: 0.5rem; position: relative; z-index: 1; }
+.case-history-hero h1 {
+  margin: 0 0 1.4rem;
+  color: #4a2bb8;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 7vw, 4.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+.case-history-hero .eyebrow {
+  color: #7655ed;
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin: 0 0 0.4rem;
+}
+.case-history-hero__copy p {
+  margin: 0;
+  color: #5846a8;
+  font-size: 1rem;
+  line-height: 1.5;
+  max-width: 32rem;
+}
+.case-history-hero img {
+  align-self: end;
+  width: 100%;
+  max-height: 20rem;
+  object-fit: contain;
+  object-position: bottom;
+  position: relative;
+  z-index: 1;
+}
 .case-history-filters { display: flex; flex-wrap: wrap; gap: 0.7rem; }
 .case-history-filters button { min-height: 3.2rem; padding: 0.65rem 1.35rem; border: 1px solid #bfb0ff; border-radius: 1.7rem; color: var(--khoan-text); background: #fff; font-weight: 700; }
 .case-history-filters button.is-active { color: #fff; border-color: transparent; background: linear-gradient(135deg, #7655ed, #8668f3); }
 .case-create-button { display: flex; align-items: center; gap: 0.55rem; min-height: 3rem; margin: 0 0 1rem auto; padding: 0.55rem 1rem; border-radius: 1.5rem; color: #fff; background: var(--color-accent); font-weight: 700; }
 #caseListPanel .history-list { gap: 1rem; }
-#caseListPanel .case-history-row { position: relative; display: grid; grid-template-columns: 8rem minmax(0, 1fr) 3.3rem; grid-template-rows: auto auto 1fr; gap: 0.35rem 1rem; min-height: 11.5rem; padding: 1.35rem 1.4rem; overflow: hidden; border: 1px solid rgba(117, 84, 232, 0.1); border-radius: 1.8rem; box-shadow: var(--khoan-shadow); }
-.case-history-row__icon { grid-row: 1 / 4; display: grid; place-items: center; width: 7rem; height: 7rem; align-self: center; border-radius: 50%; }
-.case-history-row__icon .icon { width: 3.9rem; height: 3.9rem; }
+#caseListPanel .case-history-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) auto;
+  grid-template-rows: auto auto auto;
+  gap: 0.4rem 1rem;
+  align-items: start;
+  min-height: 8rem;
+  padding: 1.1rem 1.2rem;
+  overflow: hidden;
+  border: 1px solid rgba(117, 84, 232, 0.12);
+  border-radius: 1.4rem;
+  box-shadow: var(--khoan-shadow);
+  background: #fff;
+}
+.case-history-row__icon {
+  grid-row: 1 / 4;
+  display: grid;
+  place-items: center;
+  width: 4.5rem;
+  height: 4.5rem;
+  align-self: center;
+  border-radius: 50%;
+  background: #f1ecff;
+  color: #7655ed;
+}
+.case-history-row__icon .icon { width: 2.2rem; height: 2.2rem; }
 .case-history-row--high { background: #fff8f8; }
 .case-history-row--high .case-history-row__icon { color: #e73c45; background: #ffe5e7; }
 .case-history-row--medium { background: #fffaf5; }
 .case-history-row--medium .case-history-row__icon { color: #ed7900; background: #ffeedb; }
 .case-history-row--low, .case-history-row--safe { background: #f8fffc; }
 .case-history-row--low .case-history-row__icon, .case-history-row--safe .case-history-row__icon { color: #16a978; background: #dcf7ed; }
-#caseListPanel .history-row__meta { grid-column: 2 / 4; display: flex; justify-content: space-between; color: var(--khoan-text-soft); }
-.case-history-row__tag { width: fit-content; padding: 0.3rem 0.75rem; border-radius: 1rem; color: var(--color-accent); background: #eee8ff; font-weight: 800; }
-.case-history-row__title { grid-column: 2; margin: 0; color: var(--khoan-text); font-size: 1.35rem; font-weight: 800; }
-.case-history-row__description { grid-column: 2; color: var(--khoan-text-soft); font-size: 0.95rem; line-height: 1.55; }
-#caseListPanel .history-row__actions { grid-column: 3; grid-row: 2 / 4; display: grid; place-items: center; align-self: center; }
-.case-history-row__open { display: grid; place-items: center; width: 3.1rem; height: 3.1rem; border: 1px solid var(--khoan-line); border-radius: 50%; color: var(--khoan-text); background: #fff; }
-.case-history-row__delete { position: absolute; top: 0.55rem; right: 0.55rem; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; color: transparent; opacity: 0; }
+.case-history-row__heading {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.case-history-row__title {
+  margin: 0;
+  color: var(--khoan-text);
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.3;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.case-history-row__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.7rem;
+  border-radius: 1rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: color-mix(in oklch, currentColor 14%, transparent);
+  margin-left: auto;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.case-history-row__chip[data-risk="high"] { color: #c41e2a; background: #fde0e2; }
+.case-history-row__chip[data-risk="medium"] { color: #b56400; background: #ffeedb; }
+.case-history-row__chip[data-risk="low"] { color: #11805c; background: #dcf7ed; }
+.case-history-row__subline {
+  margin: 0;
+  grid-column: 2;
+  color: #6f6494;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+.case-history-row__meta {
+  grid-column: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--khoan-text-soft);
+  font-size: 0.78rem;
+  gap: 0.5rem;
+}
+.case-history-row__actions {
+  grid-column: 3;
+  grid-row: 1 / 4;
+  display: flex;
+  align-items: center;
+  align-self: center;
+  gap: 0.4rem;
+}
+.case-history-row__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 0.85rem;
+  min-width: 2.8rem;
+  height: 2.8rem;
+  border: 1px solid #ddd2ff;
+  border-radius: 1.6rem;
+  background: #fff;
+  color: #33207a;
+  font-weight: 700;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+.case-history-row__open-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+.case-history-row__open .icon { width: 1rem; height: 1rem; }
+.case-history-row__delete {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  color: transparent;
+  opacity: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
 .case-history-row:focus-within .case-history-row__delete, .case-history-row:hover .case-history-row__delete { color: #c72d36; opacity: 1; }
 #caseListPanel .empty-state { min-height: 12rem; border: 1px dashed var(--khoan-line); border-radius: 1.5rem; color: var(--khoan-text-soft); background: rgba(255,255,255,0.8); }
 
@@ -3095,19 +3232,21 @@ html[data-route="hanh-trinh"] #hanhTrinhView > .back-link { display: none; }
   html[data-route="kiem-tra"] #analysisView > .analysis-mascot { right: -1.2rem !important; bottom: 1rem !important; width: 14.5rem !important; }
   html[data-route="kiem-tra"] #analysisView::after { right: -12rem; width: 28rem; height: 19rem; }
 
-  .case-history-hero { grid-template-columns: minmax(0, 1fr) 12rem; min-height: 13rem; }
-  .case-history-hero h1 { margin-bottom: 1rem; font-size: 2.7rem; }
-  .case-history-hero img { width: 13rem; transform: translateX(0.7rem); }
+  .case-history-hero { grid-template-columns: minmax(0, 1fr) 11rem; min-height: 12rem; padding: 1.2rem 1.2rem 0; }
+  .case-history-hero h1 { margin-bottom: 0.8rem; font-size: 2.4rem; line-height: 1.05; }
+  .case-history-hero .eyebrow { font-size: 0.85rem; }
+  .case-history-hero__copy p { font-size: 0.9rem; }
+  .case-history-hero img { width: 11rem; transform: translateX(0.4rem); }
   .case-history-filters { gap: 0.4rem; }
   .case-history-filters button { min-height: 2.7rem; padding: 0.45rem 0.8rem; font-size: 0.75rem; }
-  #caseListPanel .case-history-row { grid-template-columns: 5rem minmax(0, 1fr) 2.7rem; min-height: 8.7rem; padding: 0.9rem; border-radius: 1.3rem; }
-  .case-history-row__icon { width: 4.6rem; height: 4.6rem; }
-  .case-history-row__icon .icon { width: 2.55rem; height: 2.55rem; }
-  .case-history-row__title { font-size: 1rem; }
-  .case-history-row__description { font-size: 0.72rem; }
-  .case-history-row__tag { padding: 0.22rem 0.55rem; font-size: 0.7rem; }
-  #caseListPanel .history-row__meta { font-size: 0.7rem; }
-  .case-history-row__open { width: 2.55rem; height: 2.55rem; }
+  #caseListPanel .case-history-row { grid-template-columns: 3.8rem minmax(0, 1fr) auto; min-height: 7rem; padding: 0.9rem; border-radius: 1.2rem; gap: 0.3rem 0.8rem; }
+  .case-history-row__icon { width: 3.8rem; height: 3.8rem; }
+  .case-history-row__icon .icon { width: 1.8rem; height: 1.8rem; }
+  .case-history-row__title { font-size: 0.95rem; }
+  .case-history-row__subline { font-size: 0.78rem; }
+  .case-history-row__chip { padding: 0.22rem 0.55rem; font-size: 0.66rem; }
+  #caseListPanel .case-history-row__meta { font-size: 0.72rem; }
+  .case-history-row__open { min-width: 2.5rem; height: 2.5rem; padding: 0 0.65rem; font-size: 0.72rem; }
 }
 
 /* --- UI/UX Rebrand for Kiểm tra View (Image 2) --- */
@@ -6875,6 +7014,242 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   html[data-route="trang-chu"] #homeView .mobile-home-followup { display: none !important; }
 }
 
+/* Case history refinement: text-led layout without the decorative mascot. */
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel {
+  width: min(100% - 2.5rem, 54rem) !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero {
+  display: block !important;
+  min-height: 0 !important;
+  margin: 0 0 1.75rem !important;
+  padding: 0.5rem 0 !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero > img {
+  display: none !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel .empty-state img {
+  display: none !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy {
+  width: 100% !important;
+  max-width: 42rem !important;
+  padding: 0 !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 {
+  max-width: none !important;
+  margin: 0 !important;
+  color: var(--khoan-text) !important;
+  font-size: clamp(2.25rem, 5vw, 3.5rem) !important;
+  line-height: 1.1 !important;
+  letter-spacing: 0 !important;
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
+  display: block !important;
+  max-width: 38rem !important;
+  margin: 0.85rem 0 1.25rem !important;
+  color: var(--khoan-text-soft) !important;
+  font-size: clamp(1rem, 1.6vw, 1.12rem) !important;
+  line-height: 1.55 !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-filters {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.55rem !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-filters button {
+  min-height: 2.8rem !important;
+  padding: 0.55rem 1rem !important;
+  font-size: 0.9rem !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1rem !important;
+  margin: 0 0 0.9rem !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
+  margin: 0 !important;
+  color: var(--khoan-text) !important;
+  font-size: clamp(1.45rem, 3vw, 1.9rem) !important;
+  line-height: 1.2 !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: fit-content !important;
+  min-height: 2.9rem !important;
+  margin: -3.8rem 0 1rem auto !important;
+  padding: 0.55rem 1rem !important;
+  white-space: nowrap !important;
+}
+
+@media (max-width: 40rem) {
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel {
+    width: min(100% - 2rem, 34rem) !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero {
+    margin-bottom: 1.4rem !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 {
+    font-size: clamp(2rem, 9vw, 2.5rem) !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
+    margin-top: 0.7rem !important;
+    font-size: 1rem !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head {
+    align-items: flex-start !important;
+    min-height: 3rem !important;
+    padding-right: 0 !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
+    max-width: 10rem !important;
+  }
+
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-button {
+    min-height: 2.75rem !important;
+    margin-top: -3.7rem !important;
+    padding-inline: 0.85rem !important;
+    font-size: 0.86rem !important;
+  }
+}
+
+/* Mobile repair: keep the app header and the check hub independent from desktop rules. */
+@media (max-width: 63.9375rem) {
+  html:not([data-authenticated="true"]) body .topbar,
+  html[data-authenticated="true"] body .topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  html body .topbar__actions {
+    display: inline-flex !important;
+    grid-column: 2 !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.45rem !important;
+  }
+
+  html[data-authenticated="false"] .topbar .topbar-bell,
+  html[data-authenticated="false"] .topbar .topbar-profile-icon {
+    display: none !important;
+  }
+
+  html[data-authenticated="false"] .topbar .greeting-chip {
+    display: inline-flex !important;
+    width: auto !important;
+    min-width: 7.15rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView {
+    width: min(100% - 1.25rem, 36rem) !important;
+    margin-inline: auto !important;
+    padding: 6.4rem 0 6.8rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-benefits,
+  html[data-route="kiem-tra"] #analysisView .prompt-bubble-row {
+    display: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    margin: 1rem 0 0 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__item {
+    display: grid !important;
+    grid-template-columns: 3.25rem minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+    min-height: 5.8rem !important;
+    padding: 0.8rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon {
+    width: 3.25rem !important;
+    height: 3.25rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon svg {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content {
+    min-width: 0 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content strong,
+  html[data-route="kiem-tra"] #analysisView .check-hub__content small {
+    overflow-wrap: anywhere !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content strong {
+    font-size: 1rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content small {
+    font-size: 0.84rem !important;
+    line-height: 1.35 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-advanced {
+    display: block !important;
+    margin-top: 1rem !important;
+    padding: 1rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-advanced__grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-advanced__grid a {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto !important;
+    min-height: 4.8rem !important;
+    padding: 0.7rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice {
+    grid-template-columns: 2.5rem minmax(0, 1fr) !important;
+    gap: 0.7rem !important;
+    padding: 0.9rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice a {
+    grid-column: 2 !important;
+  }
+}
+
 /* Desktop navigation: the mobile rail must never participate in desktop layout.
    This final rule is intentionally last because earlier legacy variants target
    both navigation elements and could render them on top of one another. */
@@ -7060,6 +7435,265 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   html[data-route="kiem-tra"] #analysisView .check-hub__item--voice::before { background: #f0ebff; color: #6336df; content: "Phân tích ngay  →"; } html[data-route="kiem-tra"] #analysisView .check-hub__item--link::before { background: #eaf2ff; color: #176bd9; } html[data-route="kiem-tra"] #analysisView .check-hub__item--transfer::before { background: #fff3e3; color: #e97906; }
   html[data-route="kiem-tra"] #analysisView .check-hub::after { display: block; grid-column: 1 / -1; margin-top: 0.35rem; padding: 1.15rem 1.35rem; border: 1px solid rgb(113 89 211 / 0.15); border-radius: 1.2rem; background: rgb(255 255 255 / 0.58); color: #1b1554; content: "Tính năng nâng cao\A\A  Tra cứu số điện thoại       Kiểm tra website       Báo cáo lừa đảo       Lịch sử kiểm tra"; white-space: pre-wrap; font-size: 1.05rem; font-weight: 800; line-height: 1.4; }
   html[data-route="kiem-tra"] #analysisView > .analysis-mascot, html[data-route="kiem-tra"] #analysisView .workspace-card { display: none !important; }
+}
+
+/* Account, history and alert refinements. */
+html:not([data-authenticated="true"]) body .topbar .greeting-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 9.5rem !important;
+  min-height: 2.8rem !important;
+  padding: 0 1.25rem !important;
+  border: 1px solid #d8caff !important;
+  border-radius: 999px !important;
+  background: #fff !important;
+  color: #332280 !important;
+  box-shadow: 0 0.35rem 0.9rem rgb(83 59 180 / 0.08) !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
+}
+
+html:not([data-authenticated="true"]) body .topbar__actions {
+  justify-self: end !important;
+  min-width: max-content !important;
+}
+
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
+  max-width: none !important;
+  font-size: clamp(1.15rem, 5vw, 1.55rem) !important;
+  white-space: nowrap !important;
+}
+
+.auth-dialog__tabs {
+  gap: 0.28rem !important;
+  padding: 0.26rem !important;
+  border-radius: 1.2rem !important;
+  background: #f8f7fb !important;
+}
+
+.auth-dialog__tabs button {
+  min-height: 3.3rem !important;
+  border: 2px solid #242424 !important;
+  border-radius: 1rem !important;
+  background: #f3f3f3 !important;
+}
+
+.auth-dialog__tabs button[aria-selected="true"] {
+  border-color: #242424 !important;
+  background: #fff !important;
+  box-shadow: inset 0 -0.2rem 0 #7040e8, 0 0 0 0.14rem #d9ccff !important;
+}
+
+.scam-news {
+  width: min(100%, 62rem);
+  margin: 2.25rem auto 0;
+  padding: 1.5rem;
+  border: 1px solid rgb(113 89 211 / 0.15);
+  border-radius: 1rem;
+  background: rgb(255 255 255 / 0.82);
+}
+
+.scam-news__head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+.scam-news__head .eyebrow { margin: 0 0 0.35rem; }
+.scam-news__head h2 { margin: 0; color: var(--khoan-text); font-size: 1.45rem; }
+.scam-news__head > p { margin: 0; color: var(--khoan-text-soft); font-size: 0.88rem; }
+.scam-news__list { display: grid; gap: 0.7rem; }
+.scam-news__item { display: grid; grid-template-columns: 2.7rem minmax(0, 1fr); gap: 0.8rem; align-items: start; padding: 0.9rem; border-radius: 0.8rem; background: #f8f6ff; }
+.scam-news__item > .icon { display: grid; place-items: center; width: 2.7rem; height: 2.7rem; border-radius: 50%; color: #6d3fe8; background: #ece6ff; }
+.scam-news__item h3 { margin: 0; color: var(--khoan-text); font-size: 1rem; line-height: 1.35; }
+.scam-news__item p { margin: 0.25rem 0 0; color: var(--khoan-text-soft); font-size: 0.92rem; line-height: 1.5; }
+
+@media (max-width: 40rem) {
+  .scam-news { margin-top: 1.5rem; padding: 1rem; border-radius: 0.8rem; }
+  .scam-news__head { display: grid; gap: 0.35rem; }
+  .scam-news__head h2 { font-size: 1.25rem; }
+}
+
+/* Keep the case-history introduction readable when the empty-state rules apply. */
+html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
+  display: block !important;
+}
+
+/* Tablet and phone safety net: the compact shell wins until a true desktop width. */
+@media (max-width: 79.9375rem) {
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+  }
+
+  .topbar__actions {
+    display: inline-flex !important;
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.45rem !important;
+  }
+
+  html:not([data-authenticated="true"]) .topbar .topbar-bell,
+  html:not([data-authenticated="true"]) .topbar .topbar-profile-icon {
+    display: none !important;
+  }
+
+  html:not([data-authenticated="true"]) .topbar .greeting-chip {
+    display: inline-flex !important;
+    width: auto !important;
+    min-width: 7.15rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) {
+    width: min(100% - 1.25rem, 36rem) !important;
+    margin-inline: auto !important;
+    padding: 6.4rem 0 6.8rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-benefits,
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .prompt-bubble-row {
+    display: none !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
+    margin: 1rem 0 0 !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__item {
+    display: grid !important;
+    grid-template-columns: 3.25rem minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 0.8rem !important;
+    min-height: 5.8rem !important;
+    padding: 0.8rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__icon {
+    width: 3.25rem !important;
+    height: 3.25rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__icon svg {
+    width: 2rem !important;
+    height: 2rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content {
+    min-width: 0 !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content strong,
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content small {
+    overflow-wrap: anywhere !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content strong {
+    font-size: 1rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content small {
+    font-size: 0.84rem !important;
+    line-height: 1.35 !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced {
+    display: block !important;
+    margin-top: 1rem !important;
+    padding: 1rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid a {
+    display: grid !important;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto !important;
+    min-height: 4.8rem !important;
+    padding: 0.7rem !important;
+  }
+
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub::after,
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content::after,
+  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__item::before {
+    display: none !important;
+    content: none !important;
+  }
+}
+
+/* Stable advanced tools layout for the check screen at every viewport. */
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 1rem !important;
+  padding: 1rem !important;
+  border: 1px solid rgb(113 89 211 / 0.16) !important;
+  border-radius: 1rem !important;
+  background: rgb(255 255 255 / 0.82) !important;
+}
+
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1rem !important;
+  margin: 0 0 0.85rem !important;
+}
+
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)) !important;
+  gap: 0.65rem !important;
+}
+
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid a {
+  display: grid !important;
+  grid-template-columns: 2.75rem minmax(0, 1fr) auto !important;
+  align-items: center !important;
+  gap: 0.65rem !important;
+  min-height: 5.1rem !important;
+  padding: 0.7rem !important;
+  border: 1px solid rgb(113 89 211 / 0.12) !important;
+  border-radius: 0.8rem !important;
+  background: #f8f6ff !important;
+  color: #201850 !important;
+  text-decoration: none !important;
+}
+
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid a > .icon:first-child {
+  display: grid !important;
+  place-items: center !important;
+  width: 2.75rem !important;
+  height: 2.75rem !important;
+  border-radius: 50% !important;
+  background: #ece6ff !important;
+  color: #7146e8 !important;
+}
+
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid strong,
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid small {
+  display: block !important;
+  overflow-wrap: anywhere !important;
+}
+
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid strong {
+  font-size: 0.94rem !important;
+  line-height: 1.3 !important;
+}
+
+html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid small {
+  margin-top: 0.2rem !important;
+  color: #65617f !important;
+  font-size: 0.78rem !important;
+  line-height: 1.35 !important;
 }
 
 /* Real content blocks for the reference check screen. */
@@ -9348,505 +9982,847 @@ body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--qui
   html[data-route="kiem-tra"] #analysisView > .analysis-mascot, html[data-route="kiem-tra"] #analysisView .workspace-card { display: none !important; }
 }
 
-/* Mobile repair: keep the app header and the check hub independent from desktop rules. */
-@media (max-width: 63.9375rem) {
-  .topbar,
-  body:has(#homeView:not([hidden])) .topbar,
-  body:has(#analysisView:not([hidden])) .topbar {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-  }
+/* ================================================================
+   DESIGN OVERRIDES — Redesign 2026-08-02
+   Fixes mobile layout for Profile (Hồ sơ) and Cases (Vụ việc & lịch sử)
+   to match the reference images.
+   ================================================================ */
 
-  .topbar__actions {
-    display: inline-flex !important;
-    grid-column: 2 !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 0.45rem !important;
-  }
+/* ── Profile view overrides ──────────────────────────────────── */
 
-  html[data-authenticated="false"] .topbar .topbar-bell,
-  html[data-authenticated="false"] .topbar .topbar-profile-icon {
-    display: none !important;
-  }
-
-  html[data-authenticated="false"] .topbar .greeting-chip {
-    display: inline-flex !important;
-    width: auto !important;
-    min-width: 7.15rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView {
-    width: min(100% - 1.25rem, 36rem) !important;
-    margin-inline: auto !important;
-    padding: 6.4rem 0 6.8rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-benefits,
-  html[data-route="kiem-tra"] #analysisView .prompt-bubble-row {
-    display: none !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0.75rem !important;
-    width: 100% !important;
-    margin: 1rem 0 0 !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub__item {
-    display: grid !important;
-    grid-template-columns: 3.25rem minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 0.8rem !important;
-    min-height: 5.8rem !important;
-    padding: 0.8rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub__icon {
-    width: 3.25rem !important;
-    height: 3.25rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub__icon svg {
-    width: 2rem !important;
-    height: 2rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub__content {
-    min-width: 0 !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub__content strong,
-  html[data-route="kiem-tra"] #analysisView .check-hub__content small {
-    overflow-wrap: anywhere !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub__content strong {
-    font-size: 1rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-hub__content small {
-    font-size: 0.84rem !important;
-    line-height: 1.35 !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-advanced {
-    display: block !important;
-    margin-top: 1rem !important;
-    padding: 1rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-advanced__grid {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0.6rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-advanced__grid a {
-    grid-template-columns: 2.5rem minmax(0, 1fr) auto !important;
-    min-height: 4.8rem !important;
-    padding: 0.7rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-notice {
-    grid-template-columns: 2.5rem minmax(0, 1fr) !important;
-    gap: 0.7rem !important;
-    padding: 0.9rem !important;
-  }
-
-  html[data-route="kiem-tra"] #analysisView .check-notice a {
-    grid-column: 2 !important;
-  }
+/* Centered compact header matching image 1 */
+#familyView .family-profile-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: min(100%, 54rem);
+  margin-inline: auto;
+  padding: 1.5rem 0.75rem 1.25rem;
 }
 
-
-/* Final compact override: this comes after all legacy desktop rules. */
-/* Mobile repair: keep the app header and the check hub independent from desktop rules. */
-@media (max-width: 79.9375rem) {
-  html:not([data-authenticated="true"]) body .topbar,
-  html[data-authenticated="true"] body .topbar {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 0.5rem !important;
-  }
-
-  html body .topbar__actions {
-    display: inline-flex !important;
-    grid-column: 2 !important;
-    grid-row: 1 !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 0.45rem !important;
-  }
-
-  html:not([data-authenticated="true"]) .topbar .topbar-bell,
-  html:not([data-authenticated="true"]) .topbar .topbar-profile-icon {
-    display: none !important;
-  }
-
-  html:not([data-authenticated="true"]) .topbar .greeting-chip {
-    display: inline-flex !important;
-    width: auto !important;
-    min-width: 7.15rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) {
-    width: min(100% - 1.25rem, 36rem) !important;
-    margin-inline: auto !important;
-    padding: 6.4rem 0 6.8rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-benefits,
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .prompt-bubble-row {
-    display: none !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0.75rem !important;
-    width: 100% !important;
-    margin: 1rem 0 0 !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__item {
-    display: grid !important;
-    grid-template-columns: 3.25rem minmax(0, 1fr) auto !important;
-    align-items: center !important;
-    gap: 0.8rem !important;
-    min-height: 5.8rem !important;
-    padding: 0.8rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__icon {
-    width: 3.25rem !important;
-    height: 3.25rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__icon svg {
-    width: 2rem !important;
-    height: 2rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content {
-    min-width: 0 !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content strong,
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content small {
-    overflow-wrap: anywhere !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content strong {
-    font-size: 1rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content small {
-    font-size: 0.84rem !important;
-    line-height: 1.35 !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced {
-    display: block !important;
-    margin-top: 1rem !important;
-    padding: 1rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 0.6rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid a {
-    grid-template-columns: 2.5rem minmax(0, 1fr) auto !important;
-    min-height: 4.8rem !important;
-    padding: 0.7rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-notice {
-    grid-template-columns: 2.5rem minmax(0, 1fr) !important;
-    gap: 0.7rem !important;
-    padding: 0.9rem !important;
-  }
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-notice a {
-    grid-column: 2 !important;
-  }
+#familyView .family-profile-avatar {
+  width: 7rem;
+  height: 7rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: #f4efff;
+  box-shadow: 0 0.75rem 1.5rem rgba(86, 64, 164, 0.16);
+  overflow: hidden;
 }
 
-
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub::after,
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__content::after,
-  html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub__item::before {
-    display: none !important;
-    content: none !important;
-  }
+#familyView .family-profile-avatar .family-hero-mascot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-/* Stable advanced tools layout for the check screen at every viewport. */
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced {
-  display: block !important;
-  width: 100% !important;
-  margin-top: 1rem !important;
-  padding: 1rem !important;
-  border: 1px solid rgb(113 89 211 / 0.16) !important;
-  border-radius: 1rem !important;
-  background: rgb(255 255 255 / 0.82) !important;
+#familyView .family-profile-head .eyebrow {
+  margin: 0 0 0.5rem;
 }
 
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__head {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 1rem !important;
-  margin: 0 0 0.85rem !important;
+#familyView .family-profile-head h1 {
+  margin: 0 0 0.75rem;
+  color: #33207a;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  line-height: 1.05;
 }
 
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)) !important;
-  gap: 0.65rem !important;
+#familyView .family-profile-head .calm-line {
+  margin: 0;
+  color: #6f68a6;
+  font-size: 1.05rem;
+  max-width: 28rem;
 }
 
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid a {
-  display: grid !important;
-  grid-template-columns: 2.75rem minmax(0, 1fr) auto !important;
-  align-items: center !important;
-  gap: 0.65rem !important;
-  min-height: 5.1rem !important;
-  padding: 0.7rem !important;
-  border: 1px solid rgb(113 89 211 / 0.12) !important;
-  border-radius: 0.8rem !important;
-  background: #f8f6ff !important;
-  color: #201850 !important;
-  text-decoration: none !important;
+/* Contact card — full-width on mobile, matches image 1 */
+#familyView .family-contact-card {
+  width: min(100%, 54rem);
+  margin-inline: auto;
+  padding: 1.4rem;
+  border: 1px solid rgba(117, 78, 238, 0.12);
+  border-radius: 1.6rem;
+  background: #fff;
+  box-shadow: 0 0.8rem 2.2rem rgba(86, 64, 164, 0.1);
 }
 
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid a > .icon:first-child {
-  display: grid !important;
-  place-items: center !important;
-  width: 2.75rem !important;
-  height: 2.75rem !important;
-  border-radius: 50% !important;
-  background: #ece6ff !important;
-  color: #7146e8 !important;
+.family-contact-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(82, 64, 157, 0.1);
 }
 
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid strong,
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid small {
-  display: block !important;
-  overflow-wrap: anywhere !important;
+.family-contact-card__head > span:last-child {
+  min-width: 0;
 }
 
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid strong {
-  font-size: 0.94rem !important;
-  line-height: 1.3 !important;
+.family-contact-card__head-icon {
+  flex: 0 0 3.75rem;
+  width: 3.75rem;
+  height: 3.75rem;
+  border: 1px solid #ddd2ff;
+  border-radius: 50%;
+  background: #f4efff;
+  color: #7043e5;
 }
 
-html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid small {
-  margin-top: 0.2rem !important;
-  color: #65617f !important;
-  font-size: 0.78rem !important;
-  line-height: 1.35 !important;
+.family-contact-card__head-icon .icon {
+  width: 1.85rem;
+  height: 1.85rem;
 }
 
-/* Case history refinement: text-led layout without the decorative mascot. */
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel {
-  width: min(100% - 2.5rem, 54rem) !important;
+.family-contact-card__head .card-heading {
+  margin: 0 0 0.2rem;
+  font-size: clamp(1.25rem, 3vw, 1.65rem);
+  color: #33207a;
+  font-weight: 800;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero {
-  display: block !important;
-  min-height: 0 !important;
-  margin: 0 0 1.75rem !important;
-  padding: 0.5rem 0 !important;
-  overflow: visible !important;
-  background: transparent !important;
+.family-contact-card__head .field-hint {
+  margin: 0;
+  color: #6f68a6;
+  font-size: 0.92rem;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero > img {
+/* Contact form — full-width on mobile */
+#familyView #contactForm {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+#familyView .family-contact-field {
+  position: relative;
+}
+
+#familyView .family-contact-field label {
+  display: block;
+  margin: 0 0 0.35rem;
+  color: #33207a;
+  font-weight: 700;
+}
+
+.family-contact-field__icon {
+  position: absolute;
+  left: 1rem;
+  bottom: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: #f2edff;
+  color: #7950e9;
+  pointer-events: none;
+}
+
+.family-contact-field__icon .icon {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+#familyView .family-contact-field input,
+#familyView .family-contact-field select {
+  width: 100%;
+  min-height: 3.35rem;
+  padding-left: 3.1rem !important;
+  border: 1px solid #d8ceff;
+  border-radius: 1.1rem;
+  background: #fff;
+  font-size: 1.05rem;
+}
+
+#familyView .family-contact-advanced {
   display: none !important;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel .empty-state img {
-  display: none !important;
+/* Submit button — full-width pill */
+#familyView #contactSubmitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 3.7rem;
+  margin-top: 0.35rem;
+  border: 0;
+  border-radius: 1.35rem;
+  background: linear-gradient(100deg, #7042e5, #8854ed);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  box-shadow: 0 0.8rem 1.5rem rgba(107, 65, 224, 0.24);
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy {
-  width: 100% !important;
-  max-width: 42rem !important;
-  padding: 0 !important;
+.family-add-plus {
+  display: inline-grid;
+  place-items: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+  background: #fff;
+  color: #7042e5;
+  font-size: 1.65rem;
+  line-height: 1;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 {
-  max-width: none !important;
-  margin: 0 !important;
-  color: var(--khoan-text) !important;
-  font-size: clamp(2.25rem, 5vw, 3.5rem) !important;
-  line-height: 1.1 !important;
-  letter-spacing: 0 !important;
-  overflow-wrap: normal !important;
-  word-break: normal !important;
+/* Contact entry list — grid layout */
+#familyView .family-contact-card .contact-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-block-end: 1.25rem;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
-  display: block !important;
-  max-width: 38rem !important;
-  margin: 0.85rem 0 1.25rem !important;
-  color: var(--khoan-text-soft) !important;
-  font-size: clamp(1rem, 1.6vw, 1.12rem) !important;
-  line-height: 1.55 !important;
+#familyView .family-contact-card .contact-entry__info {
+  min-width: 0;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-filters {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 0.55rem !important;
+#familyView .family-contact-card .contact-entry__name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-filters button {
-  min-height: 2.8rem !important;
-  padding: 0.55rem 1rem !important;
-  font-size: 0.9rem !important;
+#familyView .family-contact-card .contact-entry__name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #33207a;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  gap: 1rem !important;
-  margin: 0 0 0.9rem !important;
+#familyView .family-contact-card .contact-entry__role-chip {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 0.75rem;
+  background: #eee8ff;
+  color: #7043e5;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
-  margin: 0 !important;
-  color: var(--khoan-text) !important;
-  font-size: clamp(1.45rem, 3vw, 1.9rem) !important;
-  line-height: 1.2 !important;
+#familyView .family-contact-card .contact-entry__phone {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0.15rem 0 0;
+  color: #6f68a6;
+  font-size: 0.92rem;
 }
 
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-button {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: fit-content !important;
-  min-height: 2.9rem !important;
-  margin: -3.8rem 0 1rem auto !important;
-  padding: 0.55rem 1rem !important;
-  white-space: nowrap !important;
+#familyView .family-contact-card .contact-entry__phone .icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
 }
 
-@media (max-width: 40rem) {
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel {
-    width: min(100% - 2rem, 34rem) !important;
-  }
-
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero {
-    margin-bottom: 1.4rem !important;
-  }
-
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 {
-    font-size: clamp(2rem, 9vw, 2.5rem) !important;
-  }
-
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
-    margin-top: 0.7rem !important;
-    font-size: 1rem !important;
-  }
-
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head {
-    align-items: flex-start !important;
-    min-height: 3rem !important;
-    padding-right: 0 !important;
-  }
-
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
-    max-width: 10rem !important;
-  }
-
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-button {
-    min-height: 2.75rem !important;
-    margin-top: -3.7rem !important;
-    padding-inline: 0.85rem !important;
-    font-size: 0.86rem !important;
-  }
+#familyView .family-contact-card .contact-entry__timestamp {
+  margin: 0.2rem 0 0;
+  color: #6f68a6;
+  font-size: 0.78rem;
 }
 
-/* Account, history and alert refinements. */
-html:not([data-authenticated="true"]) body .topbar .greeting-chip {
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-width: 9.5rem !important;
-  min-height: 2.8rem !important;
-  padding: 0 1.25rem !important;
-  border: 1px solid #d8caff !important;
-  border-radius: 999px !important;
-  background: #fff !important;
-  color: #332280 !important;
-  box-shadow: 0 0.35rem 0.9rem rgb(83 59 180 / 0.08) !important;
-  font-weight: 800 !important;
-  white-space: nowrap !important;
-}
-
-html:not([data-authenticated="true"]) body .topbar__actions {
-  justify-self: end !important;
-  min-width: max-content !important;
-}
-
-html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head h2 {
-  max-width: none !important;
-  font-size: clamp(1.15rem, 5vw, 1.55rem) !important;
-  white-space: nowrap !important;
-}
-
-.auth-dialog__tabs {
-  gap: 0.28rem !important;
-  padding: 0.26rem !important;
-  border-radius: 1.2rem !important;
-  background: #f8f7fb !important;
-}
-
-.auth-dialog__tabs button {
-  min-height: 3.3rem !important;
-  border: 2px solid #242424 !important;
-  border-radius: 1rem !important;
-  background: #f3f3f3 !important;
-}
-
-.auth-dialog__tabs button[aria-selected="true"] {
-  border-color: #242424 !important;
-  background: #fff !important;
-  box-shadow: inset 0 -0.2rem 0 #7040e8, 0 0 0 0.14rem #d9ccff !important;
-}
-
-.scam-news {
-  width: min(100%, 62rem);
-  margin: 2.25rem auto 0;
-  padding: 1.5rem;
-  border: 1px solid rgb(113 89 211 / 0.15);
+/* Contact entry card — grid: avatar | info+actions */
+#familyView .family-contact-card .contact-entry {
+  display: grid;
+  grid-template-columns: 4rem 1fr auto;
+  align-items: start;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid rgba(117, 78, 238, 0.08);
   border-radius: 1rem;
-  background: rgb(255 255 255 / 0.82);
+  background: var(--color-surface, #faf9ff);
 }
 
-.scam-news__head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
-.scam-news__head .eyebrow { margin: 0 0 0.35rem; }
-.scam-news__head h2 { margin: 0; color: var(--khoan-text); font-size: 1.45rem; }
-.scam-news__head > p { margin: 0; color: var(--khoan-text-soft); font-size: 0.88rem; }
-.scam-news__list { display: grid; gap: 0.7rem; }
-.scam-news__item { display: grid; grid-template-columns: 2.7rem minmax(0, 1fr); gap: 0.8rem; align-items: start; padding: 0.9rem; border-radius: 0.8rem; background: #f8f6ff; }
-.scam-news__item > .icon { display: grid; place-items: center; width: 2.7rem; height: 2.7rem; border-radius: 50%; color: #6d3fe8; background: #ece6ff; }
-.scam-news__item h3 { margin: 0; color: var(--khoan-text); font-size: 1rem; line-height: 1.35; }
-.scam-news__item p { margin: 0.25rem 0 0; color: var(--khoan-text-soft); font-size: 0.92rem; line-height: 1.5; }
+#familyView .family-contact-card .contact-entry__avatar {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+}
 
+#familyView .family-contact-card .contact-entry--tone-warm .contact-entry__avatar { background: linear-gradient(135deg, #f59e0b, #fb923c); }
+#familyView .family-contact-card .contact-entry--tone-leaf .contact-entry__avatar { background: linear-gradient(135deg, #16a34a, #4ade80); }
+#familyView .family-contact-card .contact-entry--tone-sky .contact-entry__avatar { background: linear-gradient(135deg, #2563eb, #60a5fa); }
+#familyView .family-contact-card .contact-entry--tone-rose .contact-entry__avatar { background: linear-gradient(135deg, #db2777, #f472b6); }
+
+.contact-entry__info {
+  min-width: 0;
+}
+
+.contact-entry__name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.2rem;
+}
+
+.contact-entry__name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-ink, #33207a);
+}
+
+.contact-entry__role-chip {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 0.75rem;
+  background: #eee8ff;
+  color: #7043e5;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.contact-entry__phone {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0.15rem 0 0;
+  color: #6f68a6;
+  font-size: 0.92rem;
+}
+
+.contact-entry__phone .icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+}
+
+.contact-entry__timestamp {
+  margin: 0.2rem 0 0;
+  color: #6f68a6;
+  font-size: 0.78rem;
+}
+
+/* Contact entry actions — stack vertically on mobile */
+#familyView .family-contact-card .contact-entry__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+#familyView .family-contact-card .contact-entry__call,
+#familyView .family-contact-card .contact-entry__alert {
+  min-height: var(--touch-target, 52px);
+  padding: 0.55rem 0.8rem;
+  font-size: 0.88rem;
+  border-radius: 1.1rem;
+  width: 100%;
+}
+
+#familyView .family-contact-card .contact-entry__call .icon,
+#familyView .family-contact-card .contact-entry__alert .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.contact-entry__menu {
+  min-height: var(--touch-target, 52px);
+  padding: 0.55rem 0.7rem;
+  font-size: 1.5rem;
+  line-height: 1;
+  border-radius: 1.1rem;
+}
+
+.contact-entry__menu-popup {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  min-width: 11rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid rgba(117, 78, 238, 0.12);
+  border-radius: 0.75rem;
+  background: #fff;
+  box-shadow: 0 0.8rem 2.2rem rgba(86, 64, 164, 0.18);
+}
+
+.contact-entry__menu-popup button {
+  padding: 0.65rem 0.9rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #33207a;
+  font-size: 0.92rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.contact-entry__menu-popup button:hover {
+  background: #f4efff;
+}
+
+.contact-entry__menu-popup button[data-action="delete"] {
+  color: #dc2626;
+}
+
+/* Empty state */
+#familyView #contactEmpty {
+  min-height: 10rem;
+  margin: 1.25rem 0;
+  padding: 1.5rem;
+  border: 2px dashed #d1c3ff;
+  border-radius: 1.4rem;
+  background: linear-gradient(180deg, #fff, #fbf9ff);
+  text-align: center;
+}
+
+#familyView #contactEmpty p {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #33207a;
+}
+
+.family-empty-visual > .icon-users {
+  width: 4.5rem;
+  height: 4.5rem;
+  color: #a18af3;
+}
+
+/* Privacy notice */
+.family-local-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin-top: 1.25rem;
+  padding: 0.9rem;
+  border-radius: 0.75rem;
+  background: #f4efff;
+  color: #6f68a6;
+  font-size: 0.88rem;
+}
+
+.family-local-notice .icon {
+  flex-shrink: 0;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: 0.1rem;
+  color: #7043e5;
+}
+
+/* ── Cases / Vụ việc & lịch sử overrides ──────────────────── */
+
+/* Compact hero so the list is visible immediately */
+.case-history-hero {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem;
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(117, 78, 238, 0.1);
+  border-radius: 1.6rem;
+  background: linear-gradient(135deg, #f8f4ff 0%, #fff 100%);
+}
+
+.case-history-hero__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.case-history-hero__copy .eyebrow {
+  margin: 0 0 0.25rem;
+  color: #7043e5;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+
+.case-history-hero h1 {
+  margin: 0 0 0.4rem;
+  color: #33207a;
+  font-size: clamp(1.5rem, 4.5vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.case-history-hero__copy > p {
+  margin: 0;
+  color: #6f68a6;
+  font-size: 0.92rem;
+}
+
+.case-history-hero > img {
+  width: clamp(4.5rem, 14vw, 8rem);
+  height: auto;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+/* Case list head: heading + filters + create button in a row */
+.case-list-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.case-list-head h2 {
+  margin: 0;
+  flex: 0 0 auto;
+  color: #33207a;
+  font-size: clamp(1.3rem, 3.5vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.case-list-head .case-history-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex: 1 1 auto;
+}
+
+.case-history-filters button {
+  min-height: 2.9rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid #ddd2ff;
+  border-radius: 1.6rem;
+  background: #fff;
+  color: #33207a;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.case-history-filters button.is-active {
+  color: #fff;
+  background: linear-gradient(100deg, #7042e5, #8854ed);
+  border-color: transparent;
+}
+
+.case-create-button {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 1.4rem;
+  background: linear-gradient(100deg, #7042e5, #8854ed);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  box-shadow: 0 0.5rem 1.2rem rgba(107, 65, 224, 0.22);
+}
+
+.case-create-button .icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Case history row: compact card with icon + title/badge + timestamp */
+#caseListPanel .history-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+#caseListPanel .case-history-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 0.3rem 0.9rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid rgba(117, 78, 238, 0.1);
+  border-radius: 1.5rem;
+  background: #fff;
+  box-shadow: 0 0.6rem 1.8rem rgba(86, 64, 164, 0.09);
+}
+
+.case-history-row__icon {
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: #eee8ff;
+  color: #7043e5;
+}
+
+.case-history-row__icon .icon {
+  width: 2.6rem;
+  height: 2.6rem;
+}
+
+.case-history-row--high .case-history-row__icon {
+  background: #ffe5e7;
+  color: #dc2626;
+}
+
+.case-history-row--medium .case-history-row__icon {
+  background: #ffeedb;
+  color: #d97706;
+}
+
+.case-history-row--low .case-history-row__icon,
+.case-history-row--safe .case-history-row__icon {
+  background: #dcf7ed;
+  color: #16a34a;
+}
+
+.case-history-row__heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.case-history-row__title {
+  margin: 0;
+  flex: 0 1 auto;
+  color: #33207a;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.case-history-row__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 1rem;
+  background: #eee8ff;
+  color: #7043e5;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.case-history-row__badge[data-risk="high"] { background: #ffe5e7; color: #dc2626; }
+.case-history-row__badge[data-risk="medium"] { background: #ffeedb; color: #d97706; }
+.case-history-row__badge[data-risk="low"] { background: #dcf7ed; color: #16a34a; }
+
+#caseListPanel .case-history-row__meta {
+  grid-column: 2;
+  color: #6f68a6;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+#caseListPanel .case-history-row__actions {
+  grid-row: 1 / span 2;
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.case-history-row__open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0 0.9rem;
+  min-width: 3rem;
+  height: 3rem;
+  border: 1px solid #ddd2ff;
+  border-radius: 2rem;
+  background: #fff;
+  color: #33207a;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: var(--text-xs);
+}
+
+.case-history-row__open-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  pointer-events: none;
+}
+
+.case-history-row__open .icon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.case-history-row__delete {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: transparent;
+  color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.case-history-row:focus-within .case-history-row__delete,
+.case-history-row:hover .case-history-row__delete {
+  color: #dc2626;
+}
+
+/* Empty state for case list */
+#caseListPanel .empty-state {
+  min-height: 11rem;
+  border: 2px dashed #d1c3ff;
+  border-radius: 1.4rem;
+  background: linear-gradient(180deg, #fff, #fbf9ff);
+  padding: 1.5rem;
+}
+
+/* ── Mobile adjustments (≤ 640px) ─────────────────────────────── */
 @media (max-width: 40rem) {
-  .scam-news { margin-top: 1.5rem; padding: 1rem; border-radius: 0.8rem; }
-  .scam-news__head { display: grid; gap: 0.35rem; }
-  .scam-news__head h2 { font-size: 1.25rem; }
+  /* Profile */
+  #familyView .family-profile-head {
+    padding: 1.25rem 0.6rem 1rem;
+  }
+
+  #familyView .family-profile-avatar {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  #familyView .family-profile-head h1 {
+    font-size: 1.75rem;
+  }
+
+  #familyView .family-contact-card {
+    padding: 1.1rem 0.9rem;
+    border-radius: 1.4rem;
+  }
+
+  .contact-entry {
+    grid-template-columns: 3.5rem 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .contact-entry__avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 0.95rem;
+  }
+
+  .contact-entry__actions {
+    grid-column: 1 / -1;
+    flex-direction: row;
+  }
+
+  .contact-entry__call,
+  .contact-entry__alert {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .contact-entry__menu {
+    flex: 0 0 auto;
+    padding: 0.55rem 0.65rem;
+  }
+
+  /* Cases */
+  .case-history-hero {
+    padding: 1rem;
+  }
+
+  .case-history-hero > img {
+    display: none;
+  }
+
+  .case-list-head {
+    margin: 1.25rem 0 0.75rem;
+  }
+
+  .case-list-head h2 {
+    width: 100%;
+    font-size: 1.3rem;
+  }
+
+  .case-history-filters {
+    order: 2;
+  }
+
+  .case-create-button {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+  }
+
+  #caseListPanel .case-history-row {
+    grid-template-columns: 4rem minmax(0, 1fr) auto;
+    padding: 0.9rem;
+    border-radius: 1.3rem;
+  }
+
+  .case-history-row__icon {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .case-history-row__icon .icon {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .case-history-row__title {
+    font-size: 1rem;
+  }
+
+  .case-history-row__badge {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  #caseListPanel .case-history-row__meta {
+    font-size: 0.72rem;
+  }
+
+  .case-history-row__open {
+    min-width: 2.6rem;
+    height: 2.6rem;
+    padding: 0 0.7rem;
+  }
+
+  .case-history-row__open .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+/* ── Tablet / medium desktop (641px – 1024px) ──────────────── */
+@media (min-width: 41rem) and (max-width: 64rem) {
+  /* Profile */
+  #familyView .family-profile-head {
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  #familyView .family-profile-avatar {
+    width: 6rem;
+    height: 6rem;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  /* Cases */
+  .case-history-hero > img {
+    width: 7rem;
+  }
+
+  .case-list-head .case-create-button {
+    margin-left: auto;
+  }
 }

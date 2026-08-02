@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const path = require("node:path");
+const fs = require("node:fs");
 const express = require("express");
 const { GeminiError, extractSignals, extractTransferSignals, extractChatResponse } = require("./src/gemini");
 const {
@@ -100,6 +101,22 @@ app.use("/vendor", express.static(path.join(__dirname, "node_modules", "jsqr", "
 
 app.get("/api/health", (_request, response) => {
   response.json({ ok: true });
+});
+
+app.get("/api/danh-ba-ho-tro", (_request, response, next) => {
+  try {
+    const filename = path.join(staticRoot, "config", "support-directory.json");
+    const items = JSON.parse(fs.readFileSync(filename, "utf8"));
+    const reviewedAt = items.reduce((latest, item) => item.updatedAt > latest ? item.updatedAt : latest, "");
+    response.json({
+      version: "2026.07.31",
+      reviewedAt,
+      staleAfterDays: 90,
+      items
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 function buildFallbackAnalysis(text, { hasMedia = false, recoveryModeActive = false } = {}) {

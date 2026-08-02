@@ -210,11 +210,11 @@ test("desktop and mobile taskbars share routes and render cross-browser icons", 
   assert.match(styles, /\.mobile-bottom-nav[\s\S]*?border-radius:\s*var\(--radius-xl\)/);
 });
 
-test("desktop web shell exposes sidebar brand, search and large-screen overrides", () => {
+test("desktop web shell exposes sidebar brand and large-screen overrides", () => {
   assert.match(html, /class="desktop-sidebar-brand"[\s\S]*?Khoan Đã[\s\S]*?Bảo vệ bác, mỗi ngày/);
-  assert.match(html, /id="desktopSearchForm"[\s\S]*?id="desktopSearchInput"[\s\S]*?placeholder="Tìm kiếm hoặc hỗ trợ"/);
+  assert.doesNotMatch(html, /id="desktopSearchForm"|id="desktopSearchInput"/);
   assert.match(html, /khoan-da-2026\.css\?v=20260801-learning-alerts-1/);
-  assert.match(serviceWorker, /khoan-da-shell-v48/);
+    assert.match(serviceWorker, /khoan-da-shell-v51/);
   assert.match(serviceWorker, /khoan-da-2026\.css\?v=20260801-learning-alerts-1/);
   assert.match(refreshStyles, /Desktop web redesign, 2026-07-28/);
   assert.match(refreshStyles, /@media \(min-width: 64rem\)[\s\S]*?--desktop-sidebar-w/);
@@ -223,7 +223,8 @@ test("desktop web shell exposes sidebar brand, search and large-screen overrides
 });
 
 test("floating header, local account flow and reference history shell stay connected", () => {
-  assert.match(html, /id="profileMenuButton"[\s\S]*?data-auth-label>Đăng nhập/);
+  assert.doesNotMatch(html, /id="profileMenuButton"/);
+  assert.match(html, /id="profileIconButton"[\s\S]*?aria-label="Hồ sơ của bác"/);
   for (const id of ["authDialog", "authLoginTab", "authRegisterTab", "authForm", "logoutButton", "deleteAccountButton"]) {
     assert.match(html, new RegExp(`id="${id}"`));
   }

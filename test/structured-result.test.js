@@ -62,3 +62,16 @@ test("keeps low-risk structured results cautious and non-empty", () => {
   assert.match(structured.summary, /Chưa|Thông tin/);
   assert.match(structured.limitations.join(" "), /không bảo đảm/);
 });
+
+test("recommends explicit next actions without auto-opening extracted links", () => {
+  const text = "Cài ứng dụng lạ, đọc OTP 123456, rồi chuyển vào 1234567890 qua https://bad.example.";
+  const signals = inferSignalsFromText(text);
+  const structured = buildStructuredAnalysisResult({ result: evaluateRisk(signals), signals, text });
+
+  assert.deepEqual(
+    structured.recommendedActions.map((action) => action.type),
+    ["protect_device", "check_link", "check_transfer"]
+  );
+  assert.ok(structured.recommendedActions.every((action) => action.route.startsWith("#")));
+  assert.doesNotMatch(JSON.stringify(structured.recommendedActions), /fetch|https?:/i);
+});

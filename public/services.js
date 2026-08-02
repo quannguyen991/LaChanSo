@@ -67,8 +67,8 @@
     evidenceService: { mode: "local-only" },
     familyCircleService: { mode: "local-only" },
     supportDirectoryService: {
-      mode: "config-backed",
-      getAll(options) { return getJson("/config/support-directory.json", options); }
+      mode: "versioned-config-backed",
+      getAll(options) { return getJson("/api/danh-ba-ho-tro", options); }
     },
     communityReportService: { mode: "local-queue-until-server-provider" },
     privacyService: { mode: "local-only" },

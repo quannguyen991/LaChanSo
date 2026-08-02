@@ -19,8 +19,11 @@
     <link rel="stylesheet" href="/tokens.css">
     <link rel="stylesheet" href="/styles.css?v=20260801-route-transitions-1">
     <link rel="stylesheet" href="/khoan-da-2026.css?v=20260801-learning-alerts-1">
+    <link rel="stylesheet" href="/mobile-header-fix.css?v=20260802-4">
+    <link rel="stylesheet" href="/history-redesign.css?v=20260802-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
+    <script src="/local-vault.js" defer></script>
     <script src="/app.js" defer></script>
   </head>
   <body>
@@ -124,15 +127,7 @@
           <span class="brand__tagline">Bảo vệ bác, mỗi ngày</span>
         </span>
       </a>
-      <form class="desktop-search" id="desktopSearchForm" role="search" aria-label="Tìm kiếm hoặc nhập tình huống nhanh">
-        <span class="icon icon-search" aria-hidden="true"></span>
-        <label class="visually-hidden" for="desktopSearchInput">Tìm kiếm hoặc hỗ trợ</label>
-        <input id="desktopSearchInput" type="search" autocomplete="off" placeholder="Tìm kiếm hoặc hỗ trợ">
-      </form>
       <div class="topbar__actions">
-        <button class="greeting-chip" type="button" id="profileMenuButton" aria-label="Đăng nhập" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu authDialog">
-          <span data-auth-label>Đăng nhập</span>
-        </button>
         <button class="topbar-icon-btn topbar-bell" type="button" id="notificationButton" aria-label="Thông báo">
           <span class="icon icon-bell" aria-hidden="true"></span>
         </button>
@@ -168,6 +163,7 @@
       </div>
     </aside>
 
+    <div class="network-status" id="networkStatus" role="status" hidden></div>
     <main id="noi-dung">
       <section class="view" id="homeView" aria-labelledby="homeTitle">
         <div class="home-layout">
@@ -575,13 +571,13 @@
         </div>
         <section class="scam-news" aria-labelledby="scamNewsTitle">
           <div class="scam-news__head">
-            <div><p class="eyebrow">C?p nh?t c?nh gi?c</p><h2 id="scamNewsTitle">C?nh b?o g?n ??y</h2></div>
-            <p>C?p nh?t n?i dung: 01/08/2026</p>
+            <div><p class="eyebrow">Cập nhật cảnh giác</p><h2 id="scamNewsTitle">Cảnh báo gần đây</h2></div>
+            <p>Cập nhật nội dung: 01/08/2026</p>
           </div>
           <div class="scam-news__list">
-            <article class="scam-news__item"><span class="icon icon-alert" aria-hidden="true"></span><div><h3>Gi? nh?n vi?n ng?n h?ng h? tr? sinh tr?c h?c</h3><p>Kh?ng g?i video, ??c OTP ho?c c?i ?ng d?ng theo y?u c?u t? s? ?i?n tho?i l?.</p></div></article>
-            <article class="scam-news__item"><span class="icon icon-messages" aria-hidden="true"></span><div><h3>Gi?ng n?i, h?nh ?nh ng??i th?n b? l?m gi?</h3><p>C?p m?y v? g?i l?i s? ?? l?u; ch? chuy?n ti?n sau khi x?c minh v?i th?m m?t ng??i th?n.</p></div></article>
-            <article class="scam-news__item"><span class="icon icon-link" aria-hidden="true"></span><div><h3>Link, QR nh?n qu? v? ho?n ti?n</h3><p>Ki?m tra tr?c ti?p trong ?ng d?ng ch?nh th?c, kh?ng ??ng nh?p qua m? ho?c ???ng link ???c g?i.</p></div></article>
+            <article class="scam-news__item"><span class="icon icon-alert" aria-hidden="true"></span><div><h3>Giả nhân viên ngân hàng hỗ trợ sinh trắc học</h3><p>Không gọi video, đọc OTP hoặc cài ứng dụng theo yêu cầu từ số điện thoại lạ.</p></div></article>
+            <article class="scam-news__item"><span class="icon icon-messages" aria-hidden="true"></span><div><h3>Giọng nói, hình ảnh người thân bị làm giả</h3><p>Cúp máy và gọi lại số đã lưu; chỉ chuyển tiền sau khi xác minh với thêm một người thân.</p></div></article>
+            <article class="scam-news__item"><span class="icon icon-link" aria-hidden="true"></span><div><h3>Link, QR nhận quà và hoàn tiền</h3><p>Kiểm tra trực tiếp trong ứng dụng chính thức, không đăng nhập qua mã hoặc đường link được gửi.</p></div></article>
           </div>
         </section>
       </section>
@@ -597,14 +593,14 @@
           </a>
         </div>
 
-        <div class="prompt-bubble-row">
-          <div class="prompt-bubble">
-        <section class="check-benefits" aria-label="L?i ?ch khi ki?m tra">
-          <div><span class="icon icon-shield-check" aria-hidden="true"></span><p><strong>Nhanh ch?ng</strong><small>Ki?m tra trong v?i gi?y</small></p></div>
-          <div><span class="icon icon-shield-check" aria-hidden="true"></span><p><strong>Ch?nh x?c</strong><small>Ph?n t?ch th?ng minh</small></p></div>
-          <div><span class="icon icon-lock" aria-hidden="true"></span><p><strong>B?o m?t</strong><small>Th?ng tin c?a b?c ???c b?o v?</small></p></div>
+        <section class="check-benefits" aria-label="Lợi ích khi kiểm tra">
+          <div><span class="icon icon-shield-check" aria-hidden="true"></span><p><strong>Nhanh chóng</strong><small>Kiểm tra trong vài giây</small></p></div>
+          <div><span class="icon icon-shield-check" aria-hidden="true"></span><p><strong>Chính xác</strong><small>Phân tích thông minh</small></p></div>
+          <div><span class="icon icon-lock" aria-hidden="true"></span><p><strong>Bảo mật</strong><small>Thông tin của bác được bảo vệ</small></p></div>
         </section>
 
+        <div class="prompt-bubble-row">
+          <div class="prompt-bubble">
             <span class="prompt-bubble__icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -682,20 +678,24 @@
             </span>
           </a>
         </nav>
-        <img class="analysis-mascot" src="/assets/mascot-check.webp" alt="" aria-hidden="true">
-
         <section class="check-advanced" aria-labelledby="checkAdvancedTitle">
-          <div class="check-advanced__head"><h2 id="checkAdvancedTitle">T&#237;nh n&#259;ng n&#226;ng cao</h2><a href="#lich-su">Xem t&#7845;t c&#7843; <span class="icon icon-chevron-right" aria-hidden="true"></span></a></div>
+          <div class="check-advanced__head"><h2 id="checkAdvancedTitle">Tính năng nâng cao</h2><a href="#lich-su">Xem tất cả <span class="icon icon-chevron-right" aria-hidden="true"></span></a></div>
           <div class="check-advanced__grid">
-            <a href="#xac-minh"><span class="icon icon-phone" aria-hidden="true"></span><span><strong>Tra c&#7913;u s&#7889; &#273;i&#7879;n tho&#7841;i</strong><small>Tra c&#7913;u th&#244;ng tin chi ti&#7871;t v&#7873; s&#7889; &#273;i&#7879;n tho&#7841;i.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
-            <a href="#kiem-tra-lien-ket"><span class="icon icon-link" aria-hidden="true"></span><span><strong>Ki&#7875;m tra website</strong><small>&#272;&#225;nh gi&#225; &#273;&#7897; tin c&#7853;y c&#7911;a website.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
-            <a href="#hanh-trinh"><span class="icon icon-shield-check" aria-hidden="true"></span><span><strong>B&#225;o c&#225;o l&#7915;a &#273;&#7843;o</strong><small>B&#225;o c&#225;o c&#225;c tr&#432;&#7901;ng h&#7907;p l&#7915;a &#273;&#7843;o cho c&#7897;ng &#273;&#7891;ng.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
-            <a href="#lich-su"><span class="icon icon-history" aria-hidden="true"></span><span><strong>L&#7883;ch s&#7917; ki&#7875;m tra</strong><small>Xem l&#7841;i c&#225;c l&#7847;n ki&#7875;m tra c&#7911;a b&#225;c.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
+            <a href="#xac-minh"><span class="icon icon-phone" aria-hidden="true"></span><span><strong>Tra cứu số điện thoại</strong><small>Tra cứu thông tin chi tiết về số điện thoại.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
+            <a href="#kiem-tra-lien-ket"><span class="icon icon-link" aria-hidden="true"></span><span><strong>Kiểm tra website</strong><small>Đánh giá độ tin cậy của website.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
+            <a href="#hanh-trinh"><span class="icon icon-shield-check" aria-hidden="true"></span><span><strong>Báo cáo lừa đảo</strong><small>Báo cáo các trường hợp lừa đảo cho cộng đồng.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
+            <a href="#lich-su"><span class="icon icon-history" aria-hidden="true"></span><span><strong>Lịch sử kiểm tra</strong><small>Xem lại các lần kiểm tra của bác.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
           </div>
         </section>
-        <aside class="check-notice"><span class="icon icon-lock" aria-hidden="true"></span><p><strong>L&#432;u &#253; quan tr&#7885;ng</strong><small>Lu&#244;n c&#7843;nh gi&#225;c v&#7899;i c&#225;c y&#234;u c&#7847;u cung c&#7845;p th&#244;ng tin c&#225; nh&#226;n, m&#7853;t kh&#7849;u, m&#227; OTP ho&#7863;c chuy&#7875;n ti&#7873;n cho ng&#432;&#7901;i l&#7841;.</small></p><a href="#huong-dan">T&#236;m hi&#7875;u th&#234;m <span class="icon icon-chevron-right" aria-hidden="true"></span></a></aside>
+        <aside class="check-notice"><span class="icon icon-lock" aria-hidden="true"></span><p><strong>Lưu ý quan trọng</strong><small>Luôn cảnh giác với các yêu cầu cung cấp thông tin cá nhân, mật khẩu, mã OTP hoặc chuyển tiền cho người lạ.</small></p><a href="#huong-dan">Tìm hiểu thêm <span class="icon icon-chevron-right" aria-hidden="true"></span></a></aside>
+        <img class="analysis-mascot" src="/assets/mascot-check.webp" alt="" aria-hidden="true">
+
         <div class="workspace-card">
         <form class="analysis-form" id="analysisForm" novalidate>
+          <p class="analysis-form__lead">
+            <span class="icon icon-shield-check" aria-hidden="true"></span>
+            <span>Bác có thể nhập chữ, <strong>nói thay vì gõ</strong>, hoặc <strong>chụp ảnh/PDF</strong> — Khoan Đã sẽ giúp bác kiểm tra.</span>
+          </p>
           <div class="field-head">
             <label for="situation">Kể lại cuộc gọi hoặc tin nhắn</label>
             <span id="characterCount" aria-live="polite">0 / 5.000</span>
@@ -790,6 +790,12 @@
               </div>
             </div>
             <p class="result-insight__question" id="structuredNextQuestion"></p>
+          </section>
+
+          <section class="result-layer" id="recommendedActionSection" aria-labelledby="recommendedActionTitle" hidden>
+            <h3 id="recommendedActionTitle">Việc bác có thể kiểm tra tiếp</h3>
+            <p class="field-hint">Khoan Đã chưa tự mở link, gọi số hoặc gửi thông tin đi đâu. Bác tự chọn bước phù hợp.</p>
+            <div class="form-actions" id="recommendedActionList"></div>
           </section>
 
           <section class="result-layer" aria-labelledby="signalLayerTitle">
@@ -1541,10 +1547,23 @@
           <h1 id="historyTitle" tabindex="-1">Lịch sử kiểm tra</h1>
         </div>
         <div class="history-list" id="historyList"></div>
-        <div class="empty-state" id="historyEmpty">
-          <span class="icon icon-history" aria-hidden="true"></span>
-          <p>Chưa có lần kiểm tra nào.</p>
-          <a class="button button-primary" href="#kiem-tra">Kiểm tra ngay</a>
+        <div class="empty-state empty-state--rich" id="historyEmpty">
+          <span class="empty-state__art" aria-hidden="true">
+            <img src="/assets/mascot-history.webp" width="220" height="200" alt="" decoding="async">
+          </span>
+          <div class="empty-state__body">
+            <h2 class="empty-state__title">Chưa có lần kiểm tra nào</h2>
+            <p>Mỗi lần bác kiểm tra, kết quả sẽ tự lưu tại đây để bác xem lại dễ dàng.</p>
+            <ul class="empty-state__bullets">
+              <li><span class="icon icon-shield-check" aria-hidden="true"></span><span>Xem lại tình huống đáng ngờ gần nhất</span></li>
+              <li><span class="icon icon-history" aria-hidden="true"></span><span>Theo dõi 5 lần kiểm tra gần đây</span></li>
+              <li><span class="icon icon-lock" aria-hidden="true"></span><span>Dữ liệu chỉ lưu trên máy này</span></li>
+            </ul>
+            <a class="button button-primary empty-state__cta" href="#kiem-tra">
+              <span class="icon icon-shield-check" aria-hidden="true"></span>
+              <span>Bắt đầu kiểm tra</span>
+            </a>
+          </div>
         </div>
         <button class="button button-danger-quiet" type="button" id="clearHistoryButton" hidden>
           <span class="icon icon-trash" aria-hidden="true"></span>
@@ -1560,25 +1579,34 @@
 
         <div id="caseListPanel">
           <section class="case-history-hero" aria-labelledby="hanhTrinhTitle">
+            <span class="case-history-hero__icon-card"><span class="icon icon-shield-check" aria-hidden="true"></span></span>
             <div class="case-history-hero__copy">
               <h1 id="hanhTrinhTitle" tabindex="-1">Vụ việc &amp; lịch sử</h1>
-              <p>Theo dõi, quản lý các vụ việc bác đã gặp. Khoan Đã luôn đồng hành và hỗ trợ bác.</p>
-              <div class="case-history-filters" role="group" aria-label="Lọc lịch sử vụ việc">
-                <button type="button" class="is-active" data-case-filter="all" aria-pressed="true">Tất cả</button>
-                <button type="button" data-case-filter="checked" aria-pressed="false">Đã kiểm tra</button>
-                <button type="button" data-case-filter="saved" aria-pressed="false">Đã lưu</button>
+              <p>Xem lại các lần bác đã kiểm tra cuộc gọi, tin nhắn hoặc đường link.<br>Mọi dữ liệu được lưu an toàn chỉ trên thiết bị của bác.</p>
+              <div class="case-history-filters case-history-filters--hero" role="group" aria-label="Lọc lịch sử vụ việc">
+                <button type="button" class="is-active" data-case-filter="all" aria-pressed="true"><span class="icon icon-route" aria-hidden="true"></span><span>Tất cả</span></button>
+                <button type="button" data-case-filter="checked" aria-pressed="false"><span class="icon icon-shield-check" aria-hidden="true"></span><span>Đã kiểm tra</span></button>
+                <button type="button" data-case-filter="saved" aria-pressed="false"><span class="icon icon-lock" aria-hidden="true"></span><span>Đã lưu</span></button>
               </div>
             </div>
-            <img src="/assets/mascot-history.webp" width="370" height="330" alt="" aria-hidden="true" decoding="async">
+            <div class="case-history-hero__visual" aria-hidden="true">
+              <span class="case-history-hero__spark case-history-hero__spark--one">✦</span>
+              <span class="case-history-hero__folder"><span class="icon icon-folder-lock"></span><span class="case-history-hero__doc"><span class="icon icon-receipt"></span></span><span class="case-history-hero__clock"><span class="icon icon-history"></span></span></span>
+            </div>
           </section>
 
           <div class="case-list-head">
             <h2>Danh sách vụ việc</h2>
+            <div class="case-history-filters" role="group" aria-label="Lọc lịch sử vụ việc">
+              <button type="button" class="is-active" data-case-filter="all" aria-pressed="true">Tất cả</button>
+              <button type="button" data-case-filter="checked" aria-pressed="false">Đã kiểm tra</button>
+              <button type="button" data-case-filter="saved" aria-pressed="false">Đã lưu</button>
+            </div>
+            <button class="case-create-button" type="button" id="createCaseButton">
+              <span class="icon icon-route" aria-hidden="true"></span>
+              <span>Thêm vụ việc</span>
+            </button>
           </div>
-          <button class="case-create-button" type="button" id="createCaseButton">
-            <span class="icon icon-route" aria-hidden="true"></span>
-            <span>Thêm vụ việc</span>
-          </button>
 
           <div class="history-list" id="caseList"></div>
           <div class="empty-state" id="caseListEmpty">
@@ -1586,12 +1614,14 @@
             <p class="case-empty-mobile">Chưa có vụ việc nào được ghi lại.</p>
             <div class="case-empty-desktop">
               <img src="/assets/mascot-history.webp" width="370" height="330" alt="" aria-hidden="true" decoding="async">
+              <div class="case-empty-desktop__content">
               <h2>Chưa có lịch sử nào</h2>
               <p>Khi bác kiểm tra cuộc gọi, tin nhắn hoặc đường link lạ, kết quả sẽ được lưu tại đây để bác xem lại dễ dàng.</p>
               <span class="case-empty-desktop__privacy"><i class="icon icon-lock" aria-hidden="true"></i>Dữ liệu chỉ lưu trên thiết bị này</span>
               <div class="case-empty-desktop__actions">
                 <a class="button button-primary" href="#kiem-tra"><span class="icon icon-shield-check" aria-hidden="true"></span><span>Bắt đầu kiểm tra</span></a>
                 <a class="button button-secondary" href="#huong-dan"><span class="icon icon-education" aria-hidden="true"></span><span>Xem cách sử dụng</span></a>
+              </div>
               </div>
             </div>
           </div>
@@ -1688,11 +1718,18 @@
       </section>
 
       <section class="view" id="familyView" aria-labelledby="familyTitle" hidden>
+        <a class="back-link" href="#trang-chu">
+          <span class="icon icon-back" aria-hidden="true"></span>
+          <span>Về trang chủ</span>
+        </a>
+
         <div class="workspace-head family-profile-head">
+          <div class="family-profile-avatar" aria-hidden="true">
+            <img class="family-hero-mascot" src="/assets/mascot-home.webp" width="466" height="470" alt="" decoding="async">
+          </div>
           <p class="eyebrow">Hồ sơ · Lưu trên máy này</p>
           <h1 id="familyTitle" tabindex="-1">Hồ sơ của bác</h1>
           <p class="calm-line">Lưu con cháu, người thân tin cậy để gọi nhanh khi cần. Toàn bộ chỉ nằm trong trình duyệt này, không gửi lên máy chủ nào.</p>
-          <img class="family-hero-mascot" src="/assets/mascot-home.webp" width="466" height="470" alt="" aria-hidden="true" decoding="async">
         </div>
 
         <div class="family-two-col">
@@ -1766,6 +1803,7 @@
 
           <div class="workspace-card family-contact-card family-contact-card--list">
             <div class="family-contact-card__head">
+              <span class="family-contact-card__head-icon" aria-hidden="true"><span class="icon icon-users"></span></span>
               <span>
                 <h2 class="card-heading">Danh sách người thân đã lưu <span id="contactCount">(0/5)</span></h2>
                 <p class="field-hint">Gọi nhanh hoặc gửi báo tin cho 1 chạm.</p>
@@ -1784,36 +1822,57 @@
         </div>
 
         <div class="workspace-card family-settings-card">
-          <h2 class="card-heading">Số hotline &amp; mật khẩu gia đình</h2>
-          <form class="dialog-form" id="familyForm" novalidate>
-            <div class="dialog-field">
-              <label for="bankPhone">Số điện thoại tổng đài ngân hàng (không bắt buộc)</label>
-              <input id="bankPhone" type="tel" inputmode="tel" autocomplete="off" placeholder="Ví dụ: 1900 xxxx">
-              <p class="field-hint">Dùng cho nút "Gọi ngân hàng" khi cần xử lý khẩn cấp.</p>
-              <p class="field-error" id="phoneError" role="alert" hidden></p>
+          <div class="family-contact-card__head">
+            <span class="family-contact-card__head-icon" aria-hidden="true"><span class="icon icon-shield-check"></span></span>
+            <span>
+              <h2 class="card-heading">Số hotline &amp; mật khẩu gia đình</h2>
+              <p class="field-hint">Hai thông tin bác tự lưu để gọi nhanh khi cần xử lý khẩn cấp.</p>
+            </span>
+          </div>
+          <form class="dialog-form family-settings-form" id="familyForm" novalidate>
+            <div class="family-settings-grid">
+              <div class="dialog-field family-settings-field">
+                <span class="family-settings-field__icon" aria-hidden="true"><span class="icon icon-phone"></span></span>
+                <span class="family-settings-field__body">
+                  <label for="bankPhone">Số hotline ngân hàng</label>
+                  <input id="bankPhone" type="tel" inputmode="tel" autocomplete="off" placeholder="Ví dụ: 1900 xxxx">
+                  <p class="field-hint">Dùng cho nút "Gọi ngân hàng" khi xử lý khẩn cấp.</p>
+                  <p class="field-error" id="phoneError" role="alert" hidden></p>
+                </span>
+              </div>
+
+              <div class="dialog-field family-settings-field">
+                <span class="family-settings-field__icon" aria-hidden="true"><span class="icon icon-lock"></span></span>
+                <span class="family-settings-field__body">
+                  <label for="familyKeyword">Mật khẩu gia đình</label>
+                  <input id="familyKeyword" name="familyKeyword" type="password" autocomplete="off" placeholder="Một từ chỉ gia đình biết">
+                  <p class="field-hint">Dùng để hỏi lại khi có người tự xưng là người thân.</p>
+                </span>
+              </div>
             </div>
 
-            <div class="dialog-field">
-              <label for="familyKeyword">Mật khẩu gia đình</label>
-              <input id="familyKeyword" name="familyKeyword" type="password" autocomplete="off" placeholder="Một từ chỉ gia đình biết">
-              <p class="field-hint">Dùng để hỏi lại khi có người tự xưng là người thân.</p>
+            <div class="family-settings-actions">
+              <button class="button button-primary" type="submit">
+                <span class="icon icon-save" aria-hidden="true"></span>
+                <span>Lưu cài đặt</span>
+              </button>
+              <button class="button button-danger-quiet dialog-clear" type="button" id="clearSettingsButton">
+                <span class="icon icon-trash" aria-hidden="true"></span>
+                <span>Xóa toàn bộ dữ liệu đã lưu</span>
+              </button>
             </div>
-
-            <button class="button button-primary" type="submit">
-              <span class="icon icon-save" aria-hidden="true"></span>
-              <span>Lưu cài đặt</span>
-            </button>
-            <button class="button button-danger-quiet dialog-clear" type="button" id="clearSettingsButton">
-              <span class="icon icon-trash" aria-hidden="true"></span>
-              <span>Xóa toàn bộ dữ liệu đã lưu</span>
-            </button>
             <p class="save-status" id="settingsStatus" aria-live="polite"></p>
           </form>
         </div>
 
         <div class="workspace-card">
-          <h2 class="card-heading">Lịch sử chia sẻ</h2>
-          <p class="field-hint">Bác luôn biết ai đã xem dữ liệu nào và quyền nào đang bật.</p>
+          <div class="family-contact-card__head">
+            <span class="family-contact-card__head-icon" aria-hidden="true"><span class="icon icon-history"></span></span>
+            <span>
+              <h2 class="card-heading">Lịch sử chia sẻ</h2>
+              <p class="field-hint">Bác luôn biết ai đã xem dữ liệu nào và quyền nào đang bật.</p>
+            </span>
+          </div>
           <div class="privacy-audit-list" id="familyAuditList"></div>
         </div>
 
@@ -1935,11 +1994,37 @@
               <span class="icon icon-save" aria-hidden="true"></span>
               <span>Tải xuống toàn bộ dữ liệu của tôi</span>
             </button>
+            <button class="button button-secondary" type="button" id="exportEncryptedBackupButton">
+              <span class="icon icon-lock" aria-hidden="true"></span>
+              <span>Tạo bản sao lưu có mật khẩu</span>
+            </button>
             <button class="button button-danger-quiet" type="button" id="deleteAllDataButton">
               <span class="icon icon-trash" aria-hidden="true"></span>
               <span>Xóa toàn bộ dữ liệu trên máy này</span>
             </button>
           </div>
+        </div>
+      </section>
+      <section class="view" id="deviceProtectionView" aria-labelledby="deviceProtectionTitle" hidden>
+        <a class="back-link" href="#kiem-tra"><span class="icon icon-back" aria-hidden="true"></span><span>Về kết quả kiểm tra</span></a>
+        <div class="workspace-head">
+          <p class="eyebrow eyebrow--danger">Bảo vệ thiết bị</p>
+          <h1 id="deviceProtectionTitle" tabindex="-1">Dừng lại và bảo vệ điện thoại</h1>
+          <p class="calm-line">Nếu bác đã đọc OTP, cài ứng dụng lạ hoặc chia sẻ màn hình, hãy làm từng việc dưới đây. Khoan Đã không thể tự kiểm tra hay sửa điện thoại thay bác.</p>
+        </div>
+        <div class="workspace-card">
+          <ol class="checklist" id="deviceProtectionChecklist">
+            <li class="checklist__item"><label><input type="checkbox" data-device-step="stop"><span class="checklist__title">Dừng cuộc gọi, tắt chia sẻ màn hình và không đọc thêm mã xác nhận</span></label></li>
+            <li class="checklist__item"><label><input type="checkbox" data-device-step="bank"><span class="checklist__title">Gọi ngân hàng bằng số chính thức để khóa hoặc kiểm tra tài khoản</span></label></li>
+            <li class="checklist__item"><label><input type="checkbox" data-device-step="remove"><span class="checklist__title">Gỡ ứng dụng lạ và thu hồi quyền Trợ năng, Điều khiển từ xa hoặc Cài ứng dụng không rõ nguồn gốc</span></label></li>
+            <li class="checklist__item"><label><input type="checkbox" data-device-step="password"><span class="checklist__title">Đổi mật khẩu ngân hàng, email và ví điện tử trên thiết bị sạch nếu có thể</span></label></li>
+            <li class="checklist__item"><label><input type="checkbox" data-device-step="review"><span class="checklist__title">Kiểm tra giao dịch gần đây và lưu lại thông tin đáng ngờ</span></label></li>
+          </ol>
+          <div class="form-actions">
+            <button class="button button-call" type="button" id="deviceProtectionBankButton"><span class="icon icon-phone" aria-hidden="true"></span><span>Gọi ngân hàng</span></button>
+            <a class="button button-secondary" href="#bang-chung"><span class="icon icon-save" aria-hidden="true"></span><span>Lưu bằng chứng</span></a>
+          </div>
+          <p class="field-hint" id="deviceProtectionStatus" role="status"></p>
         </div>
       </section>
       <section class="view" id="supportView" aria-labelledby="supportTitle" hidden>

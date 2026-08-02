@@ -25,6 +25,16 @@ test("health response includes security headers", async () => {
   assert.equal(response.headers.get("x-content-type-options"), "nosniff");
 });
 
+test("support directory has a version, review date and no invented contact data", async () => {
+  const response = await fetch(`${baseUrl}/api/danh-ba-ho-tro`);
+  const payload = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(payload.version, /^\d{4}\.\d{2}\.\d{2}$/);
+  assert.match(payload.reviewedAt, /^\d{4}-\d{2}-\d{2}$/);
+  assert.ok(Array.isArray(payload.items));
+  assert.ok(payload.items.every((item) => item.name && item.source));
+});
+
 test("reputation API never invents reports for an unknown phone", async () => {
   const response = await fetch(`${baseUrl}/api/kiem-tra-uy-tin`, {
     method: "POST",
