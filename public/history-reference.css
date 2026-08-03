@@ -1,8 +1,15 @@
 /* Desktop reference layout for the case and history workspace. */
 @media (min-width: 64rem) {
   html[data-route="hanh-trinh"] #hanhTrinhView {
-    width: min(calc(100% - 4rem), 94rem) !important;
-    padding: 4.4rem 0 3rem !important;
+    width: 100% !important;
+    padding: 0.8rem 0 3rem !important;
+  }
+
+  /* Match the focused, compact reference composition on large screens. */
+  html[data-route="hanh-trinh"] #noi-dung {
+    width: min(calc(100% - 2rem), 58rem) !important;
+    max-width: 58rem !important;
+    margin: 5.35rem auto 0 !important;
   }
 
   /* Remove the legacy 54rem cap so every history surface shares the desktop grid. */
@@ -87,13 +94,13 @@
 
   /* Outrank the legacy case-workspace grid that addresses its children by ID. */
   html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero {
-    grid-template-columns: minmax(0, 1fr) minmax(19rem, 25rem) !important;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem) !important;
     grid-template-areas: "copy visual" !important;
     min-height: 18rem !important;
   }
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy { grid-column: 1 !important; grid-row: 1 !important; align-self: start !important; max-width: 52rem !important; padding-top: 4rem !important; }
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 { margin-left: 4.35rem !important; }
-  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p { max-width: 46rem !important; margin-left: 4.35rem !important; }
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy { grid-column: 1 !important; grid-row: 1 !important; align-self: start !important; max-width: 36rem !important; padding: 4rem 0 0 2.1rem !important; }
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 { margin-left: 0 !important; }
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p { max-width: 31rem !important; margin-left: 0 !important; }
   html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero__visual { grid-column: 2 !important; grid-row: 1 !important; min-height: 0 !important; }
   html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero .case-create-button--hero {
     position: absolute !important;
@@ -108,7 +115,7 @@
     position: absolute !important;
     top: 3rem;
     right: 3rem;
-    width: 17rem;
+    width: 15rem;
     height: 11rem;
   }
 
