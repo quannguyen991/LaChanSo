@@ -1,5 +1,22 @@
 /* Desktop home hero without the decorative character illustration. */
 @media (min-width: 64rem) {
+  html[data-route="trang-chu"] .desktop-home-redesign__hero {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-height: 18rem !important;
+  }
+
+  html[data-route="trang-chu"] .desktop-home-redesign__hero-copy {
+    width: min(100%, 66rem) !important;
+    margin-inline: auto !important;
+    padding: 1rem 0 0 !important;
+    text-align: center !important;
+  }
+
+  html[data-route="trang-chu"] .desktop-home-redesign__hero-copy > p {
+    margin-inline: auto !important;
+    text-align: center !important;
+  }
+
   #homeView .hero-band {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;
