@@ -1,14 +1,25 @@
 /* Desktop home hero without the decorative character illustration. */
 @media (min-width: 64rem) {
-  html[data-route="trang-chu"] .desktop-home-redesign__hero {
-    grid-template-columns: minmax(0, 1fr) !important;
-    min-height: 18rem !important;
+  html[data-route="trang-chu"] body #homeView > .desktop-home-redesign {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: min(100% - 2rem, 80rem) !important;
+    padding-top: 4.25rem !important;
   }
 
-  html[data-route="trang-chu"] .desktop-home-redesign__hero-copy {
-    width: min(100%, 66rem) !important;
+  html[data-route="trang-chu"] body .desktop-home-redesign__hero {
+    display: grid !important;
+    grid-template-columns: minmax(0, 46rem) !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 0 !important;
+  }
+
+  html[data-route="trang-chu"] body .desktop-home-redesign__hero-copy {
+    width: 100% !important;
     margin-inline: auto !important;
-    padding: 1rem 0 0 !important;
+    padding: 0 !important;
     text-align: center !important;
   }
 
