@@ -1,8 +1,15 @@
 /* Desktop reference layout for the case and history workspace. */
 @media (min-width: 64rem) {
   html[data-route="hanh-trinh"] #hanhTrinhView {
-    width: min(calc(100% - 2rem), 61rem) !important;
+    width: min(calc(100% - 4rem), 78rem) !important;
     padding: 6.2rem 0 3rem !important;
+  }
+
+  /* Remove the legacy 54rem cap so every history surface shares the desktop grid. */
+  html[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListPanel {
+    width: 100% !important;
+    max-width: none !important;
+    margin-inline: 0 !important;
   }
 
   html[data-route="hanh-trinh"] .case-history-hero {
