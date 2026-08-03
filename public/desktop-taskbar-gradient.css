@@ -1,5 +1,20 @@
 /* Desktop navigation uses the lavender taskbar treatment from the reference. */
 @media (min-width: 64rem) {
+  .topbar,
+  body:has(#homeView:not([hidden])) .topbar,
+  body:has(#analysisView:not([hidden])) .topbar,
+  body:has(#hanhTrinhView:not([hidden])) .topbar,
+  body:has(#educationView:not([hidden])) .topbar {
+    border-color: rgb(148 96 228 / 0.36) !important;
+    background:
+      radial-gradient(circle at 70% 0%, rgb(255 255 255 / 0.72), transparent 24rem),
+      radial-gradient(circle at 32% 110%, rgb(184 125 246 / 0.26), transparent 28rem),
+      linear-gradient(112deg, #fbf9ff 0%, #eadbff 48%, #f6f0ff 100%) !important;
+    box-shadow:
+      0 0.72rem 1.8rem rgb(90 54 159 / 0.12),
+      inset 0 1px 0 rgb(255 255 255 / 0.82) !important;
+  }
+
   body > .bottom-nav:not(.mobile-bottom-nav) {
     width: 19.25rem !important;
     height: 3.78rem !important;
@@ -26,8 +41,48 @@
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item,
   body > .bottom-nav:not(.mobile-bottom-nav):hover .bottom-nav__item,
   body > .bottom-nav:not(.mobile-bottom-nav):focus-within .bottom-nav__item {
+    position: relative !important;
+    flex: 0 0 3rem !important;
+    width: 3rem !important;
+    min-width: 3rem !important;
+    height: 3rem !important;
+    min-height: 3rem !important;
+    padding: 0.35rem !important;
     color: #fff !important;
     text-shadow: 0 1px 2px rgb(74 34 147 / 0.18);
+    transform: none !important;
+    transition: background-color 160ms ease, box-shadow 160ms ease, color 160ms ease !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > .icon,
+  body > .bottom-nav:not(.mobile-bottom-nav):hover .bottom-nav__item > .icon,
+  body > .bottom-nav:not(.mobile-bottom-nav):focus-within .bottom-nav__item > .icon {
+    width: 1.38rem !important;
+    height: 1.38rem !important;
+    transform: translateY(-0.12rem) !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item > span:last-child,
+  body > .bottom-nav:not(.mobile-bottom-nav):hover .bottom-nav__item > span:last-child,
+  body > .bottom-nav:not(.mobile-bottom-nav):focus-within .bottom-nav__item > span:last-child {
+    position: absolute !important;
+    top: calc(100% + 0.65rem) !important;
+    left: 50% !important;
+    z-index: 4 !important;
+    display: block !important;
+    width: max-content !important;
+    max-width: 9rem !important;
+    padding: 0.32rem 0.58rem !important;
+    overflow: visible !important;
+    border: 1px solid #d7c6fb !important;
+    border-radius: 0.55rem !important;
+    background: rgb(255 255 255 / 0.98) !important;
+    color: #6334bd !important;
+    box-shadow: 0 0.35rem 0.8rem rgb(71 37 135 / 0.14) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transform: translate(-50%, -0.2rem) !important;
+    transition: opacity 140ms ease, transform 140ms ease !important;
   }
 
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"] {
@@ -45,8 +100,17 @@
 
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:hover,
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:focus-visible {
+    flex-basis: 3rem !important;
+    width: 3rem !important;
     background: rgb(255 255 255 / 0.2) !important;
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.28) !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:hover > span:last-child,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:focus-visible > span:last-child {
+    max-width: 9rem !important;
+    opacity: 1 !important;
+    transform: translate(-50%, 0) !important;
   }
 
   body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"]:hover,
