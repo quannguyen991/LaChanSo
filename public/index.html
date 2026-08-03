@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="/check-hub-refresh.css?v=20260803-2">
     <link rel="stylesheet" href="/home-news.css?v=20260803-2">
     <link rel="stylesheet" href="/history-reference.css?v=20260803-11">
+    <link rel="stylesheet" href="/auth-state-ui.css?v=20260803-2">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/local-vault.js" defer></script>
@@ -164,6 +165,7 @@
         <button class="topbar-icon-btn topbar-profile-icon" type="button" id="profileIconButton" aria-label="Hồ sơ của bác" aria-haspopup="true" aria-expanded="false" aria-controls="profileMenu">
           <span class="icon icon-user" aria-hidden="true"></span>
         </button>
+        <button class="topbar-login-button" type="button" id="topbarLoginButton"><span class="icon icon-back" aria-hidden="true"></span><span>Đăng nhập</span></button>
       </div>
     </header>
 
@@ -1621,9 +1623,9 @@
           </section>
 
           <section class="case-dashboard-stats" aria-label="Tổng quan vụ việc">
-            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--all"><i class="icon icon-receipt" aria-hidden="true"></i></span><span><small>Tổng vụ việc</small><strong>12</strong></span></article>
-            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--risk"><i class="icon icon-alert" aria-hidden="true"></i></span><span><small>Nguy hiểm cao</small><strong>3</strong></span></article>
-            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--saved"><i class="icon icon-lock" aria-hidden="true"></i></span><span><small>Đã lưu bằng chứng</small><strong>8</strong></span></article>
+            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--all"><i class="icon icon-receipt" aria-hidden="true"></i></span><span><small>Tổng vụ việc</small><strong data-auth-empty-value="12">12</strong></span></article>
+            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--risk"><i class="icon icon-alert" aria-hidden="true"></i></span><span><small>Nguy hiểm cao</small><strong data-auth-empty-value="3">3</strong></span></article>
+            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--saved"><i class="icon icon-lock" aria-hidden="true"></i></span><span><small>Đã lưu bằng chứng</small><strong data-auth-empty-value="8">8</strong></span></article>
           </section>
 
           <div class="case-list-head">

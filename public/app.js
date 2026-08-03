@@ -610,6 +610,7 @@ const elements = {
   profileMenu: document.querySelector("#profileMenu"),
   profileMenuButton: document.querySelector("#profileMenuButton"),
   profileIconButton: document.querySelector("#profileIconButton"),
+  topbarLoginButton: document.querySelector("#topbarLoginButton"),
   notificationButton: document.querySelector("#notificationButton"),
   desktopSearchForm: document.querySelector("#desktopSearchForm"),
   desktopSearchInput: document.querySelector("#desktopSearchInput"),
@@ -2901,7 +2902,7 @@ function renderCaseDesktopPreview(caseObj) {
 
 function renderCaseList() {
   const storedCases = getCases();
-  const cases = storedCases.length ? storedCases : CASE_DESKTOP_DEMO_CASES;
+  const cases = isAuthenticated() ? (storedCases.length ? storedCases : CASE_DESKTOP_DEMO_CASES) : [];
   const visibleCases = cases.filter((item) => {
     if (activeCaseFilter === "checked") return item.events.length > 0;
     if (activeCaseFilter === "saved") return true;
@@ -3441,6 +3442,10 @@ function renderAuthState() {
   elements.mobileProfileMenuButton.setAttribute("aria-label", authenticated ? "Mở hồ sơ" : "Đăng nhập");
   elements.profileIdentityName.textContent = account?.name || "Tài khoản của bác";
   elements.profileIdentityEmail.textContent = account?.email || "";
+  document.querySelectorAll("[data-auth-empty-value]").forEach((value) => {
+    value.textContent = authenticated ? value.dataset.authEmptyValue : "Kh?ng c? d? li?u";
+  });
+  if (elements.caseList && elements.caseListEmpty) renderCaseList();
 }
 
 function setAuthMode(mode) {
@@ -4282,6 +4287,7 @@ elements.desktopSearchForm?.addEventListener("submit", (event) => {
   window.setTimeout(() => {
     elements.situation.value = query;
     updateCharacterCount();
+elements.topbarLoginButton?.addEventListener("click", () => openAuthDialog("login"));
     elements.situation.focus();
   }, 0);
 });

@@ -1,0 +1,45 @@
+/* Header and history states are explicit before a local account session exists. */
+html:not([data-authenticated="true"]) .topbar .topbar-bell,
+html:not([data-authenticated="true"]) .topbar .topbar-profile-icon {
+  display: none !important;
+}
+
+.topbar-login-button {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.6rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #6331d3;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 800;
+  box-shadow: 0 0.3rem 0.7rem rgb(69 36 143 / 0.2);
+  cursor: pointer;
+}
+
+.topbar-login-button .icon {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+html:not([data-authenticated="true"]) .topbar .topbar-login-button {
+  display: inline-flex !important;
+}
+
+html[data-authenticated="true"] .topbar .topbar-login-button {
+  display: none !important;
+}
+
+html[data-authenticated="false"][data-route="hanh-trinh"] #caseListEmpty {
+  display: block !important;
+}
+
+.topbar-login-button:hover,
+.topbar-login-button:focus-visible {
+  background: #f8f4ff;
+}
