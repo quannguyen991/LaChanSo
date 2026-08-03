@@ -1,0 +1,243 @@
+@media (min-width: 64rem) {
+  html[data-route="kiem-tra"] #analysisView {
+    width: min(calc(100% - 2rem), 69rem) !important;
+    max-width: none !important;
+    min-height: auto !important;
+    margin: 0 auto !important;
+    padding: 8.1rem 0 3rem !important;
+    overflow: visible !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background:
+      radial-gradient(circle at 8% 32%, rgb(190 173 255 / 0.22), transparent 23rem),
+      radial-gradient(circle at 92% 12%, rgb(225 216 255 / 0.45), transparent 18rem),
+      #fbfaff !important;
+    box-shadow: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView::before,
+  html[data-route="kiem-tra"] #analysisView::after,
+  html[data-route="kiem-tra"] #analysisView > .analysis-mascot,
+  html[data-route="kiem-tra"] #analysisView .check-benefits,
+  html[data-route="kiem-tra"] #analysisView .prompt-bubble-row,
+  html[data-route="kiem-tra"] #analysisView .analysis-mode-tabs,
+  html[data-route="kiem-tra"] #analysisView .analysis-hero-actions,
+  html[data-route="kiem-tra"] #analysisView .analysis-hero-visual,
+  html[data-route="kiem-tra"] #analysisView .check-advanced,
+  html[data-route="kiem-tra"] #analysisView .workspace-card {
+    display: none !important;
+    content: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head {
+    display: block !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 0 1.45rem !important;
+    background: transparent !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head .header-action-btn,
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head h1::before,
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head h1::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .kiem-tra-head h1.page-title-center {
+    max-width: none !important;
+    margin: 0 !important;
+    color: #21146f !important;
+    font-size: 2.55rem !important;
+    font-weight: 850 !important;
+    line-height: 1.12 !important;
+    text-align: left !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .analysis-hero-copy {
+    display: block !important;
+    margin: 0.45rem 0 0 !important;
+    color: #74709d !important;
+    font-size: 1.05rem !important;
+    line-height: 1.5 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.25rem !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__item {
+    display: grid !important;
+    grid-template-columns: 7.4rem minmax(0, 1fr) 3rem !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    min-height: 9.7rem !important;
+    padding: 1.05rem 1.25rem !important;
+    border: 1px solid rgb(255 255 255 / 0.9) !important;
+    border-radius: 1.4rem !important;
+    background: rgb(255 255 255 / 0.79) !important;
+    box-shadow: 0 0.7rem 1.5rem rgb(70 52 145 / 0.1) !important;
+    text-decoration: none !important;
+    transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__item:hover,
+  html[data-route="kiem-tra"] #analysisView .check-hub__item:focus-visible {
+    transform: translateY(-0.18rem) !important;
+    background: #fff !important;
+    box-shadow: 0 0.95rem 1.9rem rgb(70 52 145 / 0.15) !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon {
+    display: grid !important;
+    place-items: center !important;
+    width: 7rem !important;
+    height: 7rem !important;
+    overflow: hidden !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__icon img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content {
+    display: block !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content strong {
+    display: block !important;
+    color: #21146f !important;
+    font-size: 1.22rem !important;
+    font-weight: 850 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__item--transfer .check-hub__content strong {
+    font-size: 1.22rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__item--transfer .check-hub__content strong::before,
+  html[data-route="kiem-tra"] #analysisView .check-hub__content::after,
+  html[data-route="kiem-tra"] #analysisView .check-hub__item::before {
+    display: none !important;
+    content: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__content small {
+    display: block !important;
+    min-height: 0 !important;
+    margin-top: 0.4rem !important;
+    color: #74709d !important;
+    font-size: 0.95rem !important;
+    line-height: 1.55 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__arrow {
+    display: grid !important;
+    place-items: center !important;
+    width: 2.85rem !important;
+    height: 2.85rem !important;
+    border-radius: 50% !important;
+    background: #fff !important;
+    color: #5e3ce2 !important;
+    box-shadow: 0 0.28rem 0.65rem rgb(77 53 169 / 0.14) !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-hub__arrow .icon {
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .safety-shortcuts {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    margin: 1.45rem 0 0 !important;
+    padding: 0.9rem 0 !important;
+    border: 1px solid rgb(255 255 255 / 0.88) !important;
+    border-radius: 1.35rem !important;
+    background: rgb(255 255 255 / 0.74) !important;
+    box-shadow: 0 0.7rem 1.5rem rgb(70 52 145 / 0.08) !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .safety-shortcuts > a {
+    display: grid !important;
+    grid-template-columns: 3.25rem minmax(0, 1fr) 1.75rem !important;
+    align-items: center !important;
+    gap: 0.7rem !important;
+    min-height: 4.7rem !important;
+    padding: 0.45rem 1.1rem !important;
+    border: 0 !important;
+    border-right: 1px solid #e6e1f6 !important;
+    background: transparent !important;
+    text-decoration: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .safety-shortcuts > a:last-child {
+    border-right: 0 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .safety-shortcuts > a > .icon {
+    display: grid !important;
+    place-items: center !important;
+    width: 3rem !important;
+    height: 3rem !important;
+    border-radius: 50% !important;
+    background: #eee8ff !important;
+    color: #6845df !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .safety-shortcuts strong {
+    display: block !important;
+    color: #21146f !important;
+    font-size: 0.96rem !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .safety-shortcuts small {
+    display: block !important;
+    margin-top: 0.18rem !important;
+    color: #74709d !important;
+    font-size: 0.74rem !important;
+    line-height: 1.4 !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .safety-shortcuts i {
+    color: #6845df !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 0.55rem !important;
+    margin-top: 1.45rem !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #79749e !important;
+    box-shadow: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice > .icon {
+    color: #6845df !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice p strong,
+  html[data-route="kiem-tra"] #analysisView .check-notice .safety-privacy-bar__points {
+    display: none !important;
+  }
+
+  html[data-route="kiem-tra"] #analysisView .check-notice p small {
+    display: block !important;
+    color: #79749e !important;
+    font-size: 0.78rem !important;
+  }
+}
