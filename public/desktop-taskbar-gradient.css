@@ -1,0 +1,62 @@
+/* Desktop navigation uses the lavender taskbar treatment from the reference. */
+@media (min-width: 64rem) {
+  body > .bottom-nav:not(.mobile-bottom-nav) {
+    width: 19.25rem !important;
+    height: 3.78rem !important;
+    padding: 0.24rem !important;
+    overflow: visible !important;
+    border: 1px solid rgb(255 255 255 / 0.34) !important;
+    border-radius: 999px !important;
+    background:
+      radial-gradient(circle at 18% 22%, rgb(255 255 255 / 0.38), transparent 28%),
+      linear-gradient(112deg, #cfadff 0%, #b881f5 48%, #a967e9 100%) !important;
+    box-shadow:
+      0 0.7rem 1.45rem rgb(116 67 201 / 0.28),
+      inset 0 1px 0 rgb(255 255 255 / 0.32) !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__inner {
+    gap: 0.24rem !important;
+    border: 0 !important;
+    border-radius: inherit !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item,
+  body > .bottom-nav:not(.mobile-bottom-nav):hover .bottom-nav__item,
+  body > .bottom-nav:not(.mobile-bottom-nav):focus-within .bottom-nav__item {
+    color: #fff !important;
+    text-shadow: 0 1px 2px rgb(74 34 147 / 0.18);
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"] {
+    color: #8551d8 !important;
+    background: rgb(255 255 255 / 0.96) !important;
+    box-shadow:
+      0 0.25rem 0.7rem rgb(89 44 165 / 0.2),
+      inset 0 0 0 1px rgb(255 255 255 / 0.8) !important;
+    text-shadow: none;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"]::after {
+    display: none !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:hover,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:focus-visible {
+    background: rgb(255 255 255 / 0.2) !important;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.28) !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"]:hover,
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item[aria-current="page"]:focus-visible {
+    background: #fff !important;
+    box-shadow: 0 0.25rem 0.7rem rgb(89 44 165 / 0.2) !important;
+  }
+
+  body > .bottom-nav:not(.mobile-bottom-nav) .bottom-nav__item:focus-visible {
+    outline: 3px solid #2c155f !important;
+    outline-offset: 3px !important;
+  }
+}
