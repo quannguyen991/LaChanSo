@@ -24,8 +24,9 @@
     <link rel="stylesheet" href="/safety-redesign.css?v=20260802-1">
     <link rel="stylesheet" href="/desktop-taskbar-gradient.css?v=20260803-12">
     <link rel="stylesheet" href="/home-hero-center.css?v=20260803-2">
-    <link rel="stylesheet" href="/check-hub-refresh.css?v=20260803-1">
+    <link rel="stylesheet" href="/check-hub-refresh.css?v=20260803-2">
     <link rel="stylesheet" href="/home-news.css?v=20260803-2">
+    <link rel="stylesheet" href="/history-reference.css?v=20260803-7">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/local-vault.js" defer></script>
@@ -1616,19 +1617,23 @@
               <span class="case-history-hero__spark case-history-hero__spark--one">✦</span>
               <span class="case-history-hero__folder"><span class="icon icon-folder-lock"></span><span class="case-history-hero__doc"><span class="icon icon-receipt"></span></span><span class="case-history-hero__clock"><span class="icon icon-history"></span></span></span>
             </div>
+            <button class="case-create-button case-create-button--hero" type="button" id="createCaseButton"><span class="icon icon-route" aria-hidden="true"></span><span>Thêm vụ việc</span></button>
+          </section>
+
+          <section class="case-dashboard-stats" aria-label="Tổng quan vụ việc">
+            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--all"><i class="icon icon-receipt" aria-hidden="true"></i></span><span><small>Tổng vụ việc</small><strong>12</strong></span></article>
+            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--risk"><i class="icon icon-alert" aria-hidden="true"></i></span><span><small>Nguy hiểm cao</small><strong>3</strong></span></article>
+            <article><span class="case-dashboard-stats__icon case-dashboard-stats__icon--saved"><i class="icon icon-lock" aria-hidden="true"></i></span><span><small>Đã lưu bằng chứng</small><strong>8</strong></span></article>
           </section>
 
           <div class="case-list-head">
-            <h2>Danh sách vụ việc</h2>
+            <div class="case-list-head__title"><h2>Danh sách vụ việc</h2><label class="case-list-search"><span class="icon icon-search" aria-hidden="true"></span><input type="search" placeholder="Tìm theo từ khóa hoặc ngày..." aria-label="Tìm trong danh sách vụ việc"></label></div>
             <div class="case-history-filters" role="group" aria-label="Lọc lịch sử vụ việc">
               <button type="button" class="is-active" data-case-filter="all" aria-pressed="true">Tất cả</button>
               <button type="button" data-case-filter="checked" aria-pressed="false">Đã kiểm tra</button>
               <button type="button" data-case-filter="saved" aria-pressed="false">Đã lưu</button>
             </div>
-            <button class="case-create-button" type="button" id="createCaseButton">
-              <span class="icon icon-route" aria-hidden="true"></span>
-              <span>Thêm vụ việc</span>
-            </button>
+            <label class="case-list-sort">Mới nhất <select aria-label="Sắp xếp vụ việc"><option>Mới nhất</option><option>Cũ nhất</option></select><span class="icon icon-chevron-right" aria-hidden="true"></span></label>
           </div>
 
           <div class="history-list" id="caseList"></div>

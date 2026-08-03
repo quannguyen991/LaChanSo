@@ -1,0 +1,200 @@
+/* Desktop reference layout for the case and history workspace. */
+@media (min-width: 64rem) {
+  html[data-route="hanh-trinh"] #hanhTrinhView {
+    width: min(calc(100% - 2rem), 61rem) !important;
+    padding: 6.2rem 0 3rem !important;
+  }
+
+  html[data-route="hanh-trinh"] .case-history-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem) !important;
+    grid-template-areas: "copy visual" !important;
+    min-height: 17.8rem !important;
+    gap: 1.5rem !important;
+    padding: 1.6rem 2.1rem !important;
+    border-radius: 1.45rem !important;
+    background:
+      radial-gradient(circle at 82% 19%, rgb(216 197 255 / 0.62), transparent 12rem),
+      linear-gradient(125deg, #fbfaff 0%, #fff 56%, #f4eeff 100%) !important;
+  }
+
+  html[data-route="hanh-trinh"] .case-history-hero__icon-card {
+    position: absolute !important;
+    top: 1.55rem;
+    left: 2.1rem;
+    z-index: 2;
+    width: 3.35rem;
+    height: 3.35rem;
+    margin-bottom: 0.8rem;
+    border-radius: 0.9rem;
+  }
+
+  html[data-route="hanh-trinh"] .case-history-hero__icon-card .icon { width: 1.65rem; height: 1.65rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__copy { display: block; grid-area: auto !important; grid-column: 1 !important; grid-row: 1 !important; align-self: center; padding-top: 4.2rem !important; }
+  html[data-route="hanh-trinh"] .case-history-hero h1 { margin: 0 0 0.75rem !important; font-size: 2.55rem !important; line-height: 1.05 !important; }
+  html[data-route="hanh-trinh"] .case-history-hero__copy > p { max-width: 34rem !important; font-size: 0.91rem !important; line-height: 1.6 !important; }
+  html[data-route="hanh-trinh"] .case-history-filters--hero { gap: 0.55rem; margin-top: 1.35rem; }
+  html[data-route="hanh-trinh"] .case-history-filters--hero button { min-height: 2.8rem; padding: 0.45rem 1rem; font-size: 0.85rem; }
+  html[data-route="hanh-trinh"] .case-history-filters--hero button .icon { width: 1.1rem; height: 1.1rem; }
+
+  html[data-route="hanh-trinh"] .case-history-hero__visual {
+    grid-area: auto !important;
+    grid-column: 2 !important;
+    grid-row: 1;
+    align-self: stretch;
+    min-height: 0;
+  }
+
+  html[data-route="hanh-trinh"] .case-history-hero__folder { width: 12rem; height: 7.5rem; transform: rotate(-3deg); }
+  html[data-route="hanh-trinh"] .case-history-hero__folder::before { width: 4.8rem; height: 1.5rem; top: -0.8rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__folder > .icon { width: 3.25rem; height: 3.25rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__doc { top: -3.4rem; right: -1.65rem; width: 7.1rem; height: 5.7rem; border-width: 0.35rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__doc .icon { width: 2.35rem; height: 2.35rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__clock { right: -1.9rem; bottom: -1rem; width: 3.8rem; height: 3.8rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__clock .icon { width: 1.9rem; height: 1.9rem; }
+  html[data-route="hanh-trinh"] .case-history-hero__spark--one { right: 2rem; }
+
+  html[data-route="hanh-trinh"] .case-create-button--hero {
+    position: absolute !important;
+    right: 1.9rem;
+    bottom: 1.55rem;
+    left: auto !important;
+    top: auto !important;
+    z-index: 3;
+    grid-area: auto !important;
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.85rem;
+    padding: 0 1.15rem;
+    border: 0;
+    border-radius: 0.8rem;
+    background: linear-gradient(135deg, #7542e7, #984ff1);
+    color: #fff;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 800;
+    box-shadow: 0 0.65rem 1.1rem rgb(100 58 211 / 0.25);
+    cursor: pointer;
+  }
+  html[data-route="hanh-trinh"] .case-create-button--hero .icon { width: 1.15rem; height: 1.15rem; }
+
+  /* Outrank the legacy case-workspace grid that addresses its children by ID. */
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem) !important;
+    grid-template-areas: "copy visual" !important;
+    min-height: 18rem !important;
+  }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero__copy { grid-column: 1 !important; grid-row: 1 !important; align-self: start !important; padding-top: 4rem !important; }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero h1 { margin-left: 4.15rem !important; }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero__visual { grid-column: 2 !important; grid-row: 1 !important; min-height: 0 !important; }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero .case-create-button--hero {
+    position: absolute !important;
+    grid-area: auto !important;
+    top: auto !important;
+    right: 1.9rem !important;
+    bottom: 1.55rem !important;
+    left: auto !important;
+    margin: 0 !important;
+  }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-history-hero__visual {
+    position: absolute !important;
+    top: 3rem;
+    right: 3rem;
+    width: 15rem;
+    height: 11rem;
+  }
+
+  html[data-route="hanh-trinh"] .case-dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin: 1.05rem 0;
+    overflow: hidden;
+    border: 1px solid #e3daf8;
+    border-radius: 0.95rem;
+    background: #fff;
+    box-shadow: 0 0.55rem 1.3rem rgb(76 49 154 / 0.07);
+  }
+
+  html[data-route="hanh-trinh"] .case-dashboard-stats article {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-height: 5.15rem;
+    padding: 0.8rem 1.3rem;
+  }
+  html[data-route="hanh-trinh"] .case-dashboard-stats article + article { border-left: 1px solid #ece6fa; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats__icon { display: grid; width: 3.1rem; height: 3.1rem; place-items: center; border-radius: 0.85rem; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats__icon .icon { width: 1.55rem; height: 1.55rem; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats__icon--all { background: #eee8ff; color: #7448df; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats__icon--risk { background: #ffe9ed; color: #ed4657; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats__icon--saved { background: #e1f9ef; color: #19a77a; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats small, html[data-route="hanh-trinh"] .case-dashboard-stats strong { display: block; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats small { color: #777598; font-size: 0.76rem; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats strong { margin-top: 0.15rem; color: #211563; font-size: 1.35rem; line-height: 1; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats article:nth-child(2) strong { color: #e53e4f; }
+  html[data-route="hanh-trinh"] .case-dashboard-stats article:nth-child(3) strong { color: #10a675; }
+
+  html[data-route="hanh-trinh"] .case-list-head {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: end;
+    gap: 1rem;
+    margin: 0 !important;
+    padding: 1.2rem 1.3rem 0.95rem !important;
+    border: 1px solid #e3daf8;
+    border-bottom: 0;
+    border-radius: 1.15rem 1.15rem 0 0;
+    background: #fff;
+  }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-list-head {
+    grid-template-columns: minmax(0, 1fr) auto auto !important;
+    grid-template-areas: "title filters sort" !important;
+  }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-list-head__title { grid-area: title !important; order: 0 !important; }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-list-head .case-history-filters { grid-area: filters !important; order: 0 !important; }
+  html[data-route="hanh-trinh"] #hanhTrinhView .case-list-sort { grid-area: sort !important; order: 0 !important; }
+  html[data-route="hanh-trinh"] .case-list-head h2 { display: block !important; margin: 0; color: #211563; font-size: 1rem; }
+  html[data-route="hanh-trinh"] .case-list-head__title { min-width: 0; }
+  html[data-route="hanh-trinh"] .case-list-search { display: flex; align-items: center; gap: 0.4rem; width: min(100%, 16rem); min-height: 2rem; margin-top: 0.45rem; padding: 0 0.6rem; border: 1px solid #ddd3f6; border-radius: 0.45rem; color: #77749b; }
+  html[data-route="hanh-trinh"] .case-list-search .icon { width: 1rem; height: 1rem; }
+  html[data-route="hanh-trinh"] .case-list-search input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: #2b216a; font: inherit; font-size: 0.72rem; }
+  html[data-route="hanh-trinh"] .case-list-head .case-history-filters { display: inline-flex !important; gap: 0.25rem; padding: 0.22rem; border-radius: 999px; background: #f4efff; }
+  html[data-route="hanh-trinh"] .case-list-head .case-history-filters button { min-height: 2.25rem; padding: 0 0.75rem; border: 0; border-radius: 999px; background: transparent; color: #7654ca; font: inherit; font-size: 0.72rem; font-weight: 750; white-space: nowrap; }
+  html[data-route="hanh-trinh"] .case-list-head .case-history-filters button.is-active { background: #7542e7; color: #fff; box-shadow: 0 0.35rem 0.7rem rgb(101 56 211 / 0.22); }
+  html[data-route="hanh-trinh"] .case-list-sort { display: flex; align-items: center; gap: 0.3rem; min-height: 2rem; padding: 0 0.55rem; border: 1px solid #ded5f5; border-radius: 0.45rem; color: #484170; font-size: 0.72rem; white-space: nowrap; }
+  html[data-route="hanh-trinh"] .case-list-sort select { appearance: none; width: 0.7rem; border: 0; background: transparent; color: transparent; outline: 0; }
+  html[data-route="hanh-trinh"] .case-list-sort .icon { width: 0.75rem; height: 0.75rem; transform: rotate(90deg); }
+
+  html[data-route="hanh-trinh"] #caseList {
+    display: grid;
+    gap: 0.45rem;
+    padding: 0.55rem 1.1rem 1.05rem;
+    border: 1px solid #e3daf8;
+    border-top: 0;
+    border-radius: 0 0 1.15rem 1.15rem;
+    background: #fff;
+    box-shadow: 0 0.7rem 1.5rem rgb(76 49 154 / 0.07);
+  }
+  html[data-route="hanh-trinh"] #caseList .case-history-row {
+    display: grid !important;
+    grid-template-columns: 3.1rem minmax(0, 1fr) auto 1.2rem !important;
+    grid-template-areas: "icon main meta open" !important;
+    align-items: center;
+    min-height: 4rem;
+    padding: 0.5rem 0.65rem;
+    border: 1px solid #eee9fa !important;
+    border-radius: 0.7rem;
+    background: #fff;
+    box-shadow: 0 0.22rem 0.45rem rgb(76 49 154 / 0.05);
+  }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__icon { grid-area: icon; width: 2.45rem; height: 2.45rem; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__heading { grid-area: main; display: block !important; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__title { margin: 0; color: #29206b; font-size: 0.82rem; font-weight: 800; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__subline { margin: 0.22rem 0 0; color: #7c789e; font-size: 0.72rem; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__chip { grid-area: meta; margin-right: 0.9rem; padding: 0.4rem 0.75rem; border-radius: 999px; font-size: 0.68rem; white-space: nowrap; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__meta { display: none !important; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__open { grid-area: open; width: 1.2rem; height: 1.2rem; padding: 0; border: 0; background: transparent; color: #5835cd; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__open-icon .icon:first-child { display: none; }
+  html[data-route="hanh-trinh"] #caseList .case-history-row__open-icon .icon:last-child { width: 1rem; height: 1rem; }
+  html[data-route="hanh-trinh"] #caseListEmpty { display: none !important; }
+}
