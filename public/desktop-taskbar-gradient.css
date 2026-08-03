@@ -124,3 +124,7 @@
     outline-offset: 3px !important;
   }
 }
+/* Header typography is intentionally independent from the content typeface. */
+.topbar {
+  font-family: Arial, sans-serif;
+}
