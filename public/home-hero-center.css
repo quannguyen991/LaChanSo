@@ -28,6 +28,12 @@
     text-align: center !important;
   }
 
+  html[data-route="trang-chu"] .desktop-home-redesign__quick-head,
+  html[data-route="trang-chu"] .desktop-home-redesign__quick-head strong,
+  html[data-route="trang-chu"] .desktop-home-redesign__quick-head span {
+    white-space: nowrap !important;
+  }
+
   #homeView .hero-band {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) !important;

@@ -172,6 +172,7 @@
         <div class="home-layout">
         <div class="home-main">
         <div class="hero-band">
+          <img class="hero-band__reference" src="/assets/home-couple-reference.webp" width="334" height="339" alt="" loading="lazy" decoding="async" hidden>
           <div class="hero-accessible-copy">
             <h1 id="homeTitle" tabindex="-1"><span>Khoan Đã,</span> bác cần kiểm tra điều gì?</h1>
             <p class="calm-line">Khoan Đã luôn đồng hành, giúp bác tránh lừa đảo và an toàn trên không gian mạng.</p>
@@ -590,7 +591,7 @@
           <a class="header-action-btn search-btn" href="#trang-chu" aria-label="Tìm kiếm">
             <span class="icon icon-search" aria-hidden="true"></span>
           </a>
-          <p class="analysis-hero-copy">Chọn tính năng phù hợp để kiểm tra và nhận hướng dẫn chi tiết,<br>giúp bác nhận diện và phòng tránh các rủi ro lừa đảo.</p>
+          <p class="analysis-hero-copy">Chọn cách kiểm tra phù hợp, Khoan Đã sẽ hướng dẫn bác từng bước.</p>
           <nav class="analysis-mode-tabs" aria-label="Chọn loại kiểm tra">
             <a class="is-active" href="#xac-minh"><span class="icon icon-phone" aria-hidden="true"></span><span>Cuộc gọi</span></a>
             <a href="#tin-nhan-la"><span class="icon icon-messages" aria-hidden="true"></span><span>Tin nhắn</span></a>
@@ -632,7 +633,7 @@
             </span>
             <span class="check-hub__content">
               <strong>Cuộc gọi lạ</strong>
-              <small>Kể lại nội dung cuộc gọi để được kiểm tra</small>
+              <small>Kể lại nội dung cuộc gọi để được kiểm tra.</small>
             </span>
             <span class="check-hub__arrow">
               <span class="icon icon-chevron-right" aria-hidden="true"></span>
@@ -650,7 +651,7 @@
             </span>
             <span class="check-hub__content">
               <strong>Tin nhắn đáng ngờ</strong>
-              <small>Phân tích nội dung hoặc ảnh chụp tin nhắn</small>
+              <small>Dán nội dung hoặc gửi ảnh chụp tin nhắn.</small>
             </span>
             <span class="check-hub__arrow">
               <span class="icon icon-chevron-right" aria-hidden="true"></span>
@@ -665,13 +666,13 @@
             </span>
             <span class="check-hub__content">
               <strong>Link hoặc mã QR</strong>
-              <small>Kiểm tra đường link hoặc mã QR lạ</small>
+              <small>Kiểm tra trước khi bấm mở để đảm bảo an toàn.</small>
             </span>
             <span class="check-hub__arrow">
               <span class="icon icon-chevron-right" aria-hidden="true"></span>
             </span>
           </a>
-          <a class="check-hub__item check-hub__item--transfer" href="#chuyen-khoan">
+          <a class="check-hub__item check-hub__item--transfer" href="#chuyen-khoan" aria-label="Chuyển tiền - Trước khi chuyển tiền">
             <span class="check-hub__icon">
               <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect x="4" y="7" width="16" height="12" rx="2" fill="#F59E0B" stroke="#D97706" stroke-width="2"/>
@@ -681,14 +682,19 @@
               </svg>
             </span>
             <span class="check-hub__content">
-              <strong>Trước khi chuyển tiền</strong>
-              <small>Kiểm tra yêu cầu chuyển tiền có đáng tin không</small>
+              <strong>Chuyển tiền</strong>
+              <small>Xem lại người nhận và hoàn cảnh giao dịch.</small>
             </span>
             <span class="check-hub__arrow">
               <span class="icon icon-chevron-right" aria-hidden="true"></span>
             </span>
           </a>
         </nav>
+        <section class="safety-shortcuts" aria-label="T&#237;nh n&#259;ng b&#7893; sung">
+          <a href="#xac-minh"><span class="icon icon-search" aria-hidden="true"></span><span><strong>Tra c&#7913;u nhanh</strong><small>T&#236;m th&#244;ng tin s&#7889; &#273;i&#7879;n tho&#7841;i, t&#224;i kho&#7843;n, link v&#224; m&#227; QR.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
+          <a href="#lich-su"><span class="icon icon-history" aria-hidden="true"></span><span><strong>L&#7883;ch s&#7917; ki&#7875;m tra</strong><small>Xem l&#7841;i c&#225;c n&#7897;i dung b&#225;c &#273;&#227; ki&#7875;m tra tr&#432;&#7899;c &#273;&#226;y.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
+          <a class="safety-shortcuts__report" href="#hanh-trinh"><span class="icon icon-alert" aria-hidden="true"></span><span><strong>B&#225;o c&#225;o l&#7915;a &#273;&#7843;o</strong><small>G&#7917;i th&#244;ng tin &#273;&#7875; gi&#250;p c&#7897;ng &#273;&#7891;ng tr&#225;nh &#273;&#432;&#7907;c r&#7911;i ro.</small></span><i class="icon icon-chevron-right" aria-hidden="true"></i></a>
+        </section>
         <section class="check-advanced" aria-labelledby="checkAdvancedTitle">
           <div class="check-advanced__head"><h2 id="checkAdvancedTitle">Tính năng nâng cao</h2><a href="#lich-su">Xem tất cả <span class="icon icon-chevron-right" aria-hidden="true"></span></a></div>
           <div class="check-advanced__grid">
