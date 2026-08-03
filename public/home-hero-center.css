@@ -1,0 +1,24 @@
+/* Desktop home hero without the decorative character illustration. */
+@media (min-width: 64rem) {
+  #homeView .hero-band {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    justify-items: center !important;
+    min-height: 15.5rem !important;
+    max-height: none !important;
+    padding-inline: clamp(2rem, 6vw, 7rem) !important;
+    text-align: center !important;
+  }
+
+  #homeView .hero-accessible-copy {
+    justify-items: center !important;
+    max-width: 44rem !important;
+    text-align: center !important;
+  }
+
+  #homeView .hero-accessible-copy h1,
+  #homeView .hero-accessible-copy .calm-line {
+    max-width: 100% !important;
+    text-align: center !important;
+  }
+}
