@@ -1,0 +1,66 @@
+{
+  "mo_ta": "Mẫu BÌNH THƯỜNG nhưng dễ gây nhầm. Hệ thống KHÔNG được gắn nhãn 'Nguy hiểm cao', và KHÔNG được kích hoạt critical override.",
+  "nguon_chung": "Tự soạn. Cố ý chứa những chữ mà một bộ dò từ khoá ngây thơ sẽ bắt nhầm: 'chuyển khoản', 'ngân hàng', 'mã xác nhận', 'gấp', 'hôm nay'.",
+  "mau": [
+    {
+      "id": "bao-co-tien-ve",
+      "noi_dung": "Ngân hàng thông báo tài khoản của quý khách vừa nhận 2.000.000đ lúc 09:15 ngày 07/08. Số dư khả dụng 12.430.000đ."
+    },
+    {
+      "id": "con-chuyen-tien-tieu-tet",
+      "noi_dung": "Mẹ ơi con vừa chuyển khoản cho mẹ 5 triệu tiêu Tết nhé, mẹ kiểm tra giúp con."
+    },
+    {
+      "id": "shipper-giao-hang",
+      "noi_dung": "Đơn hàng của bác sẽ giao trong hôm nay, shipper sẽ gọi trước 15 phút. Bác để ý điện thoại giúp em nhé."
+    },
+    {
+      "id": "nhac-lich-kham",
+      "noi_dung": "Bệnh viện nhắc bác đi khám lại vào thứ Năm tuần sau lúc 8 giờ sáng, nhớ mang theo sổ khám bệnh."
+    },
+    {
+      "id": "hop-to-dan-pho",
+      "noi_dung": "Tổ dân phố mời các bác họp vào 19h tối nay tại nhà văn hoá để bàn việc thu quỹ khuyến học."
+    },
+    {
+      "id": "con-ve-an-com",
+      "noi_dung": "Mai con về ăn cơm với bố mẹ nhé, con mua sẵn hoa quả rồi."
+    },
+    {
+      "id": "nhac-tien-dien-that",
+      "noi_dung": "Thông báo tiền điện tháng 7 của gia đình là 420.000đ, hạn thanh toán ngày 15/08. Quý khách thanh toán tại quầy hoặc qua ứng dụng ngân hàng."
+    },
+    {
+      "id": "ma-xac-nhan-dang-nhap-that",
+      "noi_dung": "Mã xác nhận đăng nhập của quý khách là 483920. Không chia sẻ mã này cho bất kỳ ai."
+    },
+    {
+      "id": "chau-hoi-tham",
+      "noi_dung": "Bà ơi cháu vừa thi xong rồi ạ, cuối tuần cháu về chơi với bà nhé."
+    },
+    {
+      "id": "lich-tiem-chung",
+      "noi_dung": "Trạm y tế phường mời bác đến tiêm nhắc vắc xin cúm vào sáng thứ Bảy, miễn phí cho người trên 65 tuổi."
+    },
+    {
+      "id": "ngan-hang-nhac-the-het-han",
+      "noi_dung": "Thẻ ATM của quý khách sẽ hết hạn vào tháng 10. Quý khách vui lòng đến phòng giao dịch gần nhất để làm thủ tục cấp lại."
+    },
+    {
+      "id": "con-nho-mua-thuoc",
+      "noi_dung": "Bố ơi chiều bố ra hiệu thuốc mua giúp con hộp thuốc ho nhé, con gửi tiền lại bố sau."
+    },
+    {
+      "id": "hoi-nguoi-cao-tuoi",
+      "noi_dung": "Hội Người cao tuổi tổ chức đi tham quan chùa Hương ngày 20/08, các bác đăng ký với bác tổ trưởng trước ngày 15."
+    },
+    {
+      "id": "cong-ty-dien-luc-bao-cat-dien-ke-hoach",
+      "noi_dung": "Điện lực thông báo lịch cắt điện bảo trì khu vực từ 8h đến 11h ngày 09/08. Mong quý khách thông cảm."
+    },
+    {
+      "id": "nhac-dong-bao-hiem-that",
+      "noi_dung": "Cơ quan bảo hiểm xã hội nhắc bác đến nhận lương hưu tháng này tại điểm chi trả của phường, mang theo chứng minh nhân dân."
+    }
+  ]
+}

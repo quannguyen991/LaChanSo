@@ -75,10 +75,17 @@ Mọi thứ thông minh thêm vào **chỉ được làm tăng cảnh giác, kh�
 ```bash
 npm install
 npm start          # cổng 8089 (đã đăng ký trong port-registry)
-npm test           # node --test — 142 test
+npm test           # node --test
 npm run check      # kiểm cú pháp server.js, app.js, services.js, sw.js
 npm run build      # xuất ra dist/
+
+npm run eval       # đánh giá chất lượng phân tích bằng BỘ LUẬT (không cần khoá)
+npm run eval:ai    # đánh giá bằng AI thật — cần LLM_API_KEY
+npm run eval:ghi   # ghi kết quả vào docs/AI-EVALUATION.md
 ```
+
+`npm run eval` trả mã thoát khác 0 khi trượt ngưỡng, nên gắn được vào CI.
+Chạy lại **sau mỗi lần đổi lời nhắc, đổi model hoặc đổi ngưỡng bộ luật**.
 
 - Cổng **8089** là cố định cho dự án này. Kiểm trước khi chạy:
   `python ~/.claude/scripts/port_manager.py check 8089`
@@ -99,6 +106,9 @@ src/gemini.js           # gọi AI, chỉ lấy tín hiệu boolean.
                         # Chọn bằng LLM_PROVIDER, xem .env.example.
 test/                   # node --test
 test-utils/             # tiện ích dùng chung (KHÔNG đặt trong test/ vì node coi mọi .js ở đó là test)
+eval/                   # bộ đánh giá chất lượng phân tích (mục 8.4 báo cáo v2)
+  dataset/              # bộ dữ liệu vàng — HIỆN LÀ MẪU TỰ SOẠN, chưa phải mẫu thật
+  run.js                # 5 chỉ số + ngưỡng, sinh docs/AI-EVALUATION.md
 ```
 
 ## Nợ kỹ thuật cần biết

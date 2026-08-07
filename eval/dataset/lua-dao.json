@@ -1,0 +1,184 @@
+{
+  "mo_ta": "Mẫu LỪA ĐẢO. Mỗi mẫu ghi mức rủi ro TỐI THIỂU mà hệ thống phải đạt, và tổ hợp critical override phải kích hoạt (nếu có).",
+  "nguon_chung": "Tự soạn theo các mẫu thủ đoạn đã mã hoá trong src/rule-engine.js. CHƯA phải mẫu thật thu thập từ báo chí hay cảnh báo ngân hàng — xem phần 'Việc còn thiếu' trong docs/AI-EVALUATION.md.",
+  "mau": [
+    {
+      "id": "cong-an-tai-khoan-an-toan",
+      "noi_dung": "Tôi là điều tra viên Bộ Công an. Tài khoản của chị dính vào đường dây rửa tiền. Chị chuyển toàn bộ tiền tiết kiệm sang tài khoản an toàn của cơ quan để chúng tôi xác minh, xong sẽ trả lại. Tuyệt đối không nói với ai.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": "tai_khoan_an_toan",
+      "tin_hieu": {
+        "gia_danh_co_quan_nha_nuoc": true,
+        "doi_chuyen_tien_tai_khoan_ca_nhan": true,
+        "yeu_cau_giu_bi_mat": true
+      }
+    },
+    {
+      "id": "cong-an-doa-bat-giam",
+      "noi_dung": "Công an phường gọi báo tôi liên quan một vụ án, yêu cầu chuyển khoản ngay hôm nay nếu không sẽ bị bắt giam.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": null
+    },
+    {
+      "id": "vien-kiem-sat-giu-bi-mat-chuyen-tien",
+      "noi_dung": "Người tự xưng viện kiểm sát nói hồ sơ của tôi đang bị khởi tố, bắt tôi chuyển tiền vào tài khoản cá nhân của họ để bảo lãnh, và dặn không được kể cho con cháu biết kẻo lộ bí mật điều tra.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": "bi_mat_cong_so_hai_cong_chuyen_tien",
+      "tin_hieu": {
+        "gia_danh_co_quan_nha_nuoc": true,
+        "doa_bat_giu_hoac_cat_tro_cap": true,
+        "yeu_cau_giu_bi_mat": true,
+        "doi_chuyen_tien_tai_khoan_ca_nhan": true
+      }
+    },
+    {
+      "id": "otp-kem-chuyen-tien",
+      "noi_dung": "Nhân viên gọi bảo tôi đọc mã OTP vừa nhận được để xác nhận, rồi chuyển 20 triệu sang tài khoản họ đưa.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": "otp_kem_chuyen_tien",
+      "tin_hieu": {
+        "doi_otp_hoac_cai_app_la": true,
+        "doi_chuyen_tien_tai_khoan_ca_nhan": true
+      }
+    },
+    {
+      "id": "cai-apk-dich-vu-cong",
+      "noi_dung": "Có người nhắn gửi link bảo tôi cài ứng dụng Dịch vụ công để đồng bộ định danh, file apk tải ngoài CH Play.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": "cai_apk_hoac_dieu_khien_tu_xa",
+      "tin_hieu": {
+        "cai_app_dich_vu_cong_gia": true
+      }
+    },
+    {
+      "id": "chia-se-man-hinh-ngan-hang",
+      "noi_dung": "Họ bảo tôi cài TeamViewer rồi chia sẻ màn hình trong lúc đăng nhập ngân hàng để họ hướng dẫn mở khoá tài khoản.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": "cai_apk_hoac_dieu_khien_tu_xa",
+      "tin_hieu": {
+        "yeu_cau_chia_se_man_hinh_dieu_khien_tu_xa": true,
+        "gia_danh_ngan_hang_xac_thuc_sinh_trac_hoc": true
+      }
+    },
+    {
+      "id": "phi-thu-hoi-tien-da-mat",
+      "noi_dung": "Bên em là bộ phận hỗ trợ thu hồi vốn. Chị nộp phí xử lý hồ sơ 3 triệu thì bên em lấy lại tiền đã mất cho chị trong 24 giờ.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": "dong_phi_de_lay_lai_tien",
+      "tin_hieu": {}
+    },
+    {
+      "id": "sinh-trac-hoc-ngan-hang",
+      "noi_dung": "Nhân viên ngân hàng nhắn tài khoản của tôi bị khoá do chưa xác thực sinh trắc học, gửi link bảo bấm vào để mở khoá ngay.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": null
+    },
+    {
+      "id": "con-tai-nan-can-tien-gap",
+      "noi_dung": "Một người tự xưng giáo viên gọi báo con tôi bị tai nạn đang cấp cứu, cần chuyển tiền viện phí gấp, không cho tôi nói chuyện trực tiếp với con.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "dien-luc-doa-cat-dien",
+      "noi_dung": "Có người xưng nhân viên điện lực báo tôi nợ tiền điện, doạ cắt điện trong 2 giờ nếu không chuyển tiền ngay.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "khoa-sim-chuan-hoa",
+      "noi_dung": "Tổng đài nhắn thuê bao của tôi sẽ bị khoá hai chiều trong hôm nay nếu không chuẩn hoá thông tin theo hướng dẫn.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "lam-nhiem-vu-hoa-hong",
+      "noi_dung": "Họ mời tôi làm nhiệm vụ chốt đơn trên mạng, nạp tiền trước mỗi đơn để nhận hoa hồng, nạp càng nhiều hoa hồng càng cao.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": null
+    },
+    {
+      "id": "dau-tu-loi-nhuan-cao",
+      "noi_dung": "Có nhóm mời tôi đầu tư tiền ảo trên một sàn, cam kết lãi đều 15% mỗi tháng và chắc chắn không lỗ.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": null
+    },
+    {
+      "id": "nguoi-yeu-online-xin-tien",
+      "noi_dung": "Người quen qua mạng chưa gặp mặt bao giờ, nói đang kẹt ở sân bay và nhờ tôi chuyển tiền giúp.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "tai-khoan-zalo-nguoi-than-bi-hack",
+      "noi_dung": "Zalo của con gái tôi nhắn hỏi mượn tiền gấp, nhưng gọi video thì không nghe máy, cách xưng hô cũng khác mọi khi.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "tong-tien-anh-rieng-tu",
+      "noi_dung": "Có người đe doạ sẽ phát tán ảnh riêng tư của tôi lên mạng nếu tôi không chuyển tiền cho họ.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": null
+    },
+    {
+      "id": "hoi-thao-qua-tang-ky-nghi",
+      "noi_dung": "Tôi được mời dự hội thảo tặng quà miễn phí, tới nơi bị ép ký hợp đồng sở hữu kỳ nghỉ ngay tại chỗ, giảm giá sốc nếu ký hôm nay.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "ep-mua-them-hop-dong",
+      "noi_dung": "Họ nói muốn thoát hợp đồng cũ thì phải mua thêm một hợp đồng mới để chuyển nhượng lại, giá vài trăm triệu.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "thue-doa-phat",
+      "noi_dung": "Người xưng cán bộ thuế báo tôi kê khai sai, phải nộp phạt ngay trong ngày vào tài khoản họ đưa nếu không sẽ bị cưỡng chế.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null
+    },
+    {
+      "id": "buu-dien-bao-buu-pham",
+      "noi_dung": "Bưu điện gọi báo có bưu phẩm liên quan đến ma tuý đứng tên tôi, nối máy sang công an, yêu cầu tôi giữ bí mật và chuyển tiền chứng minh trong sạch.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": "bi_mat_cong_so_hai_cong_chuyen_tien",
+      "tin_hieu": {
+        "gia_danh_co_quan_nha_nuoc": true,
+        "yeu_cau_giu_bi_mat": true,
+        "doa_bat_giu_hoac_cat_tro_cap": true,
+        "doi_chuyen_tien_tai_khoan_ca_nhan": true
+      }
+    },
+    {
+      "id": "khong-tu-khoa-ho-so-treo",
+      "noi_dung": "Chào chị, bên em là bộ phận chăm sóc khách hàng. Hồ sơ của chị đang bị treo, chị cần hoàn tất thủ tục trong 30 phút nữa kẻo mất quyền lợi. Chị đừng báo cho ai trong nhà, tránh phiền phức nhé.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null,
+      "ghi_chu": "CỐ Ý không chứa từ khoá nào của inferSignalsFromText. Mẫu này đo đúng chỗ bộ dò từ khoá mù."
+    },
+    {
+      "id": "khong-tu-khoa-quyen-loi-bao-hiem",
+      "noi_dung": "Bên em rà soát thấy quyền lợi của bác chưa được kích hoạt. Bác đọc giúp em dãy số vừa nhắn về máy để em đối chiếu, rồi bác gửi khoản đối ứng sang số tài khoản em đưa là xong ngay trong chiều nay.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": null,
+      "ghi_chu": "Diễn đạt vòng vo, tránh chữ 'OTP' và 'chuyển tiền'. Mô hình phải hiểu ý, bộ dò từ khoá thì không."
+    },
+    {
+      "id": "khong-tu-khoa-nguoi-quen-cu",
+      "noi_dung": "Anh là bạn học cũ của em đây, lâu quá không gặp. Anh đang có việc cần kíp, em giúp anh một khoản rồi mai anh gửi lại. Em đừng nói với ai kẻo mọi người lại nghĩ ngợi.",
+      "muc_toi_thieu": "Nghi ngờ",
+      "override_mong_doi": null,
+      "ghi_chu": "Không có từ khoá nào; chỉ có mẫu thao túng."
+    },
+    {
+      "id": "khong-tu-khoa-ho-tro-ky-thuat",
+      "noi_dung": "Máy của bác đang bị lỗi bảo mật. Bác tải giúp em phần mềm hỗ trợ ở đường dẫn em vừa gửi, rồi để em thao tác giúp bác từ xa cho nhanh.",
+      "muc_toi_thieu": "Nguy hiểm cao",
+      "override_mong_doi": null,
+      "ghi_chu": "Ý là điều khiển từ xa nhưng không dùng chữ 'điều khiển từ xa', 'AnyDesk' hay 'TeamViewer'."
+    }
+  ],
+  "ghi_chu_tin_hieu": "Trường 'tin_hieu' là tín hiệu CHUẨN do người gán nhãn, chỉ có ở mẫu kỳ vọng critical override. Dùng để đo bản thân hàm override — một hàm xác định — tách khỏi việc bộ trích xuất có nhận ra tín hiệu hay không."
+}
