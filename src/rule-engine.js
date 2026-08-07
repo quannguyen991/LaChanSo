@@ -217,10 +217,31 @@ const MANIPULATION_TACTIC_RULES = [
   }
 ];
 
+// ============================================================================
+// LÝ DO ĐỘN KHI KHÔNG ĐỦ 3 LÝ DO THẬT
+//
+// padToThree() độn các câu này vào mỗi khi số quy tắc khớp chưa đủ ba. Vì vậy
+// chúng xuất hiện ĐÚNG LÚC hệ thống biết ít nhất — và phải được viết như vậy.
+//
+// ĐÃ CẮN (7/8/2026, phát hiện trên bản production):
+// Bản cũ viết những câu KHẲNG ĐỊNH VỀ NỘI DUNG:
+//     "Chưa thấy lời đe doạ, ép giữ bí mật hoặc xin mã OTP."
+// Gửi lên câu "Chị đừng báo cho ai trong nhà nhé" — tức một yêu cầu giữ bí mật
+// rành rành — hệ thống trả về đúng câu trên. Nó không chỉ bỏ sót, nó CHỦ ĐỘNG
+// PHỦ NHẬN sự tồn tại của chính dấu hiệu đang nằm trong nội dung.
+//
+// Với người 70 tuổi đang bị thúc ép, một câu phủ nhận nghe chắc chắn như vậy
+// là giấy phép để chuyển tiền.
+//
+// LUẬT VIẾT CÂU Ở ĐÂY:
+//   • Nói về thứ HỆ THỐNG NHẬN RA, không nói về thứ CÓ HAY KHÔNG CÓ trong đời.
+//   • Không liệt kê tên các dấu hiệu cụ thể như thể đã loại trừ từng cái.
+//   • Không bao giờ dùng chữ "an toàn" (xem CLAUDE.md).
+// ============================================================================
 const SAFE_REASONS = [
-  "Chưa thấy yêu cầu chuyển tiền để điều tra hoặc xác minh.",
-  "Chưa thấy lời đe doạ, ép giữ bí mật hoặc xin mã OTP.",
-  "Thông tin hiện có chưa đủ để khẳng định đây là lừa đảo."
+  "Trong phần bác vừa đưa vào, Khoan Đã chưa nhận ra dấu hiệu lừa đảo nào.",
+  "Dấu hiệu có thể nằm ở phần bác chưa kể, nên kết quả này chưa khẳng định được điều gì.",
+  "Nếu bác vẫn thấy có gì đó bất thường, hãy hỏi lại người thân trước khi làm theo."
 ];
 
 const SAFE_ACTIONS = [
@@ -296,10 +317,12 @@ const TRANSFER_MANIPULATION_TACTIC_RULES = [
   }
 ];
 
+// Cùng luật viết câu như SAFE_REASONS ở trên — đọc phần giải thích ở đó trước
+// khi sửa. Không liệt kê dấu hiệu cụ thể như thể đã loại trừ được từng cái.
 const TRANSFER_SAFE_REASONS = [
-  "Chưa thấy tên người nhận bất thường so với người đang liên hệ.",
-  "Chưa thấy dấu hiệu ép chuyển nhiều lần hoặc hứa hoàn phí.",
-  "Thông tin hiện có chưa đủ để khẳng định đây là lừa đảo."
+  "Trong thông tin bác vừa điền, Khoan Đã chưa nhận ra dấu hiệu bất thường nào.",
+  "Khoan Đã không kiểm tra được người nhận tiền thật sự là ai.",
+  "Kết quả này chưa khẳng định được điều gì về người đang yêu cầu bác chuyển."
 ];
 
 const TRANSFER_SAFE_ACTIONS = [
@@ -390,7 +413,18 @@ function makeEvaluator(rules, safeReasons, safeActions, defaultCitation, tacticR
 
     return {
       muc_rui_ro: hasCritical ? "Nguy hiểm cao" : classifyScore(score),
-      ly_do: padToThree(matches.map((rule) => rule.reason), safeReasons),
+      // Câu độn CHỈ được dùng khi không có dấu hiệu thật nào.
+      //
+      // Bản trước độn cho đủ ba ô trong mọi trường hợp. Hậu quả đo được: một
+      // tình huống khớp hai quy tắc ra kết quả
+      //     1. "Lừa đảo luôn thúc ép để nạn nhân không kịp suy nghĩ."
+      //     2. "Yêu cầu giữ bí mật là dấu hiệu lừa đảo rất rõ."
+      //     3. "…Khoan Đã chưa nhận ra dấu hiệu lừa đảo nào."
+      // Dòng 3 phủ nhận thẳng hai dòng trên nó. Hai lý do thật thì hiển thị
+      // hai — thà ít mà đúng còn hơn đủ ba ô mà tự mâu thuẫn.
+      ly_do: matches.length > 0
+        ? unique(matches.map((rule) => rule.reason)).slice(0, 3)
+        : [...safeReasons],
       hanh_dong: padToThree(matches.map((rule) => rule.action), safeActions),
       trich_dan: unique([...matches.map((rule) => rule.citation), defaultCitation]),
       chien_thuat_thao_tung: detectManipulationTactics(signals, tacticRules),
@@ -473,6 +507,7 @@ function inferSignalsFromText(rawText) {
 }
 
 module.exports = {
+  normalizeVietnameseText,
   SIGNAL_KEYS,
   SIGNAL_RULES,
   MANIPULATION_TACTIC_RULES,

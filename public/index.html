@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="/home-news.css?v=20260803-2">
     <link rel="stylesheet" href="/history-reference.css?v=20260803-11">
     <link rel="stylesheet" href="/auth-state-ui.css?v=20260803-2">
+    <link rel="stylesheet" href="/mobile-reference-exact.css?v=20260803-1">
+    <link rel="stylesheet" href="/home-aurora-tiles.css?v=20260803-1">
+    <link rel="stylesheet" href="/intervention-ladder.css?v=20260807-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/local-vault.js" defer></script>
@@ -197,6 +200,104 @@
 
     <div class="network-status" id="networkStatus" role="status" hidden></div>
     <main id="noi-dung">
+      <!-- MÀN HÌNH MỘT CÂU HỎI (báo cáo 6.1 / mục 57)
+           Đây là nơi biểu tượng trên màn hình điện thoại dẫn tới, KHÔNG phải
+           trang chủ. Người đang bị thúc ép không dùng được một trang chủ nhiều
+           chức năng. Một câu hỏi, bốn nút, một lối ra. -->
+      <section class="view emergency-entry" id="khanCapView" aria-labelledby="khanCapTitle" hidden>
+        <h1 class="emergency-entry__question" id="khanCapTitle" tabindex="-1">Bác đang được yêu cầu làm gì?</h1>
+
+        <div class="emergency-entry__choices">
+          <a class="emergency-choice" href="#thoat-cuoc-goi">
+            <span class="emergency-choice__icon" aria-hidden="true"><span class="icon icon-phone"></span></span>
+            <span class="emergency-choice__label">Có người đang gọi cho tôi</span>
+          </a>
+          <a class="emergency-choice" href="#kiem-tra">
+            <span class="emergency-choice__icon" aria-hidden="true"><span class="icon icon-messages"></span></span>
+            <span class="emergency-choice__label">Tôi nhận được tin nhắn hoặc đường link</span>
+          </a>
+          <a class="emergency-choice" href="#chuyen-khoan">
+            <span class="emergency-choice__icon" aria-hidden="true"><span class="icon icon-wallet"></span></span>
+            <span class="emergency-choice__label">Tôi sắp chuyển tiền</span>
+          </a>
+        </div>
+
+        <!-- Nút thứ tư tách hẳn khỏi ba nút trên và khác màu: người vừa mất
+             tiền không được bấm nhầm vào luồng kiểm tra. -->
+        <div class="emergency-entry__choices emergency-entry__choices--separated">
+          <a class="emergency-choice emergency-choice--alarm" href="#vua-chuyen-tien">
+            <span class="emergency-choice__icon" aria-hidden="true"><span class="icon icon-siren"></span></span>
+            <span class="emergency-choice__label">Tôi đã chuyển tiền rồi</span>
+          </a>
+        </div>
+
+        <a class="emergency-entry__exit" href="#trang-chu">
+          <span>Tôi chỉ muốn xem hướng dẫn</span>
+          <span class="icon icon-chevron-right" aria-hidden="true"></span>
+        </a>
+      </section>
+
+      <!-- BÁC ĐANG ĐƯỢC BẢO VỆ (báo cáo 5.5 / mục 56)
+           Mức Nghiêm trọng của thang can thiệp. Chỉ tới từ critical override,
+           không bao giờ từ điểm số. Toàn bộ điều hướng bị bỏ (CSS ẩn topbar và
+           thanh nav dưới khi data-route="duoc-bao-ve").
+
+           Hai khối tách rời có chủ đích: não người đang hoảng loạn không phân
+           loại được "điều không được làm" lẫn với "việc phải làm" trong cùng
+           một danh sách đánh số. -->
+      <section class="view protect-screen" id="duocBaoVeView" aria-labelledby="duocBaoVeTitle" hidden>
+        <p class="protect-screen__eyebrow">Khoan Đã</p>
+        <h1 class="protect-screen__title" id="duocBaoVeTitle" tabindex="-1">Bác đang được bảo vệ</h1>
+        <p class="protect-screen__why" id="protectReason">Khoan Đã thấy dấu hiệu rất nguy hiểm trong việc bác vừa đưa vào.</p>
+
+        <!-- Chữ tĩnh, KHÔNG bấm được, KHÔNG checkbox. Checkbox tạo cảm giác
+             phải hoàn thành nhiệm vụ — gánh nặng thừa với người đang run tay. -->
+        <section class="protect-donts" aria-labelledby="protectDontsTitle">
+          <h2 class="protect-donts__title" id="protectDontsTitle">Đừng làm 3 điều này</h2>
+          <ul class="protect-donts__list">
+            <li><span class="protect-donts__mark" aria-hidden="true">✕</span><span>Đừng chuyển thêm tiền</span></li>
+            <li><span class="protect-donts__mark" aria-hidden="true">✕</span><span>Đừng đọc mã OTP cho ai</span></li>
+            <li><span class="protect-donts__mark" aria-hidden="true">✕</span><span>Đừng nói chuyện tiếp với họ</span></li>
+          </ul>
+        </section>
+
+        <div class="protect-actions">
+          <button class="protect-call" type="button" id="protectCallButton">
+            <span class="protect-call__icon" aria-hidden="true"><span class="icon icon-phone"></span></span>
+            <span class="protect-call__copy">
+              <strong class="protect-call__name" id="protectCallName">Gọi người thân</strong>
+              <small class="protect-call__role" id="protectCallRole">Chưa lưu người thân nào</small>
+            </span>
+          </button>
+
+          <!-- Người liên hệ chính không bắt máy thì luồng cứu hộ đứt giữa
+               chừng. Khối này hiện sau 20 giây (báo cáo 6.6). -->
+          <div class="protect-backup" id="protectBackup" role="status" hidden>
+            <p class="protect-backup__text" id="protectBackupText"></p>
+            <button class="protect-call protect-call--backup" type="button" id="protectBackupButton">
+              <span class="protect-call__icon" aria-hidden="true"><span class="icon icon-phone"></span></span>
+              <span class="protect-call__copy">
+                <strong class="protect-call__name" id="protectBackupName">Gọi người dự phòng</strong>
+                <small class="protect-call__role" id="protectBackupRole"></small>
+              </span>
+            </button>
+          </div>
+
+          <a class="protect-transferred" href="#vua-chuyen-tien">
+            <span class="icon icon-siren" aria-hidden="true"></span>
+            <span>Tôi đã chuyển tiền rồi</span>
+          </a>
+        </div>
+
+        <!-- Lối ra bắt buộc (báo cáo 4.2). Nếu bộ luật báo động giả mà người
+             dùng bị kẹt trong màn hình này, họ sẽ gỡ ứng dụng. Mỗi lần bấm là
+             một mẫu dữ liệu báo động giả, ghi lại để hiệu chỉnh ngưỡng. -->
+        <button class="protect-exit" type="button" id="protectExitButton">
+          <span>Tôi ổn, không có gì nguy hiểm</span>
+          <span class="icon icon-chevron-right" aria-hidden="true"></span>
+        </button>
+      </section>
+
       <section class="view" id="homeView" aria-labelledby="homeTitle">
         <div class="home-layout">
         <div class="home-main">
@@ -798,6 +899,62 @@
             <p><strong>Mức độ chắc chắn:</strong> <span id="resultConfidence">Trung bình</span></p>
             <p><strong>Nguồn:</strong> phân tích AI kết hợp quy tắc an toàn; dữ liệu uy tín được kiểm tra riêng.</p>
           </div>
+
+          <!-- PHIẾU TIN CẬY (báo cáo 5.4 / mục 62)
+               Đây là câu trả lời cho "vì sao tin được kết quả của AI".
+               Ba thứ bắt buộc, đừng bỏ thứ nào:
+                 • mục "Chưa xác minh được" LUÔN hiện, kể cả khi rủi ro thấp
+                 • ghi rõ ranh giới AI làm gì / bộ luật làm gì
+                 • gửi được cho người thân
+               Nội dung do src/trust-receipt.js sinh và đã che mã OTP, mật khẩu,
+               mã PIN và số tài khoản đầy đủ trước khi tới đây. -->
+          <section class="trust-receipt" id="trustReceiptSection" aria-labelledby="trustReceiptTitle" hidden>
+            <header class="trust-receipt__head">
+              <h3 class="trust-receipt__title" id="trustReceiptTitle">
+                <span class="icon icon-receipt" aria-hidden="true"></span>
+                <span>Phiếu tin cậy</span>
+              </h3>
+              <p class="trust-receipt__time" id="trustReceiptTime"></p>
+            </header>
+
+            <p class="trust-receipt__level">
+              <span class="trust-receipt__level-label">Mức cảnh báo</span>
+              <strong id="trustReceiptLevel"></strong>
+            </p>
+
+            <div class="trust-receipt__block" id="trustReceiptFoundBlock">
+              <h4>Đã phát hiện</h4>
+              <ul id="trustReceiptFoundList"></ul>
+            </div>
+
+            <div class="trust-receipt__block trust-receipt__block--unverified">
+              <h4>Chưa xác minh được</h4>
+              <ul id="trustReceiptUnverifiedList"></ul>
+            </div>
+
+            <div class="trust-receipt__block trust-receipt__block--how">
+              <h4>Cách kết luận</h4>
+              <ul id="trustReceiptHowList"></ul>
+            </div>
+
+            <div class="trust-receipt__block" id="trustReceiptTodoBlock">
+              <h4>Nên làm ngay</h4>
+              <ul id="trustReceiptTodoList"></ul>
+            </div>
+
+            <p class="trust-receipt__note" id="trustReceiptNote"></p>
+
+            <div class="trust-receipt__actions">
+              <button class="button button-secondary" type="button" id="trustReceiptShareButton">
+                <span class="icon icon-users" aria-hidden="true"></span>
+                <span>Gửi cho người thân</span>
+              </button>
+              <button class="button button-secondary" type="button" id="trustReceiptCopyButton">
+                <span class="icon icon-save" aria-hidden="true"></span>
+                <span>Sao chép phiếu</span>
+              </button>
+            </div>
+          </section>
 
           <section class="result-insight" id="structuredInsightSection" aria-labelledby="structuredInsightTitle" hidden>
             <div>
@@ -2373,5 +2530,6 @@
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
   </body>
 </html>
+
 
 

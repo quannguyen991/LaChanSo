@@ -16,6 +16,9 @@ const { LinkCheckError, evaluateLinkRisk, resolveRedirectChain } = require("./sr
 const { lookupReputation } = require("./src/reputation-engine");
 const { validateBase64Media } = require("./src/media-validation");
 const { buildStructuredAnalysisResult } = require("./src/structured-result");
+const { detectCriticalOverride } = require("./src/critical-override");
+const { resolveInterventionLevel } = require("./src/intervention-ladder");
+const { buildTrustReceipt } = require("./src/trust-receipt");
 
 const app = express();
 const port = Number(process.env.PORT) || 3000;
@@ -119,7 +122,38 @@ app.get("/api/danh-ba-ho-tro", (_request, response, next) => {
   }
 });
 
-function buildFallbackAnalysis(text, { hasMedia = false, recoveryModeActive = false } = {}) {
+// Thang can thiệp và Phiếu tin cậy phải được gắn vào MỌI đường trả kết quả —
+// cả đường AI chạy bình thường lẫn đường dự phòng khi AI hỏng. Tách ra một hàm
+// để không có đường nào quên: một phản hồi thiếu `mucCanThiep` nghĩa là giao
+// diện không biết phải dựng màn hình nào.
+function attachInterventionAndReceipt({
+  result,
+  signals,
+  structuredResult,
+  text = "",
+  aiUnavailable = false,
+  moneyAlreadySent = false
+}) {
+  const criticalOverride = detectCriticalOverride({ signals, text });
+  const mucCanThiep = resolveInterventionLevel({
+    riskLabel: result.muc_rui_ro,
+    score: result.diem,
+    criticalOverride,
+    moneyAlreadySent
+  });
+  const phieuTinCay = buildTrustReceipt({
+    result,
+    structuredResult,
+    intervention: mucCanThiep,
+    criticalOverride,
+    aiUnavailable,
+    now: new Date()
+  });
+
+  return { mucCanThiep, phieuTinCay };
+}
+
+function buildFallbackAnalysis(text, { hasMedia = false, recoveryModeActive = false, moneyAlreadySent = false } = {}) {
   const signals = inferSignalsFromText(text);
   let result = evaluateRisk(signals);
 
@@ -143,19 +177,47 @@ function buildFallbackAnalysis(text, { hasMedia = false, recoveryModeActive = fa
 
   if (recoveryModeActive) result = applyRecoveryBoost(result, text);
 
+  // Ở chế độ dự phòng, "chưa thấy dấu hiệu" KHÔNG cùng ý nghĩa với lúc AI chạy
+  // bình thường: lúc này hệ thống mới chỉ dò một danh sách từ khoá cố định.
+  // Bản production ngày 7/8/2026 chạy dự phòng suốt vì thiếu khoá AI, và một
+  // kịch bản lừa đảo có yêu cầu giữ bí mật vẫn ra "Chưa thấy dấu hiệu rủi ro"
+  // mà không có một chữ nào nói cho người dùng biết hệ thống đang chạy mù.
+  //
+  // Chỉ độn câu này ở mức thấp: từ mức "Nghi ngờ" trở lên người dùng đã được
+  // cảnh báo rồi, và ba ô lý do cần dành cho dấu hiệu thật.
+  if (result.muc_rui_ro === "Chưa thấy dấu hiệu rủi ro") {
+    result = {
+      ...result,
+      ly_do: [
+        "Lần này Khoan Đã chưa đọc kỹ được nội dung, mới chỉ dò theo một số từ khoá — nên rất dễ bỏ sót.",
+        ...result.ly_do
+      ].slice(0, 3)
+    };
+  }
+
+  const structuredResult = buildStructuredAnalysisResult({
+    result,
+    signals,
+    text,
+    hasMedia,
+    aiUnavailable: true,
+    recoveryModeActive
+  });
+
   return {
     ...result,
     tin_hieu: signals,
     noi_dung_da_doc: text || undefined,
     loi_dong_cam: "Bác đã làm đúng khi dừng lại để kiểm tra trước khi hành động.",
     che_do_du_phong: true,
-    structuredResult: buildStructuredAnalysisResult({
+    structuredResult,
+    ...attachInterventionAndReceipt({
       result,
       signals,
+      structuredResult,
       text,
-      hasMedia,
       aiUnavailable: true,
-      recoveryModeActive
+      moneyAlreadySent
     })
   };
 }
@@ -224,6 +286,12 @@ app.post("/api/phan-tich", async (request, response, next) => {
   }
 
   const recoveryModeActive = request.body?.che_do_phuc_hoi === true;
+  // Cờ này KHÁC `che_do_phuc_hoi`. `che_do_phuc_hoi` là chế độ bảo vệ 72 giờ
+  // đang bật nền; `da_chuyen_tien` là lời khai của người dùng NGAY TRONG lần
+  // kiểm tra này. Gộp hai thứ sẽ khiến một tin nhắn nguy hiểm mới, gửi tới
+  // trong lúc chế độ 72 giờ đang bật, bị hạ từ màn hình bảo vệ xuống luồng
+  // phục hồi — tức là hạ mức cảnh giác, đúng thứ không được phép làm.
+  const moneyAlreadySent = request.body?.da_chuyen_tien === true;
 
   try {
     const extraction = await extractSignals(text, { image });
@@ -232,24 +300,33 @@ app.post("/api/phan-tich", async (request, response, next) => {
       result = applyRecoveryBoost(result, text || extraction.noi_dung_da_doc || "");
     }
     const analyzedText = extraction.noi_dung_da_doc || text;
+    const structuredResult = buildStructuredAnalysisResult({
+      result,
+      signals: extraction.signals,
+      text: analyzedText,
+      hasMedia: Boolean(image),
+      recoveryModeActive
+    });
     return response.json({
       ...result,
       tin_hieu: extraction.signals,
       noi_dung_da_doc: extraction.noi_dung_da_doc || undefined,
       loi_dong_cam: extraction.loi_dong_cam || undefined,
-      structuredResult: buildStructuredAnalysisResult({
+      structuredResult,
+      ...attachInterventionAndReceipt({
         result,
         signals: extraction.signals,
+        structuredResult,
         text: analyzedText,
-        hasMedia: Boolean(image),
-        recoveryModeActive
+        moneyAlreadySent
       })
     });
   } catch (error) {
     console.warn("Dịch vụ AI tạm thời không phản hồi; đang dùng phân tích dự phòng.", error?.name || "Error");
     return response.json(buildFallbackAnalysis(text, {
       hasMedia: Boolean(image),
-      recoveryModeActive
+      recoveryModeActive,
+      moneyAlreadySent
     }));
   }
 });

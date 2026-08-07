@@ -53,7 +53,20 @@ for (const scenario of scenarios) {
     const result = evaluateRisk(scenario.signals);
 
     assert.equal(result.muc_rui_ro, scenario.expected_risk);
-    assert.equal(result.ly_do.length, 3);
+
+    // Trước đây dòng này là `equal(result.ly_do.length, 3)` — nó khoá đúng
+    // hành vi độn cho đủ ba ô, tức khoá luôn cái lỗi khiến một kết quả có hai
+    // dấu hiệu thật lại kèm câu "chưa nhận ra dấu hiệu nào".
+    // Ràng buộc thật cần khoá: có ít nhất một lý do, nhiều nhất ba, và không
+    // lý do nào rỗng.
+    assert.ok(result.ly_do.length >= 1 && result.ly_do.length <= 3, `có ${result.ly_do.length} lý do`);
+    assert.ok(result.ly_do.every((reason) => reason.trim().length > 0));
+
+    // Đã có dấu hiệu thật thì không được kèm câu trấn an phủ nhận chúng.
+    if (result.diem > 0) {
+      assert.doesNotMatch(result.ly_do.join(" "), /chưa nhận ra dấu hiệu/i);
+    }
+
     assert.equal(result.hanh_dong.length, 3);
     assert.ok(result.trich_dan.length >= 1);
     assert.ok(result.chien_thuat_thao_tung.length <= 4);

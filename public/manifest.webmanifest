@@ -3,10 +3,16 @@
   "short_name": "Khoan Đã",
   "description": "Dừng lại trước khi chuyển tiền.",
   "lang": "vi-VN",
-  "start_url": "/#trang-chu",
+  "start_url": "/#khan-cap",
   "display": "standalone",
   "background_color": "#edf5ff",
   "theme_color": "#155eef",
+  "shortcuts": [
+    { "name": "Có người đang gọi tôi", "url": "/#thoat-cuoc-goi" },
+    { "name": "Tôi nhận được tin nhắn", "url": "/#kiem-tra" },
+    { "name": "Tôi sắp chuyển tiền", "url": "/#chuyen-khoan" },
+    { "name": "Tôi đã chuyển tiền rồi", "url": "/#vua-chuyen-tien" }
+  ],
   "icons": [
     {
       "src": "/vendor/unicons/shield-check.svg",

@@ -21,7 +21,11 @@ const STORAGE_KEYS = {
   deviceProtection: "khoan-da:device-protection",
   onboardingComplete: "khoan-da:onboarding-complete",
   account: "khoan-da:account",
-  accountSession: "khoan-da:account-session"
+  accountSession: "khoan-da:account-session",
+  // Mỗi lần người dùng bấm "Tôi ổn, không có gì nguy hiểm" ở màn hình bảo vệ
+  // là một mẫu báo động giả. Ghi lại cục bộ để hiệu chỉnh ngưỡng bộ luật —
+  // điểm yếu của hệ thống trở thành vòng lặp cải tiến (báo cáo 4.2).
+  falseAlarmLog: "khoan-da:false-alarm-log"
 };
 
 const ALL_STORAGE_KEYS = Object.values({
@@ -47,7 +51,11 @@ const ALL_STORAGE_KEYS = Object.values({
   deviceProtection: "khoan-da:device-protection",
   onboardingComplete: "khoan-da:onboarding-complete",
   account: "khoan-da:account",
-  accountSession: "khoan-da:account-session"
+  accountSession: "khoan-da:account-session",
+  // Mỗi lần người dùng bấm "Tôi ổn, không có gì nguy hiểm" ở màn hình bảo vệ
+  // là một mẫu báo động giả. Ghi lại cục bộ để hiệu chỉnh ngưỡng bộ luật —
+  // điểm yếu của hệ thống trở thành vòng lặp cải tiến (báo cáo 4.2).
+  falseAlarmLog: "khoan-da:false-alarm-log"
 });
 
 const MAX_CONTACTS = 5;
@@ -223,6 +231,10 @@ function displayRiskLabel(risk) {
 }
 
 const ROUTES = {
+  // #khan-cap đứng trước #trang-chu có chủ đích: đây là màn hình mà biểu tượng
+  // ứng dụng dẫn tới (start_url trong manifest), không phải trang chủ.
+  "#khan-cap": "khanCapView",
+  "#duoc-bao-ve": "duocBaoVeView",
   "#trang-chu": "homeView",
   "#canh-bao": "canhBaoView",
   "#kiem-tra": "analysisView",
@@ -242,6 +254,19 @@ const ROUTES = {
   "#huong-dan": "educationView"
   ,"#bao-ve-thiet-bi": "deviceProtectionView"
 };
+
+// Tên mức can thiệp — giữ khớp CHÍNH XÁC với LEVELS trong
+// src/intervention-ladder.js. Đây là hợp đồng giữa máy chủ và giao diện.
+// Khai báo sớm vì setLoading() ở phía trên tệp cũng đọc activeInterventionLevel.
+const INTERVENTION = {
+  PHIEU_TIN_CAY: "phieu_tin_cay",
+  DUONG_XAC_MINH: "duong_xac_minh",
+  DUNG_60_GIAY: "dung_60_giay",
+  DUOC_BAO_VE: "duoc_bao_ve",
+  PHUC_HOI: "phuc_hoi"
+};
+
+let activeInterventionLevel = null;
 
 const COMMON_VERIFY_QUESTIONS = [
   "Anh/chị tên đầy đủ là gì?",
@@ -287,6 +312,33 @@ const EDUCATION_LESSONS = [
 ];
 
 const elements = {
+  khanCapView: document.querySelector("#khanCapView"),
+
+  duocBaoVeView: document.querySelector("#duocBaoVeView"),
+  protectReason: document.querySelector("#protectReason"),
+  protectCallButton: document.querySelector("#protectCallButton"),
+  protectCallName: document.querySelector("#protectCallName"),
+  protectCallRole: document.querySelector("#protectCallRole"),
+  protectBackup: document.querySelector("#protectBackup"),
+  protectBackupText: document.querySelector("#protectBackupText"),
+  protectBackupButton: document.querySelector("#protectBackupButton"),
+  protectBackupName: document.querySelector("#protectBackupName"),
+  protectBackupRole: document.querySelector("#protectBackupRole"),
+  protectExitButton: document.querySelector("#protectExitButton"),
+
+  trustReceiptSection: document.querySelector("#trustReceiptSection"),
+  trustReceiptTime: document.querySelector("#trustReceiptTime"),
+  trustReceiptLevel: document.querySelector("#trustReceiptLevel"),
+  trustReceiptFoundBlock: document.querySelector("#trustReceiptFoundBlock"),
+  trustReceiptFoundList: document.querySelector("#trustReceiptFoundList"),
+  trustReceiptUnverifiedList: document.querySelector("#trustReceiptUnverifiedList"),
+  trustReceiptHowList: document.querySelector("#trustReceiptHowList"),
+  trustReceiptTodoBlock: document.querySelector("#trustReceiptTodoBlock"),
+  trustReceiptTodoList: document.querySelector("#trustReceiptTodoList"),
+  trustReceiptNote: document.querySelector("#trustReceiptNote"),
+  trustReceiptShareButton: document.querySelector("#trustReceiptShareButton"),
+  trustReceiptCopyButton: document.querySelector("#trustReceiptCopyButton"),
+
   homeView: document.querySelector("#homeView"),
   homeSupportButton: document.querySelector("#homeSupportButton"),
   homeAlertFamilyCall: document.querySelector("#homeAlertFamilyCall"),
@@ -852,6 +904,13 @@ function setInputError(message = "") {
 }
 
 function setLoading(isLoading) {
+  // Xoá mức can thiệp của lần phân tích TRƯỚC ngay khi lần mới bắt đầu.
+  //
+  // Đã cắn khi đo trên trình duyệt: bác gửi một tình huống khớp critical
+  // override, rồi gửi tiếp một tình huống khác. Trong lúc lần hai đang chạy,
+  // biến này vẫn giữ "duoc_bao_ve", nên bấm "Xem kết quả chi tiết" là bị đẩy
+  // vào màn hình bảo vệ của kết quả CŨ.
+  if (isLoading) activeInterventionLevel = null;
   elements.analyzeButton.disabled = isLoading;
   elements.cancelAnalysisButton.hidden = !isLoading;
   elements.analyzeButton.dataset.loading = String(isLoading);
@@ -1315,6 +1374,15 @@ function startDangerCountdown() {
       elements.pressureCountdown.textContent = "0";
       clearInterval(countdownTimer);
       countdownTimer = null;
+
+      // Mục 56: ở mức Nghiêm trọng, hết 60 giây là chuyển THẲNG sang màn hình
+      // bảo vệ — đếm ngược và màn bảo vệ là một luồng, không phải hai tính
+      // năng rời. Ở mức Cao thì dừng lại ở câu hỏi bên dưới.
+      if (activeInterventionLevel === INTERVENTION.DUOC_BAO_VE) {
+        goToProtectScreen();
+        return;
+      }
+
       elements.dangerMainActions.hidden = true;
       elements.dangerFollowup.hidden = false;
       elements.dangerStillPressuredButton.focus();
@@ -1440,6 +1508,238 @@ function renderStructuredInsights(structuredResult) {
   elements.structuredInsightSection.hidden = false;
 }
 
+// ---------------------------------------------------------------------------
+// PHIẾU TIN CẬY (báo cáo 5.4 / mục 62)
+//
+// Nội dung tới từ src/trust-receipt.js và ĐÃ được che dữ liệu nhạy cảm ở đó.
+// Ở đây chỉ dựng DOM — không xử lý lại chuỗi, không ghép thêm dữ liệu từ máy
+// người dùng vào, vì phiếu này được thiết kế để gửi ra ngoài.
+// ---------------------------------------------------------------------------
+
+let currentTrustReceipt = null;
+
+function formatReceiptTime(isoString) {
+  const time = new Date(isoString);
+  if (Number.isNaN(time.getTime())) return "";
+  const hh = String(time.getHours()).padStart(2, "0");
+  const mm = String(time.getMinutes()).padStart(2, "0");
+  const dd = String(time.getDate()).padStart(2, "0");
+  const mo = String(time.getMonth() + 1).padStart(2, "0");
+  return `${hh}:${mm} · ${dd}/${mo}/${time.getFullYear()}`;
+}
+
+function renderTrustReceipt(receipt) {
+  currentTrustReceipt = receipt || null;
+  if (!receipt) {
+    elements.trustReceiptSection.hidden = true;
+    return;
+  }
+
+  elements.trustReceiptTime.textContent = formatReceiptTime(receipt.thoiDiem);
+  elements.trustReceiptLevel.textContent = receipt.mucCanhBao;
+  elements.trustReceiptSection.dataset.risk = RISK_META[receipt.mucCanhBao]?.key || "medium";
+
+  const found = receipt.daPhatHien || [];
+  fillList(elements.trustReceiptFoundList, found);
+  elements.trustReceiptFoundBlock.hidden = found.length === 0;
+
+  // Bất biến: khối này KHÔNG BAO GIỜ bị ẩn, kể cả khi rủi ro thấp. Sự khiêm
+  // tốn hiển thị được là thứ xây niềm tin nhanh nhất với người cao tuổi.
+  fillList(elements.trustReceiptUnverifiedList, receipt.chuaXacMinhDuoc || []);
+
+  const how = [receipt.cachKetLuan?.aiLam, receipt.cachKetLuan?.boLuatLam];
+  if (receipt.cachKetLuan?.ghiChu) how.push(receipt.cachKetLuan.ghiChu);
+  if (receipt.cachKetLuan?.criticalOverride) {
+    how.push(`Quy tắc cố định đã kích hoạt: ${receipt.cachKetLuan.criticalOverride.label}.`);
+  }
+  fillList(elements.trustReceiptHowList, how.filter(Boolean));
+
+  const todo = receipt.nenLamNgay || [];
+  fillList(elements.trustReceiptTodoList, todo);
+  elements.trustReceiptTodoBlock.hidden = todo.length === 0;
+
+  elements.trustReceiptNote.textContent = receipt.luuY || "";
+  elements.trustReceiptSection.hidden = false;
+}
+
+// Bản chữ để gửi vào nhóm Zalo gia đình. Giữ đồng bộ với
+// trustReceiptToShareText() trong src/trust-receipt.js.
+function trustReceiptShareText(receipt) {
+  const lines = ["PHIẾU TIN CẬY — Khoan Đã", `Mức cảnh báo: ${receipt.mucCanhBao}`, ""];
+  if ((receipt.daPhatHien || []).length > 0) {
+    lines.push("Đã phát hiện:");
+    for (const item of receipt.daPhatHien) lines.push(`• ${item}`);
+    lines.push("");
+  }
+  lines.push("Chưa xác minh được:");
+  for (const item of receipt.chuaXacMinhDuoc || []) lines.push(`• ${item}`);
+  lines.push("");
+  lines.push("Cách kết luận:");
+  lines.push(`• ${receipt.cachKetLuan?.aiLam || ""}`);
+  lines.push(`• ${receipt.cachKetLuan?.boLuatLam || ""}`);
+  if ((receipt.nenLamNgay || []).length > 0) {
+    lines.push("");
+    lines.push("Nên làm ngay:");
+    for (const item of receipt.nenLamNgay) lines.push(`• ${item}`);
+  }
+  lines.push("");
+  lines.push(receipt.luuY || "");
+  return lines.join("\n");
+}
+
+async function shareTrustReceipt() {
+  if (!currentTrustReceipt) return;
+  const text = trustReceiptShareText(currentTrustReceipt);
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: "Phiếu tin cậy — Khoan Đã", text });
+      // Phần 7.1: KHÔNG ghi "đã gửi" khi mới chỉ mở bảng chia sẻ của hệ điều
+      // hành. Ứng dụng không biết người dùng có bấm gửi hay không.
+      appendPrivacyAudit("Mở bảng chia sẻ Phiếu tin cậy", "Chưa rõ đã gửi hay chưa", true);
+      showToast("Đã mở bảng chia sẻ. Bác chọn người nhận nhé.");
+      return;
+    }
+    await navigator.clipboard.writeText(text);
+    showToast("Máy này không có nút chia sẻ. Đã sao chép phiếu để bác dán vào Zalo.");
+  } catch {
+    showToast("Chưa chia sẻ được phiếu. Bác thử nút Sao chép phiếu.");
+  }
+}
+
+async function copyTrustReceipt() {
+  if (!currentTrustReceipt) return;
+  try {
+    await navigator.clipboard.writeText(trustReceiptShareText(currentTrustReceipt));
+    showToast("Đã sao chép Phiếu tin cậy.");
+  } catch {
+    showToast("Chưa sao chép được. Bác thử lại nhé.");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// BÁC ĐANG ĐƯỢC BẢO VỆ (báo cáo 5.5)
+//
+// Mức Nghiêm trọng của thang can thiệp. Chỉ tới từ critical override.
+// ---------------------------------------------------------------------------
+
+const PROTECT_BACKUP_DELAY_MS = 20_000;
+let protectBackupTimer = null;
+let protectCallTarget = null;
+let protectBackupTarget = null;
+
+// Người liên hệ chính là người đầu danh sách; người dự phòng là người kế tiếp.
+// Đây là thứ đối thủ không làm được — họ không biết gia đình người dùng là ai.
+function protectContactPair() {
+  const contacts = getContacts().filter((contact) => String(contact.phone || "").trim());
+  return { primary: contacts[0] || null, backup: contacts[1] || null };
+}
+
+function fillProtectCallButton(nameEl, roleEl, contact, fallbackName) {
+  if (contact) {
+    // Ghi TÊN THẬT và QUAN HỆ THẬT. "Gọi người thân" mất hết sức nặng cảm xúc —
+    // đây là chi tiết giá trị nhất của cả luồng cứu hộ (báo cáo 5.5).
+    nameEl.textContent = `Gọi ${contact.name}`;
+    roleEl.textContent = contact.role || "Người thân";
+    return true;
+  }
+  nameEl.textContent = fallbackName;
+  roleEl.textContent = "Bác chưa lưu người thân nào — bấm để mở phần Gia đình";
+  return false;
+}
+
+function stopProtectBackupTimer() {
+  window.clearTimeout(protectBackupTimer);
+  protectBackupTimer = null;
+}
+
+function startProtectBackupTimer() {
+  stopProtectBackupTimer();
+  elements.protectBackup.hidden = true;
+  if (!protectBackupTarget) return;
+
+  protectBackupTimer = window.setTimeout(() => {
+    const primaryName = protectCallTarget?.name || "người thân";
+    elements.protectBackupText.textContent = `Chưa gọi được ${primaryName}. Gọi ${protectBackupTarget.name}?`;
+    elements.protectBackup.hidden = false;
+  }, PROTECT_BACKUP_DELAY_MS);
+}
+
+function enterProtectScreen(intervention) {
+  const reason = intervention?.criticalOverride?.explanation
+    || "Khoan Đã thấy dấu hiệu rất nguy hiểm trong việc bác vừa đưa vào.";
+  elements.protectReason.textContent = reason;
+
+  const { primary, backup } = protectContactPair();
+  protectCallTarget = primary;
+  protectBackupTarget = backup;
+
+  fillProtectCallButton(elements.protectCallName, elements.protectCallRole, primary, "Gọi người thân");
+  if (backup) {
+    fillProtectCallButton(elements.protectBackupName, elements.protectBackupRole, backup, "Gọi người dự phòng");
+  }
+
+  if (window.location.hash !== "#duoc-bao-ve") window.location.hash = "#duoc-bao-ve";
+}
+
+// Cầu nối duy nhất từ màn đếm ngược sang màn bảo vệ. Mọi lối ra khỏi đếm ngược
+// ở mức Nghiêm trọng đều phải đi qua đây — hết giờ, bấm bỏ qua, đóng hộp thoại.
+function goToProtectScreen() {
+  if (elements.dangerDialog.open) elements.dangerDialog.close();
+  enterProtectScreen(currentResult?.mucCanThiep || null);
+}
+
+function onEnterProtectRoute() {
+  startProtectBackupTimer();
+  // Người hoảng loạn không đọc chữ. Đọc to ngay khi vào chế độ này, không cần
+  // người dùng bật gì thêm (báo cáo 5.5).
+  const spoken = [
+    "Bác đang được bảo vệ.",
+    "Đừng chuyển thêm tiền. Đừng đọc mã OTP cho ai. Đừng nói chuyện tiếp với họ.",
+    protectCallTarget ? `Bác bấm nút to để gọi ${protectCallTarget.name}.` : "Bác gọi ngay cho người thân."
+  ].join(" ");
+  window.setTimeout(() => {
+    window.KhoanDaServices?.textToSpeechService?.speak?.(spoken);
+  }, 250);
+}
+
+function callProtectContact(contact) {
+  if (!contact) {
+    window.location.hash = "#gia-dinh";
+    showToast("Bác thêm một người thân để Khoan Đã gọi nhanh giúp bác.");
+    return;
+  }
+  const digits = String(contact.phone || "").replace(/[^+\d]/g, "");
+  if (!digits) {
+    window.location.hash = "#gia-dinh";
+    return;
+  }
+  window.location.href = `tel:${digits}`;
+}
+
+function logFalseAlarm() {
+  let entries = [];
+  try {
+    const parsed = JSON.parse(getStored(STORAGE_KEYS.falseAlarmLog, "[]"));
+    entries = Array.isArray(parsed) ? parsed : [];
+  } catch {
+    entries = [];
+  }
+  entries.unshift({
+    at: new Date().toISOString(),
+    override: currentResult?.mucCanThiep?.criticalOverride?.id || null,
+    risk: currentResult?.muc_rui_ro || null
+  });
+  setStored(STORAGE_KEYS.falseAlarmLog, JSON.stringify(entries.slice(0, 30)));
+}
+
+function exitProtectScreen() {
+  stopProtectBackupTimer();
+  window.KhoanDaServices?.textToSpeechService?.stop?.();
+  logFalseAlarm();
+  showToast("Đã ghi nhận. Bác vẫn xem lại kết quả chi tiết bất cứ lúc nào.");
+  window.location.hash = "#kiem-tra";
+}
+
 function renderNetworkStatus() {
   const offline = navigator.onLine === false;
   elements.networkStatus.hidden = !offline;
@@ -1487,6 +1787,7 @@ function renderResult(result, options = {}) {
   elements.resultSummary.dataset.risk = meta.key;
   const signalCount = Object.values(result.tin_hieu || {}).filter(Boolean).length;
   elements.resultConfidence.textContent = signalCount >= 3 ? "Cao" : signalCount >= 1 ? "Trung bình" : "Thấp";
+  renderTrustReceipt(result.phieuTinCay);
   renderStructuredInsights(result.structuredResult);
   renderRecommendedActions(result.structuredResult);
   renderSignalSummary(result.tin_hieu || {});
@@ -1512,8 +1813,19 @@ function renderResult(result, options = {}) {
     elements.resultSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  if (meta.key === "high" && options.showDanger !== false) {
+  // THANG CAN THIỆP quyết định dựng màn hình nào (báo cáo Phần 4 / mục 56).
+  // Máy chủ đã giải xong mức; ở đây chỉ thi hành, không tự tính lại — nếu
+  // giao diện tự suy diễn thì lại có hai nguồn sự thật cho cùng một quyết định.
+  const level = result.mucCanThiep?.level;
+  activeInterventionLevel = level || null;
+
+  if (options.showDanger !== false && (level === INTERVENTION.DUOC_BAO_VE || level === INTERVENTION.DUNG_60_GIAY)) {
+    // Cả hai mức đều bắt đầu bằng cùng một màn đếm ngược. Khác biệt duy nhất
+    // nằm ở chỗ hết giờ thì đi đâu — xử lý trong stopDangerCountdown().
     openDangerDialog("analysis");
+  } else if (level === INTERVENTION.DUOC_BAO_VE || level === INTERVENTION.DUNG_60_GIAY) {
+    // showDanger === false (ví dụ xem lại một kết quả cũ trong lịch sử): không
+    // dựng lại màn khủng hoảng, nhưng cũng không đọc to như ca bình thường.
   } else if (getStored(STORAGE_KEYS.voiceGuide) === "1") {
     window.setTimeout(speakResult, 250);
   }
@@ -3443,7 +3755,7 @@ function renderAuthState() {
   elements.profileIdentityName.textContent = account?.name || "Tài khoản của bác";
   elements.profileIdentityEmail.textContent = account?.email || "";
   document.querySelectorAll("[data-auth-empty-value]").forEach((value) => {
-    value.textContent = authenticated ? value.dataset.authEmptyValue : "Kh?ng c? d? li?u";
+    value.textContent = authenticated ? value.dataset.authEmptyValue : "Không có dữ liệu";
   });
   if (elements.caseList && elements.caseListEmpty) renderCaseList();
 }
@@ -3701,6 +4013,10 @@ function route() {
       const transition = document.startViewTransition(apply);
       activeRouteTransition = transition;
       transition.updateCallbackDone.catch(() => {});
+      // `ready` cũng reject khi một chuyển cảnh bị huỷ giữa chừng — chuyện
+      // bình thường khi điều hướng nhanh, ví dụ đóng hộp thoại rồi nhảy ngay
+      // sang màn hình bảo vệ. Không bắt thì console đầy InvalidStateError.
+      transition.ready.catch(() => {});
       transition.finished.then(
         () => {
           if (activeRouteTransition === transition) activeRouteTransition = null;
@@ -3726,6 +4042,8 @@ function route() {
   }
 }
 
+let previousRouteHashForCleanup = null;
+
 function applyRoute(hash) {
   setProfileMenu(false);
   const activeKey = ROUTES[hash];
@@ -3741,7 +4059,22 @@ function applyRoute(hash) {
 
   updateBottomNav(hash);
 
-  if (hash === "#lich-su") {
+  // Rời màn hình bảo vệ thì phải tắt hẹn giờ người dự phòng và tắt giọng đọc,
+  // nếu không giọng nói còn đọc tiếp trên màn hình sau.
+  if (hash !== "#duoc-bao-ve") {
+    stopProtectBackupTimer();
+    if (previousRouteHashForCleanup === "#duoc-bao-ve") {
+      window.KhoanDaServices?.textToSpeechService?.stop?.();
+    }
+  }
+  previousRouteHashForCleanup = hash;
+
+  if (hash === "#duoc-bao-ve") {
+    onEnterProtectRoute();
+    document.querySelector("#duocBaoVeTitle").focus?.({ preventScroll: true });
+  } else if (hash === "#khan-cap") {
+    document.querySelector("#khanCapTitle").focus?.({ preventScroll: true });
+  } else if (hash === "#lich-su") {
     renderHistory();
     document.querySelector("#historyTitle").focus?.({ preventScroll: true });
   } else if (hash === "#hanh-trinh") {
@@ -4095,9 +4428,23 @@ desktopHomeComposer?.addEventListener("submit", (event) => {
     desktopHomeInput?.focus();
     return;
   }
-  elements.mobileSituationInput.value = value;
-  elements.mobileSituationInput.dispatchEvent(new Event("input", { bubbles: true }));
-  elements.mobileSituationForm.requestSubmit();
+
+  // The mobile composer is hidden on desktop, so send users to the visible
+  // analysis view before starting the shared analysis flow.
+  elements.situation.value = value;
+  elements.situation.dispatchEvent(new Event("input", { bubbles: true }));
+  window.location.hash = "#kiem-tra";
+  window.setTimeout(() => elements.analysisForm.requestSubmit(), 0);
+});
+
+document.querySelectorAll(".desktop-home-redesign [data-home-suggestion]").forEach((button) => {
+  button.addEventListener("click", () => {
+    if (!desktopHomeInput) return;
+    desktopHomeInput.value = button.dataset.homeSuggestion === "call"
+      ? "Có người gọi cho tôi và yêu cầu làm theo ngay."
+      : "Tôi vừa nhận một tin nhắn lạ và muốn kiểm tra.";
+    desktopHomeInput.focus({ preventScroll: true });
+  });
 });
 
 elements.homeSupportButton.addEventListener("click", callFamily);
@@ -4156,11 +4503,27 @@ elements.clearSettingsButton.addEventListener("click", () => {
     ? "Đã xóa toàn bộ dữ liệu đã lưu."
     : "Không thể xóa dữ liệu trên trình duyệt này.";
 });
+elements.trustReceiptShareButton.addEventListener("click", shareTrustReceipt);
+elements.trustReceiptCopyButton.addEventListener("click", copyTrustReceipt);
+
+elements.protectCallButton.addEventListener("click", () => callProtectContact(protectCallTarget));
+elements.protectBackupButton.addEventListener("click", () => callProtectContact(protectBackupTarget));
+elements.protectExitButton.addEventListener("click", exitProtectScreen);
+
 elements.dangerDialog.addEventListener("close", stopDangerCountdown);
 elements.pressurePhraseGrid.querySelectorAll(".phrase-chip").forEach((chip) => {
   chip.addEventListener("click", () => togglePressurePhrase(chip.dataset.phrase));
 });
-elements.closeDangerButton.addEventListener("click", () => elements.dangerDialog.close());
+// "Bấm bỏ qua" ở mức Nghiêm trọng cũng dẫn sang màn hình bảo vệ, y như hết
+// giờ (mục 56). Nếu để nó đóng hộp thoại về màn kết quả thì người dùng thoát
+// được khỏi luồng cứu hộ chỉ bằng một nút — tức lại là hai tính năng rời.
+elements.closeDangerButton.addEventListener("click", () => {
+  if (activeInterventionLevel === INTERVENTION.DUOC_BAO_VE) {
+    goToProtectScreen();
+    return;
+  }
+  elements.dangerDialog.close();
+});
 elements.pressureCalmButton.addEventListener("click", () => {
   stopDangerCountdown();
   elements.dangerDialog.close();
@@ -4273,6 +4636,7 @@ elements.recoveryActive.querySelectorAll("[data-recovery-step]").forEach((checkb
 elements.fontSizeButtons.forEach((button) => button.addEventListener("click", () => applyFontSize(button.dataset.fontSize)));
 elements.profileMenuButton?.addEventListener("click", handleProfileTrigger);
 elements.profileIconButton?.addEventListener("click", handleProfileTrigger);
+elements.topbarLoginButton?.addEventListener("click", () => openAuthDialog("login"));
 elements.notificationButton?.addEventListener("click", () => {
   window.location.hash = "#canh-bao";
 });
@@ -4287,7 +4651,6 @@ elements.desktopSearchForm?.addEventListener("submit", (event) => {
   window.setTimeout(() => {
     elements.situation.value = query;
     updateCharacterCount();
-elements.topbarLoginButton?.addEventListener("click", () => openAuthDialog("login"));
     elements.situation.focus();
   }, 0);
 });

@@ -146,6 +146,103 @@ test("chat API always returns useful guidance when the AI provider is unavailabl
   }
 });
 
+// Thang can thiệp và Phiếu tin cậy phải có mặt trên MỌI đường trả kết quả.
+// Thiếu `mucCanThiep` nghĩa là giao diện không biết dựng màn hình nào — và
+// đường dễ quên nhất chính là đường dự phòng khi AI hỏng.
+async function analyzeWithoutAi(body) {
+  const saved = {
+    provider: process.env.LLM_PROVIDER,
+    llmKey: process.env.LLM_API_KEY,
+    geminiKey: process.env.GEMINI_API_KEY
+  };
+  process.env.LLM_PROVIDER = "gemini";
+  delete process.env.LLM_API_KEY;
+  delete process.env.GEMINI_API_KEY;
+
+  try {
+    const response = await fetch(`${baseUrl}/api/phan-tich`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+    return { response, payload: await response.json() };
+  } finally {
+    if (saved.provider === undefined) delete process.env.LLM_PROVIDER;
+    else process.env.LLM_PROVIDER = saved.provider;
+    if (saved.llmKey === undefined) delete process.env.LLM_API_KEY;
+    else process.env.LLM_API_KEY = saved.llmKey;
+    if (saved.geminiKey === undefined) delete process.env.GEMINI_API_KEY;
+    else process.env.GEMINI_API_KEY = saved.geminiKey;
+  }
+}
+
+test("đường dự phòng vẫn trả về thang can thiệp và Phiếu tin cậy", async () => {
+  const { response, payload } = await analyzeWithoutAi({
+    van_ban: "Tin nhắn nhắc lịch khám bệnh thứ Năm tuần sau."
+  });
+
+  assert.equal(response.status, 200);
+  assert.equal(payload.che_do_du_phong, true);
+  assert.ok(payload.mucCanThiep, "thiếu mucCanThiep trên đường dự phòng");
+  assert.ok(payload.phieuTinCay, "thiếu phieuTinCay trên đường dự phòng");
+  // Mọi lần phân tích đều tạo phiếu, kể cả khi rủi ro thấp.
+  assert.ok(payload.phieuTinCay.chuaXacMinhDuoc.length > 0);
+  assert.equal(payload.phieuTinCay.cachKetLuan.aiDaChay, false);
+});
+
+test("critical override đẩy lên mức Nghiêm trọng dù bộ luật không thấy tín hiệu nào", async () => {
+  const { payload } = await analyzeWithoutAi({
+    van_ban: "Bên tôi là cơ quan điều tra. Chị chuyển toàn bộ tiền sang tài khoản an toàn để xác minh, "
+      + "và tuyệt đối không nói với ai."
+  });
+
+  assert.equal(payload.mucCanThiep.level, "duoc_bao_ve");
+  assert.equal(payload.mucCanThiep.boDieuHuong, true);
+  assert.equal(payload.mucCanThiep.route, "#duoc-bao-ve");
+  assert.equal(payload.mucCanThiep.criticalOverride.id, "tai_khoan_an_toan");
+});
+
+test("nội dung nguy hiểm cao nhưng không khớp override chỉ tới Dừng 60 giây", async () => {
+  const { payload } = await analyzeWithoutAi({
+    van_ban: "Công an bảo tôi phải chuyển khoản ngay hôm nay nếu không sẽ bị bắt giam."
+  });
+
+  assert.equal(payload.muc_rui_ro, "Nguy hiểm cao");
+  assert.equal(payload.mucCanThiep.level, "dung_60_giay");
+  assert.equal(payload.mucCanThiep.boDieuHuong, false);
+});
+
+test("cờ đã chuyển tiền đưa thẳng sang luồng phục hồi", async () => {
+  const { payload } = await analyzeWithoutAi({
+    van_ban: "Tôi vừa chuyển 45 triệu theo hướng dẫn của họ.",
+    da_chuyen_tien: true
+  });
+
+  assert.equal(payload.mucCanThiep.level, "phuc_hoi");
+  assert.equal(payload.mucCanThiep.route, "#vua-chuyen-tien");
+});
+
+test("chế độ bảo vệ 72 giờ KHÔNG hạ mức can thiệp của một tin nhắn nguy hiểm mới", async () => {
+  const { payload } = await analyzeWithoutAi({
+    van_ban: "Họ bảo tôi cài ứng dụng dịch vụ công từ link này để nhận lại tiền.",
+    che_do_phuc_hoi: true
+  });
+
+  // Chế độ 72 giờ đang bật, nhưng người dùng chưa khai vừa chuyển tiền lần này
+  // -> vẫn phải là màn hình bảo vệ, không phải luồng phục hồi.
+  assert.equal(payload.mucCanThiep.level, "duoc_bao_ve");
+});
+
+test("phiếu trả về từ API không bao giờ mang mã OTP hay số tài khoản đầy đủ", async () => {
+  const { payload } = await analyzeWithoutAi({
+    van_ban: "Họ xin mã OTP là 847213 và bảo chuyển vào số tài khoản 19036688123456 ngay lập tức."
+  });
+
+  const serialized = JSON.stringify(payload.phieuTinCay);
+  assert.ok(!serialized.includes("847213"), "phiếu rò rỉ mã OTP");
+  assert.ok(!serialized.includes("19036688123456"), "phiếu rò rỉ số tài khoản đầy đủ");
+});
+
 test("chat API returns assistant reply successfully", async () => {
   // callGemini() ném GeminiError(..., 503) NGAY khi thiếu khoá, tức trước cả
   // lần gọi fetch đầu tiên — nên mock fetch bên dưới không bao giờ được chạm

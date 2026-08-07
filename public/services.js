@@ -81,6 +81,13 @@
         utterance.lang = lang;
         global.speechSynthesis.speak(utterance);
         return true;
+      },
+      // Màn hình bảo vệ tự đọc to ngay khi mở. Người dùng rời màn hình đó phải
+      // im được ngay, nếu không giọng đọc còn nói tiếp trên màn hình sau.
+      stop() {
+        if (!global.speechSynthesis) return false;
+        global.speechSynthesis.cancel();
+        return true;
       }
     }
   };

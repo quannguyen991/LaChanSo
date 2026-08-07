@@ -27,7 +27,10 @@ test("flags a personal account impersonating a state agency as high risk", () =>
     result.chien_thuat_thao_tung.map((tactic) => tactic.id),
     ["gia-danh-chu-tai-khoan"]
   );
-  assert.equal(result.ly_do.length, 3);
+  // Hai tín hiệu khớp -> đúng hai lý do thật. Không độn thêm câu trấn an cho
+  // đủ ba ô, vì câu đó sẽ phủ nhận chính hai dòng ngay trên nó.
+  assert.equal(result.ly_do.length, 2);
+  assert.doesNotMatch(result.ly_do.join(" "), /chưa nhận ra dấu hiệu/i);
   assert.equal(result.hanh_dong.length, 3);
   assert.ok(result.trich_dan.length >= 1);
 });

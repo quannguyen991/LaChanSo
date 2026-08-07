@@ -214,7 +214,16 @@ test("desktop web shell exposes sidebar brand and large-screen overrides", () =>
   assert.match(html, /class="desktop-sidebar-brand"[\s\S]*?Khoan Đã[\s\S]*?Bảo vệ bác, mỗi ngày/);
   assert.doesNotMatch(html, /id="desktopSearchForm"|id="desktopSearchInput"/);
   assert.match(html, /khoan-da-2026\.css\?v=20260801-learning-alerts-1/);
-    assert.match(serviceWorker, /khoan-da-shell-v51/);
+  // Trước đây dòng này ghim cứng "v51". Ghim cứng một số version thì mọi lần
+  // đổi app shell — tức đúng lúc BẮT BUỘC phải bump cache, nếu không người
+  // dùng cũ vẫn nhận CSS/HTML cũ — đều làm test đỏ vì một lý do không phải lỗi.
+  // Điều cần khoá là: tên cache CÓ đánh version, và version không tụt lùi.
+  const cacheVersion = serviceWorker.match(/khoan-da-shell-v(\d+)/);
+  assert.ok(cacheVersion, "sw.js phải có tên cache dạng khoan-da-shell-v<số>");
+  assert.ok(
+    Number(cacheVersion[1]) >= 51,
+    `cache version tụt về v${cacheVersion[1]}; hạ version khiến trình duyệt giữ lại shell cũ`
+  );
   assert.match(serviceWorker, /khoan-da-2026\.css\?v=20260801-learning-alerts-1/);
   assert.match(refreshStyles, /Desktop web redesign, 2026-07-28/);
   assert.match(refreshStyles, /@media \(min-width: 64rem\)[\s\S]*?--desktop-sidebar-w/);

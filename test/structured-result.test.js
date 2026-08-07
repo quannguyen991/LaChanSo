@@ -59,7 +59,18 @@ test("keeps low-risk structured results cautious and non-empty", () => {
   assert.equal(structured.riskLevel, "low");
   assert.equal(structured.requiresEmergencyFlow, false);
   assert.ok(structured.predictedNextSteps.length >= 1);
-  assert.match(structured.summary, /Chưa|Thông tin/);
+  // Trước đây dòng này ghim /Chưa|Thông tin/ — tức ghim CHỮ ĐẦU CÂU của bản
+  // copy cũ, không ghim ý nghĩa. Nó đỏ ngay khi câu độn được viết lại cho
+  // trung thực hơn, dù nội dung mới đúng hơn hẳn.
+  // Điều thật sự cần khoá: tóm tắt mức thấp phải giữ giọng dè dặt và KHÔNG
+  // được tuyên bố rằng một dấu hiệu cụ thể nào đó vắng mặt.
+  assert.match(structured.summary, /chưa|không/i, "tóm tắt mức thấp phải giữ giọng dè dặt");
+  assert.doesNotMatch(structured.summary, /an toàn/i);
+  assert.doesNotMatch(
+    structured.summary,
+    /Chưa thấy[^.]*(giữ bí mật|đe do|OTP)/i,
+    "tóm tắt không được khẳng định một dấu hiệu cụ thể là vắng mặt"
+  );
   assert.match(structured.limitations.join(" "), /không bảo đảm/);
 });
 

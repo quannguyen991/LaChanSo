@@ -1,0 +1,521 @@
+/* ==========================================================================
+   THANG CAN THIỆP — Phần 4 báo cáo sản phẩm v2
+
+   Ba màn hình mới, dùng chung một nguyên tắc: người dùng gặp chúng trong
+   trạng thái tệ nhất có thể của con người — đang bị dọa, tim đập nhanh, có
+   người đang thúc trên điện thoại. Trong trạng thái đó năng lực nhận thức
+   giảm mạnh: đọc chậm hơn, khó so sánh nhiều lựa chọn, tay run, dễ bấm nhầm.
+
+   Vì vậy ở đây KHÔNG dùng thang chữ của trang thường. Chữ và vùng chạm được
+   kẹp bằng max(px, rem):
+     • kẹp px  -> không bao giờ nhỏ hơn sàn, kể cả ở bậc chữ A (gốc 15px)
+     • kẹp rem -> vẫn phóng to theo nút A+ / A++
+   Ghi trần bằng rem là ở bậc A nút tụt xuống dưới sàn mà test tĩnh không thấy.
+
+   KHÔNG dùng white-space: nowrap ở bất kỳ nút nào — nhãn tiếng Việt dài hơn
+   tiếng Anh khoảng 30%, ở bậc A++ nút sẽ bị cắt chữ.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   BỎ ĐIỀU HƯỚNG
+
+   Màn hình một câu hỏi và màn hình bảo vệ đều thu sản phẩm về một luồng duy
+   nhất. Mọi lối rẽ khác là một cơ hội bấm nhầm.
+   -------------------------------------------------------------------------- */
+/* Hai thứ ở đây trông thừa nhưng đều cần, và cả hai đều đến từ ĐO TRÊN TRÌNH
+   DUYỆT chứ không phải phỏng đoán:
+ *
+ *  1. !important — mobile-reference-exact.css khai báo `.topbar{display:flex
+ *     !important}` và `.mobile-bottom-nav{display:block!important}`.
+ *
+ *  2. :root thay cho html — khoan-da-2026.css có
+ *       html:not([data-authenticated="true"]) body .topbar { display:grid!important }
+ *     Độ đặc hiệu của nó là (0,2,2). Bản đầu của khối này viết
+ *     `html[data-route="khan-cap"] .topbar` = (0,2,1) nên THUA, và thanh
+ *     topbar vẫn hiện nguyên trên màn hình lẽ ra bỏ hết điều hướng — dù đã có
+ *     !important. Đổi `html` thành `:root` biến type-selector thành
+ *     pseudo-class, đẩy lên (0,3,1) và thắng dứt điểm.
+ *
+ * Đây đúng là món nợ kỹ thuật mà CLAUDE.md nói: ~24 ngưỡng màn hình đè nhau
+ * trong nhiều file. Luôn kiểm bằng số đo, đừng tin mắt.
+ */
+:root[data-route="khan-cap"] body .topbar,
+:root[data-route="khan-cap"] body .mobile-bottom-nav,
+:root[data-route="khan-cap"] body .bottom-nav,
+:root[data-route="khan-cap"] body .chat-widget,
+:root[data-route="duoc-bao-ve"] body .topbar,
+:root[data-route="duoc-bao-ve"] body .mobile-bottom-nav,
+:root[data-route="duoc-bao-ve"] body .bottom-nav,
+:root[data-route="duoc-bao-ve"] body .chat-widget {
+  display: none !important;
+}
+
+/* Thanh nav dưới là position:fixed nên body chừa sẵn 6.5rem cho nó. Ẩn nav mà
+   quên dòng này thì màn hình khẩn cấp có một khoảng trống chết ở đáy. */
+:root[data-route="khan-cap"] body,
+:root[data-route="duoc-bao-ve"] body {
+  padding-bottom: var(--space-4) !important;
+}
+
+/* --------------------------------------------------------------------------
+   MÀN HÌNH MỘT CÂU HỎI (6.1)
+   -------------------------------------------------------------------------- */
+/* Cùng lý do !important như khối ẩn điều hướng: mobile-reference-exact.css có
+   `.view{padding:.15rem 0 1.2rem!important}`, dán tiêu đề vào sát mép trên. */
+.emergency-entry {
+  width: min(100%, 34rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6) max(var(--space-4), env(safe-area-inset-left)) var(--space-7) !important;
+}
+
+.emergency-entry__question {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: max(26px, 1.6rem);
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+  text-align: center;
+  text-wrap: balance;
+}
+
+.emergency-entry__choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Khoảng trắng rõ rệt tách nút thứ tư khỏi ba nút trên. Người vừa mất tiền
+   và người đang nghi ngờ đi hai luồng hoàn toàn khác nhau. */
+.emergency-entry__choices--separated {
+  margin-block-start: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: 2px solid var(--color-rule);
+}
+
+.emergency-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  /* 88px là sàn của báo cáo 6.1. Ngưỡng 44px trong đặc tả cũ dành cho người
+     bình thường, không dành cho người 70 tuổi tay run. */
+  min-block-size: max(88px, 5.5rem);
+  padding: var(--space-4);
+  border: 2px solid var(--color-border-interactive);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  text-decoration: none;
+  transition: background var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+}
+
+.emergency-choice:hover,
+.emergency-choice:focus-visible {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+
+.emergency-choice__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: max(52px, 3.25rem);
+  block-size: max(52px, 3.25rem);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.emergency-choice__label {
+  /* Không nowrap: nhãn "Tôi nhận được tin nhắn hoặc đường link" phải xuống
+     dòng được ở bậc A++ trên máy 320px. */
+  font-size: max(22px, 1.3rem);
+  line-height: var(--leading-snug);
+  font-weight: 600;
+}
+
+.emergency-choice--alarm {
+  border-color: var(--color-notice-line);
+  background: var(--color-warning-soft);
+  color: var(--color-ink);
+}
+
+.emergency-choice--alarm:hover,
+.emergency-choice--alarm:focus-visible {
+  background: var(--color-warning-soft);
+  border-color: var(--color-warning);
+}
+
+.emergency-choice--alarm .emergency-choice__icon {
+  background: var(--color-surface);
+  color: var(--color-warning);
+}
+
+/* Không có dòng này thì mọi lần mở ứng dụng đều bị hỏi câu hỏi khẩn cấp. */
+.emergency-entry__exit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-block-size: var(--touch-target-primary);
+  padding: var(--space-3);
+  color: var(--color-ink-2);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  text-decoration: underline;
+}
+
+/* --------------------------------------------------------------------------
+   BÁC ĐANG ĐƯỢC BẢO VỆ (5.5)
+
+   Không linh vật, không đếm ngược, không phủ đỏ toàn màn hình. Người đang
+   hoảng loạn không cần thêm kích thích thị giác.
+   -------------------------------------------------------------------------- */
+.protect-screen {
+  width: min(100%, 34rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6) max(var(--space-4), env(safe-area-inset-left)) var(--space-7) !important;
+}
+
+.protect-screen__eyebrow {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.protect-screen__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: max(28px, 1.75rem);
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+}
+
+.protect-screen__why {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--color-ink-2);
+}
+
+/* Chữ tĩnh. Không checkbox — checkbox tạo cảm giác phải hoàn thành nhiệm vụ,
+   là gánh nặng thừa với người đang run tay. */
+.protect-donts {
+  padding: var(--space-4);
+  border: 2px solid var(--color-danger);
+  border-radius: var(--radius-lg);
+  background: var(--color-danger-faint);
+}
+
+.protect-donts__title {
+  margin: 0 0 var(--space-3);
+  font-size: max(20px, 1.2rem);
+  line-height: var(--leading-tight);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-danger);
+}
+
+.protect-donts__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.protect-donts__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: max(19px, 1.15rem);
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+}
+
+/* Rủi ro không bao giờ được truyền đạt chỉ bằng màu: dấu ✕ là lớp thông tin
+   thứ hai bên cạnh chữ, cho người mù màu và người đục thủy tinh thể. */
+.protect-donts__mark {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 1.6em;
+  block-size: 1.6em;
+  border-radius: var(--radius-full);
+  background: var(--color-danger);
+  color: var(--color-danger-ink);
+  font-size: 0.85em;
+  font-weight: 700;
+}
+
+.protect-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-block-start: var(--space-3);
+}
+
+.protect-call {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  inline-size: 100%;
+  min-block-size: max(88px, 5.5rem);
+  padding: var(--space-4);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  text-align: start;
+  cursor: pointer;
+}
+
+.protect-call:hover,
+.protect-call:focus-visible {
+  background: var(--color-accent-hover);
+}
+
+.protect-call--backup {
+  background: var(--color-accent-deep);
+}
+
+.protect-call__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: max(52px, 3.25rem);
+  block-size: max(52px, 3.25rem);
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 0.18);
+}
+
+.protect-call__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+
+/* Tên thật và quan hệ thật. "Gọi người thân" mất hết sức nặng cảm xúc —
+   đây là chi tiết giá trị nhất của cả luồng cứu hộ. */
+.protect-call__name {
+  font-size: max(22px, 1.3rem);
+  line-height: var(--leading-snug);
+  font-weight: 700;
+}
+
+.protect-call__role {
+  font-size: max(16px, 1rem);
+  line-height: var(--leading-snug);
+  opacity: 0.9;
+}
+
+.protect-backup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 2px solid var(--color-border-interactive);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.protect-backup__text {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  color: var(--color-ink);
+}
+
+/* Khác màu và tách khỏi phần trên bằng một khoảng trắng rõ rệt. */
+.protect-transferred {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-block-size: var(--touch-target-primary);
+  margin-block-start: var(--space-3);
+  padding: var(--space-4);
+  border: 2px solid var(--color-notice-line);
+  border-radius: var(--radius-lg);
+  background: var(--color-warning-soft);
+  color: var(--color-ink);
+  font-size: max(18px, 1.1rem);
+  line-height: var(--leading-snug);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Lối ra bắt buộc (4.2). Nếu bộ luật báo động giả mà người dùng bị kẹt trong
+   màn hình này, họ sẽ hoảng và gỡ ứng dụng. */
+.protect-exit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  inline-size: 100%;
+  min-block-size: var(--touch-target-primary);
+  margin-block-start: var(--space-4);
+  padding: var(--space-3);
+  border: none;
+  background: none;
+  color: var(--color-ink-2);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   PHIẾU TIN CẬY (5.4)
+   -------------------------------------------------------------------------- */
+.trust-receipt {
+  margin-block: var(--space-5);
+  padding: var(--space-5);
+  border: 2px solid var(--color-border-tinted);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.trust-receipt__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-block-end: var(--space-3);
+  border-block-end: 1px solid var(--color-rule);
+}
+
+.trust-receipt__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+}
+
+.trust-receipt__time {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  color: var(--color-muted);
+}
+
+.trust-receipt__level {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-block: var(--space-4) var(--space-2);
+}
+
+.trust-receipt__level-label {
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.trust-receipt__level strong {
+  font-size: max(20px, 1.2rem);
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+}
+
+.trust-receipt[data-risk="high"] .trust-receipt__level strong { color: var(--color-danger); }
+.trust-receipt[data-risk="medium"] .trust-receipt__level strong { color: var(--color-warning); }
+.trust-receipt[data-risk="low"] .trust-receipt__level strong { color: var(--color-success); }
+
+.trust-receipt__block {
+  margin-block-start: var(--space-4);
+}
+
+.trust-receipt__block h4 {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.trust-receipt__block ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding-inline-start: var(--space-5);
+}
+
+.trust-receipt__block li {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--color-ink);
+}
+
+/* Khối này KHÔNG BAO GIỜ bị ẩn, kể cả khi rủi ro thấp. Sự khiêm tốn hiển thị
+   được là thứ xây niềm tin nhanh nhất với người cao tuổi. */
+.trust-receipt__block--unverified {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-sky-soft);
+}
+
+.trust-receipt__block--how {
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-soft);
+}
+
+.trust-receipt__note {
+  margin-block: var(--space-4) 0;
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--color-rule);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-ink-2);
+  font-style: italic;
+}
+
+.trust-receipt__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-block-start: var(--space-4);
+}
+
+/* ĐO ĐƯỢC, không phải phòng xa: .button dùng chung trong styles.css render
+   49px ở bậc chữ A (gốc 15px) — dưới sàn 52px. Đây là một trong 34 khai báo
+   min-height dưới sàn mà CLAUDE.md ghi là chưa vá được.
+   Vá toàn cục thì mù, vì trong 34 chỗ có cả icon và nhãn không phải vùng chạm.
+   Nên chỉ kẹp đúng hai nút này, nơi đã đo và biết chắc là nút bấm được. */
+.trust-receipt__actions .button {
+  min-block-size: var(--touch-target);
+}
+
+@media (max-width: 26rem) {
+  .trust-receipt {
+    padding: var(--space-4);
+  }
+
+  .trust-receipt__actions .button {
+    inline-size: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emergency-choice {
+    transition: none;
+  }
+}
