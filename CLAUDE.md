@@ -92,7 +92,11 @@ public/index.html       # mọi màn hình là một <section class="view">, đi
 public/styles.css       # ~6.400 dòng, ~24 ngưỡng màn hình — NỢ KỸ THUẬT, xem dưới
 public/app.js           # toàn bộ logic giao diện, ánh xạ id -> phần tử dựng 1 lần lúc tải
 src/rule-engine.js      # LUẬT CỨNG quyết định mức rủi ro
-src/gemini.js           # gọi AI, chỉ lấy tín hiệu boolean
+src/gemini.js           # gọi AI, chỉ lấy tín hiệu boolean.
+                        # Tên file là di sản — nay chứa BA nhà cung cấp:
+                        # anthropic (SDK chính thức, structured outputs, đọc
+                        # được PDF) · gemini · gateway openai-compatible.
+                        # Chọn bằng LLM_PROVIDER, xem .env.example.
 test/                   # node --test
 test-utils/             # tiện ích dùng chung (KHÔNG đặt trong test/ vì node coi mọi .js ở đó là test)
 ```

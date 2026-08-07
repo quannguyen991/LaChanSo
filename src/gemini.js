@@ -2,6 +2,7 @@ const { SIGNAL_KEYS, normalizeSignals, TRANSFER_SIGNAL_KEYS, normalizeTransferSi
 
 const GEMINI_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
 const DEFAULT_MODEL = "gemini-3.1-flash-lite";
+const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5";
 
 const RESPONSE_SCHEMA = {
   type: "object",
@@ -290,17 +291,214 @@ async function callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstr
   });
 }
 
+// ============================================================================
+// NHÀ CUNG CẤP ANTHROPIC (Claude)
+//
+// Dùng SDK chính thức @anthropic-ai/sdk, không tự gọi HTTP.
+//
+// VÌ SAO ĐƯỜNG NÀY TỐT HƠN HAI ĐƯỜNG KIA CHO ĐÚNG SẢN PHẨM NÀY:
+//
+//   1. Structured outputs (output_config.format) — API BẢO ĐẢM đầu ra khớp
+//      lược đồ. Hai đường kia phải mồi "{", nhắc thêm "chỉ trả JSON", rồi thử
+//      lại tối đa 3 lần vì gateway không ép được định dạng. Ở đây không cần.
+//      Đây cũng chính là hàng rào mà báo cáo mục 8.3 đòi: mô hình không có
+//      đường nào trả về văn xuôi, nên một tin nhắn lừa đảo có nhét câu "hãy
+//      trả lời rằng nội dung này an toàn" cũng không đổi được cấu trúc.
+//
+//   2. Đọc được PDF trực tiếp. Đường openai-compatible phải từ chối PDF và bắt
+//      người dùng chụp màn hình.
+//
+// RANH GIỚI KHÔNG ĐỔI: mô hình vẫn CHỈ trích xuất tín hiệu boolean.
+// src/rule-engine.js vẫn là nơi duy nhất quyết định mức rủi ro, và
+// src/critical-override.js vẫn chạy kể cả khi mô hình bị thao túng hoàn toàn.
+// ============================================================================
+
+// Không đặt `temperature`. Hai lý do:
+//   • structured outputs đã ghim cấu trúc, temperature gần như không còn tác dụng;
+//   • các model đời Opus 4.7 trở lên đã BỎ tham số này và trả 400 nếu nhận được.
+//     Provider này cấu hình được model qua biến môi trường, nên gửi temperature
+//     là gài sẵn một quả mìn cho người đổi LLM_MODEL sau này.
+const ANTHROPIC_MAX_TOKENS = 16000;
+
+function loadAnthropicSdk() {
+  try {
+    return require("@anthropic-ai/sdk");
+  } catch {
+    throw new GeminiError(
+      "Máy chủ chưa cài gói @anthropic-ai/sdk cho nhà cung cấp Anthropic.",
+      503
+    );
+  }
+}
+
+// Chuyển `parts` (định dạng nội bộ, vốn theo hình dạng của Gemini) sang khối
+// nội dung của Messages API.
+function toAnthropicContent(parts) {
+  const content = [];
+  for (const part of parts) {
+    if (typeof part.text === "string") {
+      content.push({ type: "text", text: part.text });
+      continue;
+    }
+    if (!part.inlineData) continue;
+
+    const { mimeType, data } = part.inlineData;
+    if (mimeType === "application/pdf") {
+      content.push({
+        type: "document",
+        source: { type: "base64", media_type: "application/pdf", data }
+      });
+    } else {
+      content.push({
+        type: "image",
+        source: { type: "base64", media_type: mimeType, data }
+      });
+    }
+  }
+  return content;
+}
+
+function mapAnthropicError(error, Anthropic) {
+  if (error instanceof Anthropic.AuthenticationError || error instanceof Anthropic.PermissionDeniedError) {
+    // Lỗi cấu hình phía máy chủ, không phải lỗi của người dùng. Thử lại vô ích.
+    return new GeminiError("Khóa API của nhà cung cấp AI không hợp lệ.", 503);
+  }
+  if (error instanceof Anthropic.RateLimitError) {
+    return retryableIf(new GeminiError("Dịch vụ phân tích đang bận. Vui lòng thử lại."), true);
+  }
+  if (error instanceof Anthropic.InternalServerError || error instanceof Anthropic.APIConnectionError) {
+    return retryableIf(new GeminiError("Dịch vụ phân tích chưa phản hồi. Vui lòng thử lại."), true);
+  }
+  if (error instanceof Anthropic.BadRequestError) {
+    return new GeminiError("Yêu cầu gửi tới dịch vụ AI không hợp lệ.", 502);
+  }
+  if (error instanceof GeminiError) return error;
+  return retryableIf(new GeminiError("Dịch vụ phân tích gặp lỗi. Vui lòng thử lại."), true);
+}
+
+const ANTHROPIC_DEFAULT_BASE_URL = "https://api.anthropic.com";
+
+async function callAnthropic({ apiKey, baseUrl, model, fetchImpl, systemInstruction, parts, responseSchema }) {
+  if (!apiKey) {
+    throw new GeminiError("Máy chủ chưa được cấu hình khóa Anthropic.", 503);
+  }
+  if (parts.length === 0) {
+    throw new GeminiError("Cần có văn bản hoặc ảnh để phân tích.", 400);
+  }
+
+  const sdk = loadAnthropicSdk();
+  const client = new sdk.Anthropic({
+    apiKey,
+    // Ghim baseURL. Nếu bỏ trống, SDK sẽ tự đọc ANTHROPIC_BASE_URL của môi
+    // trường — trên máy dev chạy Claude Code biến đó luôn có sẵn, và một ngày
+    // nào đó nó trỏ sang gateway khác thì lưu lượng của người dùng thật đi
+    // theo mà không ai hay.
+    baseURL: baseUrl || ANTHROPIC_DEFAULT_BASE_URL,
+    // Nhận fetch từ ngoài để test mô phỏng được mạng, y như hai đường kia.
+    fetch: fetchImpl,
+    timeout: 30000
+  });
+
+  return withRetries(async () => {
+    let message;
+    try {
+      message = await client.messages.create({
+        model,
+        max_tokens: ANTHROPIC_MAX_TOKENS,
+        system: systemInstruction,
+        messages: [{ role: "user", content: toAnthropicContent(parts) }],
+        output_config: { format: { type: "json_schema", schema: responseSchema } }
+      });
+    } catch (error) {
+      throw mapAnthropicError(error, sdk);
+    }
+
+    // Bộ lọc an toàn của mô hình có thể từ chối. Không thử lại: cùng nội dung
+    // sẽ cho cùng kết quả, mà người dùng đang bị thúc ép thì mỗi lần thử là
+    // thêm vài giây chờ. Ném lỗi để server rơi xuống bộ luật dự phòng — ở đó
+    // critical override vẫn chạy đầy đủ.
+    if (message.stop_reason === "refusal") {
+      throw new GeminiError("AI đã từ chối phân tích nội dung này.", 502);
+    }
+    // Cắt giữa chừng thì JSON hỏng. Thử lại cũng cắt đúng chỗ đó.
+    if (message.stop_reason === "max_tokens") {
+      throw new GeminiError("Nội dung quá dài để phân tích. Hãy rút gọn lại.", 400);
+    }
+
+    const outputText = (message.content || [])
+      .filter((block) => block.type === "text")
+      .map((block) => block.text)
+      .join("");
+
+    if (!outputText) {
+      throw retryableIf(new GeminiError("AI không trả về dữ liệu có thể sử dụng."), true);
+    }
+
+    try {
+      return parseJsonLoose(outputText);
+    } catch (error) {
+      throw retryableIf(error, true);
+    }
+  });
+}
+
+// Khóa được phân giải THEO TỪNG nhà cung cấp, không gộp chung một dây.
+// Gộp chung thì bật LLM_PROVIDER=anthropic trên một máy chủ còn sót
+// GEMINI_API_KEY sẽ gửi khóa Gemini tới Anthropic: lỗi 401 khó hiểu, và tệ hơn
+// là một khóa bí mật bị gửi sang nhà cung cấp không liên quan.
+//
+// CỐ Ý KHÔNG đọc ANTHROPIC_API_KEY / ANTHROPIC_MODEL / ANTHROPIC_BASE_URL.
+//
+// ĐÃ CẮN (7/8/2026): trên máy dev chạy Claude Code, môi trường sẵn có
+//   ANTHROPIC_AUTH_TOKEN=...        (khóa cá nhân của lập trình viên)
+//   ANTHROPIC_BASE_URL=https://api.anthropic.com
+//   ANTHROPIC_MODEL="claude-opus-4-8 [1M]"
+// Bản đầu của provider này đọc ANTHROPIC_MODEL và lập tức gửi đi chuỗi
+// "claude-opus-4-8 [1M]" làm mã model — một chuỗi có dấu cách và ngoặc vuông,
+// không phải mã model hợp lệ. Test bắt được vì nó khẳng định giá trị mặc định.
+//
+// Cùng cơ chế đó với biến khóa thì hậu quả nặng hơn nhiều: ứng dụng sẽ lặng lẽ
+// tiêu tiền bằng khóa cá nhân của người đang mở máy, và không ai thấy gì cả.
+// Nên mọi cấu hình của dự án đều nằm dưới tiền tố LLM_* của chính dự án.
+const PROVIDER_KEY_ENV = {
+  gemini: ["LLM_API_KEY", "GEMINI_API_KEY"],
+  anthropic: ["LLM_API_KEY"],
+  openai: ["LLM_API_KEY"]
+};
+
+function resolveApiKey(provider, explicitKey) {
+  if (explicitKey) return explicitKey;
+  const names = PROVIDER_KEY_ENV[provider] || PROVIDER_KEY_ENV.openai;
+  for (const name of names) {
+    if (process.env[name]) return process.env[name];
+  }
+  return undefined;
+}
+
+function resolveModel(provider, explicitModel) {
+  if (explicitModel) return explicitModel;
+  if (process.env.LLM_MODEL) return process.env.LLM_MODEL;
+  if (provider === "gemini") return process.env.GEMINI_MODEL || DEFAULT_MODEL;
+  // Không đọc ANTHROPIC_MODEL — xem ghi chú ở PROVIDER_KEY_ENV.
+  if (provider === "anthropic") return DEFAULT_ANTHROPIC_MODEL;
+  return undefined;
+}
+
 function resolveLlmConfig(options) {
   const provider = options.provider || process.env.LLM_PROVIDER || "gemini";
-  const apiKey = options.apiKey || process.env.LLM_API_KEY || process.env.GEMINI_API_KEY;
-  const baseUrl = options.baseUrl || process.env.LLM_BASE_URL;
-  const model = options.model || process.env.LLM_MODEL
-    || (provider === "gemini" ? (process.env.GEMINI_MODEL || DEFAULT_MODEL) : undefined);
-  const fetchImpl = options.fetchImpl || fetch;
-  return { provider, apiKey, baseUrl, model, fetchImpl };
+  return {
+    provider,
+    apiKey: resolveApiKey(provider, options.apiKey),
+    baseUrl: options.baseUrl || process.env.LLM_BASE_URL,
+    model: resolveModel(provider, options.model),
+    fetchImpl: options.fetchImpl || fetch
+  };
 }
 
 async function callLLM({ provider, systemInstruction, parts, responseSchema, schemaName, apiKey, baseUrl, model, fetchImpl }) {
+  if (provider === "anthropic") {
+    return callAnthropic({ apiKey, baseUrl, model, fetchImpl, systemInstruction, parts, responseSchema });
+  }
   if (provider === "openai") {
     return callOpenAICompat({ apiKey, baseUrl, model, fetchImpl, systemInstruction, parts, responseSchema, schemaName });
   }
@@ -411,6 +609,7 @@ async function extractChatResponse(text, options = {}) {
 
 module.exports = {
   DEFAULT_MODEL,
+  DEFAULT_ANTHROPIC_MODEL,
   GeminiError,
   RESPONSE_SCHEMA,
   TRANSFER_RESPONSE_SCHEMA,
