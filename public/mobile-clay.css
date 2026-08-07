@@ -1,0 +1,566 @@
+/* ==========================================================================
+   GIAO DIỆN ĐIỆN THOẠI — CLAYMORPHISM
+   Dựng theo bộ ảnh tham chiếu do người dùng cung cấp.
+
+   Phong cách do ui-ux-pro-max chốt: "Claymorphism (Mobile)" — chồng nhiều lớp
+   đổ bóng để giả độ dày đất sét, gradient tím cho nút, bo góc 40–50 ngoài /
+   32 thẻ / 20 nút, nhấn xuống thì co lại.
+
+   Bảng màu KHÔNG lấy từ cơ sở dữ liệu của skill (ở đó chỉ có claymorphism cam
+   và một bảng hồng spa). Màu dưới đây lấy từ chính ảnh tham chiếu, đối chiếu
+   với token tím sẵn có của dự án.
+
+   ---------------------------------------------------------------------------
+   BA THỨ KHÔNG ĐƯỢC PHÁ, dù ảnh tham chiếu trông thế nào:
+
+   1. Vùng chạm >= 52px, nút chính >= 56px. Ảnh tham chiếu vẽ vài nút nhỏ hơn
+      thế — người 70 tuổi tay run thì không bấm trúng.
+   2. Chữ >= 14px ở MỌI bậc cỡ chữ. Mọi giá trị sát sàn phải kẹp max(14px, …),
+      vì ở bậc A gốc là 15px chứ không phải 17px.
+   3. Không white-space: nowrap trên nút. Nhãn tiếng Việt dài hơn tiếng Anh
+      ~30%; ở bậc A++ nút sẽ bị cắt chữ.
+
+   Và line-height không bao giờ dưới 1.25 — dấu tiếng Việt xếp cả trên lẫn
+   dưới, thấp hơn thế là cụt dấu.
+   ========================================================================== */
+
+@media (max-width: 63.99rem) {
+  :root {
+    /* ---- Nền và bề mặt ---- */
+    --clay-canvas-top: #F1ECFE;
+    --clay-canvas-bottom: #E9E1FC;
+    --clay-card: #FFFFFF;
+    --clay-card-soft: #F7F4FE;
+
+    /* ---- Tím thương hiệu ---- */
+    --clay-purple: #7C4DFF;
+    --clay-purple-deep: #5B2BB8;
+    --clay-purple-light: #B18BFF;
+    --clay-purple-tint: #EFE9FE;
+
+    /* ---- Chữ ---- */
+    --clay-ink: #2B1B6B;
+    --clay-ink-soft: #6F63A0;
+
+    /* ---- Cảnh báo ---- */
+    --clay-danger: #E23B47;
+    --clay-danger-soft: #FDECEE;
+    --clay-warn: #B4690E;
+    --clay-warn-soft: #FFF3E2;
+    --clay-safe: #12784F;
+    --clay-safe-soft: #E4F7EE;
+
+    /* ---- Bo góc theo thang claymorphism ---- */
+    --clay-r-hero: 2rem;
+    --clay-r-card: 1.5rem;
+    --clay-r-tile: 1.15rem;
+    --clay-r-pill: 999px;
+
+    /* ---- Bóng nhiều lớp: đây là thứ tạo cảm giác đất sét ----
+       Một lớp bóng đơn cho ra thẻ phẳng. Cần bóng gần (viền mềm) + bóng xa
+       (độ nổi) + vệt sáng trong (mặt trên bắt sáng). */
+    --clay-shadow: 0 1px 2px rgba(76, 44, 168, 0.05),
+                   0 8px 20px rgba(76, 44, 168, 0.09),
+                   inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    --clay-shadow-lift: 0 2px 4px rgba(76, 44, 168, 0.07),
+                        0 16px 34px rgba(76, 44, 168, 0.16),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --clay-shadow-purple: 0 8px 20px rgba(91, 43, 184, 0.28),
+                          inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  }
+
+  /* Độ đặc hiệu ở đây KHÔNG thừa. home-aurora-tiles.css có
+     `html[data-route="trang-chu"] body` = (0,2,2); một quy tắc `html, body`
+     dù kèm !important vẫn thua. `:root` biến type-selector thành pseudo-class
+     và đẩy lên (0,3,1). Cùng bài học đã gặp ở khối ẩn điều hướng. */
+  :root body,
+  :root[data-route] body {
+    background: linear-gradient(180deg, var(--clay-canvas-top) 0%, var(--clay-canvas-bottom) 100%) !important;
+    background-attachment: fixed !important;
+    color: var(--clay-ink) !important;
+  }
+
+  /* =========================================================================
+     THANH TRÊN THẬT SỰ CỦA ĐIỆN THOẠI LÀ .topbar
+
+     mobile-reference-exact.css ẩn hẳn .mobile-reference-top__bar và cho
+     .topbar hiện lên thay. Style nhầm vào cái đang bị ẩn thì không thấy gì —
+     đã đo và thấy đúng như vậy.
+     ========================================================================= */
+  :root body .topbar {
+    align-items: center !important;
+    gap: 0.7rem !important;
+    block-size: auto !important;
+    min-block-size: 0 !important;
+    padding: 0.9rem 0.25rem 0.4rem !important;
+  }
+
+  /* Ô logo trắng bo tròn, nổi khỏi nền tím. */
+  :root body .topbar .brand__mark {
+    inline-size: 3.4rem !important;
+    block-size: 3.4rem !important;
+    flex-basis: 3.4rem !important;
+    display: grid !important;
+    place-items: center !important;
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+  }
+
+  :root body .topbar .brand__mark img {
+    inline-size: 2.4rem !important;
+    block-size: 2.6rem !important;
+  }
+
+  :root body .topbar .brand__title {
+    color: var(--clay-ink) !important;
+    font-size: clamp(max(20px, 1.25rem), 5.6vw, 1.7rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+  }
+
+  :root body .topbar .brand__tagline {
+    display: block !important;
+    margin-block-start: 0.12rem !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(14px, 0.88rem) !important;
+    line-height: 1.35 !important;
+    font-weight: 500 !important;
+  }
+
+  /* Hai nút tròn bên phải — hồ sơ và chuông, đúng như ảnh tham chiếu. */
+  :root body .topbar .topbar-icon-btn {
+    inline-size: max(52px, 3.25rem) !important;
+    block-size: max(52px, 3.25rem) !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: var(--clay-card) !important;
+    color: var(--clay-purple) !important;
+    box-shadow: var(--clay-shadow) !important;
+  }
+
+  :root body .topbar .topbar-icon-btn:active {
+    transform: scale(0.94) !important;
+  }
+
+  /* Khi CHƯA đăng nhập, hai nút tròn bị ẩn có chủ đích (xem renderAuthState).
+     Ảnh tham chiếu vẽ trạng thái đã đăng nhập. Ở trạng thái chưa đăng nhập thì
+     khoác áo cho nút đăng nhập để vẫn đồng bộ ngôn ngữ thị giác. */
+  :root body .topbar .topbar-login-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    min-block-size: max(52px, 3.25rem) !important;
+    padding-inline: 1.1rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
+  }
+
+  /* Chấm đỏ trên chuông. */
+  :root body .topbar .topbar-bell {
+    position: relative !important;
+  }
+
+  :root body .topbar .topbar-bell::after {
+    content: "" !important;
+    position: absolute !important;
+    inset-block-start: 0.55rem !important;
+    inset-inline-end: 0.6rem !important;
+    inline-size: 0.6rem !important;
+    block-size: 0.6rem !important;
+    border-radius: 50% !important;
+    background: var(--clay-danger) !important;
+    box-shadow: 0 0 0 0.15rem var(--clay-card) !important;
+  }
+
+  /* =========================================================================
+     THANH TRÊN — ô logo + tên + hai nút tròn
+     ========================================================================= */
+  .mobile-reference-top__bar {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    margin-block-end: 1.1rem !important;
+  }
+
+  .mobile-reference-top__brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.7rem !important;
+    flex: 1 1 auto !important;
+    min-inline-size: 0 !important;
+    text-decoration: none !important;
+  }
+
+  /* Ô logo bo tròn, nền trắng nổi lên khỏi nền tím — đúng như ảnh. */
+  .mobile-reference-top__brand img {
+    inline-size: 3.4rem !important;
+    block-size: 3.4rem !important;
+    flex: none !important;
+    padding: 0.4rem !important;
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+    object-fit: contain !important;
+  }
+
+  .mobile-reference-top__brand-name {
+    display: block !important;
+    color: var(--clay-ink) !important;
+    font-size: clamp(max(20px, 1.25rem), 5.5vw, 1.7rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+  }
+
+  .mobile-reference-top__brand-tagline {
+    display: block !important;
+    margin-block-start: 0.15rem !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(14px, 0.9rem) !important;
+    line-height: 1.35 !important;
+    font-weight: 500 !important;
+  }
+
+  /* Nút hồ sơ thành nút tròn, bỏ chữ "Đăng nhập" và mũi tên như ảnh tham chiếu.
+     Vẫn giữ nhãn cho trình đọc màn hình qua aria-label sẵn có trên nút. */
+  .mobile-reference-top__profile {
+    display: grid !important;
+    place-items: center !important;
+    inline-size: max(52px, 3.25rem) !important;
+    block-size: max(52px, 3.25rem) !important;
+    flex: none !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+  }
+
+  .mobile-reference-top__profile [data-auth-label],
+  .mobile-reference-top__profile .icon-chevron-down {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    overflow: hidden !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+  }
+
+  .mobile-reference-top__profile-avatar {
+    inline-size: 1.75rem !important;
+    block-size: 1.75rem !important;
+    border-radius: 50% !important;
+  }
+
+  /* =========================================================================
+     HERO — thẻ gradient tím, linh vật bên phải
+     ========================================================================= */
+  :root body #homeView .mobile-reference-top__intro {
+    position: relative !important;
+    border-radius: var(--clay-r-hero) !important;
+    background: linear-gradient(135deg, #9B7BF5 0%, #7C4DFF 55%, #6B3FE0 100%) !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+  }
+
+  :root body #homeView .mobile-reference-top__copy h2 {
+    font-size: clamp(max(26px, 1.6rem), 8vw, 2.6rem) !important;
+    line-height: 1.22 !important;
+    font-weight: 800 !important;
+    text-wrap: balance !important;
+  }
+
+  :root body #homeView .mobile-reference-top__copy p {
+    font-size: max(15px, 0.98rem) !important;
+    line-height: 1.5 !important;
+  }
+
+  /* =========================================================================
+     THẺ HÀNH ĐỘNG — lưới 2 cột, thẻ đất sét trắng
+     ========================================================================= */
+  :root body #homeView .mobile-action-grid {
+    gap: 0.85rem !important;
+  }
+
+  /* KHÔNG ép flex-direction: column. Đo được: đổi sang cột làm thẻ cao 338px
+     thay vì ~160px như ảnh tham chiếu, vì ô icon 60px bị đẩy lên trên toàn bộ
+     phần chữ. Bố cục gốc đã là hàng ngang — giữ nguyên, chỉ đổi lớp áo. */
+  /* CHỈ KHOÁC ÁO, KHÔNG DỰNG LẠI BỐ CỤC.
+     Thẻ này là `display: grid` chứ không phải flex. Bản đầu của tôi ép
+     flex-direction rồi đẩy mũi tên bằng margin-auto — trong grid, margin-auto
+     trên ô cuối kéo giãn hàng, và thẻ phình từ ~160px lên 405px. Đo được.
+     Bố cục cũ đã chạy đúng; ở đây chỉ đổi màu, bo góc, bóng và chữ. */
+  :root body #homeView .mobile-action {
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+    transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms ease !important;
+  }
+
+  /* Nhấn xuống thì co lại — "spring squish" của claymorphism. */
+  :root body #homeView .mobile-action:active {
+    transform: scale(0.97) !important;
+    box-shadow: var(--clay-shadow-lift) !important;
+  }
+
+  /* Ô icon bo tròn nền tím nhạt, như ảnh tham chiếu. */
+  /* Ô icon bo tròn nền tím nhạt. Không đổi kích thước — kích thước do bố cục
+     grid sẵn có quyết định, đổi ở đây là kéo lệch cả hàng. */
+  :root body #homeView .mobile-action__art {
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-purple-tint) !important;
+    object-fit: contain !important;
+  }
+
+  :root body #homeView .mobile-action__body strong {
+    display: block !important;
+    color: var(--clay-ink) !important;
+    font-size: max(16px, 1rem) !important;
+    line-height: 1.28 !important;
+    font-weight: 800 !important;
+  }
+
+  /* Đo được: đẩy cỡ chữ mô tả lên 0.9rem làm thẻ cao thêm 42px vì chữ xuống
+     dòng nhiều hơn trong cột rộng 163px. Giữ ở 0.85rem — vẫn trên sàn 14px ở
+     mọi bậc, mà không đẩy thẻ ra khỏi màn hình. */
+  :root body #homeView .mobile-action__body small {
+    display: block !important;
+    margin-block-start: 0.2rem !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(14px, 0.9rem) !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Mũi tên trong vòng tròn ở góc dưới phải. */
+  /* Mũi tên trong vòng tròn. KHÔNG dùng margin-auto — xem ghi chú ở .mobile-action. */
+  :root body #homeView .mobile-action__arrow {
+    display: grid !important;
+    place-items: center !important;
+    inline-size: 2rem !important;
+    block-size: 2rem !important;
+    border-radius: 50% !important;
+    background: var(--clay-purple-tint) !important;
+    color: var(--clay-purple) !important;
+  }
+
+  /* Thẻ khẩn cấp: nền hồng, chữ đỏ — nhưng rủi ro KHÔNG BAO GIỜ chỉ truyền
+     bằng màu, nên vẫn giữ nguyên icon và chữ sẵn có trong markup. */
+  :root body #homeView .mobile-action--alert {
+    background: var(--clay-danger-soft) !important;
+  }
+
+  :root body #homeView .mobile-action--alert .mobile-action__art {
+    background: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  :root body #homeView .mobile-action--alert .mobile-action__body strong {
+    color: var(--clay-danger) !important;
+  }
+
+  :root body #homeView .mobile-action--alert .mobile-action__arrow {
+    background: var(--clay-danger) !important;
+    color: #FFFFFF !important;
+  }
+
+  :root body #homeView .mobile-action--family .mobile-action__art {
+    background: var(--clay-purple-tint) !important;
+  }
+
+  /* =========================================================================
+     Ô NHẬP TÌNH HUỐNG
+     ========================================================================= */
+  :root body #homeView .mobile-situation-form {
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+  }
+
+  :root body #homeView .mobile-situation-form__head strong {
+    color: var(--clay-ink) !important;
+    font-size: max(17px, 1.08rem) !important;
+    line-height: 1.3 !important;
+    font-weight: 800 !important;
+  }
+
+  :root body #homeView .mobile-situation-form__box {
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-card-soft) !important;
+  }
+
+  :root body #homeView .mobile-situation-form textarea {
+    color: var(--clay-ink) !important;
+    font-size: max(16px, 1rem) !important;
+    line-height: 1.5 !important;
+  }
+
+  /* =========================================================================
+     PRIMITIVE DÙNG CHUNG — áp cho mọi màn hình, không riêng trang chủ
+     ========================================================================= */
+  .workspace-card,
+  .result,
+  .result-layer,
+  .trust-receipt,
+  .bank-call__figures,
+  .bank-call__script,
+  .protect-donts,
+  .exit-script,
+  .education-card,
+  .home-news-card {
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+  }
+
+  .workspace-head h1,
+  .view > h1 {
+    color: var(--clay-ink) !important;
+    font-size: clamp(max(24px, 1.5rem), 7.5vw, 2.3rem) !important;
+    line-height: 1.24 !important;
+    font-weight: 800 !important;
+  }
+
+  .calm-line,
+  .field-hint {
+    color: var(--clay-ink-soft) !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Nút chính: gradient tím, bo tròn hoàn toàn, sàn 56px. */
+  .button-primary,
+  .button-call,
+  .bank-call__dial,
+  .protect-call {
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+    /* KHÔNG nowrap — nhãn dài phải xuống dòng được. */
+    white-space: normal !important;
+  }
+
+  .button-primary,
+  .button-call {
+    min-block-size: var(--touch-target-primary) !important;
+  }
+
+  .button-secondary {
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: var(--clay-card) !important;
+    color: var(--clay-purple-deep) !important;
+    box-shadow: var(--clay-shadow) !important;
+    min-block-size: var(--touch-target) !important;
+    white-space: normal !important;
+  }
+
+  .button-primary:active,
+  .button-secondary:active,
+  .button-call:active,
+  .bank-call__dial:active,
+  .protect-call:active {
+    transform: scale(0.97) !important;
+  }
+
+  /* Chip lọc dạng viên thuốc — hàng chip ở màn kiểm tra và lịch sử. */
+  .phrase-chip,
+  .case-history-filters button,
+  .salutation-option {
+    min-block-size: var(--touch-target) !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: var(--clay-card) !important;
+    color: var(--clay-ink) !important;
+    box-shadow: var(--clay-shadow) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+  }
+
+  .case-history-filters button.is-active,
+  .salutation-option[aria-checked="true"],
+  .phrase-chip[aria-pressed="true"] {
+    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+  }
+
+  /* Khối rủi ro: nền hồng + chữ đỏ + icon. Ba nhãn mức rủi ro là BẤT BIẾN,
+     lớp này chỉ đổi màu nền, không đụng tới chữ. */
+  .result__summary[data-risk="high"],
+  .trust-receipt[data-risk="high"] {
+    background: var(--clay-danger-soft) !important;
+  }
+
+  .result__summary[data-risk="medium"],
+  .trust-receipt[data-risk="medium"] {
+    background: var(--clay-warn-soft) !important;
+  }
+
+  .result__summary[data-risk="low"],
+  .trust-receipt[data-risk="low"] {
+    background: var(--clay-safe-soft) !important;
+  }
+
+  /* =========================================================================
+     THANH ĐIỀU HƯỚNG DƯỚI — viên thuốc nổi, mục đang chọn là vòng tròn trắng
+     ========================================================================= */
+  :root body > .mobile-bottom-nav {
+    border-radius: var(--clay-r-pill) !important;
+    background: linear-gradient(105deg, var(--clay-purple-light) 0%, #8E55EF 100%) !important;
+    box-shadow: 0 10px 28px rgba(91, 43, 184, 0.32),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  }
+
+  :root body > .mobile-bottom-nav .mobile-bottom-nav__item {
+    /* Sàn 52px cho vùng chạm, bất kể ảnh tham chiếu vẽ nhỏ hơn. */
+    min-block-size: max(52px, 3.25rem) !important;
+    border-radius: 50% !important;
+    color: #FFFFFF !important;
+    transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  :root body > .mobile-bottom-nav .mobile-bottom-nav__item[aria-current="page"] {
+    background: #FFFFFF !important;
+    color: var(--clay-purple) !important;
+    /* Quầng sáng quanh mục đang chọn, như ảnh tham chiếu. */
+    box-shadow: 0 0 0 0.35rem rgba(255, 255, 255, 0.28),
+                0 6px 16px rgba(70, 30, 150, 0.3) !important;
+  }
+
+  :root body > .mobile-bottom-nav .mobile-bottom-nav__item:active {
+    transform: scale(0.92) !important;
+  }
+}
+
+/* Claymorphism sống bằng chuyển động nhỏ. Ai tắt hiệu ứng thì tắt hết. */
+@media (prefers-reduced-motion: reduce) {
+  #homeView .mobile-action,
+  .mobile-bottom-nav .mobile-bottom-nav__item,
+  .button-primary,
+  .button-secondary,
+  .button-call,
+  .bank-call__dial,
+  .protect-call {
+    transition: none !important;
+  }
+
+  #homeView .mobile-action:active,
+  .mobile-bottom-nav .mobile-bottom-nav__item:active,
+  .button-primary:active,
+  .button-secondary:active,
+  .button-call:active,
+  .bank-call__dial:active,
+  .protect-call:active {
+    transform: none !important;
+  }
+}
