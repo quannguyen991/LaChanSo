@@ -1408,6 +1408,100 @@
         </div>
       </section>
 
+      <!-- TRỢ LÝ CUỘC GỌI NGÂN HÀNG (báo cáo 6.4 / mục 58)
+           Đối thủ đưa số hotline rồi dừng. Chỗ nạn nhân sụp đổ lại nằm SAU khi
+           bấm gọi: tổng đài hỏi số tài khoản nhận, mã giao dịch, thời điểm
+           chuyển — người vừa mất tiền, tay run, không nhớ nổi.
+           Vì vậy nút "Gọi ngân hàng" KHÔNG dẫn tới trình quay số. Nó dẫn tới
+           màn hình này, nơi mọi con số nằm sẵn trước mắt. -->
+      <section class="view bank-call" id="goiNganHangView" aria-labelledby="goiNganHangTitle" hidden>
+        <a class="back-link" href="#vua-chuyen-tien">
+          <span class="icon icon-back" aria-hidden="true"></span>
+          <span>Về danh sách việc cần làm</span>
+        </a>
+
+        <div class="workspace-head">
+          <p class="eyebrow eyebrow--danger">Gọi ngân hàng</p>
+          <h1 id="goiNganHangTitle" tabindex="-1">Bác không cần nhớ gì cả</h1>
+          <p class="calm-line">Mọi con số tổng đài sẽ hỏi đều nằm sẵn dưới đây. Bác chỉ việc đọc theo.</p>
+        </div>
+
+        <!-- Câu mở đầu: người vừa mất tiền thường không biết bắt đầu thế nào,
+             và mất vài phút đầu chỉ để giải thích lòng vòng. -->
+        <section class="bank-call__script" aria-labelledby="bankCallScriptTitle">
+          <h2 class="bank-call__block-title" id="bankCallScriptTitle">Bác đọc câu này trước</h2>
+          <p class="bank-call__script-line" id="bankCallScriptLine">“Tôi vừa bị lừa chuyển tiền, tôi cần tra soát giao dịch.”</p>
+          <button class="button button-secondary" type="button" id="bankCallSpeakButton">
+            <span class="icon icon-volume" aria-hidden="true"></span>
+            <span>Nghe đọc câu này</span>
+          </button>
+        </section>
+
+        <section class="bank-call__figures" aria-labelledby="bankCallFiguresTitle">
+          <h2 class="bank-call__block-title" id="bankCallFiguresTitle">Khi họ hỏi, bác đọc các số này</h2>
+          <dl class="bank-call__list" id="bankCallFigureList"></dl>
+          <p class="bank-call__empty" id="bankCallEmpty" hidden>
+            Bác chưa điền số liệu giao dịch. Bấm “Sửa số liệu” bên dưới để điền, hoặc nhờ người thân điền giúp.
+          </p>
+          <button class="button button-secondary" type="button" id="bankCallRevealButton" hidden>
+            <span class="icon icon-key" aria-hidden="true"></span>
+            <span>Hiện đầy đủ số tài khoản</span>
+          </button>
+        </section>
+
+        <div class="bank-call__actions">
+          <button class="bank-call__dial" type="button" id="bankCallDialButton">
+            <span class="bank-call__dial-icon" aria-hidden="true"><span class="icon icon-phone"></span></span>
+            <span class="bank-call__dial-copy">
+              <strong id="bankCallDialName">Gọi ngân hàng</strong>
+              <small id="bankCallDialNumber">Bác chưa lưu số tổng đài</small>
+            </span>
+          </button>
+          <button class="button button-primary" type="button" id="bankCallDoneButton">
+            <span class="icon icon-save" aria-hidden="true"></span>
+            <span>Đã gọi xong</span>
+          </button>
+        </div>
+
+        <details class="bank-call__editor">
+          <summary>Sửa số liệu giao dịch</summary>
+          <form class="dialog-form" id="bankCallForm" novalidate>
+            <div class="dialog-field">
+              <label for="bankCallBank">Ngân hàng của bác</label>
+              <input id="bankCallBank" type="text" placeholder="Ví dụ: Vietcombank">
+            </div>
+            <div class="dialog-field">
+              <label for="bankCallAmount">Số tiền đã chuyển</label>
+              <input id="bankCallAmount" type="text" inputmode="numeric" placeholder="Ví dụ: 45.000.000">
+            </div>
+            <div class="dialog-field">
+              <label for="bankCallTime">Thời điểm chuyển</label>
+              <input id="bankCallTime" type="text" placeholder="Ví dụ: 14:07 hôm nay">
+            </div>
+            <div class="dialog-field">
+              <label for="bankCallAccount">Số tài khoản nhận</label>
+              <input id="bankCallAccount" type="text" inputmode="numeric" placeholder="Số tài khoản bác đã chuyển tới">
+            </div>
+            <div class="dialog-field">
+              <label for="bankCallRef">Mã giao dịch</label>
+              <input id="bankCallRef" type="text" placeholder="Ghi trong biên lai hoặc ứng dụng ngân hàng">
+            </div>
+            <div class="form-actions">
+              <button class="button button-primary" type="submit">
+                <span class="icon icon-save" aria-hidden="true"></span>
+                <span>Lưu số liệu</span>
+              </button>
+            </div>
+            <p class="save-status" id="bankCallStatus" aria-live="polite"></p>
+          </form>
+        </details>
+
+        <p class="bank-call__warning">
+          <span class="icon icon-alert" aria-hidden="true"></span>
+          <span>Khoan Đã không bao giờ lấy số tổng đài từ tin nhắn hay cuộc gọi mà bác vừa nhận. Chỉ dùng số bác đã tự lưu, hoặc số in trên mặt sau thẻ.</span>
+        </p>
+      </section>
+
       <section class="view" id="evidenceView" aria-labelledby="evidenceTitle" hidden>
         <a class="back-link" href="#trang-chu">
           <span class="icon icon-back" aria-hidden="true"></span>

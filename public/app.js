@@ -25,7 +25,10 @@ const STORAGE_KEYS = {
   // Mỗi lần người dùng bấm "Tôi ổn, không có gì nguy hiểm" ở màn hình bảo vệ
   // là một mẫu báo động giả. Ghi lại cục bộ để hiệu chỉnh ngưỡng bộ luật —
   // điểm yếu của hệ thống trở thành vòng lặp cải tiến (báo cáo 4.2).
-  falseAlarmLog: "khoan-da:false-alarm-log"
+  falseAlarmLog: "khoan-da:false-alarm-log",
+  // Số liệu giao dịch cho Trợ lý cuộc gọi ngân hàng. Lưu cục bộ như mọi thứ
+  // khác — số tài khoản và mã giao dịch không rời khỏi máy này.
+  bankCall: "khoan-da:bank-call"
 };
 
 const ALL_STORAGE_KEYS = Object.values({
@@ -55,7 +58,10 @@ const ALL_STORAGE_KEYS = Object.values({
   // Mỗi lần người dùng bấm "Tôi ổn, không có gì nguy hiểm" ở màn hình bảo vệ
   // là một mẫu báo động giả. Ghi lại cục bộ để hiệu chỉnh ngưỡng bộ luật —
   // điểm yếu của hệ thống trở thành vòng lặp cải tiến (báo cáo 4.2).
-  falseAlarmLog: "khoan-da:false-alarm-log"
+  falseAlarmLog: "khoan-da:false-alarm-log",
+  // Số liệu giao dịch cho Trợ lý cuộc gọi ngân hàng. Lưu cục bộ như mọi thứ
+  // khác — số tài khoản và mã giao dịch không rời khỏi máy này.
+  bankCall: "khoan-da:bank-call"
 });
 
 const MAX_CONTACTS = 5;
@@ -235,6 +241,7 @@ const ROUTES = {
   // ứng dụng dẫn tới (start_url trong manifest), không phải trang chủ.
   "#khan-cap": "khanCapView",
   "#duoc-bao-ve": "duocBaoVeView",
+  "#goi-ngan-hang": "goiNganHangView",
   "#trang-chu": "homeView",
   "#canh-bao": "canhBaoView",
   "#kiem-tra": "analysisView",
@@ -325,6 +332,24 @@ const elements = {
   protectBackupName: document.querySelector("#protectBackupName"),
   protectBackupRole: document.querySelector("#protectBackupRole"),
   protectExitButton: document.querySelector("#protectExitButton"),
+
+  goiNganHangView: document.querySelector("#goiNganHangView"),
+  bankCallFigureList: document.querySelector("#bankCallFigureList"),
+  bankCallEmpty: document.querySelector("#bankCallEmpty"),
+  bankCallRevealButton: document.querySelector("#bankCallRevealButton"),
+  bankCallScriptLine: document.querySelector("#bankCallScriptLine"),
+  bankCallSpeakButton: document.querySelector("#bankCallSpeakButton"),
+  bankCallDialButton: document.querySelector("#bankCallDialButton"),
+  bankCallDialName: document.querySelector("#bankCallDialName"),
+  bankCallDialNumber: document.querySelector("#bankCallDialNumber"),
+  bankCallDoneButton: document.querySelector("#bankCallDoneButton"),
+  bankCallForm: document.querySelector("#bankCallForm"),
+  bankCallBank: document.querySelector("#bankCallBank"),
+  bankCallAmount: document.querySelector("#bankCallAmount"),
+  bankCallTime: document.querySelector("#bankCallTime"),
+  bankCallAccount: document.querySelector("#bankCallAccount"),
+  bankCallRef: document.querySelector("#bankCallRef"),
+  bankCallStatus: document.querySelector("#bankCallStatus"),
 
   trustReceiptSection: document.querySelector("#trustReceiptSection"),
   trustReceiptTime: document.querySelector("#trustReceiptTime"),
@@ -1738,6 +1763,153 @@ function exitProtectScreen() {
   logFalseAlarm();
   showToast("Đã ghi nhận. Bác vẫn xem lại kết quả chi tiết bất cứ lúc nào.");
   window.location.hash = "#kiem-tra";
+}
+
+// ---------------------------------------------------------------------------
+// TRỢ LÝ CUỘC GỌI NGÂN HÀNG (báo cáo 6.4 / mục 58)
+//
+// Nút "Gọi ngân hàng" trong luồng phục hồi KHÔNG dẫn tới trình quay số nữa.
+// Nó dẫn tới màn hình này. Lý do: chỗ nạn nhân sụp đổ không phải lúc bấm gọi,
+// mà là lúc tổng đài hỏi "số tài khoản nhận là gì, mã giao dịch bao nhiêu" —
+// người vừa mất tiền, tay run, không nhớ nổi.
+// ---------------------------------------------------------------------------
+
+const BANK_CALL_SCRIPT = "Tôi vừa bị lừa chuyển tiền, tôi cần tra soát giao dịch.";
+
+let bankCallAccountRevealed = false;
+
+function getBankCall() {
+  try {
+    const parsed = JSON.parse(getStored(STORAGE_KEYS.bankCall, "{}"));
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function setBankCall(data) {
+  return setStored(STORAGE_KEYS.bankCall, JSON.stringify(data));
+}
+
+// Che khúc giữa, giữ 4 số đầu và 4 số cuối — đủ để tổng đài đối chiếu cùng mã
+// giao dịch, mà người ngồi cạnh hoặc ảnh chụp màn hình lọt ra ngoài thì không
+// đọc được cả dãy. Có nút hiện đầy đủ cho lúc tổng đài hỏi thẳng.
+function maskAccountNumber(value) {
+  const digits = String(value || "").replace(/\D/g, "");
+  if (digits.length <= 8) return digits;
+  return `${digits.slice(0, 4)} ${"*".repeat(Math.min(6, digits.length - 8))} ${digits.slice(-4)}`;
+}
+
+function bankCallRows(data) {
+  const rows = [];
+  if (data.nganHang) rows.push({ nhan: "Ngân hàng", giaTri: data.nganHang, nhayCam: false });
+  if (data.soTien) rows.push({ nhan: "Số tiền", giaTri: data.soTien, nhayCam: false });
+  if (data.thoiDiem) rows.push({ nhan: "Thời điểm", giaTri: data.thoiDiem, nhayCam: false });
+  if (data.taiKhoanNhan) {
+    rows.push({
+      nhan: "Tài khoản nhận",
+      giaTri: bankCallAccountRevealed ? data.taiKhoanNhan : maskAccountNumber(data.taiKhoanNhan),
+      nhayCam: true
+    });
+  }
+  if (data.maGiaoDich) rows.push({ nhan: "Mã giao dịch", giaTri: data.maGiaoDich, nhayCam: false });
+  return rows;
+}
+
+function renderBankCall() {
+  const data = getBankCall();
+  const rows = bankCallRows(data);
+
+  elements.bankCallFigureList.replaceChildren();
+  for (const row of rows) {
+    const dt = document.createElement("dt");
+    dt.textContent = row.nhan;
+    const dd = document.createElement("dd");
+    dd.textContent = row.giaTri;
+    elements.bankCallFigureList.append(dt, dd);
+  }
+  elements.bankCallEmpty.hidden = rows.length > 0;
+  elements.bankCallRevealButton.hidden = !data.taiKhoanNhan || bankCallAccountRevealed;
+
+  elements.bankCallBank.value = data.nganHang || "";
+  elements.bankCallAmount.value = data.soTien || "";
+  elements.bankCallTime.value = data.thoiDiem || "";
+  elements.bankCallAccount.value = data.taiKhoanNhan || "";
+  elements.bankCallRef.value = data.maGiaoDich || "";
+
+  const phone = bankPhoneForCall();
+  elements.bankCallDialName.textContent = data.nganHang ? `Gọi ${data.nganHang}` : "Gọi ngân hàng";
+  elements.bankCallDialNumber.textContent = phone
+    ? getStored(STORAGE_KEYS.bankPhone)
+    : "Bác chưa lưu số tổng đài — bấm để thêm";
+}
+
+// Điền sẵn từ những gì bác đã gõ ở luồng kiểm tra chuyển khoản. Người vừa mất
+// tiền không nên phải gõ lại lần thứ hai.
+function prefillBankCallFromTransfer() {
+  const data = getBankCall();
+  let changed = false;
+  const nguon = [
+    ["soTien", elements.transferAmount?.value],
+    ["taiKhoanNhan", elements.transferAccountNumber?.value]
+  ];
+  for (const [key, value] of nguon) {
+    if (!data[key] && value && value.trim()) {
+      data[key] = value.trim();
+      changed = true;
+    }
+  }
+  if (changed) setBankCall(data);
+}
+
+function saveBankCall(event) {
+  event.preventDefault();
+  setBankCall({
+    nganHang: elements.bankCallBank.value.trim(),
+    soTien: elements.bankCallAmount.value.trim(),
+    thoiDiem: elements.bankCallTime.value.trim(),
+    taiKhoanNhan: elements.bankCallAccount.value.trim(),
+    maGiaoDich: elements.bankCallRef.value.trim()
+  });
+  renderBankCall();
+  elements.bankCallStatus.dataset.state = "success";
+  elements.bankCallStatus.textContent = "Đã lưu. Số liệu chỉ nằm trên máy này.";
+}
+
+function dialBankFromAssistant() {
+  const phone = bankPhoneForCall();
+  if (!phone) {
+    showToast("Bác lưu số tổng đài ngân hàng trong mục Gia đình trước nhé.");
+    window.location.hash = "#gia-dinh";
+    return;
+  }
+  window.location.href = `tel:${phone}`;
+}
+
+// Bấm "Đã gọi xong" ghi một mốc vào dòng thời gian vụ việc. Chính dòng thời
+// gian đó là hồ sơ đem đi trình báo cơ quan chức năng sau này (báo cáo 6.4).
+function markBankCallDone() {
+  const data = getBankCall();
+  const ten = data.nganHang || "ngân hàng";
+  const gio = new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
+
+  let caseId = lastViewedCaseId;
+  if (!caseId || !getCase(caseId)) {
+    const created = createCase();
+    caseId = created?.id || null;
+  }
+  if (caseId) {
+    lastViewedCaseId = caseId;
+    addEventToCase(caseId, {
+      type: "khac",
+      text: `${gio} — đã gọi ${ten} yêu cầu tra soát giao dịch.`,
+      signals: null,
+      risk: null
+    });
+    showToast(`Đã ghi vào dòng thời gian vụ việc lúc ${gio}.`);
+  } else {
+    showToast("Đã ghi nhận cuộc gọi.");
+  }
 }
 
 function renderNetworkStatus() {
@@ -4072,6 +4244,13 @@ function applyRoute(hash) {
   if (hash === "#duoc-bao-ve") {
     onEnterProtectRoute();
     document.querySelector("#duocBaoVeTitle").focus?.({ preventScroll: true });
+  } else if (hash === "#goi-ngan-hang") {
+    // Che lại số tài khoản mỗi lần vào màn hình. Nếu giữ trạng thái "đã hiện"
+    // thì một lần bấm hôm nay làm số hiện nguyên cho mọi lần sau.
+    bankCallAccountRevealed = false;
+    prefillBankCallFromTransfer();
+    renderBankCall();
+    document.querySelector("#goiNganHangTitle").focus?.({ preventScroll: true });
   } else if (hash === "#khan-cap") {
     document.querySelector("#khanCapTitle").focus?.({ preventScroll: true });
   } else if (hash === "#lich-su") {
@@ -4503,6 +4682,17 @@ elements.clearSettingsButton.addEventListener("click", () => {
     ? "Đã xóa toàn bộ dữ liệu đã lưu."
     : "Không thể xóa dữ liệu trên trình duyệt này.";
 });
+elements.bankCallForm.addEventListener("submit", saveBankCall);
+elements.bankCallDialButton.addEventListener("click", dialBankFromAssistant);
+elements.bankCallDoneButton.addEventListener("click", markBankCallDone);
+elements.bankCallRevealButton.addEventListener("click", () => {
+  bankCallAccountRevealed = true;
+  renderBankCall();
+});
+elements.bankCallSpeakButton.addEventListener("click", () => {
+  window.KhoanDaServices?.textToSpeechService?.speak?.(BANK_CALL_SCRIPT);
+});
+
 elements.trustReceiptShareButton.addEventListener("click", shareTrustReceipt);
 elements.trustReceiptCopyButton.addEventListener("click", copyTrustReceipt);
 
@@ -4565,7 +4755,11 @@ elements.transferForm.addEventListener("submit", analyzeTransfer);
 elements.postTransferYesButton.addEventListener("click", showPostTransferRescue);
 elements.postTransferNoButton.addEventListener("click", showPostTransferNotYet);
 elements.postTransferCallButton.addEventListener("click", callFamily);
-elements.postTransferBankButton.addEventListener("click", callBank);
+// Mục 58: nút này KHÔNG được dẫn thẳng tới trình quay số. Nó dẫn tới màn hình
+// đồng hành, nơi mọi con số tổng đài sẽ hỏi đã nằm sẵn trước mắt.
+elements.postTransferBankButton.addEventListener("click", () => {
+  window.location.hash = "#goi-ngan-hang";
+});
 elements.rescueSaveButton.addEventListener("click", saveRescueEvidence);
 elements.postTransferShareChecklistButton.addEventListener("click", shareChecklist);
 elements.postTransferCopySummaryButton.addEventListener("click", copySummaryForBank);

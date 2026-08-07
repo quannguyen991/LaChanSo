@@ -17,6 +17,20 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
+   SÀN CHO <small> — mặc định của TRÌNH DUYỆT, không phải của dự án
+
+   Đo trên trình duyệt ở bậc chữ A: 11 thẻ <small> ở màn kiểm tra render 12,5px
+   mà KHÔNG quy tắc CSS nào của dự án đặt cỡ chữ cho chúng. Đó là mặc định
+   0,83em của user-agent stylesheet.
+
+   Không hàng rào quét tĩnh nào bắt được chuyện này — nó không nằm trong bất kỳ
+   file CSS nào của dự án. Chỉ số đo trên trình duyệt mới thấy.
+   -------------------------------------------------------------------------- */
+small {
+  font-size: max(14px, 0.875em);
+}
+
+/* --------------------------------------------------------------------------
    BỎ ĐIỀU HƯỚNG
 
    Màn hình một câu hỏi và màn hình bảo vệ đều thu sản phẩm về một luồng duy
@@ -371,6 +385,180 @@
   line-height: var(--leading-snug);
   text-decoration: underline;
   cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   TRỢ LÝ CUỘC GỌI NGÂN HÀNG (6.4 / mục 58)
+
+   Người dùng màn hình này vừa mất tiền, tay run, và đang có tổng đài viên chờ
+   ở đầu dây bên kia. Mọi con số phải đọc được mà không cần nheo mắt.
+   Mục 58 đặt sàn 24px cho phần số liệu.
+   -------------------------------------------------------------------------- */
+.bank-call {
+  width: min(100%, 40rem);
+}
+
+.bank-call__block-title {
+  margin: 0 0 var(--space-3);
+  font-size: max(18px, 1.05rem);
+  line-height: var(--leading-snug);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.bank-call__script {
+  margin-block: var(--space-5);
+  padding: var(--space-5);
+  border: 2px solid var(--color-border-interactive);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-soft);
+}
+
+.bank-call__script-line {
+  margin: 0 0 var(--space-4);
+  font-size: max(24px, 1.45rem);
+  line-height: var(--leading-normal);
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.bank-call__figures {
+  margin-block: var(--space-5);
+  padding: var(--space-5);
+  border: 2px solid var(--color-rule-strong);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.bank-call__list {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: var(--space-3) var(--space-5);
+  margin: 0;
+}
+
+.bank-call__list dt {
+  font-size: max(16px, 1rem);
+  line-height: var(--leading-snug);
+  color: var(--color-muted);
+}
+
+/* Sàn 24px của mục 58 nằm ở đây. Kẹp bằng max() vì rem trần tụt xuống
+   21,75px ở bậc chữ A (gốc 15px). */
+.bank-call__list dd {
+  margin: 0;
+  font-size: max(24px, 1.45rem);
+  line-height: var(--leading-tight);
+  font-weight: 700;
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}
+
+.bank-call__empty {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--color-ink-2);
+}
+
+/* .button dùng chung render 49px ở bậc chữ A — dưới sàn 52px. Kẹp riêng cho
+   các nút của màn hình này, nơi đã đo và biết chắc là vùng bấm. */
+.bank-call__figures .button,
+.bank-call__script .button {
+  margin-block-start: var(--space-4);
+  min-block-size: var(--touch-target);
+}
+
+.bank-call__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-block: var(--space-5);
+}
+
+.bank-call__dial {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  inline-size: 100%;
+  min-block-size: max(88px, 5.5rem);
+  padding: var(--space-4);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+  text-align: start;
+  cursor: pointer;
+}
+
+.bank-call__dial:hover,
+.bank-call__dial:focus-visible {
+  background: var(--color-accent-hover);
+}
+
+.bank-call__dial-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: max(52px, 3.25rem);
+  block-size: max(52px, 3.25rem);
+  border-radius: var(--radius-md);
+  background: rgb(255 255 255 / 0.18);
+}
+
+.bank-call__dial-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-inline-size: 0;
+}
+
+.bank-call__dial-copy strong {
+  font-size: max(22px, 1.3rem);
+  line-height: var(--leading-snug);
+}
+
+.bank-call__dial-copy small {
+  font-size: max(16px, 1rem);
+  line-height: var(--leading-snug);
+  opacity: 0.9;
+}
+
+.bank-call__actions .button {
+  min-block-size: var(--touch-target-primary);
+}
+
+.bank-call__editor {
+  margin-block: var(--space-5);
+  padding: var(--space-4);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+}
+
+.bank-call__editor summary {
+  min-block-size: var(--touch-target);
+  display: flex;
+  align-items: center;
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  color: var(--color-ink);
+  cursor: pointer;
+}
+
+/* Không lấy số tổng đài từ nội dung người dùng gửi lên (báo cáo 9.6): một số
+   tổng đài sai sẽ đẩy nạn nhân tới đúng kẻ lừa đảo. */
+.bank-call__warning {
+  display: flex;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-warning-soft);
+  color: var(--color-ink);
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
 }
 
 /* --------------------------------------------------------------------------

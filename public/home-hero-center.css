@@ -18,9 +18,19 @@
 
   html[data-route="trang-chu"] body .desktop-home-redesign__hero-copy {
     width: 100% !important;
+    max-width: none !important;
     margin-inline: auto !important;
     padding: 0 !important;
     text-align: center !important;
+  }
+
+  html[data-route="trang-chu"] body .desktop-home-redesign__composer {
+    width: min(100%, 61rem) !important;
+    margin-inline: auto !important;
+  }
+
+  html[data-route="trang-chu"] body .desktop-home-redesign__quick {
+    margin-inline: auto !important;
   }
 
   html[data-route="trang-chu"] .desktop-home-redesign__hero-copy > p {

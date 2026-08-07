@@ -15,14 +15,30 @@ const ROOT_STEPS = { small: 15, medium: 17, large: 20 };
 const ROOT_PX = ROOT_STEPS.medium;   // giữ cho các hàm cũ
 const FLOOR_PX = 14;
 
-const css = fs.readFileSync(path.join(__dirname, "..", "public", "styles.css"), "utf8");
-const lines = css.split(/\r?\n/);
+// LỖ HỔNG THỨ HAI, vá 7/8/2026: bản trước chỉ đọc public/styles.css.
+// Thư mục public/ nay có 11 file CSS, riêng khoan-da-2026.css hơn 3.000 dòng —
+// toàn bộ nằm ngoài tầm quét. Đo trên trình duyệt mới thấy `.eyebrow` render
+// 13,5px ở bậc chữ A, khai báo tại khoan-da-2026.css:1028, và CI im lặng.
+//
+// Một hàng rào chỉ canh một file trong mười một thì không phải hàng rào.
+const PUBLIC_DIR = path.join(__dirname, "..", "public");
+const cssFiles = fs
+  .readdirSync(PUBLIC_DIR)
+  .filter((name) => name.endsWith(".css"))
+  .map((name) => ({
+    name,
+    lines: fs.readFileSync(path.join(PUBLIC_DIR, name), "utf8").split(/\r?\n/)
+  }));
 
 // Đổi một giá trị font-size sang px ở gốc 17px.
 // Trả về null nếu không quy đổi tĩnh được (em, %, vw trần, calc) — những giá
 // trị đó phụ thuộc phần tử cha nên test không phán xét.
 function toPx(raw, root = ROOT_PX) {
-  const value = raw.trim();
+  // LỖ HỔNG THỨ BA, vá 7/8/2026: `!important` đi kèm giá trị làm mọi mẫu quy
+  // đổi bên dưới trượt, hàm trả null, và khai báo được coi như "không quy đổi
+  // tĩnh được" rồi bỏ qua. Đúng những khai báo hung hăng nhất — các file
+  // redesign dùng !important dày đặc — lại là những khai báo lọt lưới.
+  const value = raw.replace(/\s*!important\s*$/i, "").trim();
 
   // clamp(min, ưa thích, max) — chỉ min mới quyết định lúc màn hình hẹp nhất
   const clamp = value.match(/^clamp\(\s*([^,]+),/);
@@ -48,20 +64,25 @@ function toPx(raw, root = ROOT_PX) {
 
 function violationsAt(root) {
   const found = [];
-  lines.forEach((line, index) => {
-    const match = line.match(/(?:^|[;{]|\s)font-size:\s*([^;}]+)/);
-    if (!match) return;
-    const px = toPx(match[1], root);
-    if (px === null) return;
-    if (px < FLOOR_PX - 0.01) {
-      found.push({
-        line: index + 1,
-        declared: match[1].trim(),
-        px: Number(px.toFixed(2)),
-        source: line.trim().slice(0, 90)
-      });
-    }
-  });
+  for (const file of cssFiles) {
+    file.lines.forEach((line, index) => {
+      // Một dòng có thể chứa nhiều khai báo font-size — mobile-reference-exact.css
+      // nhét cả một @media vào đúng một dòng. Quét hết, đừng chỉ lấy cái đầu.
+      for (const match of line.matchAll(/(?:^|[;{]|\s)font-size:\s*([^;}]+)/g)) {
+        const px = toPx(match[1], root);
+        if (px === null) continue;
+        if (px < FLOOR_PX - 0.01) {
+          found.push({
+            file: file.name,
+            line: index + 1,
+            declared: match[1].trim(),
+            px: Number(px.toFixed(2)),
+            source: line.trim().slice(0, 90)
+          });
+        }
+      }
+    });
+  }
   return found;
 }
 
@@ -71,7 +92,7 @@ for (const [step, root] of Object.entries(ROOT_STEPS)) {
   test(`no font-size falls below ${FLOOR_PX}px at the "${step}" step (${root}px root)`, () => {
     const found = violationsAt(root);
     const report = found
-      .map((v) => `  styles.css:${v.line}  ${v.declared} = ${v.px}px\n      ${v.source}`)
+      .map((v) => `  ${v.file}:${v.line}  ${v.declared} = ${v.px}px\n      ${v.source}`)
       .join("\n");
     assert.equal(
       found.length,

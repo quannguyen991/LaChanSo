@@ -16,7 +16,7 @@ html:not([data-authenticated="true"]) .topbar .topbar-profile-icon {
   background: #fff;
   color: #6331d3;
   font: inherit;
-  font-size: 0.85rem;
+  font-size: max(14px, 0.85rem);
   font-weight: 800;
   box-shadow: 0 0.3rem 0.7rem rgb(69 36 143 / 0.2);
   cursor: pointer;

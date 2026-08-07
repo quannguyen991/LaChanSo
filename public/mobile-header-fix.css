@@ -16,7 +16,7 @@
   .topbar .brand { min-width: 0 !important; flex: 1 1 auto !important; gap: 0.55rem !important; }
   .topbar .brand__mark { flex: 0 0 3.05rem !important; width: 3.05rem !important; height: 3.55rem !important; }
   .topbar .brand__title { color: var(--color-accent-deep) !important; font-size: clamp(1.3rem, 5.2vw, 1.65rem) !important; font-weight: 850 !important; }
-  .topbar .brand__tagline { display: block !important; color: var(--color-ink-2) !important; font-size: clamp(0.68rem, 2.7vw, 0.82rem) !important; font-weight: 600 !important; }
+  .topbar .brand__tagline { display: block !important; color: var(--color-ink-2) !important; font-size: clamp(max(14px, 0.68rem), 2.7vw, 0.82rem) !important; font-weight: 600 !important; }
   .topbar .topbar__actions { display: flex !important; flex: 0 0 auto !important; align-items: center !important; gap: 0.75rem !important; margin-left: auto !important; margin-right: 0.15rem !important; }
   .topbar .topbar-icon-btn { display: grid !important; place-items: center !important; width: 2.7rem !important; height: 2.7rem !important; padding: 0 !important; border: 1px solid var(--color-accent-soft-line) !important; border-radius: 50% !important; background: #fff !important; color: var(--color-accent-deep) !important; box-shadow: none !important; }
   .mobile-bottom-nav__inner { align-items: center !important; padding: 0.28rem !important; }

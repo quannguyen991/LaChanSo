@@ -84,6 +84,6 @@ html[data-route="hanh-trinh"] .case-empty-desktop__actions .button { min-height:
 @media (max-width: 28rem) {
   html[data-route="hanh-trinh"] .case-history-hero { padding: 1.1rem !important; }
   html[data-route="hanh-trinh"] .case-history-filters--hero { gap: 0.45rem; }
-  html[data-route="hanh-trinh"] .case-history-filters--hero button { min-height: 2.9rem; padding-inline: 0.8rem; font-size: 0.88rem; }
+  html[data-route="hanh-trinh"] .case-history-filters--hero button { min-height: 2.9rem; padding-inline: 0.8rem; font-size: max(14px, 0.88rem); }
   html[data-route="hanh-trinh"] .case-empty-desktop__actions .button { width: 100%; }
 }
