@@ -28,7 +28,8 @@ const STORAGE_KEYS = {
   falseAlarmLog: "khoan-da:false-alarm-log",
   // Số liệu giao dịch cho Trợ lý cuộc gọi ngân hàng. Lưu cục bộ như mọi thứ
   // khác — số tài khoản và mã giao dịch không rời khỏi máy này.
-  bankCall: "khoan-da:bank-call"
+  bankCall: "khoan-da:bank-call",
+  salutation: "khoan-da:salutation"
 };
 
 const ALL_STORAGE_KEYS = Object.values({
@@ -61,7 +62,8 @@ const ALL_STORAGE_KEYS = Object.values({
   falseAlarmLog: "khoan-da:false-alarm-log",
   // Số liệu giao dịch cho Trợ lý cuộc gọi ngân hàng. Lưu cục bộ như mọi thứ
   // khác — số tài khoản và mã giao dịch không rời khỏi máy này.
-  bankCall: "khoan-da:bank-call"
+  bankCall: "khoan-da:bank-call",
+  salutation: "khoan-da:salutation"
 });
 
 const MAX_CONTACTS = 5;
@@ -350,6 +352,9 @@ const elements = {
   bankCallAccount: document.querySelector("#bankCallAccount"),
   bankCallRef: document.querySelector("#bankCallRef"),
   bankCallStatus: document.querySelector("#bankCallStatus"),
+
+  salutationGrid: document.querySelector("#salutationGrid"),
+  salutationStatus: document.querySelector("#salutationStatus"),
 
   trustReceiptSection: document.querySelector("#trustReceiptSection"),
   trustReceiptTime: document.querySelector("#trustReceiptTime"),
@@ -1910,6 +1915,108 @@ function markBankCallDone() {
   } else {
     showToast("Đã ghi nhận cuộc gọi.");
   }
+}
+
+// ---------------------------------------------------------------------------
+// XƯNG HÔ TÙY CHỌN (mục 60 / báo cáo 6.9)
+//
+// CÁCH LÀM VÀ VÌ SAO:
+// Chữ "bác" nằm rải rác ở 97 chỗ trong index.html. Sửa tay từng chỗ thành một
+// chỗ giữ chỗ là 97 cơ hội gõ nhầm trong một file 2.500 dòng.
+//
+// Thay vào đó: đổi ngay trên nút văn bản của DOM, và CHỤP BẢN GỐC trước khi
+// đổi lần đầu. Mọi lần đổi sau luôn dựng lại TỪ BẢN GỐC, không phải từ kết quả
+// lần trước — nếu không, đổi "bác"→"cô" rồi "cô"→"chú" sẽ ăn cả những chữ "cô"
+// vốn có sẵn trong câu, và mỗi lần đổi lại làm hỏng thêm một ít.
+//
+// Chỉ chạm nút văn bản. Không chạm script, style, ô nhập, hay thuộc tính.
+// ---------------------------------------------------------------------------
+
+const SALUTATIONS = ["bác", "cô", "chú", "ông", "bà", "anh", "chị"];
+const DEFAULT_SALUTATION = "bác";
+
+// Bản gốc của từng nút văn bản, chụp đúng một lần trong đời trang.
+const salutationOriginals = new WeakMap();
+
+function getSalutation() {
+  const saved = getStored(STORAGE_KEYS.salutation, "");
+  return SALUTATIONS.includes(saved) ? saved : DEFAULT_SALUTATION;
+}
+
+function capitalizeFirst(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+// Chỉ đổi khi "bác" đứng như một TỪ RIÊNG. Không có ranh giới từ thì "bác sĩ"
+// thành "cô sĩ", và "bác bỏ" thành "chú bỏ".
+//
+// \b của JavaScript không dùng được: nó coi chữ có dấu là ranh giới, nên
+// "bác" trong "bác sĩ" vẫn khớp. Phải tự kiểm ký tự liền trước và liền sau.
+const CHU_CAI_VIET = /[0-9A-Za-zÀ-ỹ]/;
+
+function replaceSalutationWord(text, target) {
+  let out = "";
+  let i = 0;
+  while (i < text.length) {
+    const lower = text.slice(i, i + 3).toLowerCase();
+    if (lower === "bác") {
+      const truoc = i > 0 ? text[i - 1] : "";
+      const sau = text[i + 3] || "";
+      const laTuRieng = !CHU_CAI_VIET.test(truoc) && !CHU_CAI_VIET.test(sau);
+      // "bác sĩ" và "bác bỏ" không phải cách xưng hô.
+      const theoSau = text.slice(i + 3, i + 8).toLowerCase();
+      const laTuGhep = /^\s(sĩ|bỏ|học)/.test(theoSau);
+      if (laTuRieng && !laTuGhep) {
+        const hoa = text[i] === text[i].toUpperCase() && text[i] !== text[i].toLowerCase();
+        out += hoa ? capitalizeFirst(target) : target;
+        i += 3;
+        continue;
+      }
+    }
+    out += text[i];
+    i += 1;
+  }
+  return out;
+}
+
+const BO_QUA_THE = new Set(["SCRIPT", "STYLE", "TEXTAREA", "INPUT", "CODE", "PRE"]);
+
+function applySalutation(root = document.body) {
+  const target = getSalutation();
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (BO_QUA_THE.has(node.parentElement?.tagName)) return NodeFilter.FILTER_REJECT;
+      return node.nodeValue.toLowerCase().includes("bác") || salutationOriginals.has(node)
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_REJECT;
+    }
+  });
+
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  for (const node of nodes) {
+    if (!salutationOriginals.has(node)) salutationOriginals.set(node, node.nodeValue);
+    const goc = salutationOriginals.get(node);
+    const moi = target === DEFAULT_SALUTATION ? goc : replaceSalutationWord(goc, target);
+    if (node.nodeValue !== moi) node.nodeValue = moi;
+  }
+}
+
+function renderSalutationChoice() {
+  const hienTai = getSalutation();
+  for (const btn of document.querySelectorAll("[data-salutation]")) {
+    btn.setAttribute("aria-checked", String(btn.dataset.salutation === hienTai));
+  }
+}
+
+function chooseSalutation(value) {
+  if (!SALUTATIONS.includes(value)) return;
+  setStored(STORAGE_KEYS.salutation, value);
+  renderSalutationChoice();
+  applySalutation();
+  elements.salutationStatus.dataset.state = "success";
+  elements.salutationStatus.textContent = `Từ giờ Khoan Đã sẽ gọi là "${value}".`;
 }
 
 function renderNetworkStatus() {
@@ -3886,6 +3993,10 @@ async function renderSupportDirectory() {
     card.append(title, purpose, source, actions);
     elements.supportDirectory.append(card);
   }
+
+  // Danh bạ nạp bất đồng bộ nên dựng SAU applySalutation() của applyRoute.
+  // Không gọi lại ở đây thì hai chữ "bác" trong danh bạ không đổi theo.
+  applySalutation(elements.supportDirectory);
 }
 
 function applyFontSize(size) {
@@ -4307,6 +4418,11 @@ function applyRoute(hash) {
     document.querySelector("#homeTitle").focus?.({ preventScroll: true });
   }
 
+  // Áp xưng hô SAU các hàm dựng nội dung ở trên, không phải trước.
+  // Đã cắn: gọi ở đầu applyRoute thì renderEducationList() chạy sau và dựng
+  // lại DOM với chữ "bác" nguyên vẹn — một câu ở màn Hướng dẫn không đổi theo.
+  applySalutation();
+
   const previousScrollBehavior = document.documentElement.style.scrollBehavior;
   document.documentElement.style.scrollBehavior = "auto";
   window.scrollTo(0, 0);
@@ -4682,6 +4798,11 @@ elements.clearSettingsButton.addEventListener("click", () => {
     ? "Đã xóa toàn bộ dữ liệu đã lưu."
     : "Không thể xóa dữ liệu trên trình duyệt này.";
 });
+elements.salutationGrid.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-salutation]");
+  if (btn) chooseSalutation(btn.dataset.salutation);
+});
+
 elements.bankCallForm.addEventListener("submit", saveBankCall);
 elements.bankCallDialButton.addEventListener("click", dialBankFromAssistant);
 elements.bankCallDoneButton.addEventListener("click", markBankCallDone);
@@ -5006,6 +5127,8 @@ renderAuthState();
 applyRetentionPolicy();
 renderPrivacyAuditLists();
 renderNetworkStatus();
+renderSalutationChoice();
+applySalutation();
 route();
 const isFreshAppEntry = window.location.hash === "" || new URLSearchParams(window.location.search).has("intro");
 if (isFreshAppEntry || getStored(STORAGE_KEYS.onboardingComplete) !== "1") openOnboarding();
@@ -5043,7 +5166,11 @@ async function handleChatSubmit(event) {
   const loadingEl = showChatLoading();
 
   try {
-    const payload = await window.KhoanDaServices.scamAnalysisService.chat({ tin_nhan: text });
+    // Mục 60: nội dung do AI sinh ra cũng phải theo cách xưng hô đã chọn.
+    const payload = await window.KhoanDaServices.scamAnalysisService.chat({
+      tin_nhan: text,
+      xung_ho: getSalutation()
+    });
     loadingEl.remove();
 
     if (payload.tra_loi) {

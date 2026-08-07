@@ -707,3 +707,35 @@ small {
     transition: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   XƯNG HÔ TÙY CHỌN (mục 60 / báo cáo 6.9)
+   -------------------------------------------------------------------------- */
+.salutation-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-block-start: var(--space-4);
+}
+
+/* Không nowrap và không cố định chiều rộng: đây là nút chọn từ, và ở bậc chữ
+   A++ chữ phải nở ra được. */
+.salutation-option {
+  min-block-size: var(--touch-target);
+  min-inline-size: max(72px, 4.5rem);
+  padding: var(--space-2) var(--space-4);
+  border: 2px solid var(--color-border-interactive);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-size: var(--text-md);
+  line-height: var(--leading-snug);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.salutation-option[aria-checked="true"] {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
+}

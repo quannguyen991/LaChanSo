@@ -251,8 +251,10 @@ app.post("/api/chat", async (request, response, next) => {
     return response.status(400).json({ error: "Tin nhắn quá dài. Hãy rút gọn còn dưới 1.000 ký tự." });
   }
 
+  const salutation = typeof request.body?.xung_ho === "string" ? request.body.xung_ho : undefined;
+
   try {
-    const result = await extractChatResponse(text);
+    const result = await extractChatResponse(text, { salutation });
     return response.json(result);
   } catch (error) {
     console.warn("Dịch vụ AI tạm thời không phản hồi; đang dùng hướng dẫn dự phòng.", error?.name || "Error");

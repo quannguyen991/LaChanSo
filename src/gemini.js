@@ -585,6 +585,18 @@ Quy tắc trả lời:
 
 BẮT BUỘC: luôn trả về đúng đối tượng JSON theo schema đã cho: { "tra_loi": "nội dung câu trả lời của cháu ở đây" }. Tuyệt đối không viết thêm bất kỳ từ ngữ nào ngoài đối tượng JSON này.`;
 
+const SALUTATIONS_HOP_LE = ["bác", "cô", "chú", "ông", "bà", "anh", "chị"];
+
+// Mục 60: nội dung do AI sinh ra cũng phải dùng đúng cách xưng hô người dùng
+// đã chọn, không mã cứng "bác". Giá trị đến từ người dùng nên phải lọc qua
+// danh sách trắng — không ghép thẳng chuỗi lạ vào lời nhắc hệ thống.
+function applySalutationToPrompt(instruction, salutation) {
+  if (!SALUTATIONS_HOP_LE.includes(salutation) || salutation === "bác") return instruction;
+  return instruction
+    .replaceAll('gọi người dùng là "bác"', `gọi người dùng là "${salutation}"`)
+    .replaceAll("bác", salutation);
+}
+
 async function extractChatResponse(text, options = {}) {
   const { provider, apiKey, baseUrl, model, fetchImpl } = resolveLlmConfig(options);
 
@@ -596,7 +608,7 @@ async function extractChatResponse(text, options = {}) {
     baseUrl,
     model,
     fetchImpl,
-    systemInstruction: CHAT_SYSTEM_INSTRUCTION,
+    systemInstruction: applySalutationToPrompt(CHAT_SYSTEM_INSTRUCTION, options.salutation),
     parts,
     responseSchema: CHAT_RESPONSE_SCHEMA,
     schemaName: "tra_loi_tro_ly"
