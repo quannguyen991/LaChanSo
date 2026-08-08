@@ -1368,6 +1368,9 @@
     align-items: center !important;
     justify-content: flex-end !important;
     gap: 0.4rem !important;
+    /* Nút gửi nay là viên thuốc rộng theo chữ, nên hàng nút có thể không đủ
+       chỗ ở khổ 320px — cho phép xuống dòng thay vì bóp nút. */
+    flex-wrap: wrap !important;
     flex: 1 1 auto !important;
     inline-size: auto !important;
     inset: auto !important;
@@ -1388,18 +1391,35 @@
     color: var(--clay-nav-purple) !important;
   }
 
-  /* Vuông cạnh RỒI mới bo 50% — nếu không thì lại ra hình elip. */
+  /* Nút gửi KHÔNG phải nút chỉ có icon: bên trong là
+     <span>Tiếp tục</span> + mũi tên. Lượt trước tôi ép nó thành hình tròn
+     59,5px vì chỉ đo mỗi icon mà bỏ sót nhãn chữ — hậu quả là "Tiếp tục" vỡ
+     hai dòng và tràn ra khỏi hình tròn.
+
+     Giữ nhãn chữ chứ không ẩn đi: mũi tên trần không nói cho bác 70 tuổi biết
+     bấm vào sẽ xảy ra chuyện gì, và nút chỉ có icon là thứ hướng dẫn tiếp cận
+     nào cũng khuyên tránh. Nên đổi thành viên thuốc rộng theo chữ.
+
+     Không đặt nowrap: nhãn tiếng Việt dài, ở bậc A++ sẽ bị cắt. flex 0 0 auto
+     giữ cho nút không bị bóp nên chữ vẫn nằm một dòng. */
   :root body #homeView .mobile-situation-submit {
-    display: grid !important;
-    place-items: center !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.35rem !important;
     flex: 0 0 auto !important;
-    inline-size: var(--touch-target-primary) !important;
-    block-size: var(--touch-target-primary) !important;
-    min-inline-size: 0 !important;
-    max-inline-size: var(--touch-target-primary) !important;
-    padding: 0 !important;
+    inline-size: auto !important;
+    min-inline-size: var(--touch-target-primary) !important;
+    max-inline-size: none !important;
+    block-size: auto !important;
+    min-block-size: var(--touch-target-primary) !important;
+    padding: 0.5rem 1.1rem !important;
     border: 0 !important;
-    border-radius: 50% !important;
+    border-radius: var(--clay-r-pill) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
     background: var(--clay-gradient-btn) !important;
     color: #FFFFFF !important;
     box-shadow: var(--clay-shadow-purple) !important;
@@ -1842,5 +1862,18 @@
   :root body #homeView .mobile-reference-top__intro {
     grid-template-columns: minmax(0, 1fr) !important;
     min-block-size: 0 !important;
+  }
+}
+
+/* ==========================================================================
+   NÚT TRỢ LÝ NỔI — nới khoảng hở với thanh điều hướng dưới
+
+   Không phải chồng lấn đo được: ở 360×460 còn cách 19px (bậc A) đến 27px
+   (bậc A++). Nhưng 19px là quá sát khi hai thứ đều bấm được, và trên máy thật
+   nó nhìn như dính vào thanh nav. Kẹp sàn 120px để mọi bậc chữ đều hở rộng.
+   ========================================================================== */
+@media (max-width: 63.99rem) {
+  :root body #chatWidget {
+    inset-block-end: max(120px, 7.5rem) !important;
   }
 }
