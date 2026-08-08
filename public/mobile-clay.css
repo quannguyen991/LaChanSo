@@ -1877,3 +1877,440 @@
     inset-block-end: max(120px, 7.5rem) !important;
   }
 }
+
+/* ==========================================================================
+   THANH TRÊN — nút "Đăng nhập" bị lệch (ảnh tham chiếu 3)
+
+   Căn nguyên đo được: .topbar là grid và tính ra
+   grid-template-columns: 589,1px 0px — cột thứ hai rộng ĐÚNG 0px, vì
+   .topbar__actions đặt position:absolute nên không góp kích thước cho lưới.
+   Nút 120,8px tràn khỏi rãnh 0px và tụt xuống: mép dưới nút trùng mép dưới
+   thanh (y=90) trong khi tâm thanh ở y=51,5 — lệch xuống 11px.
+
+   Trả về flex một hàng thì cả hai vế tự căn giữa theo trục dọc.
+   ========================================================================== */
+@media (max-width: 63.99rem) {
+  /* [data-route] KHÔNG thừa. khoan-da-2026.css có
+     `html:not([data-authenticated="true"]) body .topbar { display: grid }`
+     đặc hiệu (0,2,2); `:root body .topbar` chỉ (0,2,1) nên thua đúng ở trạng
+     thái CHƯA đăng nhập — và đó lại là trạng thái mặc định của khách. Thêm
+     [data-route] đẩy lên (0,3,1). Đo được hậu quả khi còn thua: ở bậc A++ chữ
+     thương hiệu tràn 69px xuống dưới nút "Đăng nhập". */
+  :root[data-route] body .topbar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.7rem !important;
+  }
+
+  :root[data-route] body .topbar .brand {
+    flex: 1 1 auto !important;
+    min-inline-size: 0 !important;
+    min-block-size: var(--touch-target) !important;
+  }
+
+  /* Cho khối chữ co lại được, nếu không nó giữ nguyên bề rộng nội dung và
+     tràn ra khỏi phần của mình. */
+  :root[data-route] body .topbar .brand > * {
+    min-inline-size: 0 !important;
+  }
+
+  :root[data-route] body .topbar .brand__title,
+  :root[data-route] body .topbar .brand__tagline {
+    min-inline-size: 0 !important;
+    max-inline-size: 100% !important;
+    overflow-wrap: break-word !important;
+  }
+
+  :root[data-route] body .topbar .topbar__actions {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.6rem !important;
+    flex: 0 0 auto !important;
+    inline-size: auto !important;
+    inset: auto !important;
+    margin: 0 !important;
+  }
+
+  /* ==========================================================================
+     THANH ĐIỀU HƯỚNG DƯỚI — đồng bộ 5 mục, ô chọn tròn và loang sáng (ảnh 4)
+
+     Đo được trước khi sửa: bốn mục là 121,4×68 nhưng mục đang chọn chỉ
+     109,3×61,2. Vừa lệch kích thước, vừa `border-radius: 50%` đặt trên hộp
+     chữ nhật — bo theo phần trăm trên hình chữ nhật cho ra HÌNH ELIP, không
+     phải hình tròn.
+
+     Cách chữa không thu nhỏ vùng chạm: giữ nguyên ô bấm rộng trọn cột, còn
+     vòng tròn trắng vẽ bằng radial-gradient ngay trên nền. Nếu ép ô bấm thành
+     hình vuông 56px cho tròn thì vùng chạm tụt từ 121px xuống 56px — đúng
+     luật nhưng bấm khó hơn hẳn với người tay run.
+     ========================================================================== */
+  :root body .mobile-bottom-nav .mobile-bottom-nav__inner {
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    padding: 0.4rem !important;
+  }
+
+  :root body .mobile-bottom-nav .mobile-bottom-nav__item {
+    display: grid !important;
+    place-items: center !important;
+    inline-size: 100% !important;
+    block-size: max(56px, 3.5rem) !important;
+    min-block-size: max(56px, 3.5rem) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: none !important;
+    color: #FFFFFF !important;
+    box-shadow: none !important;
+  }
+
+  /* Thứ làm mục đang chọn LỆCH KÍCH THƯỚC không phải quy tắc chiều cao, mà là
+     `transform: scale(0.9)` trong desktop-taskbar-gradient.css — cả năm mục
+     đều khai báo 118,6×68 nhưng hộp thật của mục đang chọn chỉ 106,8×61,2,
+     đúng tỉ lệ 0,9. Chỉ đọc CSS chiều cao thì không thấy.
+     Selector dài để thắng `body > …[aria-current]` đặc hiệu (0,3,2). */
+  :root body > .mobile-bottom-nav .mobile-bottom-nav__item[aria-current="page"] {
+    transform: none !important;
+  }
+
+  /* Vòng tròn trắng + quầng loang, vẽ bằng hai lớp radial-gradient nên hình
+     luôn TRÒN bất kể ô bấm rộng bao nhiêu. */
+  :root body > .mobile-bottom-nav .mobile-bottom-nav__item[aria-current="page"] {
+    background:
+      radial-gradient(circle at 50% 50%,
+        rgba(255, 255, 255, 0.42) 0 1.95rem,
+        rgba(255, 255, 255, 0.16) 2.35rem,
+        rgba(255, 255, 255, 0) 2.9rem),
+      radial-gradient(circle at 50% 50%,
+        #FFFFFF 0 1.6rem,
+        rgba(255, 255, 255, 0) 1.68rem) !important;
+    color: var(--clay-purple-deep) !important;
+    box-shadow: none !important;
+  }
+
+  :root body .mobile-bottom-nav .mobile-bottom-nav__item .icon {
+    inline-size: 1.75rem !important;
+    block-size: 1.75rem !important;
+    background-color: currentColor !important;
+  }
+
+  :root body .mobile-bottom-nav .mobile-bottom-nav__item:active {
+    transform: scale(0.94) !important;
+  }
+
+  /* ==========================================================================
+     MÀN KIỂM TRA — bám sát ảnh tham chiếu 2
+     ========================================================================== */
+
+  /* Linh vật nấp trong ::after của .kiem-tra-head dưới dạng ảnh nền, nên nhìn
+     HTML không thấy — chỉ lộ ra khi quét background-image. Nó nằm đè sau hai
+     nút và làm màn trông vỡ. Ảnh tham chiếu không có linh vật ở đây. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .kiem-tra-head::after,
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .kiem-tra-head::before {
+    content: none !important;
+    background-image: none !important;
+  }
+
+  /* Phần đầu màn là chữ trần trên nền, không phải thẻ — như ảnh 2. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .kiem-tra-head {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Hàng chip: XUỐNG DÒNG thay vì cuộn ngang.
+     Ở khổ hẹp, cuộn ngang cắt cụt chip cuối đúng như ảnh 1 — người dùng không
+     biết còn chip nữa nên coi như mất chức năng. Cho xuống dòng thì mọi chip
+     đều thấy được. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .analysis-mode-tabs {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    row-gap: 0.5rem !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .analysis-mode-tabs > a {
+    /* Đã xuống dòng được thì không cần nowrap nữa; nhãn dài tự vỡ dòng trong
+       chip thay vì bị cắt. */
+    white-space: normal !important;
+  }
+
+  /* Hai nút "Bắt đầu kiểm tra" / "Xem hướng dẫn" không có trong ảnh 2, và
+     đích đến của chúng đã nằm sẵn ở chỗ khác: #xac-minh chính là thẻ
+     "Cuộc gọi lạ", còn #huong-dan là biểu tượng sách ở thanh dưới. Ẩn ở khổ
+     điện thoại để mạch đọc đi thẳng từ hàng chip xuống bốn thẻ như ảnh. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .analysis-hero-actions {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   HỘP ĐĂNG NHẬP / TẠO TÀI KHOẢN — theo ảnh tham chiếu 5
+
+   Cấu trúc HTML đã đúng sẵn (nút đóng · logo · hai tab · tiêu đề · ô nhập có
+   icon · ghi nhớ · nút chính · chân hộp), chỉ thiếu lớp áo.
+   ========================================================================== */
+@media (max-width: 63.99rem) {
+  :root body dialog.auth-dialog[open] {
+    inline-size: min(100% - 2rem, 30rem) !important;
+    max-inline-size: min(100% - 2rem, 30rem) !important;
+    max-block-size: min(92dvh, 60rem) !important;
+    margin: auto !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-hero) !important;
+    background: var(--clay-card) !important;
+    box-shadow: 0 1.5rem 3rem rgba(43, 27, 107, 0.28) !important;
+    overflow: auto !important;
+  }
+
+  :root body dialog.auth-dialog[open]::backdrop {
+    background: rgba(43, 27, 107, 0.55) !important;
+  }
+
+  :root body .auth-dialog__shell {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.8rem !important;
+    inline-size: auto !important;
+    padding: 1.2rem 1.1rem 1.4rem !important;
+  }
+
+  /* Nút đóng: hình tròn góc trên phải. Vuông cạnh trước rồi mới bo 50%. */
+  :root body .auth-dialog__close {
+    position: absolute !important;
+    inset-block-start: 1.3rem !important;
+    inset-inline-end: 1.2rem !important;
+    display: grid !important;
+    place-items: center !important;
+    inline-size: var(--touch-target) !important;
+    block-size: var(--touch-target) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: var(--clay-card-soft) !important;
+    color: var(--clay-ink) !important;
+  }
+
+  /* fit-content chứ không để tràn ngang: khối logo trải hết bề rộng thì nút
+     đóng (đặt tuyệt đối ở góc phải) nằm đè lên hộp của nó. */
+  :root body .auth-dialog__brand {
+    display: block !important;
+    inline-size: fit-content !important;
+    margin: 0 !important;
+  }
+
+  :root body .auth-dialog__logo {
+    inline-size: 3rem !important;
+    block-size: auto !important;
+  }
+
+  /* Hai tab dạng công tắc gạt, tab đang chọn là viên thuốc tím. */
+  :root body .auth-dialog__tabs {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.3rem !important;
+    padding: 0.3rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: var(--clay-card-soft) !important;
+  }
+
+  :root body .auth-dialog__tabs button {
+    min-block-size: var(--touch-target) !important;
+    padding-inline: 0.6rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: transparent !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
+  }
+
+  :root body .auth-dialog__tabs button[aria-selected="true"] {
+    background: var(--clay-gradient-btn) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+  }
+
+  :root body .auth-dialog__heading h2 {
+    margin: 0 !important;
+    color: var(--clay-ink) !important;
+    font-size: clamp(max(24px, 1.5rem), 7vw, 2.1rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    text-wrap: balance !important;
+  }
+
+  :root body .auth-dialog__lead {
+    margin: 0.35rem 0 0 !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.5 !important;
+  }
+
+  :root body .auth-dialog__form {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.9rem !important;
+  }
+
+  /* Nhãn hiện rõ BÊN TRÊN ô nhập, không dùng placeholder thay nhãn: khi bác
+     đã gõ chữ vào thì placeholder biến mất, không còn gì nhắc đây là ô gì. */
+  :root body .auth-dialog__field {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.4rem !important;
+  }
+
+  :root body .auth-dialog__field > span:first-child {
+    color: var(--clay-ink) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+  }
+
+  :root body .auth-dialog__input {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    min-block-size: var(--touch-target-primary) !important;
+    padding-inline: 0.9rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-card-soft) !important;
+  }
+
+  :root body .auth-dialog__input .icon {
+    flex: none !important;
+    inline-size: 1.4rem !important;
+    block-size: 1.4rem !important;
+    color: var(--clay-ink-soft) !important;
+    background-color: currentColor !important;
+  }
+
+  :root body .auth-dialog__input input {
+    flex: 1 1 auto !important;
+    min-inline-size: 0 !important;
+    min-block-size: var(--touch-target) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: var(--clay-ink) !important;
+    font-size: max(16px, 1rem) !important;
+    line-height: 1.4 !important;
+  }
+
+  :root body .auth-dialog__password-toggle {
+    flex: none !important;
+    display: grid !important;
+    place-items: center !important;
+    inline-size: var(--touch-target) !important;
+    block-size: var(--touch-target) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: var(--clay-ink-soft) !important;
+  }
+
+  :root body .auth-dialog__options {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.3rem !important;
+  }
+
+  :root body .auth-dialog__options > label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    min-block-size: var(--touch-target) !important;
+    color: var(--clay-ink) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+  }
+
+  :root body .auth-dialog__options input[type="checkbox"] {
+    flex: none !important;
+    inline-size: 1.6rem !important;
+    block-size: 1.6rem !important;
+    accent-color: var(--clay-purple) !important;
+  }
+
+  :root body .auth-dialog__options > span {
+    color: var(--clay-ink-soft) !important;
+    font-size: max(14px, 0.85rem) !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Báo lỗi đặt NGAY CẠNH nút bấm, không dồn lên đầu hộp: dồn lên đầu thì bác
+     bấm xong không thấy gì thay đổi và tưởng nút hỏng. */
+  :root body .auth-dialog__error:not([hidden]) {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0.7rem 0.9rem !important;
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-danger-soft) !important;
+    color: var(--clay-danger) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.45 !important;
+    font-weight: 700 !important;
+  }
+
+  :root body .auth-dialog__mode-copy {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.4rem !important;
+    margin: 0 !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    text-align: center !important;
+  }
+
+  :root body .auth-dialog__mode-copy button {
+    min-block-size: var(--touch-target) !important;
+    padding-inline: 0.6rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: transparent !important;
+    color: var(--clay-purple-deep) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 800 !important;
+    text-decoration: underline !important;
+    white-space: normal !important;
+  }
+
+  :root body .auth-dialog__form button[type="submit"],
+  :root body .auth-dialog__submit {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    inline-size: 100% !important;
+    min-block-size: var(--touch-target-primary) !important;
+    padding-inline: 1.1rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: var(--clay-gradient-btn) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+    font-size: max(16px, 1rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 800 !important;
+    white-space: normal !important;
+  }
+}
