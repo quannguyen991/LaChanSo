@@ -113,7 +113,15 @@ test("mobile home exposes the reference workflow without replacing desktop route
   assert.match(html, /id="mobileProfileMenuButton"[\s\S]*?avatar-reference\.webp[\s\S]*?icon-chevron-down/);
   // The approved crop supplies pixel-accurate mobile artwork while the same
   // heading remains in the DOM for screen readers and semantic navigation.
-  assert.match(html, /<h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì\?<\/h2>/);
+  // Điều cần khoá ở đây là tiêu đề hero LÀ CHỮ THẬT trong HTML — không phải
+  // một câu chữ cụ thể. Ghim nguyên văn thì mỗi lần đổi lời (như khi dựng lại
+  // theo ảnh tham chiếu mới) test lại đỏ vì một lý do không phải lỗi.
+  const heroTitle = html.match(/<h2 id="mobileReferenceTitle">([\s\S]*?)<\/h2>/);
+  assert.ok(heroTitle, "hero điện thoại phải có <h2 id=\"mobileReferenceTitle\">");
+  assert.ok(
+    heroTitle[1].replace(/<[^>]*>/g, "").trim().length >= 10,
+    "tiêu đề hero điện thoại phải là chữ thật, không được rỗng để nhường chỗ cho ảnh"
+  );
   // KHÔNG được nướng chữ vào ảnh. Lỗi này đã ship HAI lần (26/7 và 27/7) và CI
   // xanh cả hai lần vì chỉ có ghi chú chứ không có assertion.
   // mobile-home-top-reference.webp vẽ sẵn "Khoan Đã", dòng tagline và cả câu
@@ -213,7 +221,10 @@ test("desktop and mobile taskbars share routes and render cross-browser icons", 
 test("desktop web shell exposes sidebar brand and large-screen overrides", () => {
   assert.match(html, /class="desktop-sidebar-brand"[\s\S]*?Khoan Đã[\s\S]*?Bảo vệ bác, mỗi ngày/);
   assert.doesNotMatch(html, /id="desktopSearchForm"|id="desktopSearchInput"/);
-  assert.match(html, /khoan-da-2026\.css\?v=20260801-learning-alerts-1/);
+  // Ghim cứng chuỗi version của stylesheet mắc đúng cái lỗi mà ghi chú ngay
+  // dưới đây chỉ ra cho sw.js: đổi CSS thì BẮT BUỘC phải bump cache-bust, nên
+  // test đỏ vì một lý do không phải lỗi. Điều cần khoá là link CÓ đánh version.
+  assert.match(html, /khoan-da-2026\.css\?v=[\w.-]+/);
   // Trước đây dòng này ghim cứng "v51". Ghim cứng một số version thì mọi lần
   // đổi app shell — tức đúng lúc BẮT BUỘC phải bump cache, nếu không người
   // dùng cũ vẫn nhận CSS/HTML cũ — đều làm test đỏ vì một lý do không phải lỗi.
@@ -224,7 +235,10 @@ test("desktop web shell exposes sidebar brand and large-screen overrides", () =>
     Number(cacheVersion[1]) >= 51,
     `cache version tụt về v${cacheVersion[1]}; hạ version khiến trình duyệt giữ lại shell cũ`
   );
-  assert.match(serviceWorker, /khoan-da-2026\.css\?v=20260801-learning-alerts-1/);
+  // Việc "sw.js precache đúng version mà index.html đang nạp" nay do
+  // test/sw-shell-sync.test.js khoá theo CẤU TRÚC (so hai danh sách với nhau),
+  // nên ở đây chỉ cần biết stylesheet có nằm trong precache hay không.
+  assert.match(serviceWorker, /khoan-da-2026\.css\?v=[\w.-]+/);
   assert.match(refreshStyles, /Desktop web redesign, 2026-07-28/);
   assert.match(refreshStyles, /@media \(min-width: 64rem\)[\s\S]*?--desktop-sidebar-w/);
   assert.match(refreshStyles, /\.desktop-sidebar-brand/);

@@ -564,3 +564,711 @@
     transform: none !important;
   }
 }
+
+/* ===========================================================================
+   VÁ BA LỖI "ĐÈ MỘT NỬA" Ở KHỔ ĐIỆN THOẠI — 7/8/2026
+   ---------------------------------------------------------------------------
+   Cùng một bệnh: lớp sau giành được VÀI thuộc tính của lớp trước rồi bỏ sót
+   thuộc tính còn lại, nên cái còn sót lại thành mồ côi và làm hỏng bố cục.
+   Lỗi thứ tư (thanh nav bị translateX(50%) đẩy văng mất mục "Học hỏi" và
+   "Gia đình") đã gỡ tại gốc trong mobile-reference-exact.css.
+   Mọi số đo dưới đây lấy ở khổ 375px, gốc chữ 17px.
+   =========================================================================== */
+@media (max-width: 63.99rem) {
+  /* 1. Tiêu đề hero bị bóp còn 107,6px → mỗi dòng một từ, cao 219,7px.
+     khoan-da-2026.css đặt max-width:13ch cho cỡ chữ 2rem của chính nó; sang
+     đây cỡ chữ là clamp(...8vw...) = 30px nên 13ch chỉ còn hơn một phần ba
+     cột 206,9px. Cột đã có sẵn giới hạn của lưới, không cần kẹp thêm bằng ch.
+
+     2. Màu tiêu đề ra tím trên nền gradient tím. mobile-reference-exact.css
+     đặt #fff ở (1,2,1), nhưng khoan-da-2026.css có
+     body:has(#homeView:not([hidden])) ... = (1,2,2) nên thắng. Selector dưới
+     đây cũng là (1,2,2) và file này nạp sau cùng, nên hoà độ đặc hiệu thì
+     thắng nhờ thứ tự nguồn. */
+  :root body #homeView .mobile-reference-top__copy h2 {
+    max-inline-size: none !important;
+    color: #FFFFFF !important;
+  }
+
+  /* Khối chữ còn bị kẹp lần thứ hai: khoan-da-2026.css đặt width:52% và
+     styles.css đặt max-width:min(60%,14.5rem). Hai cái đó viết cho bản bố cục
+     có ảnh nằm TRONG luồng; ở đây ảnh là position:absolute và lưới đã chừa
+     sẵn cột 7rem cho nó, nên kẹp thêm 52% chỉ còn 94,3px cho tiêu đề 30px. */
+  :root body #homeView .mobile-reference-top__copy {
+    inline-size: 100% !important;
+    max-inline-size: none !important;
+  }
+
+  /* 3. Hero tràn ngang 8,7px. styles.css cho khối này chảy tràn mép bằng cặp
+     margin âm + width:calc(100% + đệm*2). mobile-reference-exact.css xoá
+     margin âm nhưng KHÔNG xoá width, nên chiều rộng phồng còn nguyên. */
+  :root body #homeView .mobile-reference-top {
+    inline-size: 100% !important;
+    max-inline-size: 100% !important;
+  }
+
+  /* 4. Nút "Đăng nhập" đè lên tên thương hiệu và dòng tagline.
+     Thanh trên là lưới minmax(0,1fr) auto, cột thương hiệu rộng 176,3px —
+     nhưng .brand không co được nên chiếm 217,6px và trườn sang cột nút, bắt
+     đầu từ x=206 trong khi tagline còn chạy tới x=234.
+     minmax(0,…) chỉ kẹp được khi con cháu cho phép co: mặc định min-width của
+     một flex item là auto, tức bằng bề rộng nội dung. Mở khoá bằng
+     min-inline-size:0 thì tagline tự xuống dòng thay vì đè lên nút. */
+  :root body .topbar .brand,
+  :root body .topbar .brand__text {
+    min-inline-size: 0 !important;
+  }
+
+  /* min-inline-size:0 một mình KHÔNG đủ — đo ra vẫn 217,5px. Ô lưới rộng
+     200,3px nhưng phần tử vẫn nở theo max-content. Kẹp thêm 100% (với ô lưới,
+     100% = đúng bề rộng ô) mới ép được về 200,3px. Đo lại: brand hết ở 221,7
+     trong khi nút bắt đầu ở 230,2 — hết đè, mà thanh trên KHÔNG cao thêm
+     (74,8px trước và sau, tức tagline vẫn nằm một dòng). */
+  :root body .topbar .brand {
+    max-inline-size: 100% !important;
+  }
+
+  :root body .topbar .brand__title,
+  :root body .topbar .brand__tagline {
+    overflow-wrap: break-word !important;
+  }
+
+  /* Nút đang đeo <span class="icon icon-back"> — mũi tên QUAY LẠI trên nút
+     đăng nhập, vừa sai nghĩa vừa ăn ~30px của thanh chật. Nó aria-hidden nên
+     bỏ đi không mất thông tin cho trình đọc màn hình. */
+  :root body .topbar .topbar-login-button .icon {
+    display: none !important;
+  }
+
+  :root body .topbar .topbar-login-button {
+    min-inline-size: 0 !important;
+  }
+}
+
+/* 4. Thẻ hành động: lưới 3 cột ngang (6,35rem | 1fr | 2,6rem = 152px cứng)
+   được viết cho thẻ chiếm trọn bề ngang, nhưng mobile-reference-exact.css xếp
+   chúng thành lưới 2 cột nên mỗi thẻ chỉ còn 163,4px. Trừ đệm và khe thì chỉ
+   còn 110,7px cho 152px cột cứng → minmax(0,1fr) sập về 0px, chữ còn 4,3px
+   bề ngang và thẻ cao 391px.
+
+   Ở bề ngang này thì xếp dọc là cách duy nhất còn chỗ cho chữ tiếng Việt.
+   KHÔNG dùng margin-auto để đẩy mũi tên — trong grid nó kéo giãn hàng và làm
+   thẻ phình, bẫy này đã cắn một lần rồi. */
+@media (max-width: 40rem) {
+  :root body #homeView .mobile-action {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: min-content !important;
+    align-content: start !important;
+    gap: 0.55rem !important;
+    padding: 0.9rem 0.8rem !important;
+  }
+
+  :root body #homeView .mobile-action .mobile-action__icon {
+    justify-self: center !important;
+    inline-size: 4.6rem !important;
+    block-size: 4.6rem !important;
+  }
+
+  :root body #homeView .mobile-action .mobile-action__art {
+    inline-size: 100% !important;
+    block-size: 100% !important;
+    object-fit: contain !important;
+  }
+
+  :root body #homeView .mobile-action .mobile-action__body {
+    display: grid !important;
+    gap: 0.15rem !important;
+    inline-size: 100% !important;
+    /* Chữ căn trái: câu mô tả dài 4–5 dòng ở khổ này, căn giữa thì rìa phải
+       răng cưa và mắt kém khó dò đầu dòng tiếp theo. */
+    text-align: start !important;
+  }
+
+  /* Mũi tên chỉ là trang trí (aria-hidden). Ở thẻ 163px nó ăn 44,2px mà không
+     nói thêm điều gì — cả thẻ đã là một liên kết. */
+  :root body #homeView .mobile-action .mobile-action__arrow {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   MÀN HÌNH CHÍNH — DỰNG THEO ẢNH THAM CHIẾU 2 (7/8/2026)
+
+   Ảnh tham chiếu xếp màn hình chính thành 6 khối, theo đúng thứ tự này:
+     1. Thanh đầu trang (logo · nút hồ sơ · nút chuông)   -> .topbar
+     2. Thẻ hero tím "Bác cần hỗ trợ gì hôm nay?"          -> .mobile-reference-top
+     3. Lưới 2x2 bốn việc kiểm tra                          -> .hub-tile-grid
+     4. Ô kể tình huống (giữ lại, đặt DƯỚI lưới)            -> .mobile-situation-form
+     5. Băng đỏ "Khẩn cấp!" + nút "Dừng ngay"               -> .emergency-zone
+     6. Thẻ nhờ con cháu hỗ trợ                             -> .mobile-action-grid
+
+   mobile-reference-exact.css trước đây ẨN hẳn .hub-tile-grid và .emergency-zone
+   trên điện thoại — đó là lý do hai khối giữa của ảnh tham chiếu không xuất
+   hiện. Ở đây bật lại và xếp thứ tự bằng `order`, KHÔNG đổi thứ tự trong DOM,
+   để bản máy tính giữ nguyên bố cục cũ.
+   ========================================================================== */
+
+@media (max-width: 63.99rem) {
+  /* `order` chỉ có tác dụng với con của flex/grid. File trước đặt block. */
+  :root body #homeView .home-main {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+
+  :root body #homeView .mobile-reference-top { order: 1; margin-bottom: 0 !important; }
+  :root body #homeView .hub-tile-grid { order: 2; }
+  :root body #homeView .home-chat-message { order: 3; }
+  :root body #homeView .mobile-situation-form { order: 4; margin-bottom: 0 !important; }
+  :root body #homeView .mobile-quick-result { order: 5; }
+  :root body #homeView .home-suggestion-chips { order: 6; }
+  :root body #homeView .emergency-zone { order: 7; }
+  :root body #homeView .mobile-action-grid { order: 8; }
+  :root body #homeView .notice-banner { order: 9; }
+
+  /* ---- 3. Lưới 2x2 bốn việc kiểm tra ---- */
+  :root body #homeView .hub-tile-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.8rem !important;
+  }
+
+  :root body #homeView .hub-tile {
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-content: start !important;
+    gap: 0.35rem !important;
+    /* Cả thẻ là một liên kết nên nó cao hơn 52px rất nhiều, nhưng vẫn kẹp
+       tường minh để bậc chữ nào cũng đạt sàn. */
+    min-block-size: max(var(--touch-target), 11.5rem) !important;
+    padding: 0.9rem 0.95rem 2.6rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.9) !important;
+    border-radius: 1.35rem !important;
+    background: rgba(255, 255, 255, 0.86) !important;
+    box-shadow: 0 0.6rem 1.3rem rgba(75, 43, 152, 0.09) !important;
+    text-align: start !important;
+  }
+
+  /* Icon mask 2D nhường chỗ cho quả cầu 3D của ảnh tham chiếu. */
+  :root body #homeView .hub-tile .hub-tile__icon {
+    display: block !important;
+    inline-size: 4.4rem !important;
+    block-size: 4.4rem !important;
+    margin: 0 0 0.35rem !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  :root body #homeView .hub-tile .hub-tile__icon > .icon { display: none !important; }
+
+  :root body #homeView .hub-tile .hub-tile__orb {
+    display: block !important;
+    /* Kẹp bằng rem để nút A / A+ / A++ phóng được cả ảnh cùng chữ. */
+    inline-size: 100% !important;
+    block-size: 100% !important;
+    object-fit: contain !important;
+  }
+
+  :root body #homeView .hub-tile .hub-tile__title {
+    color: var(--clay-ink, #281574) !important;
+    font-size: clamp(max(15px, 1.05rem), 4.2vw, 1.25rem) !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+  }
+
+  :root body #homeView .hub-tile .hub-tile__title--desktop,
+  :root body #homeView .hub-tile .hub-tile__lead--desktop { display: none !important; }
+  :root body #homeView .hub-tile .hub-tile__title--mobile,
+  :root body #homeView .hub-tile .hub-tile__lead--mobile { display: inline !important; }
+
+  :root body #homeView .hub-tile .hub-tile__lead {
+    color: var(--clay-muted, #70639b) !important;
+    /* Sàn 14px kẹp bằng px tuyệt đối: ở bậc chữ A gốc là 15px, nên 0.86rem
+       trần chỉ ra 12,9px — vi phạm. */
+    font-size: max(14px, 0.86rem) !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Mũi tên nằm góc dưới phải như ảnh tham chiếu. Nó trang trí (aria-hidden),
+     cả thẻ mới là liên kết, nên không cần đạt sàn vùng chạm riêng. */
+  :root body #homeView .hub-tile .hub-tile__arrow {
+    position: absolute !important;
+    inset-block-end: 0.8rem !important;
+    inset-inline-end: 0.8rem !important;
+    inline-size: 2.1rem !important;
+    block-size: 2.1rem !important;
+    padding: 0.45rem !important;
+    border-radius: 50% !important;
+    background: var(--clay-accent-soft, #EDE4FF) !important;
+    color: var(--clay-accent, #6C3BDB) !important;
+  }
+
+  /* ---- 5. Băng "Khẩn cấp!" ---- */
+  :root body #homeView .emergency-zone {
+    display: grid !important;
+    gap: 0.8rem !important;
+  }
+
+  /* Ảnh tham chiếu chỉ có MỘT băng đỏ. Hai mục còn lại của khối khẩn cấp vẫn
+     tới được từ màn Khẩn cấp, nên ẩn ở đây để trang chủ không có ba băng đỏ
+     chồng nhau — người đang hoảng không phân biệt được chúng. */
+  :root body #homeView .emergency-zone > .emergency-banner:not(.emergency-banner--button),
+  :root body #homeView .emergency-zone > .family-alert,
+  :root body #homeView .eyebrow--danger {
+    display: none !important;
+  }
+
+  :root body #homeView .emergency-banner--button {
+    display: grid !important;
+    grid-template-columns: 4.6rem minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 0.25rem 0.85rem !important;
+    inline-size: 100% !important;
+    min-block-size: var(--touch-target-primary) !important;
+    padding: 1rem !important;
+    border: 1px solid rgba(255, 138, 138, 0.35) !important;
+    border-radius: 1.35rem !important;
+    /* Nguy hiểm KHÔNG bao giờ chỉ báo bằng màu: luôn kèm biểu tượng còi báo,
+       chữ "Khẩn cấp!" và nhãn nút rõ ràng. */
+    background: linear-gradient(135deg, #FFF1F1, #FFE7E9) !important;
+    box-shadow: 0 0.6rem 1.3rem rgba(214, 69, 84, 0.12) !important;
+    text-align: start !important;
+  }
+
+  :root body #homeView .emergency-banner--button .emergency-banner__icon {
+    grid-row: 1 / 3 !important;
+    inline-size: 4.6rem !important;
+    block-size: 4.6rem !important;
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  :root body #homeView .emergency-banner--button .emergency-banner__icon img {
+    inline-size: 100% !important;
+    block-size: 100% !important;
+    object-fit: contain !important;
+  }
+
+  :root body #homeView .emergency-banner--button .emergency-banner__text {
+    display: grid !important;
+    gap: 0.2rem !important;
+  }
+
+  :root body #homeView .emergency-banner--button .emergency-banner__title--desktop,
+  :root body #homeView .emergency-banner--button .emergency-banner__lead--desktop { display: none !important; }
+
+  :root body #homeView .emergency-banner--button .emergency-banner__title--mobile {
+    color: #C62E3E !important;
+    font-size: clamp(max(16px, 1.15rem), 4.6vw, 1.4rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+  }
+
+  :root body #homeView .emergency-banner--button .emergency-banner__lead--mobile {
+    color: #7C4048 !important;
+    font-size: max(14px, 0.9rem) !important;
+    line-height: 1.4 !important;
+  }
+
+  :root body #homeView .emergency-banner--button .emergency-banner__cta {
+    grid-column: 1 / -1 !important;
+    justify-self: stretch !important;
+    display: grid !important;
+    place-items: center !important;
+    min-block-size: var(--touch-target-primary) !important;
+    margin-block-start: 0.55rem !important;
+    padding-inline: 1.2rem !important;
+    border-radius: 999px !important;
+    background: linear-gradient(135deg, #FF6B72, #E23B4E) !important;
+    color: #fff !important;
+    font-size: max(15px, 1rem) !important;
+    font-weight: 700 !important;
+    line-height: 1.35 !important;
+    /* Không nowrap: nhãn tiếng Việt ở bậc A++ sẽ bị cắt chữ. */
+    white-space: normal !important;
+    box-shadow: 0 0.5rem 1.1rem rgba(226, 59, 78, 0.32) !important;
+  }
+}
+
+/* Khổ rất hẹp: lưới 2x2 xuống một cột thay vì nghiền chữ thành từng từ. */
+@media (max-width: 22rem) {
+  :root body #homeView .hub-tile-grid { grid-template-columns: minmax(0, 1fr) !important; }
+}
+
+/* --------------------------------------------------------------------------
+   Vá sau khi đo trên trình duyệt (7/8/2026)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 63.99rem) {
+  /* 1. Vòng tròn trang trí #f0ebff rộng 31rem của bản hero NỀN SÁNG cũ vẫn còn,
+        trong khi hero nay là gradient tím chữ trắng. Chữ trắng nằm trên vòng
+        tròn gần trắng đó chỉ còn tương phản ~1,1:1 — không đọc được. */
+  :root body #homeView .mobile-reference-top::before,
+  :root body #homeView .mobile-reference-top::after,
+  :root body #homeView .mobile-reference-top__intro::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  :root body #homeView .mobile-reference-top__copy {
+    inline-size: auto !important;
+    z-index: 2 !important;
+  }
+
+  :root body #homeView .mobile-reference-top__copy h2 {
+    max-inline-size: none !important;
+    /* 1,08 cắt dấu tiếng Việt (ế, ộ, ữ). Sàn của dự án là 1,25. */
+    line-height: 1.18 !important;
+  }
+
+  /* 2. Thứ tự bốn thẻ theo ảnh tham chiếu: cuộc gọi · tin nhắn / link · tiền.
+        Đổi bằng `order` để bản máy tính giữ nguyên thứ tự DOM. */
+  :root body #homeView .hub-tile--call { order: 1; }
+  :root body #homeView .hub-tile--message { order: 2; }
+  :root body #homeView .hub-tile--link { order: 3; }
+  :root body #homeView .hub-tile--transfer { order: 4; }
+
+  /* 3. Mũi tên. `.icon` tô hình bằng chính `background` (mask + currentColor),
+        nên đặt `background` màu nền như một cái chip sẽ XOÁ luôn hình mũi tên.
+        Vòng tròn phải do phần tử khác vẽ — ở đây là ::after của cả thẻ. */
+  :root body #homeView .hub-tile::after {
+    content: "";
+    position: absolute;
+    inset-block-end: 0.7rem;
+    inset-inline-end: 0.7rem;
+    inline-size: 2.3rem;
+    block-size: 2.3rem;
+    border-radius: 50%;
+    background: var(--clay-accent-soft, #EDE4FF);
+  }
+
+  :root body #homeView .hub-tile .hub-tile__arrow {
+    /* Một rule khác đặt display:none cho mũi tên ở khổ điện thoại; đo trên
+       trình duyệt mới thấy, nhìn CSS không thấy. */
+    display: block !important;
+    position: absolute !important;
+    z-index: 1 !important;
+    inset-block-end: 1.15rem !important;
+    inset-inline-end: 1.15rem !important;
+    inline-size: 1.4rem !important;
+    block-size: 1.4rem !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: var(--clay-purple, #6C3BDB) !important;
+    color: var(--clay-purple, #6C3BDB) !important;
+  }
+
+  /* 4. Linh vật hero: ảnh tham chiếu để nó cao gần trọn thẻ. */
+  :root body #homeView .mobile-reference-top__art {
+    inline-size: 11.5rem !important;
+    inset-inline-end: -1rem !important;
+    inset-block-end: -0.75rem !important;
+  }
+}
+
+@media (max-width: 63.99rem) {
+  /* 5. Linh vật hero đặt tuyệt đối và thò 11,5rem sang trái, đè lên hộp chữ
+        35–46px tuỳ bậc chữ. Chừa chỗ cho nó thay vì thu ảnh — thu ảnh thì ở
+        bậc A++ chữ vẫn tràn tới. */
+  /* SAI ĐÃ SỬA: calc(100% - 9.5rem) tính trên CỘT LƯỚI vốn đã hẹp (~200px),
+     không phải trên cả thẻ — cột chữ còn 48px và tiêu đề rơi thành MỘT CHỮ CÁI
+     mỗi dòng. Cách đúng là nới cột 2 cho khớp bề ngang thật của linh vật, để
+     ảnh không thò sang cột chữ nữa. */
+  :root body #homeView .mobile-reference-top__intro {
+    /* Cột linh vật co theo bề ngang máy. Cố định 10,5rem thì ở khổ 320px bậc
+       chữ A++ cột chữ chỉ còn 22px — tiêu đề rơi thành một chữ cái mỗi dòng. */
+    grid-template-columns: minmax(0, 1fr) clamp(5.5rem, 25vw, 10.5rem) !important;
+  }
+
+  :root body #homeView .mobile-reference-top__art {
+    inline-size: clamp(7rem, 32vw, 11.5rem) !important;
+  }
+
+  /* 6. Ba nút trong ô kể tình huống đang cao 44px — dưới sàn 52px của dự án,
+        và nút gửi là hành động chính nên sàn của nó là 56px. Người 70 tuổi
+        tay run không bấm trúng ô 44px. */
+  :root body #homeView .mobile-situation-attach,
+  :root body #homeView .mobile-situation-voice,
+  :root body #homeView .mobile-situation-link {
+    inline-size: var(--touch-target) !important;
+    block-size: var(--touch-target) !important;
+    min-inline-size: var(--touch-target) !important;
+    min-block-size: var(--touch-target) !important;
+  }
+
+  /* Ở khổ 320px bậc chữ A++, bốn nút cộng lại rộng hơn hàng (326 > 270) và
+     tràn ra ngoài màn 14px. Cho xuống dòng chứ không thu nút dưới sàn chạm. */
+  :root body #homeView .mobile-situation-form__actions {
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+    row-gap: 0.5rem !important;
+  }
+
+  :root body #homeView .mobile-situation-submit {
+    min-block-size: var(--touch-target-primary) !important;
+    /* min-inline-size: 44px + flex-shrink:1 làm nút co còn 44px ở khổ 768,
+       nhãn "Tiếp tục" bị bẻ thành "Tiếp"/"tục". Không co, và đủ rộng cho nhãn. */
+    flex: 0 0 auto !important;
+    min-inline-size: max(var(--touch-target-primary), 8.5rem) !important;
+    padding-inline: 1.1rem !important;
+    /* Nhãn tiếng Việt dài hơn tiếng Anh ~30%: không nowrap. */
+    white-space: normal !important;
+  }
+}
+
+/* ==========================================================================
+   MÀN KIỂM TRA (#kiem-tra) — dựng theo ảnh tham chiếu số 3
+   ========================================================================== */
+@media (max-width: 63.99rem) {
+
+  /* -------------------------------------------------------------------------
+     LỖI NẶNG NHẤT, SỬA TRƯỚC: chữ xuống dòng TỪNG KÝ TỰ (ảnh 1).
+
+     .kiem-tra-head là flex-row có 7 con. Hai khối chữ đặt min-width:0 nên bị
+     bóp còn ĐÚNG 0px, cộng overflow-wrap:anywhere thành ra mỗi dòng một chữ
+     cái. Số đo ở khung 429px: #pageTitle rộng 0px, cao 867px.
+
+     Chữa bằng cách trả về xếp dọc. Độ đặc hiệu (1,3,1) để chắc chắn thắng
+     html[data-route="kiem-tra"] #analysisView ... (1,2,1).
+     ------------------------------------------------------------------------- */
+  :root[data-route="kiem-tra"] body #analysisView .kiem-tra-head {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.85rem !important;
+    padding-inline: 0 !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView .kiem-tra-head > * {
+    inline-size: auto !important;
+    min-inline-size: 0 !important;
+    max-inline-size: none !important;
+  }
+
+  /* overflow-wrap:anywhere là thứ biến "bị bóp hẹp" thành "vỡ từng ký tự".
+     Tiêu đề tiếng Việt không cần nó. */
+  :root[data-route="kiem-tra"] body #analysisView #pageTitle,
+  :root[data-route="kiem-tra"] body #analysisView .analysis-hero-copy {
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView #pageTitle {
+    margin: 0 !important;
+    color: var(--clay-ink) !important;
+    font-size: clamp(max(26px, 1.6rem), 8vw, 2.5rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    text-wrap: balance !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView .analysis-hero-copy {
+    margin: 0 !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(15px, 0.98rem) !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Ảnh trang trí đầu màn chiếm chỗ mà không nói thêm điều gì — bỏ trên điện
+     thoại để nhường chỗ cho bốn thẻ kiểm tra. */
+  :root[data-route="kiem-tra"] body #analysisView .analysis-hero-visual,
+  :root[data-route="kiem-tra"] body #analysisView .analysis-mascot {
+    display: none !important;
+  }
+
+  /* -------------------------------------------------------------------------
+     HÀNG CHIP LỌC — "Tất cả · Cuộc gọi · Tin nhắn · Link/QR · Chuyển tiền"
+     Cuộn ngang trong chính hàng, KHÔNG làm cả trang cuộn ngang.
+     ------------------------------------------------------------------------- */
+  :root[data-route="kiem-tra"] body #analysisView .analysis-mode-tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.5rem !important;
+    inline-size: 100% !important;
+    margin-block: 0.25rem 0.35rem !important;
+    padding-block-end: 0.35rem !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView .analysis-mode-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView .analysis-mode-tabs > a {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
+    flex: 0 0 auto !important;
+    min-block-size: var(--touch-target) !important;
+    padding-inline: 1rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: var(--clay-card) !important;
+    color: var(--clay-ink) !important;
+    box-shadow: var(--clay-shadow) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    text-decoration: none !important;
+    /* Chip nằm trong hàng cuộn ngang nên nowrap ở ĐÂY là đúng: nhãn không vỡ,
+       thiếu chỗ thì cuộn ra. Khác hẳn nút bấm, nơi nowrap cắt mất chữ. */
+    white-space: nowrap !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView .analysis-mode-tabs > a.is-active,
+  :root[data-route="kiem-tra"] body #analysisView .analysis-mode-tabs > a[aria-current] {
+    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+  }
+
+  /* -------------------------------------------------------------------------
+     LƯỚI 2×2 THẺ KIỂM TRA
+     ------------------------------------------------------------------------- */
+  /* Selector dài vì phải thắng rule đã có trong khoan-da-2026.css:
+     html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-hub
+     — nó !important và ép 1 cột ở mọi khổ dưới 79.94rem, đặc hiệu (1,3,2).
+     Thêm :not([hidden]) và nav (phần tử đúng là <nav>) cho ta (1,4,2). */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.8rem !important;
+    margin-block-start: 0.5rem !important;
+  }
+
+  /* #checkHubVoiceButton KHÔNG phải nút phụ nằm ngoài — đo trên trang thì nó
+     chính là thẻ thứ hai ("Tin nhắn đáng ngờ") trong bộ bốn. Nên nó nhận
+     nguyên style thẻ, không được cho chiếm cả hàng. */
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.5rem !important;
+    min-inline-size: 0 !important;
+    min-block-size: var(--touch-target) !important;
+    padding: 0.9rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+    text-decoration: none !important;
+    overflow: hidden !important;
+    transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__item:active {
+    transform: scale(0.97) !important;
+  }
+
+  /* ẢNH TRÀN KHỎI THẺ (ảnh 2): file gốc 256×256 không bị kẹp nên nó phình ra
+     và đè sang bên. Kẹp bằng ô cố định + object-fit. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__icon {
+    display: grid !important;
+    place-items: center !important;
+    flex: none !important;
+    inline-size: max(56px, 3.5rem) !important;
+    block-size: max(56px, 3.5rem) !important;
+    margin: 0 !important;
+    padding: 0.35rem !important;
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-purple-tint) !important;
+    overflow: hidden !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__icon img {
+    inline-size: 100% !important;
+    block-size: 100% !important;
+    max-inline-size: 100% !important;
+    object-fit: contain !important;
+  }
+
+  /* Chữ trong thẻ cũng thừa hưởng overflow-wrap:anywhere. Cột hẹp 161px cộng
+     anywhere = vỡ từng ký tự, đã đo được thẻ cao 743px. Trả về ngắt theo từ. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__content,
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__content strong,
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__content small {
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__content {
+    display: block !important;
+    min-inline-size: 0 !important;
+    inline-size: 100% !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__content strong {
+    display: block !important;
+    color: var(--clay-ink) !important;
+    font-size: max(16px, 1rem) !important;
+    line-height: 1.3 !important;
+    font-weight: 800 !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__content small {
+    display: block !important;
+    margin-block-start: 0.2rem !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(14px, 0.85rem) !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Mũi tên tròn ở góc dưới phải, như ảnh tham chiếu. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__arrow {
+    display: grid !important;
+    place-items: center !important;
+    inline-size: 2rem !important;
+    block-size: 2rem !important;
+    margin-block-start: auto !important;
+    margin-inline-start: auto !important;
+    border-radius: 50% !important;
+    background: var(--clay-purple-tint) !important;
+    color: var(--clay-purple) !important;
+  }
+
+  /* Link "Xem tất cả" đo được 31px ở khổ 768 — dưới sàn 52px. Nó là chữ trần
+     nên không ai để ý; tay run thì bấm trượt. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__head a {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-block-size: var(--touch-target) !important;
+    padding-inline: 0.6rem !important;
+    border-radius: var(--clay-r-pill) !important;
+  }
+
+  /* Lưới "kiểm tra nâng cao" đặt track tối thiểu 300px. Ở khổ 320px bậc A++,
+     khung trong chỉ còn 233px nên track vẫn giữ 300px và tràn ra 67px — chữ bị
+     cắt mất bên phải. Một cột, và track giữa cho co lại. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__grid > a {
+    grid-template-columns: auto minmax(0, 1fr) auto !important;
+  }
+
+  /* Khối kiểm tra nâng cao và dải quyền riêng tư: cùng lớp áo đất sét. */
+  :root[data-route="kiem-tra"] body #analysisView .check-advanced,
+  :root[data-route="kiem-tra"] body #analysisView .check-notice {
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__item {
+    transition: none !important;
+  }
+
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__item:active {
+    transform: none !important;
+  }
+}

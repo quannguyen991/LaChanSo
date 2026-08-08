@@ -7861,10 +7861,20 @@ html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__gr
 /* Hallmark · pre-emit critique: P4 H5 E4 S5 R4 V4 */
 /* Desktop-only balance pass. Mobile keeps the existing app layout unchanged. */
 .onboarding-web,
+.onboarding-web__copy,
+.onboarding-web__dots,
 .case-empty-desktop,
 .onboarding__button--back,
 .desktop-home-redesign {
   display: none;
+}
+
+/* `.onboarding-web__panel` chỉ là cái vỏ để bản máy tính gộp chữ + nút + chấm
+   bước vào một thẻ trắng. Ở khổ điện thoại nó phải TRONG SUỐT với bố cục, để
+   `.onboarding__actions` vẫn là con trực tiếp của màn và giữ nguyên cách kê
+   nút cũ. `display: contents` làm đúng việc đó. */
+.onboarding-web__panel {
+  display: contents;
 }
 
 @media (min-width: 64rem) {
@@ -8044,231 +8054,775 @@ html[data-route="kiem-tra"] body #analysisView:not([hidden]) .check-advanced__gr
     background: var(--color-surface) !important;
   }
 
-  /* Full desktop onboarding composed from real app assets. */
+  /* ================================================================
+     LUỒNG CHÀO — BẢN MÁY TÍNH (7/8/2026)
+     Dựng lại theo bộ ảnh tham chiếu người dùng gửi. Nguyên tắc giữ
+     nguyên: mọi chữ là HTML thật, ảnh chỉ là minh hoạ và đo bằng rem
+     nên nút A / A+ / A++ phóng được từng dòng một.
+     `.onboarding-web` và `.onboarding-web__panel` dùng `display: contents`
+     để nút thật (nằm trong `.onboarding__actions`, dùng chung với bản
+     điện thoại) trở thành ô lưới ngang hàng với phần minh hoạ — không
+     phải kê bằng toạ độ tuyệt đối.
+     ================================================================ */
   body[data-onboarding="true"] .onboarding {
-    background: var(--color-surface) !important;
+    --onb-gutter: clamp(2rem, 3.6vw, 4.5rem);
+    --onb-pad-block: clamp(1.25rem, 2.4vh, 2.25rem);
+    --onb-radius: 1.75rem;
+    --onb-card: var(--color-surface);
+    --onb-line: color-mix(in oklch, var(--color-accent) 14%, var(--color-surface));
+    --onb-shadow: 0 0.75rem 2.5rem color-mix(in oklch, var(--color-accent-deep) 8%, transparent);
+    padding: 0 !important;
+    background: var(--color-onboarding-canvas-top) !important;
   }
 
-  body[data-onboarding="true"] .onboarding__shell,
-  body[data-onboarding="true"] .onboarding__screen {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: none !important;
-    max-height: none !important;
-  }
-
-  /* Desktop onboarding must own the whole viewport. The portrait shell rules
-     otherwise leave a centered, rounded panel behind the web composition. */
+  /* Bản điện thoại kê panel giữa màn; máy tính phải chiếm trọn khung nhìn. */
   body[data-onboarding="true"] .onboarding__shell {
     position: fixed !important;
     inset: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    min-height: 100vh !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+    min-height: 0 !important;
     margin: 0 !important;
     border-radius: 0 !important;
-    overflow: hidden !important;
-    background: var(--color-surface) !important;
+    /* Lưới an toàn giống bản điện thoại: chữ dài bất thường (bậc A++ trên máy
+       1024×720) thì CHO CUỘN, tuyệt đối không cắt nút. */
+    overflow: hidden auto !important;
+    background:
+      radial-gradient(42rem 34rem at 88% 18%, var(--color-accent-soft) 0%, transparent 62%),
+      radial-gradient(34rem 30rem at 6% 92%, var(--color-sky-soft) 0%, transparent 60%),
+      linear-gradient(180deg, var(--color-onboarding-canvas-top) 0%, var(--color-onboarding-canvas-mid) 100%) !important;
   }
 
   body[data-onboarding="true"] .onboarding__screen {
     position: relative !important;
-    display: block !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    background: var(--color-surface) !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+    /* `minmax(auto, 1fr)` chứ KHÔNG phải `minmax(0, 1fr)`: sàn 0 cho phép hàng
+       co nhỏ hơn nội dung, và ở bậc chữ A++ trên máy 1024px nội dung tràn
+       ngược lên hàng trên, đè vào logo. Sàn `auto` buộc hàng nở ra. */
+    grid-template-rows: auto minmax(auto, 1fr) auto;
+    grid-template-areas:
+      "brand  greet"
+      "panel  visual"
+      "aside  visual";
+    align-content: stretch !important;
+    /* Bản điện thoại đặt `justify-items: center` — ở đây nó co mọi ô lưới lại
+       bằng bề rộng nội dung rồi dồn vào giữa, làm logo trôi ra chính giữa. */
+    justify-items: stretch !important;
+    gap: clamp(0.75rem, 1.6vh, 1.5rem) clamp(1.75rem, 3vw, 3.5rem) !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    padding: var(--onb-pad-block) var(--onb-gutter) !important;
+    overflow: visible !important;
+    text-align: start !important;
+    background: transparent !important;
   }
 
   body[data-onboarding="true"] .onboarding__screen[hidden] {
     display: none !important;
   }
 
+  /* Ảnh + tiêu đề của bản điện thoại nghỉ ở khổ máy tính; `aria-labelledby`
+     vẫn trỏ tới `.onboarding__title` nên tên màn hình không mất. */
   body[data-onboarding="true"] .onboarding__art,
   body[data-onboarding="true"] .onboarding__title,
   body[data-onboarding="true"] .onboarding__lead {
     display: none !important;
   }
 
-  body[data-onboarding="true"] .onboarding-web {
-    position: absolute !important;
-    inset: 0 !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1.08fr) minmax(24rem, 0.92fr) !important;
-    grid-template-rows: 5rem minmax(0, 1fr) auto !important;
-    gap: 1rem 3rem !important;
-    padding: 2rem clamp(3rem, 5vw, 6rem) 7.5rem !important;
-    background: var(--color-surface) !important;
+  body[data-onboarding="true"] .onboarding-web,
+  body[data-onboarding="true"] .onboarding-web__panel {
+    display: contents !important;
   }
 
+  /* ---- Thương hiệu và lời chào ---- */
   .onboarding-web__brand {
-    grid-column: 1 / -1 !important;
+    grid-area: brand;
     display: flex !important;
     align-items: center !important;
+    align-self: start !important;
     gap: 0.75rem !important;
   }
 
-  .onboarding-web__brand img { width: 3.25rem !important; height: 3.8rem !important; object-fit: contain !important; }
+  .onboarding-web__brand img { width: 3.1rem !important; height: 3.7rem !important; object-fit: contain !important; }
   .onboarding-web__brand strong,
   .onboarding-web__brand small { display: block !important; }
-  .onboarding-web__brand strong { color: var(--color-accent-deep) !important; font-family: var(--font-display) !important; font-size: 1.65rem !important; }
-  .onboarding-web__brand small { color: var(--color-ink-2) !important; font-size: max(14px, 0.9rem) !important; }
+  .onboarding-web__brand strong { color: var(--color-accent-deep) !important; font-family: var(--font-display) !important; font-size: var(--text-xl) !important; line-height: var(--leading-tight) !important; }
+  .onboarding-web__brand small { color: var(--color-ink-2) !important; font-size: var(--text-xs) !important; }
 
-  .onboarding-web__copy {
-    z-index: 2 !important;
-    align-self: center !important;
-    min-width: 0 !important;
-    max-width: 48rem !important;
-    text-align: left !important;
+  .onboarding-web__greeting {
+    grid-area: greet;
+    justify-self: end !important;
+    align-self: start !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    min-height: var(--touch-target) !important;
+    margin: 0 !important;
+    padding: 0.55rem 1.35rem !important;
+    border: 1px solid var(--onb-line) !important;
+    border-radius: var(--radius-full) !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
+    color: var(--color-accent-deep) !important;
+    font-size: var(--text-base) !important;
+    font-weight: 700 !important;
   }
 
-  .onboarding-web__step {
-    margin: 0 0 0.75rem !important;
-    color: var(--color-accent) !important;
-    font-weight: 800 !important;
+  .onboarding-web__greeting .icon { width: 1.5rem !important; height: 1.5rem !important; color: var(--color-accent) !important; }
+
+  /* ---- Khối chữ chính ---- */
+  .onboarding-web__copy {
+    grid-area: panel;
+    display: block !important;
+    z-index: 2;
+    align-self: center !important;
+    min-width: 0 !important;
+    max-width: 44rem !important;
   }
 
   .onboarding-web__copy h2 {
     margin: 0 !important;
     color: var(--color-accent-deep) !important;
     font-family: var(--font-display) !important;
-    font-size: clamp(2.8rem, 4.3vw, 5.3rem) !important;
-    line-height: 1.08 !important;
-    letter-spacing: 0 !important;
-    overflow-wrap: anywhere !important;
-    text-align: left !important;
+    font-size: clamp(2.2rem, 3.3vw, 3.75rem) !important;
+    font-weight: 800 !important;
+    /* 1,08 trước đây cắt dấu tiếng Việt (ế, ộ, ữ) — dùng token hiển thị 1,2. */
+    line-height: var(--leading-display) !important;
+    letter-spacing: -0.01em !important;
+    text-align: start !important;
+    text-wrap: balance !important;
+    overflow-wrap: break-word !important;
   }
 
-  .onboarding-web__copy h2:focus {
-    outline: 0 !important;
-    box-shadow: none !important;
-  }
-
+  .onboarding-web__copy h2:focus { outline: 0 !important; box-shadow: none !important; }
   .onboarding-web__copy h2 > span { color: var(--color-accent) !important; }
-  .onboarding-web__copy > p:not(.onboarding-web__step) { max-width: 39rem !important; margin: 1.4rem 0 0 !important; color: var(--color-ink-2) !important; font-size: clamp(1.05rem, 1.35vw, 1.35rem) !important; line-height: 1.65 !important; }
 
+  .onboarding-web__copy > p {
+    max-width: 34rem !important;
+    margin: clamp(0.85rem, 1.5vh, 1.35rem) 0 0 !important;
+    color: var(--color-ink-2) !important;
+    font-size: var(--text-md) !important;
+    line-height: var(--leading-normal) !important;
+  }
+
+  /* ---- Minh hoạ ---- */
   .onboarding-web__visual {
+    grid-area: visual;
     position: relative !important;
     display: grid !important;
     place-items: center !important;
     min-width: 0 !important;
     min-height: 0 !important;
-    overflow: visible !important;
   }
 
-  .onboarding-web__visual img {
+  .onboarding-web__visual > img {
     position: relative !important;
-    display: block !important;
     z-index: 2 !important;
-    width: min(100%, 34rem) !important;
-    max-height: 42rem !important;
+    display: block !important;
+    /* Kẹp bằng rem để ảnh co giãn cùng bậc chữ A / A+ / A++. KHÔNG dùng đơn vị
+       khung nhìn: kích thước ảnh phải liên quan tới cỡ chữ, không phải màn. */
+    width: min(100%, 30rem) !important;
+    height: auto !important;
+    max-width: 100% !important;
     object-fit: contain !important;
-    filter: drop-shadow(0 1.25rem 1.5rem color-mix(in oklch, var(--color-accent) 16%, transparent)) !important;
+    filter: drop-shadow(0 1.25rem 1.75rem color-mix(in oklch, var(--color-accent-deep) 14%, transparent)) !important;
   }
 
   .onboarding-web__halo {
     position: absolute !important;
-    inset: 10% 2% !important;
+    z-index: 1 !important;
+    inset: 6% 4% !important;
+    border-radius: 50% !important;
+    background: radial-gradient(circle at 50% 45%, var(--color-accent-soft) 0%, transparent 70%) !important;
+  }
+
+  /* ---- Màn 1: thẻ trắng chứa chữ, nút và chấm bước ---- */
+  body[data-onboarding="true"] .onboarding-web__panel--card {
+    grid-area: panel;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: clamp(1.25rem, 3.2vh, 2.6rem) !important;
+    align-self: stretch !important;
+    padding: clamp(2rem, 3.4vw, 3.75rem) !important;
+    border-radius: var(--onb-radius) !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
+  }
+
+  .onboarding-web__panel--card .onboarding-web__copy {
+    grid-area: auto;
+    align-self: auto !important;
+    /* Kẹp lại để tiêu đề ngắt thành hai dòng như ảnh tham chiếu, thay vì kéo
+       dài hết bề ngang thẻ. */
+    max-width: 32rem !important;
+  }
+
+  .onboarding-web__panel--card .onboarding__actions {
+    width: auto !important;
+    justify-content: flex-start !important;
+  }
+
+  body[data-onboarding="true"] .onboarding-web__panel--card .onboarding__button--primary { margin-left: 0 !important; }
+
+  /* Trong thẻ màn 1 chấm bước là con của flex-column, không phải của hàng nút —
+     `margin: 0 auto` sẽ dồn nó vào giữa thẻ thay vì thẳng hàng với chữ. */
+  .onboarding-web__panel--card .onboarding-web__dots {
+    margin-inline: 0 !important;
+  }
+
+  /* ---- Thẻ trấn an cuối màn 1 ---- */
+  .onboarding-web__assurance {
+    grid-area: aside;
+    align-self: end !important;
+    /* Lưới `1fr + 3 max-content` bóp cột chữ xuống 122px ở khổ 1024 và đẩy thẻ
+       cao 439px. Flex có wrap thì ba mục xuống dòng thay vì nghiền cột chữ. */
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 0.75rem clamp(0.9rem, 1.6vw, 1.75rem) !important;
+    padding: 1.1rem 1.5rem !important;
+    border-radius: 1.35rem !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
+  }
+
+  .onboarding-web__assurance-lead {
+    /* 15rem: đủ nhỏ để ở 1440 cả bốn mục nằm chung một dòng như ảnh tham
+       chiếu, đủ lớn để ở 1024 ba mục xuống dòng thay vì nghiền cột chữ. */
+    flex: 1 1 15rem;
+    display: grid !important;
+    grid-template-columns: 3.1rem minmax(0, 1fr) !important;
+    align-items: center !important;
+    gap: 0.1rem 0.85rem !important;
+    padding-inline-end: 1.25rem !important;
+    border-inline-end: 1px solid var(--onb-line) !important;
+  }
+
+  .onboarding-web__assurance-lead .icon {
+    grid-row: 1 / 3 !important;
+    width: 3.1rem !important;
+    height: 3.1rem !important;
+    padding: 0.7rem !important;
     border-radius: 50% !important;
     background: var(--color-accent-soft) !important;
-    opacity: 0.62 !important;
+    color: var(--color-accent) !important;
   }
 
-  .onboarding-web__assurance {
-    grid-column: 1 / 2 !important;
+  .onboarding-web__assurance-lead b { align-self: end !important; color: var(--color-accent-deep) !important; font-size: var(--text-base) !important; }
+  .onboarding-web__assurance-lead small { align-self: start !important; color: var(--color-ink-2) !important; font-size: var(--text-xs) !important; line-height: var(--leading-snug) !important; }
+
+  .onboarding-web__assurance-item {
+    flex: 0 1 auto;
     display: grid !important;
-    grid-template-columns: 1.35fr repeat(3, minmax(0, 1fr)) !important;
-    align-items: center !important;
-    gap: 1rem !important;
-    padding: 1rem 1.25rem !important;
-    border: 1px solid var(--desktop-line) !important;
-    border-radius: 1rem !important;
-    background: var(--color-surface) !important;
-    box-shadow: var(--desktop-shadow-soft) !important;
+    justify-items: center !important;
+    gap: 0.4rem !important;
+    color: var(--color-ink-2) !important;
+    font-size: var(--text-xs) !important;
+    line-height: var(--leading-snug) !important;
+    text-align: center !important;
   }
 
-  .onboarding-web__assurance > span { display: flex !important; align-items: center !important; gap: 0.5rem !important; color: var(--color-ink-2) !important; }
-  .onboarding-web__assurance .icon { color: var(--color-accent) !important; }
+  .onboarding-web__assurance-item .icon { width: 1.9rem !important; height: 1.9rem !important; color: var(--color-accent) !important; }
+
+  /* ---- Màn 2: bốn thẻ tình huống ---- */
+  body[data-onboarding="true"] [data-onboarding-step="2"].onboarding__screen {
+    grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+    grid-template-rows: auto minmax(auto, 1fr) auto;
+    grid-template-areas:
+      "brand   greet"
+      "panel   visual"
+      "actions actions";
+  }
 
   .onboarding-web__choices {
     display: grid !important;
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 1rem !important;
-    margin-top: 1.5rem !important;
+    gap: clamp(0.7rem, 1.5vh, 1.15rem) !important;
+    margin-top: clamp(1rem, 2.2vh, 1.85rem) !important;
   }
 
-  .onboarding-web__choices > span,
-  .onboarding-web__demo > span {
+  .onboarding-web__choice {
     display: grid !important;
-    grid-template-columns: 3rem minmax(0, 1fr) !important;
-    gap: 0.15rem 0.85rem !important;
-    padding: 1rem !important;
-    border: 1px solid var(--desktop-line) !important;
-    border-radius: 0.9rem !important;
-    background: var(--color-surface) !important;
-    box-shadow: var(--desktop-shadow-soft) !important;
+    grid-template-columns: 4.25rem minmax(0, 1fr) !important;
+    align-content: center !important;
+    gap: 0.25rem 1rem !important;
+    padding: 1rem 1.25rem !important;
+    border-radius: 1.15rem !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
   }
 
-  .onboarding-web__choices .icon { grid-row: 1 / 3 !important; width: 3rem !important; height: 3rem !important; padding: 0.7rem !important; border-radius: 50% !important; background: var(--color-accent-soft) !important; color: var(--color-accent) !important; }
-  .onboarding-web__choices b,
-  .onboarding-web__demo b { color: var(--color-accent-deep) !important; font-size: 1rem !important; }
-  .onboarding-web__choices small,
-  .onboarding-web__demo small { color: var(--color-ink-2) !important; line-height: 1.4 !important; }
+  .onboarding-web__choice img { grid-row: 1 / 3 !important; align-self: center !important; width: 4.25rem !important; height: 4.25rem !important; object-fit: contain !important; }
+  .onboarding-web__choice b { align-self: end !important; color: var(--color-accent-deep) !important; font-size: var(--text-md) !important; line-height: var(--leading-snug) !important; }
+  .onboarding-web__choice small { align-self: start !important; color: var(--color-ink-2) !important; font-size: var(--text-xs) !important; line-height: var(--leading-snug) !important; }
 
-  .onboarding-web__demo { display: grid !important; gap: 0.75rem !important; margin-top: 1.5rem !important; }
-  .onboarding-web__demo > span { grid-template-columns: 1fr !important; }
+  /* ---- Màn 3: hội thoại mẫu, chữ căn giữa ---- */
+  body[data-onboarding="true"] [data-onboarding-step="3"].onboarding__screen {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.44fr);
+    grid-template-rows: auto auto minmax(auto, 1fr) auto;
+    grid-template-areas:
+      "brand   greet"
+      "panel   panel"
+      "chat    visual"
+      "actions actions";
+  }
 
-  body[data-onboarding="true"] .onboarding__actions {
-    position: absolute !important;
-    inset: auto clamp(3rem, 5vw, 6rem) 2rem !important;
-    z-index: 5 !important;
+  .onboarding__screen--centered .onboarding-web__copy {
+    justify-self: center !important;
+    max-width: 54rem !important;
+    text-align: center !important;
+  }
+
+  .onboarding__screen--centered .onboarding-web__copy h2 { text-align: center !important; }
+  .onboarding__screen--centered .onboarding-web__copy > p { margin-inline: auto !important; max-width: 40rem !important; }
+
+  .onboarding-web__chat {
+    grid-area: chat;
+    align-self: center !important;
+    display: grid !important;
+    align-content: center !important;
+    gap: clamp(0.5rem, 1.1vh, 0.85rem) !important;
+    padding: clamp(1rem, 1.8vw, 1.9rem) !important;
+    border-radius: var(--onb-radius) !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
+  }
+
+  .onboarding-web__bubble {
     display: flex !important;
     align-items: center !important;
-    justify-content: flex-end !important;
-    gap: 0.8rem !important;
+    gap: 0.75rem !important;
+    margin: 0 !important;
+  }
+
+  .onboarding-web__bubble--user { justify-content: flex-end !important; }
+  .onboarding-web__bubble img { width: 3rem !important; height: 3rem !important; border-radius: 50% !important; object-fit: cover !important; }
+
+  .onboarding-web__bubble .icon {
+    width: 3rem !important;
+    height: 3rem !important;
+    padding: 0.7rem !important;
+    border-radius: 50% !important;
+    background: var(--color-accent-soft) !important;
+    color: var(--color-accent) !important;
+  }
+
+  .onboarding-web__bubble span {
+    padding: 0.65rem 1.1rem !important;
+    border: 1px solid var(--onb-line) !important;
+    border-radius: 1rem !important;
+    background: var(--color-surface-2) !important;
+    color: var(--color-ink) !important;
+    font-size: var(--text-base) !important;
+    line-height: var(--leading-snug) !important;
+  }
+
+  .onboarding-web__bubble--user span { border-color: transparent !important; background: var(--color-accent-soft) !important; }
+
+  /* Cảnh báo luôn kèm biểu tượng + chữ, không bao giờ chỉ dựa vào màu. */
+  .onboarding-web__flag {
+    display: grid !important;
+    grid-template-columns: 2.6rem minmax(0, 1fr) !important;
+    align-content: center !important;
+    gap: 0.3rem 0.9rem !important;
+    padding: 0.9rem 1.15rem !important;
+    border-radius: 1.15rem !important;
+  }
+
+  .onboarding-web__flag .icon { grid-row: 1 / 3 !important; align-self: center !important; width: 2.6rem !important; height: 2.6rem !important; }
+  .onboarding-web__flag b { font-size: var(--text-base) !important; line-height: var(--leading-snug) !important; }
+
+  .onboarding-web__flag ul,
+  .onboarding-web__flag ol {
+    margin: 0 !important;
+    padding-inline-start: 1.2rem !important;
+    color: var(--color-ink-2) !important;
+    font-size: var(--text-xs) !important;
+    line-height: var(--leading-normal) !important;
+  }
+
+  .onboarding-web__flag--danger { background: var(--color-danger-soft) !important; }
+  .onboarding-web__flag--danger .icon,
+  .onboarding-web__flag--danger b { color: var(--color-danger) !important; }
+  .onboarding-web__flag--danger li::marker { color: var(--color-danger) !important; }
+
+  .onboarding-web__flag--action { background: var(--color-success-soft) !important; }
+  .onboarding-web__flag--action .icon,
+  .onboarding-web__flag--action b { color: var(--color-success) !important; }
+  .onboarding-web__flag--action li::marker { color: var(--color-success) !important; font-weight: 700 !important; }
+
+  /* Linh vật nhô sang mép thẻ hội thoại đúng như ảnh tham chiếu. */
+  .onboarding__screen--centered .onboarding-web__visual { margin-inline-start: clamp(-4rem, -3vw, -1.5rem) !important; }
+
+  /* ---- Màn 4: vòng tin cậy ---- */
+  body[data-onboarding="true"] [data-onboarding-step="4"].onboarding__screen {
+    grid-template-columns: minmax(0, 0.94fr) minmax(0, 1.12fr) minmax(0, 0.94fr);
+    grid-template-rows: auto minmax(auto, 1fr) auto;
+    grid-template-areas:
+      "brand   brand   greet"
+      "panel   visual  aside"
+      "actions actions actions";
+  }
+
+  .onboarding-web__visual--orbit { position: relative !important; align-self: center !important; }
+  .onboarding-web__visual--orbit .onboarding-web__halo { inset: 8% 4% !important; }
+
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-mascot {
+    position: relative !important;
+    z-index: 2 !important;
     width: auto !important;
+    max-width: min(78%, 21rem) !important;
+    object-fit: contain !important;
+    filter: drop-shadow(0 1.25rem 1.75rem color-mix(in oklch, var(--color-accent-deep) 14%, transparent)) !important;
+  }
+
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-face,
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-shield {
+    position: absolute !important;
+    z-index: 3 !important;
     max-width: none !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    filter: none !important;
+  }
+
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-face {
+    width: 4.6rem !important;
+    height: 4.6rem !important;
+    border-radius: 50% !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
+  }
+
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-face--a { top: 8% !important; left: 2% !important; right: auto !important; bottom: auto !important; }
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-face--b { top: 4% !important; right: 4% !important; left: auto !important; bottom: auto !important; }
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-face--c { bottom: 20% !important; left: 0 !important; top: auto !important; right: auto !important; }
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-face--d { bottom: 10% !important; right: 0 !important; top: auto !important; left: auto !important; }
+
+  .onboarding-web__visual--orbit > .onboarding-web__orbit-shield {
+    top: 0 !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    /* Ảnh khiên có nền trắng đặc — đặt thẳng lên nền tím sẽ lộ hộp trắng.
+       Bọc thành huy hiệu tròn nền trắng thì hộp đó biến mất vào huy hiệu. */
+    width: 6.5rem !important;
+    height: 6.5rem !important;
+    padding: 0.75rem !important;
+    border-radius: 50% !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
+    translate: -50% 0 !important;
+  }
+
+  /* ---- Thẻ danh sách bên phải (màn 4 và 5) ---- */
+  .onboarding-web__aside {
+    grid-area: aside;
+    align-self: center !important;
+    display: grid !important;
+    align-content: start !important;
+    gap: clamp(0.6rem, 1.2vh, 1rem) !important;
+    padding: clamp(1.15rem, 1.7vw, 1.85rem) !important;
+    border-radius: var(--onb-radius) !important;
+    background: var(--onb-card) !important;
+    box-shadow: var(--onb-shadow) !important;
+  }
+
+  .onboarding-web__aside-title {
+    color: var(--color-accent-deep) !important;
+    font-family: var(--font-display) !important;
+    font-size: var(--text-xl) !important;
+    line-height: var(--leading-tight) !important;
+  }
+
+  .onboarding-web__aside-row {
+    display: grid !important;
+    grid-template-columns: 2.85rem minmax(0, 1fr) !important;
+    align-content: center !important;
+    gap: 0.2rem 0.9rem !important;
+    padding-top: clamp(0.6rem, 1.2vh, 1rem) !important;
+    border-top: 1px solid var(--onb-line) !important;
+  }
+
+  .onboarding-web__aside-row .icon {
+    grid-row: 1 / 3 !important;
+    align-self: center !important;
+    width: 2.85rem !important;
+    height: 2.85rem !important;
+    padding: 0.65rem !important;
+    border-radius: 0.85rem !important;
+  }
+
+  .onboarding-web__aside-row b { align-self: end !important; color: var(--color-accent-deep) !important; font-size: var(--text-base) !important; line-height: var(--leading-snug) !important; }
+  .onboarding-web__aside-row small { align-self: start !important; color: var(--color-ink-2) !important; font-size: var(--text-xs) !important; line-height: var(--leading-snug) !important; }
+
+  .onboarding-web__aside-icon--call { background: var(--color-teal-soft) !important; color: var(--color-teal) !important; }
+  .onboarding-web__aside-icon--report { background: var(--color-violet-soft) !important; color: var(--color-violet) !important; }
+  .onboarding-web__aside-icon--control { background: var(--color-sky-soft) !important; color: var(--color-accent) !important; }
+
+  /* ---- Màn 5: chốt luồng ---- */
+  body[data-onboarding="true"] [data-onboarding-step="5"].onboarding__screen {
+    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+    grid-template-rows: auto minmax(auto, 1fr) auto auto;
+    grid-template-areas:
+      "brand   greet"
+      "panel   visual"
+      "aside   visual"
+      "actions actions";
+  }
+
+  body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding-web__aside { align-self: end !important; }
+
+  /* ---- Chấm bước ----
+     Nằm TRONG `.onboarding__actions` như một mục flex, không phải ô lưới đè
+     lên hàng nút. Trước đây hai thứ dùng chung một ô: ở bậc chữ A++ nút nở ra
+     và đè lên chấm mà không có gì báo. Là mục flex thì không bao giờ đè được. */
+  .onboarding-web__dots {
+    flex: 0 0 auto;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    margin: 0 auto !important;
+    pointer-events: none !important;
+  }
+
+  .onboarding-web__dot {
+    display: block !important;
+    width: 0.8rem !important;
+    height: 0.8rem !important;
+    border-radius: 50% !important;
+    background: color-mix(in oklch, var(--color-accent) 28%, var(--color-surface)) !important;
+  }
+
+  .onboarding-web__dot[data-dot-label] { background: var(--color-accent) !important; }
+
+  .onboarding-web__panel--card .onboarding-web__dot[data-dot-label] {
+    display: grid !important;
+    place-items: center !important;
+    width: 1.9rem !important;
+    height: 1.9rem !important;
+    color: var(--color-accent-ink) !important;
+    font-size: var(--text-xs) !important;
+    font-weight: 700 !important;
+  }
+
+  .onboarding-web__panel--card .onboarding-web__dot[data-dot-label]::before { content: attr(data-dot-label); }
+
+  .onboarding-web__count {
+    margin-inline-start: 0.75rem !important;
+    color: var(--color-ink-2) !important;
+    font-size: var(--text-base) !important;
+    font-weight: 600 !important;
+  }
+
+  /* ---- Hàng nút ---- */
+  body[data-onboarding="true"] .onboarding__actions {
+    grid-area: actions;
+    position: static !important;
+    z-index: 2 !important;
+    inset: auto !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 1rem !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    pointer-events: auto !important;
+  }
+
+  body[data-onboarding="true"] .onboarding__screen--centered .onboarding__actions {
+    width: min(100%, 44rem) !important;
+    margin-inline: auto !important;
   }
 
   body[data-onboarding="true"] .onboarding__button {
     position: static !important;
-    min-width: 11.5rem !important;
-    min-height: 3.55rem !important;
-    padding: 0 1.4rem !important;
-    border-radius: 0.85rem !important;
-    font-size: 1rem !important;
+    /* Bản điện thoại kê nút bằng toạ độ phần trăm (left/right/bottom: 12%…).
+       `position: static` làm chúng vô hại, nhưng nút nào cần `relative` để neo
+       pseudo-element thì toạ độ cũ sống lại và đẩy nút lệch 71px. Xoá hẳn. */
+    inset: auto !important;
+    min-width: 10.5rem !important;
+    /* Sàn 56px của brief: 3.55rem ở bậc chữ nhỏ nhất chỉ ra 53,25px. */
+    min-height: var(--touch-target-primary) !important;
+    padding: 0.7rem 1.6rem !important;
+    border: 1px solid transparent !important;
+    border-radius: 0.9rem !important;
+    background: transparent !important;
+    color: var(--color-accent-deep) !important;
+    font-size: var(--text-base) !important;
+    font-weight: 700 !important;
+    line-height: var(--leading-snug) !important;
+    text-shadow: none !important;
+    white-space: normal !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease !important;
+  }
+
+  body[data-onboarding="true"] .onboarding__button:focus-visible {
+    outline: 3px solid var(--color-focus-outer) !important;
+    outline-offset: 3px !important;
   }
 
   body[data-onboarding="true"] .onboarding__button--back {
     display: inline-flex !important;
     margin-right: auto !important;
-    border: 1px solid var(--color-accent) !important;
-    background: var(--color-surface) !important;
-    color: var(--color-accent) !important;
+    border-color: var(--color-accent-soft-line) !important;
+    background: var(--onb-card) !important;
+    color: var(--color-accent-deep) !important;
+    box-shadow: var(--onb-shadow) !important;
   }
+
+  body[data-onboarding="true"] .onboarding__button--back:hover { border-color: var(--color-accent) !important; }
 
   body[data-onboarding="true"] .onboarding__button--primary {
-    border: 1px solid var(--color-accent) !important;
+    border-color: var(--color-accent) !important;
     background: var(--color-accent) !important;
     color: var(--color-accent-ink) !important;
-    box-shadow: var(--shadow-sm) !important;
+    box-shadow: 0 0.6rem 1.4rem color-mix(in oklch, var(--color-accent) 32%, transparent) !important;
   }
 
+  body[data-onboarding="true"] .onboarding__button--primary:hover {
+    border-color: var(--color-accent-hover) !important;
+    background: var(--color-accent-hover) !important;
+  }
+
+  /* "Bỏ qua" nằm góc trên phải; nó tuyệt đối nên không chen vào hàng nút. */
   body[data-onboarding="true"] .onboarding__button--quiet {
-    position: fixed !important;
-    top: 2rem !important;
-    right: clamp(3rem, 5vw, 6rem) !important;
+    position: absolute !important;
+    top: var(--onb-pad-block) !important;
+    right: var(--onb-gutter) !important;
     bottom: auto !important;
     left: auto !important;
-    width: auto !important;
-    height: auto !important;
-    min-width: 7rem !important;
-    border: 1px solid var(--desktop-line) !important;
-    background: var(--color-surface) !important;
+    min-width: 8rem !important;
+    border-color: var(--onb-line) !important;
+    border-radius: 0.9rem !important;
+    background: var(--onb-card) !important;
     color: var(--color-accent-deep) !important;
+    box-shadow: var(--onb-shadow) !important;
   }
 
-  body[data-onboarding="true"] [data-onboarding-step="1"] .onboarding__actions { justify-content: center !important; }
-  body[data-onboarding="true"] [data-onboarding-step="1"] .onboarding__button--primary { min-width: 19rem !important; }
+  body[data-onboarding="true"] .onboarding__button--quiet:hover { border-color: var(--color-accent) !important; }
+
+  /* Màn cuối: "Đăng nhập hoặc dùng sau" đứng cạnh nút chính, không lên góc. */
+  body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--quiet {
+    position: static !important;
+    order: 2 !important;
+    margin-left: 0 !important;
+    border-color: transparent !important;
+    background: transparent !important;
+    color: var(--color-accent) !important;
+    box-shadow: none !important;
+  }
+
+  body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--quiet:hover { background: var(--color-accent-soft) !important; }
+  body[data-onboarding="true"] [data-onboarding-step="5"] .onboarding__button--primary { order: 1 !important; margin-left: 0 !important; }
+
+  /* Màn 1: nút mở luồng, có vòng tròn mũi tên như ảnh tham chiếu. */
+  body[data-onboarding="true"] .onboarding__button--lead {
+    position: relative !important;
+    min-width: 15rem !important;
+    min-height: max(4rem, var(--touch-target-primary)) !important;
+    padding-inline: 4.4rem 2rem !important;
+    border-radius: 1.1rem !important;
+    font-size: var(--text-md) !important;
+  }
+
+  .onboarding__button--lead::before,
+  .onboarding__button--lead::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+  }
+
+  .onboarding__button--lead::before {
+    inset-inline-start: 0.85rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: color-mix(in oklch, var(--color-accent-ink) 26%, transparent);
+  }
+
+  .onboarding__button--lead::after {
+    inset-inline-start: 1.45rem;
+    width: 1.3rem;
+    height: 1.3rem;
+    background: var(--color-accent-ink);
+    -webkit-mask: url("/vendor/unicons/angle-right-b.svg") center / contain no-repeat;
+    mask: url("/vendor/unicons/angle-right-b.svg") center / contain no-repeat;
+  }
+
+  /* Mũi tên hướng đi trên nút Quay lại / Tiếp tục. Vẽ bằng pseudo-element nên
+     nhãn nút trong HTML vẫn là chữ thật, không phải icon trộn vào chữ. */
+  body[data-onboarding="true"] .onboarding__screen--grid .onboarding__button--back,
+  body[data-onboarding="true"] .onboarding__screen--grid [data-onboarding-next] {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.65rem !important;
+  }
+
+  body[data-onboarding="true"] .onboarding__screen--grid .onboarding__button--back::before,
+  body[data-onboarding="true"] .onboarding__screen--grid [data-onboarding-next]::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 1.3rem;
+    height: 1.3rem;
+    background: currentColor;
+    -webkit-mask: var(--onb-arrow) center / contain no-repeat;
+    mask: var(--onb-arrow) center / contain no-repeat;
+  }
+
+  body[data-onboarding="true"] .onboarding__screen--grid .onboarding__button--back::before { --onb-arrow: url("/vendor/unicons/angle-left.svg"); }
+  body[data-onboarding="true"] .onboarding__screen--grid [data-onboarding-next]::after { --onb-arrow: url("/vendor/unicons/angle-right-b.svg"); }
+
+  @media (prefers-reduced-motion: reduce) {
+    body[data-onboarding="true"] .onboarding__button { transition: none !important; }
+  }
+
+  /* Màn hình thấp (1024×720, hoặc bậc chữ A++ trên laptop 13"): thu minh hoạ
+     lại để hàng nút luôn nằm trọn trong khung nhìn. */
+  @media (max-height: 52rem) {
+    body[data-onboarding="true"] .onboarding { --onb-pad-block: clamp(1rem, 1.8vh, 1.5rem); }
+    .onboarding-web__visual > img { width: min(100%, 20rem) !important; }
+    .onboarding-web__visual--orbit > .onboarding-web__orbit-mascot { max-width: min(70%, 15rem) !important; }
+    .onboarding-web__visual--orbit > .onboarding-web__orbit-face { width: 3.6rem !important; height: 3.6rem !important; }
+    .onboarding-web__visual--orbit > .onboarding-web__orbit-shield { width: 5rem !important; height: 5rem !important; }
+    .onboarding-web__panel--card { padding: clamp(1.5rem, 2.4vw, 2.5rem) !important; gap: clamp(1rem, 2vh, 1.6rem) !important; }
+    .onboarding-web__chat { gap: 0.45rem !important; padding: clamp(0.85rem, 1.4vw, 1.35rem) !important; }
+    .onboarding-web__flag { padding: 0.7rem 1rem !important; }
+    .onboarding-web__choice { padding: 0.8rem 1rem !important; }
+    .onboarding-web__choices { margin-top: clamp(0.75rem, 1.4vh, 1.15rem) !important; }
+    .onboarding-web__copy > p { margin-top: clamp(0.6rem, 1.1vh, 1rem) !important; }
+    .onboarding-web__assurance { padding: 0.85rem 1.15rem !important; }
+  }
+
+  /* Máy tính khổ hẹp (1024–1200): bớt cột ba của màn 4 để không bóp chữ. */
+  @media (max-width: 75rem) {
+    body[data-onboarding="true"] [data-onboarding-step="4"].onboarding__screen {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      grid-template-rows: auto minmax(auto, 1fr) auto auto;
+      grid-template-areas:
+        "brand   greet"
+        "panel   visual"
+        "aside   visual"
+        "actions actions";
+    }
+
+    body[data-onboarding="true"] [data-onboarding-step="4"] .onboarding-web__aside { align-self: end !important; }
+    .onboarding-web__choice { grid-template-columns: 3.5rem minmax(0, 1fr) !important; }
+    .onboarding-web__choice img { width: 3.5rem !important; height: 3.5rem !important; }
+  }
+
 
   /* Empty case history mirrors the calm, useful reference state. */
   html[data-route="hanh-trinh"] #caseListPanel:has(#caseListEmpty:not([hidden])) {

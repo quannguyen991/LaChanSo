@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/fonts/be-vietnam-pro/700.css">
     <link rel="stylesheet" href="/tokens.css">
     <link rel="stylesheet" href="/styles.css?v=20260801-route-transitions-1">
-    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260801-learning-alerts-1">
+    <link rel="stylesheet" href="/khoan-da-2026.css?v=20260807-onboarding-desktop-1">
     <link rel="stylesheet" href="/mobile-header-fix.css?v=20260802-4">
     <link rel="stylesheet" href="/history-redesign.css?v=20260802-1">
     <link rel="stylesheet" href="/safety-redesign.css?v=20260802-1">
@@ -28,10 +28,10 @@
     <link rel="stylesheet" href="/home-news.css?v=20260803-2">
     <link rel="stylesheet" href="/history-reference.css?v=20260803-11">
     <link rel="stylesheet" href="/auth-state-ui.css?v=20260803-2">
-    <link rel="stylesheet" href="/mobile-reference-exact.css?v=20260803-1">
+    <link rel="stylesheet" href="/mobile-reference-exact.css?v=20260807-navfix-1">
     <link rel="stylesheet" href="/home-aurora-tiles.css?v=20260803-1">
     <link rel="stylesheet" href="/intervention-ladder.css?v=20260807-1">
-    <link rel="stylesheet" href="/mobile-clay.css?v=20260807-1">
+    <link rel="stylesheet" href="/mobile-clay.css?v=20260808-kiemtra-1">
     <script src="/vendor/jsQR.js" defer></script>
     <script src="/services.js" defer></script>
     <script src="/local-vault.js" defer></script>
@@ -57,7 +57,7 @@
             <p class="onboarding-web__greeting"><i class="icon icon-user" aria-hidden="true"></i>Chào bác</p>
             <div class="onboarding-web__visual"><span class="onboarding-web__halo" aria-hidden="true"></span><img src="/assets/mascot-home.webp" width="466" height="470" alt="" aria-hidden="true" decoding="async"></div>
             <div class="onboarding-web__assurance">
-              <span class="onboarding-web__assurance-lead"><i class="icon icon-smile" aria-hidden="true"></i><b>An toàn hơn mỗi ngày</b><small>Khoan Đã đồng hành cùng bác phát hiện rủi ro, tránh lừa đảo và bảo vệ thông tin cá nhân.</small></span>
+              <span class="onboarding-web__assurance-lead"><i class="icon icon-smile" aria-hidden="true"></i><b>An toàn hơn mỗi ngày</b><small>Khoan Đã đồng hành cùng bác phát hiện rủi ro và bảo vệ thông tin cá nhân.</small></span>
               <span class="onboarding-web__assurance-item"><i class="icon icon-lock" aria-hidden="true"></i>Bảo vệ thông tin</span>
               <span class="onboarding-web__assurance-item"><i class="icon icon-search" aria-hidden="true"></i>Nhận diện rủi ro</span>
               <span class="onboarding-web__assurance-item"><i class="icon icon-heart" aria-hidden="true"></i>Đồng hành tận tâm</span>
@@ -96,54 +96,105 @@
             <div class="onboarding__actions">
             <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
             <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
+            <p class="onboarding-web__dots"><span class="visually-hidden">Bước 2 trên 5</span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" data-dot-label="2" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span></p>
             <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
             </div>
-            <p class="onboarding-web__dots"><span class="visually-hidden">Bước 2 trên 5</span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" data-dot-label="2" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span></p>
           </div>
         </article>
-        <article class="onboarding__screen" data-onboarding-step="3" aria-labelledby="onboardingCheckTitle" hidden>
-          <div class="onboarding-web" aria-hidden="true">
-            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
-            <div class="onboarding-web__copy onboarding-web__copy--center"><p class="onboarding-web__step">Hướng dẫn rõ ràng</p><h2>Khoan Đã sẽ hướng dẫn bác từng bước</h2><p>Bác chỉ cần kể lại tình huống. Ứng dụng sẽ giải thích điều gì đáng ngờ và bác nên làm gì tiếp theo.</p><div class="onboarding-web__demo"><span><b>Dấu hiệu đáng ngờ</b><small>Yêu cầu chuyển tiền gấp, dặn không nói với người thân.</small></span><span><b>Bác nên làm ngay</b><small>Dừng cuộc gọi, không chuyển tiền và gọi người thân xác minh.</small></span></div></div>
-            <div class="onboarding-web__visual"><img src="/assets/mascot-assistant.webp" width="370" height="370" alt=""><span class="onboarding-web__halo"></span></div>
+        <article class="onboarding__screen onboarding__screen--grid onboarding__screen--centered" data-onboarding-step="3" aria-labelledby="onboardingCheckTitle" hidden>
+          <div class="onboarding-web">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt="" aria-hidden="true"><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
+            <div class="onboarding-web__chat">
+              <p class="onboarding-web__bubble onboarding-web__bubble--bot"><img src="/assets/mascot-assistant.webp" width="72" height="72" alt="" aria-hidden="true" decoding="async"><span>Bác đang gặp tình huống gì?</span></p>
+              <p class="onboarding-web__bubble onboarding-web__bubble--user"><span>Có người tự xưng là công an và yêu cầu tôi chuyển tiền.</span><i class="icon icon-user" aria-hidden="true"></i></p>
+              <div class="onboarding-web__flag onboarding-web__flag--danger">
+                <i class="icon icon-alert" aria-hidden="true"></i>
+                <b>Dấu hiệu đáng ngờ</b>
+                <ul><li>Tự xưng là công an</li><li>Yêu cầu chuyển tiền gấp</li><li>Dặn không nói với người thân</li></ul>
+              </div>
+              <div class="onboarding-web__flag onboarding-web__flag--action">
+                <i class="icon icon-shield-check" aria-hidden="true"></i>
+                <b>Bác nên làm ngay</b>
+                <ol><li>Dừng cuộc gọi</li><li>Không chuyển tiền</li><li>Gọi người thân để xác minh</li></ol>
+              </div>
+            </div>
+            <div class="onboarding-web__visual"><span class="onboarding-web__halo" aria-hidden="true"></span><img src="/assets/mascot-home.webp" width="466" height="470" alt="" aria-hidden="true" decoding="async"></div>
           </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-3.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h2 class="onboarding__title" id="onboardingCheckTitle">Kiểm tra nhanh, phát hiện sớm</h2>
           <p class="onboarding__lead">Tin nhắn lạ, cuộc gọi lạ, link hay mã QR — bác đưa vào, tôi xem giúp.</p>
-          <div class="onboarding__actions">
-          <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
-          <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
-          <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
+          <div class="onboarding-web__panel">
+            <div class="onboarding-web__copy">
+              <h2>Khoan Đã sẽ hướng dẫn bác từng bước</h2>
+              <p>Bác chỉ cần kể lại tình huống. Ứng dụng sẽ giải thích rõ điều gì đáng ngờ và bác nên làm gì tiếp theo.</p>
+            </div>
+            <div class="onboarding__actions">
+            <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
+            <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
+            <p class="onboarding-web__dots"><span class="visually-hidden">Bước 3 trên 5</span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" data-dot-label="3" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span></p>
+            <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
+            </div>
           </div>
         </article>
-        <article class="onboarding__screen" data-onboarding-step="4" aria-labelledby="onboardingProcessTitle" hidden>
-          <div class="onboarding-web" aria-hidden="true">
-            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
-            <div class="onboarding-web__copy"><p class="onboarding-web__step">Vòng tin cậy</p><h2>An toàn hơn khi có người thân đồng hành</h2><p>Bác có thể kết nối con cháu và người thân tin cậy để nhận hỗ trợ khi gặp cuộc gọi, tin nhắn hay yêu cầu chuyển tiền đáng ngờ.</p><div class="onboarding-web__demo"><span><b>Gọi nhanh cho con cháu</b><small>Kết nối ngay khi cần hỗ trợ.</small></span><span><b>Bác luôn kiểm soát</b><small>Chủ động lựa chọn quyền chia sẻ.</small></span></div></div>
-            <div class="onboarding-web__visual"><img src="/assets/mascot-home.webp" width="466" height="470" alt=""><span class="onboarding-web__halo"></span></div>
+        <article class="onboarding__screen onboarding__screen--grid onboarding__screen--trio" data-onboarding-step="4" aria-labelledby="onboardingProcessTitle" hidden>
+          <div class="onboarding-web">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt="" aria-hidden="true"><span><strong>Khoan Đã</strong><small>An tâm hơn mỗi ngày</small></span></div>
+            <div class="onboarding-web__visual onboarding-web__visual--orbit">
+              <span class="onboarding-web__halo" aria-hidden="true"></span>
+              <img class="onboarding-web__orbit-shield" src="/assets/brand-shield-purple.webp" width="120" height="144" alt="" aria-hidden="true" decoding="async">
+              <img class="onboarding-web__orbit-face onboarding-web__orbit-face--a" src="/assets/family-ha.webp" width="112" height="112" alt="" aria-hidden="true" decoding="async">
+              <img class="onboarding-web__orbit-face onboarding-web__orbit-face--b" src="/assets/family-nam.webp" width="112" height="112" alt="" aria-hidden="true" decoding="async">
+              <img class="onboarding-web__orbit-face onboarding-web__orbit-face--c" src="/assets/family-mai.webp" width="112" height="112" alt="" aria-hidden="true" decoding="async">
+              <img class="onboarding-web__orbit-face onboarding-web__orbit-face--d" src="/assets/family-bac.webp" width="112" height="112" alt="" aria-hidden="true" decoding="async">
+              <img class="onboarding-web__orbit-mascot" src="/assets/mascot-home.webp" width="466" height="470" alt="" aria-hidden="true" decoding="async">
+            </div>
+            <div class="onboarding-web__aside">
+              <b class="onboarding-web__aside-title">Vòng tin cậy</b>
+              <span class="onboarding-web__aside-row"><i class="icon icon-phone onboarding-web__aside-icon onboarding-web__aside-icon--call" aria-hidden="true"></i><b>Gọi nhanh cho con cháu</b><small>Kết nối tức thì khi cần hỗ trợ.</small></span>
+              <span class="onboarding-web__aside-row"><i class="icon icon-alert onboarding-web__aside-icon onboarding-web__aside-icon--report" aria-hidden="true"></i><b>Báo cáo tình huống đáng ngờ</b><small>Cảnh báo để mọi người cùng hỗ trợ.</small></span>
+              <span class="onboarding-web__aside-row"><i class="icon icon-shield-check onboarding-web__aside-icon onboarding-web__aside-icon--control" aria-hidden="true"></i><b>Bác luôn kiểm soát quyền chia sẻ</b><small>Chủ động lựa chọn và yên tâm sử dụng.</small></span>
+            </div>
           </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-4.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h2 class="onboarding__title" id="onboardingProcessTitle">Xử lý đơn giản, hướng dẫn rõ ràng</h2>
           <p class="onboarding__lead">Tôi nói rõ mức rủi ro, vì sao, và việc bác cần làm ngay.</p>
-          <div class="onboarding__actions">
-          <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
-          <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
-          <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
+          <div class="onboarding-web__panel">
+            <div class="onboarding-web__copy">
+              <h2>An toàn hơn khi có người thân đồng hành</h2>
+              <p>Bác có thể kết nối con cháu và người thân tin cậy để nhận hỗ trợ khi gặp cuộc gọi, tin nhắn hay yêu cầu chuyển tiền đáng ngờ.</p>
+            </div>
+            <div class="onboarding__actions">
+            <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
+            <button class="onboarding__button onboarding__button--quiet" type="button" data-onboarding-skip>Bỏ qua</button>
+            <p class="onboarding-web__dots"><span class="visually-hidden">Bước 4 trên 5</span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" data-dot-label="4" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span></p>
+            <button class="onboarding__button onboarding__button--primary" type="button" data-onboarding-next>Tiếp tục</button>
+            </div>
           </div>
         </article>
-        <article class="onboarding__screen" data-onboarding-step="5" aria-labelledby="onboardingFamilyTitle" hidden>
-          <div class="onboarding-web" aria-hidden="true">
-            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt=""><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
-            <div class="onboarding-web__copy"><p class="onboarding-web__step">Sẵn sàng</p><h2>Khoan Đã luôn ở đây cùng bác</h2><p>Bắt đầu kiểm tra tình huống đầu tiên hoặc thêm người thân tin cậy để được hỗ trợ khi cần.</p><div class="onboarding-web__demo"><span><b>Thông tin ở lại trên thiết bị</b><small>Bác quyết định nội dung nào được lưu và chia sẻ.</small></span></div></div>
-            <div class="onboarding-web__visual"><img src="/assets/mascot-history.webp" width="370" height="330" alt=""><span class="onboarding-web__halo"></span></div>
+        <article class="onboarding__screen onboarding__screen--grid onboarding__screen--finish" data-onboarding-step="5" aria-labelledby="onboardingFamilyTitle" hidden>
+          <div class="onboarding-web">
+            <div class="onboarding-web__brand"><img src="/assets/brand-shield-purple.webp" width="52" height="62" alt="" aria-hidden="true"><span><strong>Khoan Đã</strong><small>Bảo vệ bác, mỗi ngày</small></span></div>
+            <div class="onboarding-web__visual"><span class="onboarding-web__halo" aria-hidden="true"></span><img src="/assets/mascot-history.webp" width="370" height="330" alt="" aria-hidden="true" decoding="async"></div>
+            <div class="onboarding-web__aside">
+              <b class="onboarding-web__aside-title">Bác đã sẵn sàng</b>
+              <span class="onboarding-web__aside-row"><i class="icon icon-folder-lock onboarding-web__aside-icon onboarding-web__aside-icon--control" aria-hidden="true"></i><b>Thông tin ở lại trên thiết bị</b><small>Bác quyết định nội dung nào được lưu và chia sẻ.</small></span>
+              <span class="onboarding-web__aside-row"><i class="icon icon-users onboarding-web__aside-icon onboarding-web__aside-icon--call" aria-hidden="true"></i><b>Thêm người thân tin cậy</b><small>Bác có thể thêm bất cứ lúc nào trong mục Gia đình.</small></span>
+            </div>
           </div>
           <img class="onboarding__art" src="/assets/onboarding-reference-5.webp" width="942" height="1672" alt="" aria-hidden="true" decoding="async">
           <h2 class="onboarding__title" id="onboardingFamilyTitle">Gia đình luôn bên cạnh bác</h2>
           <p class="onboarding__lead">Lưu số con cháu để gọi ngay bằng một chạm khi cần.</p>
-          <div class="onboarding__actions">
-          <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
-          <button class="onboarding__button onboarding__button--quiet" type="button" id="finishOnboardingLaterButton">Đăng nhập hoặc dùng sau</button>
-          <button class="onboarding__button onboarding__button--primary" type="button" id="finishOnboardingButton">Bắt đầu sử dụng</button>
+          <div class="onboarding-web__panel">
+            <div class="onboarding-web__copy">
+              <h2>Khoan Đã luôn ở đây cùng bác</h2>
+              <p>Bắt đầu kiểm tra tình huống đầu tiên hoặc thêm người thân tin cậy để được hỗ trợ khi cần.</p>
+            </div>
+            <div class="onboarding__actions">
+            <button class="onboarding__button onboarding__button--back" type="button" data-onboarding-back>Quay lại</button>
+            <p class="onboarding-web__dots"><span class="visually-hidden">Bước 5 trên 5</span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" aria-hidden="true"></span><span class="onboarding-web__dot" data-dot-label="5" aria-hidden="true"></span></p>
+            <button class="onboarding__button onboarding__button--quiet" type="button" id="finishOnboardingLaterButton">Đăng nhập hoặc dùng sau</button>
+            <button class="onboarding__button onboarding__button--primary" type="button" id="finishOnboardingButton">Bắt đầu sử dụng</button>
+            </div>
           </div>
         </article>
       </div>
@@ -348,8 +399,8 @@
           </div>
           <div class="mobile-reference-top__intro">
             <div class="mobile-reference-top__copy">
-              <h2 id="mobileReferenceTitle">Bác đang gặp tình huống gì?</h2>
-              <p>Khoan Đã sẽ giúp bác kiểm tra và xử lý an toàn, từng bước rõ ràng.</p>
+              <h2 id="mobileReferenceTitle">Bác cần hỗ trợ gì hôm nay?</h2>
+              <p>Khoan Đã luôn ở đây để bảo vệ bác khỏi lừa đảo.</p>
             </div>
             <img class="mobile-reference-top__art" src="/assets/mascot-home.webp" width="466" height="470" alt="" aria-hidden="true" decoding="async">
           </div>
@@ -470,28 +521,28 @@
         </div>
 
         <div class="hub-tile-grid">
-          <a class="hub-tile" href="#kiem-tra" aria-label="Chụp và kiểm tra tin nhắn đáng ngờ">
-            <span class="hub-tile__icon hub-card__icon--teal"><span class="icon icon-camera" aria-hidden="true"></span></span>
+          <a class="hub-tile hub-tile--message" href="#kiem-tra" aria-label="Chụp và kiểm tra tin nhắn đáng ngờ">
+            <span class="hub-tile__icon hub-card__icon--teal"><span class="icon icon-camera" aria-hidden="true"></span><img class="hub-tile__orb" src="/assets/check-message-orb-new.webp" width="112" height="112" alt="" aria-hidden="true" loading="lazy" decoding="async"></span>
             <span class="hub-tile__title"><span class="hub-tile__title--desktop">Chụp tin nhắn</span><span class="hub-tile__title--mobile">Tin nhắn</span></span>
-            <span class="hub-tile__lead">Kiểm tra nội dung nghi ngờ</span>
+            <span class="hub-tile__lead"><span class="hub-tile__lead--desktop">Kiểm tra nội dung nghi ngờ</span><span class="hub-tile__lead--mobile">Kiểm tra tin nhắn có dấu hiệu lừa đảo</span></span>
             <span class="icon icon-chevron-right hub-tile__arrow" aria-hidden="true"></span>
           </a>
-          <a class="hub-tile" href="#chuyen-khoan" aria-label="Kiểm tra trước khi chuyển tiền">
-            <span class="hub-tile__icon hub-card__icon--green"><span class="icon icon-wallet" aria-hidden="true"></span></span>
+          <a class="hub-tile hub-tile--transfer" href="#chuyen-khoan" aria-label="Kiểm tra trước khi chuyển tiền">
+            <span class="hub-tile__icon hub-card__icon--green"><span class="icon icon-wallet" aria-hidden="true"></span><img class="hub-tile__orb" src="/assets/check-transfer-orb-new.webp" width="112" height="112" alt="" aria-hidden="true" loading="lazy" decoding="async"></span>
             <span class="hub-tile__title"><span class="hub-tile__title--desktop">Trước khi chuyển tiền</span><span class="hub-tile__title--mobile">Chuyển tiền</span></span>
-            <span class="hub-tile__lead">Kiểm tra tài khoản an toàn</span>
+            <span class="hub-tile__lead"><span class="hub-tile__lead--desktop">Kiểm tra tài khoản an toàn</span><span class="hub-tile__lead--mobile">Kiểm tra trước khi chuyển khoản</span></span>
             <span class="icon icon-chevron-right hub-tile__arrow" aria-hidden="true"></span>
           </a>
-          <a class="hub-tile" href="#xac-minh" aria-label="Kiểm tra cuộc gọi lạ">
-            <span class="hub-tile__icon hub-card__icon--amber"><span class="icon icon-messages" aria-hidden="true"></span></span>
+          <a class="hub-tile hub-tile--call" href="#xac-minh" aria-label="Kiểm tra cuộc gọi lạ">
+            <span class="hub-tile__icon hub-card__icon--amber"><span class="icon icon-messages" aria-hidden="true"></span><img class="hub-tile__orb" src="/assets/check-call-orb-new.webp" width="112" height="112" alt="" aria-hidden="true" loading="lazy" decoding="async"></span>
             <span class="hub-tile__title"><span class="hub-tile__title--desktop">Đang có cuộc gọi lạ</span><span class="hub-tile__title--mobile">Cuộc gọi lạ</span></span>
-            <span class="hub-tile__lead">Nhận diện số điện thoại nguy cơ</span>
+            <span class="hub-tile__lead"><span class="hub-tile__lead--desktop">Nhận diện số điện thoại nguy cơ</span><span class="hub-tile__lead--mobile">Kiểm tra cuộc gọi và số lạ</span></span>
             <span class="icon icon-chevron-right hub-tile__arrow" aria-hidden="true"></span>
           </a>
-          <a class="hub-tile" href="#kiem-tra-lien-ket" aria-label="Kiểm tra link hoặc mã QR lạ">
-            <span class="hub-tile__icon hub-card__icon--violet"><span class="icon icon-qr-code" aria-hidden="true"></span></span>
+          <a class="hub-tile hub-tile--link" href="#kiem-tra-lien-ket" aria-label="Kiểm tra link hoặc mã QR lạ">
+            <span class="hub-tile__icon hub-card__icon--violet"><span class="icon icon-qr-code" aria-hidden="true"></span><img class="hub-tile__orb" src="/assets/check-link-orb-new.webp" width="112" height="112" alt="" aria-hidden="true" loading="lazy" decoding="async"></span>
             <span class="hub-tile__title"><span class="hub-tile__title--desktop">Kiểm tra link/QR</span><span class="hub-tile__title--mobile">Link / QR</span></span>
-            <span class="hub-tile__lead">Phát hiện đường link độc hại</span>
+            <span class="hub-tile__lead"><span class="hub-tile__lead--desktop">Phát hiện đường link độc hại</span><span class="hub-tile__lead--mobile">Kiểm tra đường dẫn hoặc mã QR</span></span>
             <span class="icon icon-chevron-right hub-tile__arrow" aria-hidden="true"></span>
           </a>
         </div>
@@ -502,9 +553,9 @@
               <span class="emergency-banner__icon"><img src="/assets/home-siren-action.webp" width="143" height="164" alt="" aria-hidden="true"></span>
             <span class="emergency-banner__text">
               <span class="emergency-banner__title emergency-banner__title--desktop">TÔI ĐANG BỊ THÚC ÉP</span>
-              <span class="emergency-banner__title emergency-banner__title--mobile">Bác đang bị thúc ép?</span>
+              <span class="emergency-banner__title emergency-banner__title--mobile">Khẩn cấp!</span>
               <span class="emergency-banner__lead emergency-banner__lead--desktop">Dừng lại 60 giây để bình tĩnh</span>
-              <span class="emergency-banner__lead emergency-banner__lead--mobile">Dừng lại 60 giây, Khoan Đã sẽ giúp bác!</span>
+              <span class="emergency-banner__lead emergency-banner__lead--mobile">Nếu bác đang nghi ngờ bị lừa đảo, hãy dừng lại ngay lập tức.</span>
             </span>
             <span class="emergency-banner__cta">Dừng ngay</span>
           </button>

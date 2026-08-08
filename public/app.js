@@ -4178,7 +4178,14 @@ function renderOnboardingStep(step, { focus = true } = {}) {
 
   const focusHeading = () => {
     if (!focus || token !== onboardingTransitionToken) return;
-    const heading = nextScreen?.querySelector("h1, h2");
+    // Mỗi màn có HAI tiêu đề: một cho bản điện thoại, một cho bản máy tính —
+    // bản kia luôn display:none. Gọi focus() lên phần tử display:none thì
+    // không có gì xảy ra, nên phải chọn cái ĐANG HIỆN. checkVisibility() là
+    // cách duy nhất đúng ở đây (offsetParent nói dối với phần tử trong grid).
+    const headings = Array.from(nextScreen?.querySelectorAll("h1, h2") || []);
+    const heading = headings.find((item) =>
+      (typeof item.checkVisibility === "function" ? item.checkVisibility() : item.offsetParent !== null)
+    ) || headings[0];
     if (heading) {
       heading.setAttribute("tabindex", "-1");
       heading.focus({ preventScroll: true });
