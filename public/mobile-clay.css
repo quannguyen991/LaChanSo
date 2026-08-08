@@ -975,12 +975,7 @@
     color: var(--clay-nav-purple) !important;
   }
 
-  /* 4. Linh vật hero: ảnh tham chiếu để nó cao gần trọn thẻ. */
-  :root body #homeView .mobile-reference-top__art {
-    inline-size: 11.5rem !important;
-    inset-inline-end: -1rem !important;
-    inset-block-end: -0.75rem !important;
-  }
+  /* 4. Linh vật hero: người dùng yêu cầu bỏ, xem khối cuối file. */
 }
 
 @media (max-width: 63.99rem) {
@@ -997,9 +992,6 @@
     grid-template-columns: minmax(0, 1fr) clamp(5.5rem, 25vw, 10.5rem) !important;
   }
 
-  :root body #homeView .mobile-reference-top__art {
-    inline-size: clamp(7rem, 32vw, 11.5rem) !important;
-  }
 
   /* 6. Ba nút trong ô kể tình huống đang cao 44px — dưới sàn 52px của dự án,
         và nút gửi là hành động chính nên sàn của nó là 56px. Người 70 tuổi
@@ -1825,5 +1817,30 @@
     block-size: 2.6rem !important;
     color: var(--clay-nav-purple) !important;
     background-color: currentColor !important;
+  }
+}
+
+/* ==========================================================================
+   BỎ LINH VẬT Ở KHỐI HERO TRANG CHỦ (theo yêu cầu người dùng)
+
+   Ảnh này là `alt=""` và `aria-hidden="true"` — thuần trang trí, nên bỏ đi
+   không mất thông tin nào và trình đọc màn hình vốn đã không đọc nó.
+
+   Phải gỡ CẢ CỘT LƯỚI chứ không chỉ ẩn ảnh: .mobile-reference-top__intro là
+   grid `1fr 9.5rem`, mà ảnh lại position:absolute — tức cột thứ hai rộng
+   93,75px vẫn được chừa sẵn dù ảnh biến mất. Đo được phần chữ chỉ rộng 206px
+   trên khung 341px. Trả về một cột để chữ dùng trọn bề ngang.
+
+   min-height cũng phải gỡ: 258,4px là chiều cao đặt theo linh vật, giữ lại
+   thì còn một mảng tím rỗng bên dưới chữ.
+   ========================================================================== */
+@media (max-width: 63.99rem) {
+  :root body #homeView .mobile-reference-top__art {
+    display: none !important;
+  }
+
+  :root body #homeView .mobile-reference-top__intro {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-block-size: 0 !important;
   }
 }

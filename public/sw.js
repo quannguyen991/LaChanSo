@@ -1,4 +1,4 @@
-const CACHE_NAME = "khoan-da-shell-v64";
+const CACHE_NAME = "khoan-da-shell-v65";
 const APP_SHELL = [
   "/",
   "/index.html",
@@ -9,7 +9,7 @@ const APP_SHELL = [
   // Màn hình bảo vệ và màn hình một câu hỏi phải dựng được khi mất mạng —
   // đó chính là lúc người dùng cần chúng nhất.
   "/intervention-ladder.css?v=20260807-1",
-  "/mobile-clay.css?v=20260808-lichsu-1",
+  "/mobile-clay.css?v=20260808-hero-2",
   "/services.js",
   "/local-vault.js",
   "/app.js",
