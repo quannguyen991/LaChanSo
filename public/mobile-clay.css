@@ -38,6 +38,18 @@
     --clay-purple-light: #B18BFF;
     --clay-purple-tint: #EFE9FE;
 
+    /* Sắc tím của THANH TASKBAR, đo từ chính nó:
+       linear-gradient(105deg, #B18BFF, #8E55EF). Dùng cho ICON và nền không
+       chứa chữ — sàn tương phản phi văn bản là 3:1, #8E55EF trên nền trắng
+       đạt 4,47:1 nên thoải mái. */
+    --clay-nav-purple: #8E55EF;
+    --clay-nav-gradient: linear-gradient(105deg, #B18BFF 0%, #8E55EF 100%);
+
+    /* Gradient cho nút CÓ CHỮ TRẮNG. Không dùng --clay-purple-light làm chặn
+       sáng được: chữ trắng trên #B18BFF chỉ đạt 2,62:1, dưới sàn 4,5:1. Chặn
+       sáng ở đây là #7C4DFF (4,85:1), chặn tối #5B2BB8 (8,43:1). */
+    --clay-gradient-btn: linear-gradient(120deg, #7C4DFF 0%, #5B2BB8 100%);
+
     /* ---- Chữ ---- */
     --clay-ink: #2B1B6B;
     --clay-ink-soft: #6F63A0;
@@ -154,7 +166,7 @@
     padding-inline: 1.1rem !important;
     border: 0 !important;
     border-radius: var(--clay-r-pill) !important;
-    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    background: var(--clay-gradient-btn) !important;
     color: #FFFFFF !important;
     box-shadow: var(--clay-shadow-purple) !important;
     font-size: max(15px, 0.95rem) !important;
@@ -441,7 +453,7 @@
   .protect-call {
     border: 0 !important;
     border-radius: var(--clay-r-pill) !important;
-    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    background: var(--clay-gradient-btn) !important;
     color: #FFFFFF !important;
     box-shadow: var(--clay-shadow-purple) !important;
     /* KHÔNG nowrap — nhãn dài phải xuống dòng được. */
@@ -489,7 +501,7 @@
   .case-history-filters button.is-active,
   .salutation-option[aria-checked="true"],
   .phrase-chip[aria-pressed="true"] {
-    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    background: var(--clay-gradient-btn) !important;
     color: #FFFFFF !important;
     box-shadow: var(--clay-shadow-purple) !important;
   }
@@ -958,8 +970,9 @@
     block-size: 1.4rem !important;
     padding: 0 !important;
     border-radius: 0 !important;
-    background: var(--clay-purple, #6C3BDB) !important;
-    color: var(--clay-purple, #6C3BDB) !important;
+    /* Đổi sang tím taskbar cho khớp với mọi icon tím khác trên màn. */
+    background: var(--clay-nav-purple) !important;
+    color: var(--clay-nav-purple) !important;
   }
 
   /* 4. Linh vật hero: ảnh tham chiếu để nó cao gần trọn thẻ. */
@@ -1122,7 +1135,7 @@
 
   :root[data-route="kiem-tra"] body #analysisView .analysis-mode-tabs > a.is-active,
   :root[data-route="kiem-tra"] body #analysisView .analysis-mode-tabs > a[aria-current] {
-    background: linear-gradient(120deg, var(--clay-purple-light) 0%, var(--clay-purple) 100%) !important;
+    background: var(--clay-gradient-btn) !important;
     color: #FFFFFF !important;
     box-shadow: var(--clay-shadow-purple) !important;
   }
@@ -1220,11 +1233,24 @@
   }
 
   /* Mũi tên tròn ở góc dưới phải, như ảnh tham chiếu. */
+  /* .check-hub__arrow KHÔNG chỉ chứa mũi tên: safety-redesign.css gắn thêm
+     ::before với content "Kiểm tra ngay". Đặt display:grid biến nhãn đó thành
+     một ô lưới riêng cao 71,8px, đẩy mũi tên xuống hàng hai — lệch 83px, ra
+     ngoài thẻ và bị overflow:hidden cắt mất. Thẻ đã có tiêu đề và mô tả, cả
+     thẻ lại là một liên kết, nên bỏ nhãn và giữ đúng mũi tên tròn như ảnh. */
+  :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__arrow::before {
+    content: none !important;
+  }
+
   :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__arrow {
     display: grid !important;
     place-items: center !important;
     inline-size: 2rem !important;
     block-size: 2rem !important;
+    /* min-height: 2.7rem của safety-redesign.css mới là thứ ghim chiều cao —
+       min-height thắng height, nên phải gỡ chính nó. */
+    min-block-size: 0 !important;
+    padding: 0 !important;
     margin-block-start: auto !important;
     margin-inline-start: auto !important;
     border-radius: 50% !important;
@@ -1270,5 +1296,534 @@
 
   :root[data-route="kiem-tra"] body #analysisView:not([hidden]) nav.check-hub .check-hub__item:active {
     transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   SẮC TÍM THỐNG NHẤT THEO THANH TASKBAR
+
+   Đo được ba sắc tím khác nhau đang cùng xuất hiện trên một màn:
+     · thanh taskbar   #B18BFF → #8E55EF
+     · thẻ kiểm tra    #7C4DFF
+     · nút trong ô nhập oklch(0.52 0.22 292) và oklch(0.51 0.19 298)
+   Hai cái sau xỉn và ngả xanh hơn hẳn. Kéo tất cả ICON về màu taskbar.
+   ========================================================================== */
+@media (max-width: 63.99rem) {
+  :root body .mobile-situation-attach .icon,
+  :root body .mobile-situation-voice .icon,
+  :root body .mobile-situation-link .icon,
+  :root body .hub-tile .icon,
+  :root body .check-hub__arrow .icon,
+  :root body .case-list-search .icon,
+  :root body .case-history-row__open-icon .icon {
+    color: var(--clay-nav-purple) !important;
+    background-color: currentColor !important;
+  }
+
+  /* =========================================================================
+     Ô NHẬP TÌNH HUỐNG — vá lỗi ở ảnh tham chiếu số 3
+
+     Ba thứ hỏng, đều đo được:
+     1. .mobile-situation-form__box là display:block cao 60px, nhưng textarea
+        bên trong cao 105px — chữ tràn ra ngoài hộp.
+     2. .mobile-situation-form__actions đặt position:absolute nên khối nút nằm
+        đè lên textarea thay vì xếp cạnh.
+     3. .mobile-situation-submit rộng 144,5px cao 59,5px mà bo 50% — bo tròn
+        theo phần trăm trên hộp chữ nhật cho ra HÌNH ELIP, đúng vệt tím dẹt
+        trong ảnh. Nút tròn phải vuông cạnh trước đã.
+     ========================================================================= */
+  :root body #homeView .mobile-situation-form__box {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    /* khoan-da-2026.css ghim `height: 3.55rem` cho hộp này. Ô chữ bên trong
+       cao 117px và hàng nút cao 60px, nên toàn bộ ruột tràn ra ngoài và đè lên
+       lưới bốn thẻ bên dưới — đo được 38 cặp chồng lấn. Chiều cao phải do nội
+       dung quyết định. */
+    block-size: auto !important;
+    min-block-size: 0 !important;
+    padding: 0.5rem 0.6rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+    overflow: visible !important;
+  }
+
+  /* flex-basis 9rem: còn đủ chỗ thì ô chữ và hàng nút nằm chung một dòng như
+     ảnh; hết chỗ (máy 320px hoặc bậc chữ A++) thì hàng nút tự rơi xuống dòng
+     dưới thay vì bóp ô chữ đến mức không đọc được. */
+  :root body #homeView .mobile-situation-form__box textarea {
+    flex: 1 1 9rem !important;
+    min-inline-size: 0 !important;
+    inline-size: auto !important;
+    min-block-size: var(--touch-target) !important;
+    block-size: auto !important;
+    max-block-size: 7rem !important;
+    padding: 0.6rem 0.4rem !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: var(--clay-ink) !important;
+    font-size: max(15px, 0.98rem) !important;
+    line-height: 1.45 !important;
+    resize: none !important;
+  }
+
+  :root body #homeView .mobile-situation-form__actions {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 0.4rem !important;
+    flex: 1 1 auto !important;
+    inline-size: auto !important;
+    inset: auto !important;
+  }
+
+  :root body #homeView .mobile-situation-attach,
+  :root body #homeView .mobile-situation-voice,
+  :root body #homeView .mobile-situation-link {
+    display: grid !important;
+    place-items: center !important;
+    flex: 0 0 auto !important;
+    inline-size: var(--touch-target) !important;
+    block-size: var(--touch-target) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: var(--clay-purple-tint) !important;
+    color: var(--clay-nav-purple) !important;
+  }
+
+  /* Vuông cạnh RỒI mới bo 50% — nếu không thì lại ra hình elip. */
+  :root body #homeView .mobile-situation-submit {
+    display: grid !important;
+    place-items: center !important;
+    flex: 0 0 auto !important;
+    inline-size: var(--touch-target-primary) !important;
+    block-size: var(--touch-target-primary) !important;
+    min-inline-size: 0 !important;
+    max-inline-size: var(--touch-target-primary) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: var(--clay-gradient-btn) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+  }
+
+  :root body #homeView .mobile-situation-submit .icon {
+    color: #FFFFFF !important;
+    background-color: currentColor !important;
+  }
+
+  /* Lỗi CÓ SẴN trên trang chủ, không do lớp áo này — đã đối chứng bằng cách
+     tắt hẳn stylesheet và đo lại: số đo y hệt. Ô bọc .mobile-action__icon cao
+     45px trong khi ảnh bên trong cao 94px, nên ảnh tràn xuống đè lên chữ.
+     Nới ô bọc cho vừa ảnh thay vì thu ảnh — 5.5rem là kích thước mà
+     mobile-reference-exact.css đã chọn cho ảnh. */
+  :root body #homeView .mobile-action__icon {
+    inline-size: 5.5rem !important;
+    block-size: 5.5rem !important;
+  }
+
+  /* =========================================================================
+     TRANG CHỦ — đưa ô nhập lên TRƯỚC bốn thẻ kiểm tra
+
+     .home-main là flex column xếp bằng `order`, nên chỉ cần đánh lại số thứ
+     tự, không phải động vào HTML. Kết quả trả lời và tin nhắn của người dùng
+     bám ngay sau ô nhập để mạch đọc liền một khối.
+     ========================================================================= */
+  :root body #homeView .home-main > .mobile-situation-form { order: 2 !important; }
+  :root body #homeView .home-main > #homeChatUserMessage { order: 3 !important; }
+  :root body #homeView .home-main > #mobileQuickResult { order: 4 !important; }
+  :root body #homeView .home-main > .hub-tile-grid { order: 5 !important; }
+
+  /* =========================================================================
+     MÀN VỤ VIỆC & LỊCH SỬ (#hanh-trinh) — dựng theo ảnh tham chiếu số 2
+
+     Ảnh 1 cho thấy hai lỗi chồng lấn, đã đo đủ 8 cặp:
+     · nút "Thêm vụ việc" đè lên chữ mô tả và lên hàng chip lọc
+     · trong mỗi ô thống kê, <small> nhãn đè thẳng lên <strong> số, nên đọc ra
+       "Tổng vụ việcKhông có dữ liệu"
+     ========================================================================= */
+
+  /* Phần đầu màn trở thành chữ trần trên nền, không còn là thẻ — như ảnh 2. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero {
+    display: block !important;
+    min-block-size: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero h1 {
+    margin: 0 !important;
+    color: var(--clay-ink) !important;
+    font-size: clamp(max(26px, 1.6rem), 8vw, 2.5rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+    text-wrap: balance !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-hero__copy > p {
+    margin: 0.45rem 0 0 !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(15px, 0.98rem) !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Có HAI bộ chip lọc trùng nhau trong DOM: một trong phần đầu màn, một
+     trong .case-list-head. Ảnh 2 đặt chip SAU thẻ số liệu, mà chỉ bộ thứ hai
+     nằm đúng chỗ đó — nên ẩn bộ đầu và bật bộ sau. Cả hai đều đã được app.js
+     gắn sự kiện qua querySelectorAll("[data-case-filter]"), nên đổi bộ nào
+     hiển thị không làm mất chức năng lọc. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-history-filters--hero {
+    display: none !important;
+  }
+
+  /* Nút "Thêm vụ việc": trả về dòng riêng, hết đè lên chữ. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-create-button--hero {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.45rem !important;
+    inline-size: 100% !important;
+    min-block-size: var(--touch-target-primary) !important;
+    margin: 1rem 0 0 !important;
+    inset: auto !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: var(--clay-gradient-btn) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+    font-size: max(15px, 0.98rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    white-space: normal !important;
+  }
+
+  /* ---- Thẻ số liệu tím lớn, thay cho khối "12 tình huống" của ảnh 2 ----
+     Ảnh mẫu chỉ có MỘT con số. App có ba số thật (tổng · nguy hiểm cao · đã
+     lưu bằng chứng) nên giữ cả ba, xếp ba cột trong cùng một thẻ tím.
+
+     Gradient dùng --clay-gradient-btn chứ không phải gradient taskbar: nhãn ở
+     đây là chữ nhỏ, mà chữ trắng trên chặn sáng #B18BFF của taskbar chỉ đạt
+     2,62:1. Chặn sáng #7C4DFF cho 4,85:1, qua sàn. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.5rem !important;
+    margin: 1rem 0 !important;
+    padding: 1.1rem 0.75rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-hero) !important;
+    background: var(--clay-gradient-btn) !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats article {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+    min-block-size: 0 !important;
+    min-inline-size: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+    text-align: center !important;
+  }
+
+  /* Đây là chỗ sinh ra chồng lấn "Tổng vụ việcKhông có dữ liệu": nhãn và số
+     nằm trong cùng một <span> mà không được xếp dọc. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats article > span:not(.case-dashboard-stats__icon) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.1rem !important;
+    min-inline-size: 0 !important;
+    inline-size: 100% !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats article small,
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats article strong {
+    position: static !important;
+    display: block !important;
+    inline-size: 100% !important;
+    overflow-wrap: break-word !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats article strong {
+    order: 1 !important;
+    color: #FFFFFF !important;
+    font-size: clamp(max(18px, 1.15rem), 5.5vw, 1.7rem) !important;
+    line-height: 1.25 !important;
+    font-weight: 800 !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats article small {
+    order: 2 !important;
+    color: #FFFFFF !important;
+    font-size: max(14px, 0.82rem) !important;
+    line-height: 1.35 !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats__icon {
+    display: grid !important;
+    place-items: center !important;
+    inline-size: 2.6rem !important;
+    block-size: 2.6rem !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #FFFFFF !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-dashboard-stats__icon .icon {
+    color: #FFFFFF !important;
+    background-color: currentColor !important;
+  }
+
+  /* ---- Hàng chip lọc trong khay trắng, như ảnh 2 ---- */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head {
+    display: block !important;
+    margin: 0 0 0.85rem !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Ảnh 2 không có tiêu đề phụ, ô tìm kiếm hay bộ sắp xếp ở khổ điện thoại. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head__title,
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-sort {
+    display: none !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head .case-history-filters {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 0.3rem !important;
+    inline-size: 100% !important;
+    padding: 0.35rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head .case-history-filters::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head .case-history-filters button {
+    flex: 1 0 auto !important;
+    min-block-size: var(--touch-target) !important;
+    padding-inline: 0.9rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-pill) !important;
+    background: transparent !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(15px, 0.92rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 600 !important;
+    /* Chip nằm trong khay cuộn ngang — thiếu chỗ thì cuộn, không cắt chữ. */
+    white-space: nowrap !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) .case-list-head .case-history-filters button.is-active {
+    background: var(--clay-gradient-btn) !important;
+    color: #FFFFFF !important;
+    box-shadow: var(--clay-shadow-purple) !important;
+  }
+
+  /* ---- Danh sách vụ việc ---- */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList {
+    display: grid !important;
+    gap: 0.75rem !important;
+    padding: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Bốn cột để CHỮ và GIỜ nằm cạnh nhau ở hàng chân mà không đè lên nhau —
+     đặt chung một ô lưới là chồng lấn ngay khi nhãn rủi ro dài. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row {
+    display: grid !important;
+    /* Ảnh 2 xếp nhãn rủi ro và mốc giờ CHUNG một dòng. Ở khổ 375px thì không
+       đủ chỗ, và đây là số đo chứ không phải cảm tính: bề ngang trong thẻ còn
+       280px, ô icon 60px và nút mở 52px (sàn vùng chạm) cùng ba khe 33,6px đã
+       chiếm 145,6px, chỉ để lại 134,4px — trong khi riêng nhãn "Nguy hiểm cao"
+       đã 120px và mốc giờ 81px. Ép chung dòng là chồng chữ lên nhau, đúng lỗi
+       vừa đo được. Nên tách hai dòng, giờ căn phải để vẫn giống ảnh. */
+    grid-template-columns: max(56px, 3.5rem) minmax(0, 1fr) var(--touch-target) !important;
+    grid-template-areas:
+      "icon title open"
+      "icon sub   open"
+      "icon chip  open"
+      "icon meta  open" !important;
+    column-gap: 0.7rem !important;
+    row-gap: 0.35rem !important;
+    align-items: center !important;
+    min-block-size: 0 !important;
+    padding: 0.85rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+  }
+
+  /* display:contents làm <p> tiêu đề và <span> nhãn rủi ro trở thành con trực
+     tiếp của lưới, nhờ vậy xếp được vào hai hàng khác nhau như ảnh 2 — nhãn
+     rủi ro xuống dưới phần mô tả chứ không nằm cạnh tiêu đề. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__heading {
+    display: contents !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__icon {
+    grid-area: icon !important;
+    display: grid !important;
+    place-items: center !important;
+    align-self: start !important;
+    inline-size: max(56px, 3.5rem) !important;
+    block-size: max(56px, 3.5rem) !important;
+    margin: 0 !important;
+    border-radius: var(--clay-r-tile) !important;
+    background: var(--clay-purple-tint) !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__title {
+    grid-area: title !important;
+    margin: 0 !important;
+    color: var(--clay-ink) !important;
+    font-size: max(16px, 1.02rem) !important;
+    line-height: 1.3 !important;
+    font-weight: 800 !important;
+    overflow-wrap: break-word !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__subline {
+    grid-area: sub !important;
+    margin: 0 !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(14px, 0.88rem) !important;
+    line-height: 1.4 !important;
+    overflow-wrap: break-word !important;
+  }
+
+  /* Nhãn rủi ro: chữ + màu, không bao giờ chỉ màu — người cao tuổi tỉ lệ mù
+     màu và đục thuỷ tinh thể cao. Ba chuỗi nhãn là bất biến của sản phẩm nên
+     CSS chỉ khoác áo, không đụng tới chữ. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__chip {
+    grid-area: chip !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-self: start !important;
+    padding: 0.2rem 0.6rem !important;
+    border-radius: var(--clay-r-pill) !important;
+    font-size: max(14px, 0.82rem) !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    overflow-wrap: break-word !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__chip--high {
+    background: var(--clay-danger-soft) !important;
+    color: var(--clay-danger) !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__chip--medium {
+    background: var(--clay-warn-soft) !important;
+    color: var(--clay-warn) !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__chip--low,
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__chip--safe {
+    background: var(--clay-safe-soft) !important;
+    color: var(--clay-safe) !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__meta {
+    grid-area: meta !important;
+    justify-self: end !important;
+    max-inline-size: 100% !important;
+    margin: 0 !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(14px, 0.82rem) !important;
+    line-height: 1.4 !important;
+    white-space: nowrap !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__actions {
+    grid-area: open !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.3rem !important;
+  }
+
+  /* :not([hidden]) KHÔNG thừa. app.js ẩn nút xoá ở các vụ việc mẫu bằng thuộc
+     tính `hidden`, mà `hidden` chỉ là `display:none` ở lớp UA — một khai báo
+     display kèm !important sẽ đè nó và lôi nút đã ẩn hiện trở lại. Đo được
+     đúng như vậy: nút xoá position:absolute đè lên nút mở. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__open,
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__delete:not([hidden]) {
+    position: static !important;
+    display: grid !important;
+    place-items: center !important;
+    inline-size: var(--touch-target) !important;
+    block-size: var(--touch-target) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: var(--clay-purple-tint) !important;
+    color: var(--clay-nav-purple) !important;
+  }
+
+  /* Trong nút mở có hai icon (con mắt + mũi tên) xếp chồng; ảnh 2 chỉ có mũi
+     tên nên bỏ con mắt cho gọn. */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseList .case-history-row__open-icon .icon-eye {
+    display: none !important;
+  }
+
+  /* ---- Trạng thái chưa có vụ việc nào ---- */
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListEmpty {
+    display: grid !important;
+    justify-items: center !important;
+    gap: 0.6rem !important;
+    padding: 1.6rem 1.1rem !important;
+    border: 0 !important;
+    border-radius: var(--clay-r-card) !important;
+    background: var(--clay-card) !important;
+    box-shadow: var(--clay-shadow) !important;
+    text-align: center !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListEmpty .case-empty-desktop {
+    display: none !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListEmpty p {
+    margin: 0 !important;
+    color: var(--clay-ink-soft) !important;
+    font-size: max(15px, 0.95rem) !important;
+    line-height: 1.5 !important;
+  }
+
+  :root[data-route="hanh-trinh"] body #hanhTrinhView:not([hidden]) #caseListEmpty .case-empty-mobile.icon {
+    inline-size: 2.6rem !important;
+    block-size: 2.6rem !important;
+    color: var(--clay-nav-purple) !important;
+    background-color: currentColor !important;
   }
 }
